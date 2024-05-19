@@ -1,0 +1,315 @@
+<?page title="Offer Notification" contentType="text/html;charset=UTF-8"?>
+<zk>
+<script type="text/javascript" src="js/quill/quill.js"></script>
+<style>
+.splitLeft { 
+	position: relative;
+	width: 50%;
+	float: left;
+	height: 100%;
+}
+.splitRight { 
+	position: relative;
+  	width: 50%;
+  	float: left;
+  	height: 100%;
+}
+.columnAllign{
+    width: 468px;
+    float: right;
+}
+.blockAllign{
+	display: flow-root !important;
+}
+.additionalFiles{
+    padding-left: 50px;
+    margin-bottom: 18px;
+}
+.zkDesignClass{
+    border: 1px solid #CCCCCC;
+    border-radius: 5px 5px 5px 5px;
+    padding: 0 2px 0 7px;
+    text-align: left;
+    font-size: 14px
+}
+.zkHeaderHeight{
+	 height: 50px;
+}
+.zkBodyHeight{
+ 	 height: 70px;
+}
+.previewDiv{
+	width: 500px;
+    margin: auto;
+    padding: 32px;
+    text-align: justify;
+}
+
+/* The device with borders */
+.smartphone {
+  position: relative;
+  width: 290px;
+  height: 441px;
+  margin: auto;
+  border: 16px black solid;
+  border-top-width: 60px;
+  border-bottom-width: 60px;
+  border-radius: 36px;
+}
+
+/* The horizontal line on the top of the device */
+.smartphone:before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 5px;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #333;
+  border-radius: 10px;
+}
+
+/* The circle on the bottom of the device */
+.smartphone:after {
+  content: '';
+  display: block;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 50%;
+  bottom: -65px;
+  transform: translate(-50%, -50%);
+  background: #333;
+  border-radius: 50%;
+}
+
+/* The screen (or content) of the device */
+.smartphone .content {
+  width: 290px;
+  height: 441px;
+  background: white;
+  word-break: break-all;
+  overflow: auto;
+  -ms-overflow-style: none;
+}
+.smartphone .content::-webkit-scrollbar {
+  display: none;
+}
+#counter {
+  border: 1px solid #ccc;
+  border-width: 0px 1px 1px 1px;
+  color: #aaa;
+  padding: 5px 15px;
+  text-align: right;
+}
+.req_step_completed:HOVER {
+     text-decoration:none !important; 
+     color: #222222 !important; 
+}
+</style>
+
+
+
+
+	<window id="offersNotificationMenuItemId"
+		apply="org.mq.marketer.campaign.controller.contacts.OffersNotificationWeb"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%">
+		
+		<div id="navigationDivId" visible="true">
+				<hlayout style="margin:10px 0 15px 0;">
+				
+					<div id="couponBasicSettingsFirstId" sclass="req_step_completed">
+						<label  value="1" style="color:#222222;padding-right:12px;"  />					
+						<label  value="Basic Settings" />					
+					</div>
+				
+					<div id="promotionRulesSecondId" sclass="req_step_completed" style="margin-left: 3px;">
+						<label  value="2" style="color:#222222;padding-right:12px;"  />					
+						<label  value="Discount Code Rules"/>					
+					</div>
+				
+					<div id="mobileOfferThirdId" visible="true" sclass="req_step_current" style="margin-left: 3px;background-color: #59a135;width:204px !important;">
+						<label  value="3" style="color:#222222;padding-right:12px;"/>					
+						<label  value="Display options (optional)" />					
+					</div>
+				
+				</hlayout>
+			</div>
+		
+		
+		<div visible="true">
+			<groupbox sclass="gbStyle" style="padding:10px 5px;"
+				closable="false">
+				<caption label="Offer Details Settings" />
+				
+					<div class="splitLeft">
+					
+						<div class="blockAllign">
+							<label value="Select Image :" />
+							<div class="columnAllign" style="padding-bottom:12px;">
+								<button id="uploadBtn" width="130px" label="Upload Image"/>
+								<image id="imgToSaveId" visible="false"/>
+								<separator />
+								<textbox placeholder="Enter Redirect URL For Image" id="redirectUrl" maxlength="100" width="340px"/>
+								<separator />
+								<label id="msgLb" />
+							</div>
+						</div>
+						
+						<div class="blockAllign">
+							<label value="Heading :" />
+							<label value="*" style="color:red;" />
+							<div class="columnAllign" style="padding-bottom:12px;">
+								<textbox  id="headerId" maxlength="250" width="285px" onChanging='Clients.evalJavaScript("displayIndivOnKeyup();")'/>
+								<space /><label id="" />
+								<listbox id="mergeTagListboxId" mold="select" width="150px">
+									<listitem label="Insert Merge Tags" selected="true" />
+								</listbox>
+							</div>
+						</div>
+						
+						<!-- <div class="blockAllign">
+							<label value="Insert Promotion :" />
+							<label value="*" style="color:red;" />
+							<div class="columnAllign">
+									<checkbox id="insertPromotionCouponLbId" checked="true" />
+								<separator />
+								<separator />
+							</div>
+						</div>
+						
+						<div class="blockAllign">
+							<label value="Insert Bar Code Image :" />
+							<label value="*" style="color:red;" />
+							<div class="columnAllign">
+									<checkbox id="promotionBarCodeId" checked="true" />
+								<separator />
+								<separator />
+							</div>
+						</div> -->
+					
+						<div class="blockAllign">
+							<label value="Description :" />
+							<label value="*" style="color:red;" />
+							<div class="columnAllign">
+								<html>
+									<body>
+										<div id="quillEditor" style="height:262px;"></div>
+										<div id="counter">0 characters</div>
+									</body>
+								</html>
+							</div>
+						</div>
+						<separator />
+						<separator />
+						<div class="blockAllign">
+							<label value="Highlight Offer :" />
+							<div class="columnAllign">
+									<checkbox id="highLighMobileCheckId" checked="false" />
+							</div>
+						</div>
+							<label value="(display offer on the" />
+						<div class="blockAllign">
+							<label value="home page of mobile app)"/>
+						</div>
+						
+							<separator />
+							<separator />
+						<div class="columnAllign">
+								<button label="Save Offer" sclass="idle180 greenbtn" onClick='Clients.evalJavaScript("onclickSave();")'/>
+						</div>
+					
+				</div>
+				<div class="splitRight" id="additionalFieldsId">
+					<div class="smartphone">
+					  <div class="content">
+							<h:table>
+								<h:tr>
+									<h:td><label id="mobileHeaddingDisplayId"></label></h:td>
+								</h:tr>
+								<separator />
+								<separator />
+								<h:tr>
+									<h:td style="padding-bottom: 10px;"><image id="img"><custom-attributes org.zkoss.zul.image.preload="true" /></image></h:td>
+								</h:tr>
+								<h:tr style="padding-left: 15px;">
+									<h:td><label style="font-size:18px;" id="headderContentId"></label></h:td>
+								</h:tr>
+								<h:tr>
+								</h:tr>
+								<h:tr style="padding-left: 15px;">
+									<h:td><label style="font-size:18px;margin-left: 20px;" id="promotionCodes"></label></h:td>
+								</h:tr>
+								</h:table>
+								<h:table>
+									<h:tr>
+										<h:td style="padding-bottom: 10px;"><image id="imgBarcode" /></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td><label id="bodyContentDisplayId"></label></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td><textbox id="bodyContentId"></textbox></h:td>
+										<h:td><textbox id="bodytextId"></textbox></h:td>
+										<h:td><textbox id="placeHolderDropdownId"></textbox></h:td>
+									</h:tr>
+								</h:table>
+					  </div>
+					</div>
+				</div>
+			</groupbox>
+		</div>
+		<html>
+			<![CDATA[
+				<script type="text/javascript">
+					/**get cursor position and insert merge tag in header field*/
+					function insertAtCursor(myField, myValue) {
+					    //IE support
+					    	if (document.selection) {
+						        myField.focus();
+						        sel = document.selection.createRange();
+						        sel.text = myValue;
+					    	}
+					    	//MOZILLA and others
+					    	else if (myField.selectionStart || myField.selectionStart == '0') {
+						        var startPos = myField.selectionStart;
+						        var endPos = myField.selectionEnd;
+						        myField.value = myField.value.substring(0, startPos)
+						            + myValue
+						            + myField.value.substring(endPos, myField.value.length);
+						    } else {
+						        myField.value += myValue;
+						    }
+						} 
+					var headerText;
+					function displayIndivOnKeyup(){
+					 	   var currentText = jq('$headerId').val();
+					 	  jq('$headderContentId').text(currentText);
+					}
+					
+					function onclickSave(){
+						var headerText = jq('$headderContentId').text();
+						var quillData = JSON.stringify({'htmlQuill':htmlQuill, 'htmlQuillText':validateQuill, 'headerText':headerText});
+				 		zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onClickSaveOfferData', quillData));
+				 	}
+					
+				</script>
+			]]>
+		</html>
+		<div style="display:none">
+			<textbox id="jsonData"></textbox>
+		</div>
+		<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+				<caption>
+					<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)" />
+				</caption>
+				<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+				<iframe id="iframeId" width="100%" height="100%"/>
+				</div>
+		</window>
+		
+	</window>
+</zk>

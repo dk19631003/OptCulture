@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.CustomFieldData"
+		table="customfield_data">
+		<id name="cId" type="java.lang.Long" column="c_id">
+			<generator class="native" />
+		</id>
+		<many-to-one name="contact"
+			class="org.mq.marketer.campaign.beans.Contacts"
+			foreign-key="CFEmail_ID" fetch="select">
+			<column name="contact_id" not-null="true"
+				unique-key="Unique_email" />
+		</many-to-one>
+		<property name="cust1" type="string">
+			<column name="cust_1" length="50" default="''" />
+		</property>
+		<property name="cust2" type="string">
+			<column name="cust_2" length="50" default="''" />
+		</property>
+		<property name="cust3" type="string">
+			<column name="cust_3" length="50" default="''" />
+		</property>
+		<property name="cust4" type="string">
+			<column name="cust_4" length="50" default="''" />
+		</property>
+		<property name="cust5" type="string">
+			<column name="cust_5" length="50" default="''" />
+		</property>
+		<property name="cust6" type="string">
+			<column name="cust_6" length="50" default="''" />
+		</property>
+		<property name="cust7" type="string">
+			<column name="cust_7" length="50" default="''" />
+		</property>
+		<property name="cust8" type="string">
+			<column name="cust_8" length="50" default="''" />
+		</property>
+		<property name="cust9" type="string">
+			<column name="cust_9" length="50" default="''" />
+		</property>
+		<property name="cust10" type="string">
+			<column name="cust_10" length="50" default="''" />
+		</property>
+		<property name="cust11" type="string">
+			<column name="cust_11" length="50" default="''" />
+		</property>
+		<property name="cust12" type="string">
+			<column name="cust_12" length="50" default="''" />
+		</property>
+		<property name="cust13" type="string">
+			<column name="cust_13" length="50" default="''" />
+		</property>
+		<property name="cust14" type="string">
+			<column name="cust_14" length="50" default="''" />
+		</property>
+		<property name="cust15" type="string">
+			<column name="cust_15" length="50" default="''" />
+		</property>
+		<property name="cust16" type="string">
+			<column name="cust_16" length="50" default="''" />
+		</property>
+		<property name="cust17" type="string">
+			<column name="cust_17" length="50" default="''" />
+		</property>
+		<property name="cust18" type="string">
+			<column name="cust_18" length="50" default="''" />
+		</property>
+		<property name="cust19" type="string">
+			<column name="cust_19" length="50" default="''" />
+		</property>
+		<property name="cust20" type="string">
+			<column name="cust_20" length="50" default="''" />
+		</property>
+	</class>
+</hibernate-mapping>

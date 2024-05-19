@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.NotificationSuppressedContacts" table="notification_suppressed_contacts">
+    <id name="id" type="java.lang.Long" column="id">
+      <generator class="native"/>
+    </id>
+    
+    <property name="userId" type="java.lang.Long">
+			<column name="user_id"/>
+	</property>
+	
+	<property name="orgId" type="java.lang.Long">
+			<column name="org_id"/>
+	</property>
+    
+    <property name="contactId" type="java.lang.Long">
+			<column name="contact_id"/>
+	</property>
+    
+    <property name="instanceId" type="string">
+			<column name="instance_id"/>
+	</property>
+    
+    <property name="type" type="string" column="type" />
+    <property name="suppressedtime" type="java.util.Calendar" >
+			<column name="suppressed_time" />
+	</property>
+		
+	<property name="reason" type="string" column="reason" />
+    
+  	</class>
+</hibernate-mapping>

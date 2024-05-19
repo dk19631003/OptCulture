@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.UserEmailAlert"
+		table="user_email_alert">
+		<id name="userEmailAlertId" type="java.lang.Long" column="user_email_alert_id">
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" length="10" />
+		</property>
+		<property name="createdDate" type="calendar"
+			column="created_date" />
+			
+		<property name="modifiedDate" type="calendar"
+			column="modified_date" />
+			
+		<property name="createdBy" type="java.lang.Long">
+			<column name="created_by" length="10" />
+		</property>
+		
+		<property name="modifiedBy" type="java.lang.Long">
+			<column name="modified_by" length="10" />
+		</property>
+		
+		<property name="type" type="string" column="type"
+			length="60" />
+			
+		<property name="emailId" type="string" column="email_id"
+			length="500" />
+			
+		<property name="frequency" type="string" column="frequency"
+			length="60" />
+			
+		<property name="lastSentOn" type="calendar"
+			column="last_sent_on" />
+			
+		<property name="triggerAt" type="string" column="trigger_at"
+			length="60" />
+			
+		<property name="enabled" type="java.lang.Boolean" column="enabled" />
+		
+		</class>
+</hibernate-mapping>

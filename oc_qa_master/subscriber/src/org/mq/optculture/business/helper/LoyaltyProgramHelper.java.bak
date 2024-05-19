@@ -1,0 +1,774 @@
+package org.mq.optculture.business.helper;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.ContactsLoyalty;
+import org.mq.marketer.campaign.beans.EmailQueue;
+import org.mq.marketer.campaign.beans.LoyaltyCardSet;
+import org.mq.marketer.campaign.beans.LoyaltyProgram;
+import org.mq.marketer.campaign.beans.LoyaltyProgramTier;
+import org.mq.marketer.campaign.beans.LoyaltyThresholdAlerts;
+import org.mq.marketer.campaign.beans.OCSMSGateway;
+import org.mq.marketer.campaign.beans.SMSSettings;
+import org.mq.marketer.campaign.beans.UserOrganization;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.service.CaptiwayToSMSApiGateway;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.ContactsDao;
+import org.mq.marketer.campaign.dao.ContactsLoyaltyDao;
+import org.mq.marketer.campaign.dao.ContactsLoyaltyDaoForDML;
+import org.mq.marketer.campaign.dao.EmailQueueDao;
+import org.mq.marketer.campaign.dao.EmailQueueDaoForDML;
+import org.mq.marketer.campaign.dao.RetailProSalesDao;
+import org.mq.marketer.campaign.dao.SMSSettingsDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.dao.UsersDaoForDML;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.SMSStatusCodes;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.data.dao.LoyaltyCardSetDao;
+import org.mq.optculture.data.dao.LoyaltyCardsDao;
+import org.mq.optculture.data.dao.LoyaltyProgramDao;
+import org.mq.optculture.data.dao.LoyaltyProgramTierDao;
+import org.mq.optculture.data.dao.LoyaltyThresholdAlertsDao;
+import org.mq.optculture.data.dao.LoyaltyThresholdAlertsDaoForDML;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+
+public class LoyaltyProgramHelper {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	public static String getMbrshipExpiryDate(Calendar createdDate, Calendar upgradedDate, boolean upgdResetFlag,
+			String dateType, Long dateValue){
+		
+		Calendar expiryCal = null;
+		
+		if(upgdResetFlag == true){
+			
+			if(upgradedDate != null){
+				expiryCal = (Calendar)upgradedDate.clone();
+			}
+			else{
+				expiryCal = (Calendar)createdDate.clone();
+			}
+			
+		}
+		else{
+			expiryCal = (Calendar)createdDate.clone();
+		}
+		
+		if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_MONTH.equals(dateType)){
+			expiryCal.add(Calendar.MONTH, dateValue.intValue());
+		}
+		else if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_YEAR.equals(dateType)){
+			expiryCal.add(Calendar.YEAR, dateValue.intValue());
+		}
+		
+		return MyCalendar.calendarToString(expiryCal, MyCalendar.FORMAT_YEARTODATE);
+		
+	}
+	
+	public static String getGiftMbrshipExpiryDate(Calendar createdDate, String dateType, Long dateValue){
+		
+		Calendar expiryCal = (Calendar)createdDate.clone();
+		
+		if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_MONTH.equals(dateType)){
+			expiryCal.add(Calendar.MONTH, dateValue.intValue());
+		}
+		else if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_YEAR.equals(dateType)){
+			expiryCal.add(Calendar.YEAR, dateValue.intValue());
+		}
+		
+		return MyCalendar.calendarToString(expiryCal, MyCalendar.FORMAT_YEARTODATE);
+		
+	}
+	
+	public static String validateMembershipMobile(String phone){
+		try{
+			Long phoneNum = Long.parseLong(phone);
+//			if(phone.trim().length() != 10) return OCConstants.LOYALTY_MEMBERSHIP_MOBILE_INVALID;
+		}catch(Exception e){
+			return OCConstants.LOYALTY_MEMBERSHIP_MOBILE_INVALID;
+		}
+		return OCConstants.LOYALTY_MEMBERSHIP_MOBILE_VALID;
+	}
+	
+	/**
+	 * This method verifies for concurrent card generation under organisation by multiple users.
+	 * @param programId
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean anotherCardGeneration(Long programId){
+		try{
+			logger.info("Checking another user generating cards...");
+			LoyaltyProgramDao programDao = (LoyaltyProgramDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_DAO);
+			LoyaltyProgram program = programDao.findById(programId);
+			Long orgId = program.getOrgId();
+			UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO); 
+			UserOrganization userOrg = usersDao.findByOrgId(orgId);
+			if(OCConstants.LOYALTY_CARD_GENERATION_FLAG_Y.equals(userOrg.getCardGenerateFlag())){
+				return true;
+			}
+			return false;
+		} catch(Exception e){
+			logger.error("Exception in...", e);
+			return false;
+		}
+	}
+	
+	public static LoyaltyProgramTier applyTierUpgdRules(Long contactId, ContactsLoyalty contactsLoyalty, LoyaltyProgramTier currTier) throws Exception{
+
+		LoyaltyProgramTierDao loyaltyProgramTierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+
+		List<LoyaltyProgramTier> tempTiersList = loyaltyProgramTierDao.fetchTiersByProgramId(contactsLoyalty.getProgramId());
+		if (tempTiersList == null || tempTiersList.size() <= 0) {
+			logger.info("Tiers list is empty...");
+			return currTier;
+		}
+		else if (tempTiersList.size() >= 1) {
+			Collections.sort(tempTiersList, new Comparator<LoyaltyProgramTier>() {
+				@Override
+				public int compare(LoyaltyProgramTier o1, LoyaltyProgramTier o2) {
+
+					int num1 = Integer.valueOf(o1.getTierType().substring(5)).intValue();
+					int num2 = Integer.valueOf(o2.getTierType().substring(5)).intValue();
+					if(num1 < num2){
+						return -1;
+					}
+					else if(num1 == num2){
+						return 0;
+					}
+					else{
+						return 1;
+					}
+				}
+			});
+		}
+		
+		List<LoyaltyProgramTier> tiersList = new ArrayList<LoyaltyProgramTier>();
+		boolean flag = false;
+		for(LoyaltyProgramTier tier : tempTiersList) {
+			logger.info("tier level : "+tier.getTierType());
+			if(currTier.getTierType().equalsIgnoreCase(tier.getTierType())){
+				flag = true;
+			}
+			if(flag){
+				tiersList.add(tier);
+			}
+		}
+
+		//Prepare eligible tiers map
+		Iterator<LoyaltyProgramTier> iterTier = tiersList.iterator();
+		Map<LoyaltyProgramTier, LoyaltyProgramTier> eligibleMap = new LinkedHashMap<LoyaltyProgramTier, LoyaltyProgramTier>();
+		LoyaltyProgramTier prevtier = null;
+		LoyaltyProgramTier nexttier = null;
+
+		while(iterTier.hasNext()){
+			nexttier = iterTier.next();
+			if(currTier.getTierType().equals(nexttier.getTierType())){
+				eligibleMap.put(nexttier, null);
+			}
+			else{
+				if((Integer.valueOf(prevtier.getTierType().substring(5))+1) 
+						== Integer.valueOf(nexttier.getTierType().substring(5)) && prevtier.getTierUpgdConstraintValue() != null){
+					eligibleMap.put(nexttier, prevtier);
+					logger.info("eligible tier ="+nexttier.getTierType()+" upgdconstrant value = "+prevtier.getTierUpgdConstraintValue());
+				}
+			}
+			prevtier = nexttier;
+		}
+
+		if(OCConstants.LOYALTY_LIFETIME_POINTS.equals(tiersList.get(0).getTierUpgdConstraint())){
+			logger.info("tier condition on :"+OCConstants.LOYALTY_LIFETIME_POINTS);
+
+			Double totLoyaltyPointsValue = contactsLoyalty.getTotalLoyaltyEarned() == null ? 0.00 : contactsLoyalty.getTotalLoyaltyEarned();
+			logger.info("totLoyaltyPointsValue value = "+totLoyaltyPointsValue);
+
+			if(totLoyaltyPointsValue == null || totLoyaltyPointsValue <= 0){
+				logger.info("totLoyaltyPointsValue value is empty...");
+				return currTier;
+			}
+			else{
+				Iterator<LoyaltyProgramTier> it = eligibleMap.keySet().iterator();
+				LoyaltyProgramTier prevKeyTier = null;
+				LoyaltyProgramTier nextKeyTier = null;
+				while(it.hasNext()){
+					nextKeyTier = it.next();
+					logger.info("------------nextKeyTier::"+nextKeyTier.getTierType());
+					logger.info("-------------currTier::"+currTier.getTierType());
+					if(currTier.getTierType().equalsIgnoreCase(nextKeyTier.getTierType())){
+						prevKeyTier = nextKeyTier;
+						continue;
+					}
+					if(totLoyaltyPointsValue > 0 && totLoyaltyPointsValue < eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue()){
+						if(prevKeyTier == null){
+							logger.info("selected tier is currTier..."+currTier.getTierType());
+							return currTier;
+						}
+						logger.info("selected tier..."+prevKeyTier.getTierType());
+						return prevKeyTier;
+					}
+					else if (totLoyaltyPointsValue > 0 && totLoyaltyPointsValue >= eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue() && !it.hasNext()) {
+						logger.info("selected tier..."+nextKeyTier.getTierType());
+						return nextKeyTier;
+					}
+					prevKeyTier = nextKeyTier;
+				}
+				return currTier;
+			}//else
+		}
+		else if(contactId == null){
+			logger.info("contactId is null and selected tier..."+tiersList.get(0).getTierType());
+			return currTier;
+		}
+		else if(OCConstants.LOYALTY_LIFETIME_PURCHASE_VALUE.equals(tiersList.get(0).getTierUpgdConstraint())){
+			logger.info("tier condition on :"+OCConstants.LOYALTY_LIFETIME_PURCHASE_VALUE);
+			
+			ContactsDao contactsDao = (ContactsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_DAO);				
+
+			List<Map<String, Object>> contactPurcahseList = contactsDao.findContactPurchaseDetails(contactsLoyalty.getUserId(), contactId);
+			Double totPurchaseValue = null;
+			if(contactPurcahseList != null && contactPurcahseList.size() == 1) {
+				for (Map<String, Object> eachMap : contactPurcahseList) {
+					if(eachMap.containsKey("tot_purchase_amt")){
+						totPurchaseValue = Double.valueOf(eachMap.get("tot_purchase_amt") != null ? eachMap.get("tot_purchase_amt").toString() : "0.00");
+						logger.info("purchase value = "+totPurchaseValue);
+					}
+				}
+			}
+
+			if(contactPurcahseList == null || totPurchaseValue == null || totPurchaseValue <= 0){
+				logger.info("purchase value is empty...");
+				return currTier;
+			}
+			else{
+				Iterator<LoyaltyProgramTier> it = eligibleMap.keySet().iterator();
+				LoyaltyProgramTier prevKeyTier = null;
+				LoyaltyProgramTier nextKeyTier = null;
+				while(it.hasNext()){
+					nextKeyTier = it.next();
+					logger.info("------------nextKeyTier::"+nextKeyTier.getTierType());
+					logger.info("-------------currTier::"+currTier.getTierType());
+					if(currTier.getTierType().equalsIgnoreCase(nextKeyTier.getTierType())){
+						prevKeyTier = nextKeyTier;
+						continue;
+					}
+					if(totPurchaseValue > 0 && totPurchaseValue < eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue()){
+						if(prevKeyTier == null){
+							logger.info("selected tier is currTier..."+currTier.getTierType());
+							return currTier;
+						}
+						logger.info("selected tier..."+prevKeyTier.getTierType());
+						return prevKeyTier;
+					}
+					else if (totPurchaseValue > 0 && totPurchaseValue >= eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue() && !it.hasNext()) {
+						logger.info("selected tier..."+nextKeyTier.getTierType());
+						return nextKeyTier;
+					}
+					prevKeyTier = nextKeyTier;
+				}
+				return currTier;
+			}//else
+		}
+		else if(OCConstants.LOYALTY_CUMULATIVE_PURCHASE_VALUE.equals(tiersList.get(0).getTierUpgdConstraint())){
+			
+			Double cumulativeAmount = 0.0;
+//			Iterator<LoyaltyProgramTier> it = eligibleMap.keySet().iterator();
+			ListIterator<LoyaltyProgramTier> it = new ArrayList(eligibleMap.keySet()).listIterator(eligibleMap.size());
+//			LoyaltyProgramTier prevKeyTier = null;
+			LoyaltyProgramTier nextKeyTier = null;
+			while(it.hasPrevious()){
+				nextKeyTier = it.previous();
+				logger.info("------------nextKeyTier::"+nextKeyTier.getTierType());
+				logger.info("-------------currTier::"+currTier.getTierType());
+				if(currTier.getTierType().equalsIgnoreCase(nextKeyTier.getTierType())){
+//					prevKeyTier = nextKeyTier;
+					return currTier;
+				}
+				Calendar startCal = Calendar.getInstance();
+				Calendar endCal = Calendar.getInstance();
+				endCal.add(Calendar.MONTH, -eligibleMap.get(nextKeyTier).getTierUpgradeCumulativeValue().intValue());
+
+				String startDate = MyCalendar.calendarToString(startCal, MyCalendar.FORMAT_DATETIME_STYEAR);
+				String endDate = MyCalendar.calendarToString(endCal, MyCalendar.FORMAT_DATETIME_STYEAR);
+				logger.info("contactId = "+contactId+" startDate = "+startDate+" endDate = "+endDate);
+
+				RetailProSalesDao salesDao = (RetailProSalesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.RETAILPRO_SALES_DAO);
+				Object[] cumulativeAmountArr = salesDao.getCumulativePurchase(contactsLoyalty.getUserId(), contactId, startDate, endDate);
+
+				cumulativeAmount = Double.valueOf(cumulativeAmountArr[0].toString());
+
+				if(cumulativeAmount == null || cumulativeAmount <= 0){
+					logger.info("cumulative purchase value is empty...");
+					continue;
+				}
+				
+				if(cumulativeAmount > 0 && cumulativeAmount >= eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue()){
+					return nextKeyTier;
+				}
+				
+			}
+			/*while(it.hasNext()){
+				nextKeyTier = it.next();
+				logger.info("------------nextKeyTier::"+nextKeyTier.getTierType());
+				logger.info("-------------currTier::"+currTier.getTierType());
+				if(currTier.getTierType().equalsIgnoreCase(nextKeyTier.getTierType())){
+					prevKeyTier = nextKeyTier;
+					continue;
+				}
+				
+				Calendar startCal = Calendar.getInstance();
+				Calendar endCal = Calendar.getInstance();
+				endCal.add(Calendar.MONTH, -eligibleMap.get(nextKeyTier).getTierUpgradeCumulativeValue().intValue());
+
+				String startDate = MyCalendar.calendarToString(startCal, MyCalendar.FORMAT_DATETIME_STYEAR);
+				String endDate = MyCalendar.calendarToString(endCal, MyCalendar.FORMAT_DATETIME_STYEAR);
+				logger.info("contactId = "+contactId+" startDate = "+startDate+" endDate = "+endDate);
+
+				RetailProSalesDao salesDao = (RetailProSalesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.RETAILPRO_SALES_DAO);
+				Object[] cumulativeAmountArr = salesDao.getCumulativePurchase(contactsLoyalty.getUserId(), contactId, startDate, endDate);
+
+				cumulativeAmount = Double.valueOf(cumulativeAmountArr[0].toString());
+
+				if(cumulativeAmount == null || cumulativeAmount <= 0){
+					logger.info("cumulative purchase value is empty...");
+					continue;
+				}
+				if(cumulativeAmount > 0 && cumulativeAmount < eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue()){
+					if(prevKeyTier == null){
+						logger.info("selected tier is currTier..."+currTier.getTierType());
+						return currTier;
+					}
+					logger.info("selected tier..."+prevKeyTier.getTierType());
+					return prevKeyTier;
+				}
+				else if (cumulativeAmount > 0 && cumulativeAmount >= eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue() && !it.hasNext()) {
+					logger.info("selected tier..."+nextKeyTier.getTierType());
+					return nextKeyTier;
+				}
+				prevKeyTier = nextKeyTier;
+			}*/
+			return currTier;
+		}
+		else{
+			return currTier;
+		}
+	
+	}
+
+	public static void updateLoyaltyMembrshpPhone(Contacts contact, String newPhone){
+		try{
+			logger.info("========= entered updateLoyaltyMembrshpPhone =========");
+			if(contact.getContactId() == null) return; 
+			ContactsLoyaltyDao contactsLoyaltyDao = (ContactsLoyaltyDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_LOYALTY_DAO);
+			ContactsLoyaltyDaoForDML contactsLoyaltyDaoForDML = (ContactsLoyaltyDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.CONTACTS_LOYALTY_DAO_FOR_DML);
+			List<ContactsLoyalty> contactLoyaltyList = contactsLoyaltyDao.findOCLoyaltyListByContactId(contact.getContactId());
+			if(contactLoyaltyList == null || contactLoyaltyList.size() == 0) return;
+
+			for (ContactsLoyalty loyalty : contactLoyaltyList) {
+
+				boolean isDifferentMobile = false;
+				boolean sendUpdateAlert = false;
+				String conMobile = loyalty.getMobilePhone();
+				//to identify whether entered one is same as previous mobile
+				if(newPhone != null && !newPhone.isEmpty()) {
+					if(conMobile != null && !conMobile.isEmpty() && !conMobile.equals(newPhone)) {
+						if( (conMobile.length() < newPhone.length() && !newPhone.endsWith(conMobile) ) ||
+								(newPhone.length() < conMobile.length() && !conMobile.endsWith(newPhone)) || conMobile.length() == newPhone.length()) {
+							isDifferentMobile = true;
+							sendUpdateAlert = true;
+						}
+					}
+					else if(conMobile == null || conMobile.isEmpty()){
+						isDifferentMobile = true;
+					}
+				}
+
+				if(isDifferentMobile) {
+					if(OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD.equalsIgnoreCase(loyalty.getMembershipType())) {
+						LoyaltyProgramDao loyaltyProgramDao =  (LoyaltyProgramDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_DAO);
+						LoyaltyProgram prgmObj = loyaltyProgramDao.findById(loyalty.getProgramId());
+						if(prgmObj.getUniqueMobileFlag() == OCConstants.FLAG_YES) {
+							ContactsLoyalty tempLtyContact = contactsLoyaltyDao.getLoyaltyByPrgmAndPhone(loyalty.getProgramId(),newPhone);
+							if(tempLtyContact != null) continue;
+							loyalty.setMobilePhone(newPhone);
+							contactsLoyaltyDaoForDML.saveOrUpdate(loyalty);
+							logger.info("updated loyalty registered phone from::"+conMobile+" to::"+newPhone);
+							if(sendUpdateAlert){
+								sendUpdateAlert(loyalty, conMobile, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+							else{
+								sendAddAlert(loyalty, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+						}
+						else {
+							loyalty.setMobilePhone(newPhone);
+							contactsLoyaltyDaoForDML.saveOrUpdate(loyalty);
+							logger.info("updated loyalty registered phone from::"+conMobile+" to::"+newPhone);
+							if(sendUpdateAlert){
+								sendUpdateAlert(loyalty, conMobile, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+							else{
+								sendAddAlert(loyalty, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+						}
+					}
+					else if(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE.equalsIgnoreCase(loyalty.getMembershipType())) {
+						ContactsLoyalty tempContact = contactsLoyaltyDao.getLoyaltyByPrgmAndMembrshp(loyalty.getProgramId(),newPhone); 
+						if (tempContact != null) continue;
+						loyalty.setMobilePhone(newPhone);
+						loyalty.setCardNumber(newPhone);
+						contactsLoyaltyDaoForDML.saveOrUpdate(loyalty);
+						logger.info("updated loyalty registered phone from::"+conMobile+" to::"+newPhone);
+						if(sendUpdateAlert){
+							sendUpdateAlert(loyalty, conMobile, newPhone, contact.getEmailId(), contact.getContactId());
+						}
+						else{
+							sendAddAlert(loyalty, newPhone, contact.getEmailId(), contact.getContactId());
+						}
+					}
+				}
+				else continue;
+			}
+			logger.info("========= exited updateLoyaltyMembrshpPhone =========");
+		}catch(Exception e){
+			logger.error("Exception::",e);
+		}
+
+	}
+
+	private static void sendAddAlert(ContactsLoyalty loyalty, String newPhone,	String emailId, Long contactId) {
+		try{
+			UsersDao usersDao = (UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			Users user = usersDao.find(loyalty.getUserId());
+			String phoneSubStr = StringUtils.right(newPhone, 4);
+			String orgName = user.getUserOrganization().getOrganizationName();
+			if(emailId != null && !emailId.isEmpty()){
+				String messageStr = PropertyUtil.getPropertyValueFromDB("ltyPhoneAddTemplate");
+				messageStr = messageStr.replace("[toStr]", phoneSubStr);
+
+				EmailQueueDao emailQueueDao = (EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+				EmailQueueDaoForDML emailQueueDaoForDML = (EmailQueueDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.EMAILQUEUE_DAO_ForDML);
+				EmailQueue email = new EmailQueue(null, Constants.EQ_TYPE_LOYALTY_OC_ALERTS  , messageStr, Constants.EQ_STATUS_ACTIVE, emailId, user, MyCalendar.getNewCalendar(), orgName+": Your Phone Number Updated Successfully!", contactId, null);
+				//emailQueueDao.saveOrUpdate(email);
+				emailQueueDaoForDML.saveOrUpdate(email);
+			}
+
+			if(!user.isEnableSMS()) return;
+
+			String message = PropertyUtil.getPropertyValueFromDB("ltyPhoneAddSmsMsgTemplate");
+			message = message.replace("[orgName]", orgName);
+			message = message.replace("[toStr]", phoneSubStr);
+			
+			//validate loyalty phone no and new phone no
+			Map<String, Object> resultMap = null;
+
+			resultMap = validateMobile(user,newPhone);
+			newPhone = (String) resultMap.get("phone"); 
+			boolean phoneIsValid = (Boolean) resultMap.get("isValid");
+
+			if(phoneIsValid){
+				sendSmsAlert(user, newPhone, message);
+			}
+		}catch(Exception e){
+			logger.error("Exception in sending alerts", e);
+		}
+	}
+
+	private static void sendUpdateAlert(ContactsLoyalty loyalty, String conMobile, String newPhone, String emailId, Long contactId) {
+		try{
+			UsersDao usersDao = (UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			Users user = usersDao.find(loyalty.getUserId());
+			String conMobileSubStr = StringUtils.right(conMobile, 4);
+			String phoneSubStr = StringUtils.right(newPhone, 4);
+			String orgName = user.getUserOrganization().getOrganizationName();
+			if(emailId != null && !emailId.isEmpty()){
+				String messageStr = PropertyUtil.getPropertyValueFromDB("ltyPhoneUpdateTemplate");
+				messageStr = messageStr.replace("[fromStr]", conMobileSubStr);
+				messageStr = messageStr.replace("[toStr]", phoneSubStr);
+
+				EmailQueueDao emailQueueDao = (EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+				EmailQueueDaoForDML emailQueueDaoForDML = (EmailQueueDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.EMAILQUEUE_DAO_ForDML);
+				EmailQueue email = new EmailQueue(null, Constants.EQ_TYPE_LOYALTY_OC_ALERTS  , messageStr, Constants.EQ_STATUS_ACTIVE, emailId, user, MyCalendar.getNewCalendar(), orgName+": Your Phone Number Updated Successfully!", contactId, null);
+				//emailQueueDao.saveOrUpdate(email);
+				emailQueueDaoForDML.saveOrUpdate(email);
+			}
+
+			if(!user.isEnableSMS()) return;
+
+			String message = PropertyUtil.getPropertyValueFromDB("ltyPhoneUpdateSmsMsgTemplate");
+			message = message.replace("[orgName]", orgName);
+			message = message.replace("[fromStr]", conMobileSubStr);
+			message = message.replace("[toStr]", phoneSubStr);
+			
+			//validate loyalty phone no and new phone no
+			Map<String, Object> resultMap = null;
+
+			resultMap = validateMobile(user, conMobile);
+			conMobile = (String) resultMap.get("phone");
+			boolean conMobileIsValid = (Boolean) resultMap.get("isValid");
+
+			resultMap = validateMobile(user,newPhone);
+			newPhone = (String) resultMap.get("phone"); 
+			boolean phoneIsValid = (Boolean) resultMap.get("isValid");
+
+			if(conMobileIsValid){
+				sendSmsAlert(user, conMobile, message);
+			}
+			if(phoneIsValid){
+				sendSmsAlert(user, newPhone, message);
+			}
+		}catch(Exception e){
+			logger.error("Exception in sending alerts", e);
+		}
+	}
+
+	public static Map<String,Object> validateMobile(Users user, String phone) {
+		Map<String, Object> resultMap =  new HashMap<String, Object>();
+		phone = phone.trim();
+		UserOrganization organization=  user!=null ? user.getUserOrganization() : null ;
+		phone = Utility.phoneParse(phone,organization);
+
+		if(phone != null &&	!phone.startsWith(user.getCountryCarrier().toString()) && phone.length() >= user.getUserOrganization().getMinNumberOfDigits() && phone.length() <=user.getUserOrganization().getMaxNumberOfDigits()) {
+				phone = user.getCountryCarrier().toString()+phone;
+			}
+			try{
+				Long.parseLong(phone);
+				resultMap.put("phone", phone);
+				resultMap.put("isValid", true);
+			}catch (Exception e) {
+				resultMap.put("phone", phone);
+				resultMap.put("isValid", false);
+				return resultMap;
+		}
+		return resultMap;
+	}
+
+	public static void sendSmsAlert(Users user, String phone, String message) {
+
+		try{
+
+			OCSMSGateway ocGateway = GatewayRequestProcessHelper.getOcSMSGateway(user, 
+					SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+			CaptiwayToSMSApiGateway captiwayToSMSApiGateway = (CaptiwayToSMSApiGateway)ServiceLocator.getInstance().getBeanByName("captiwayToSMSApiGateway");
+			if(!ocGateway.isPostPaid() && !captiwayToSMSApiGateway.getBalance(ocGateway, 1)) {
+				return;
+			}
+
+			if(!(((user.getSmsCount() == null ? 0 : user.getSmsCount()) - (user.getUsedSmsCount() == null ? 0 : user.getUsedSmsCount())) >=  1)) {
+				return;
+			}
+
+			String msgContent= "";
+			String messageHeader = findMessageHeader(user);
+
+			if(messageHeader == ""){
+				msgContent= message;
+			}
+			else{
+				msgContent= messageHeader+message;
+			}
+
+			String senderId = ocGateway.getSenderId();
+			
+			try {
+				captiwayToSMSApiGateway.sendSingleSms(ocGateway, msgContent,
+						phone, senderId);
+				/**
+				 * Update the Used SMS count
+				 */
+				try{
+					//UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+					UsersDaoForDML usersDaoForDML = (UsersDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.USERS_DAOForDML);
+					//usersDao.updateUsedSMSCount(user.getUserId(), 1);
+					usersDaoForDML.updateUsedSMSCount(user.getUserId(), 1);
+				}catch(Exception exception){
+					logger.error("Exception while updating the Used SMS count",exception);
+				}
+				
+				/**
+				 * Update Sms Queue
+				 */
+				SmsQueueHelper smsQueueHelper = new SmsQueueHelper();
+				smsQueueHelper.updateSMSQueue(phone,msgContent,Constants.SMS_MSG_TYPE_ALERTSMS , user, senderId);
+				
+				
+			} catch (Exception e) {
+				logger.error("Exception While sending OTP SMS ",e);
+			}
+
+			return;
+		}catch(Exception e){
+			logger.error("Exception in sending sms alert ...", e);
+			return;
+		}
+	}
+
+	private static String findMessageHeader(Users user){
+
+		String messageHeader = Constants.STRING_NILL;
+		try{
+
+			List<SMSSettings> smsSettings = null;
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName("smsSettingsDao");
+
+			if(SMSStatusCodes.optOutFooterMap.get(user.getCountryType())) {
+
+				smsSettings = smsSettingsDao.findByUser(user.getUserId());
+				if(smsSettings != null) {
+					SMSSettings optinSettings = null;
+					SMSSettings optOutSettings = null;
+					SMSSettings helpSettings = null;
+
+					for (SMSSettings eachSMSSetting : smsSettings) {
+
+						if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN)) optinSettings = eachSMSSetting;
+						else if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTOUT)) optOutSettings = eachSMSSetting;
+						else if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_HELP)) helpSettings = eachSMSSetting;
+
+					}
+					if(optinSettings != null && messageHeader.isEmpty()) messageHeader = optinSettings.getMessageHeader();
+					else if(optOutSettings != null && messageHeader.isEmpty()) messageHeader = optOutSettings.getMessageHeader();
+					else if(helpSettings != null && messageHeader.isEmpty()) messageHeader = helpSettings.getMessageHeader();
+				}
+
+			}
+		}catch(Exception e){
+			logger.error("Exception in find message header...", e);
+			return messageHeader;
+		}
+		return messageHeader;
+	}
+
+	public static void sendLowCardsThresholdAlerts(Users user, LoyaltyProgram prgmObj, boolean checkVirtual){
+		try{
+			logger.debug("Entered sendLowCardsThresholdAlerts ");
+			
+			if(prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)||prgmObj.getProgramType().equalsIgnoreCase(OCConstants.LOYALTY_PROGRAM_TYPE_DYNAMIC)) return;
+			
+			LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+			LoyaltyThresholdAlertsDaoForDML loyaltyThresholdAlertsDaoForDML = (LoyaltyThresholdAlertsDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO_FOR_DML);
+			LoyaltyThresholdAlerts alertsObj = loyaltyThresholdAlertsDao.findByUserId(user.getUserId());
+
+			if(alertsObj != null){
+				if(alertsObj.getEnableAlerts() == OCConstants.FLAG_NO) return;
+
+				if(alertsObj.getCountType() == null || alertsObj.getCountType().isEmpty() || alertsObj.getCountValue() == null || alertsObj.getCountValue().isEmpty()) return;
+
+				String emailId = alertsObj.getAlertEmailId() == null ? "" : alertsObj.getAlertEmailId().trim();
+				String phone = alertsObj.getAlertMobilePhn() == null ? "" : alertsObj.getAlertMobilePhn().trim();
+				Calendar currentDate = Calendar.getInstance();
+				Calendar lastSentDate = alertsObj.getEnrollAlertLastSentDate();
+
+				logger.debug("dbCurrentDate "+lastSentDate);
+
+				int dateDiff = 0;
+				if(lastSentDate != null){
+					logger.debug("currentDate.getTimeInMillis()"+currentDate.getTimeInMillis());
+					logger.debug(" dbCurrentDate.getTimeInMillis())"+ lastSentDate.getTimeInMillis());
+					dateDiff = (int)((currentDate.getTimeInMillis() - lastSentDate.getTimeInMillis())/(1000*60));
+				}
+
+				logger.debug("dateDiff  "+dateDiff);
+
+				if(dateDiff > 24*60 || lastSentDate == null) {
+					LoyaltyCardSetDao loyaltyCardSetDao = (LoyaltyCardSetDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_CARD_SET_DAO);
+					List<LoyaltyCardSet> activeCardSets = null;
+					if(checkVirtual){
+						activeCardSets = loyaltyCardSetDao.findActiveByProgramId(prgmObj.getProgramId());
+					}
+					else{
+						activeCardSets = loyaltyCardSetDao.findActiveSetByProgramId(prgmObj.getProgramId());
+					}
+					if(activeCardSets == null) return;
+					String cardSetIdStr = null;
+					for(LoyaltyCardSet cardSet : activeCardSets){
+						if(cardSetIdStr == null){
+							cardSetIdStr = ""+cardSet.getCardSetId();
+						}
+						else{
+							cardSetIdStr += ","+cardSet.getCardSetId();
+						}
+					}
+
+					LoyaltyCardsDao loyaltyCardsDao = (LoyaltyCardsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_CARDS_DAO);
+					Long totalInvCards = loyaltyCardsDao.getCardsCountByCardSetId(cardSetIdStr,true);
+					Long tresholdCount = null;
+
+					if(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_PERCENTAGE.equalsIgnoreCase(alertsObj.getCountType())){
+						Long totalCards = loyaltyCardsDao.getCardsCountByCardSetId(cardSetIdStr,false);
+						Long percentValue = Long.parseLong(alertsObj.getCountValue());
+						tresholdCount = (percentValue * totalCards)/100;
+					}
+					else if(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_VALUE.equalsIgnoreCase(alertsObj.getCountType())){
+						tresholdCount = Long.parseLong(alertsObj.getCountValue());
+					}
+
+					if(totalInvCards <= tresholdCount){
+						if(emailId != null && !emailId.isEmpty()) {
+							String messageStr = PropertyUtil.getPropertyValueFromDB("lowCardThresholdEnrollmentTemplate");
+							messageStr = messageStr.replace("[fname]", user.getFirstName() == null ? "" : user.getFirstName());
+							messageStr = messageStr.replace("[programName]", prgmObj.getProgramName());
+							messageStr = messageStr.replace("[noofcards]", totalInvCards+"");
+
+							EmailQueueDao emailQueueDao = (EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+							EmailQueueDaoForDML emailQueueDaoForDML = (EmailQueueDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.EMAILQUEUE_DAO_ForDML);
+							EmailQueue email = new EmailQueue("OptCulture Alert: Running Low On Loyalty Cards", messageStr, Constants.EQ_TYPE_LOYALTY_EMAIL_ALERTS, Constants.EQ_STATUS_ACTIVE, emailId, MyCalendar.getNewCalendar(), user);
+							//emailQueueDao.saveOrUpdate(email);
+							emailQueueDaoForDML.saveOrUpdate(email);
+							alertsObj.setEnrollAlertLastSentDate(Calendar.getInstance());
+							//loyaltyThresholdAlertsDao.saveOrUpdate(alertsObj);
+							loyaltyThresholdAlertsDaoForDML.saveOrUpdate(alertsObj);
+							logger.debug("--------loyalty alert date-------------"+alertsObj.getEnrollAlertLastSentDate());
+						}
+						if(phone != null && !phone.isEmpty()){
+							if(!user.isEnableSMS()) return;
+
+							String message = PropertyUtil.getPropertyValueFromDB("lowCardThresholdEnrollmentSmsTemplate");
+							message = message.replace("[programName]", prgmObj.getProgramName());
+							message = message.replace("[noofcards]", totalInvCards+"");
+
+							//validate loyalty phone no and new phone no
+							Map<String, Object> resultMap = null;
+
+							resultMap = validateMobile(user, phone);
+							phone = (String) resultMap.get("phone");
+							boolean phoneIsValid = (Boolean) resultMap.get("isValid");
+
+							if(phoneIsValid){
+								sendSmsAlert(user, phone, message);
+							}
+							alertsObj.setEnrollAlertLastSentDate(Calendar.getInstance());
+							//loyaltyThresholdAlertsDao.saveOrUpdate(alertsObj);
+							loyaltyThresholdAlertsDaoForDML.saveOrUpdate(alertsObj);
+
+							logger.debug("--------loyalty alert date-------------"+alertsObj.getEnrollAlertLastSentDate());
+						}
+					}
+				}
+			}
+			logger.debug("Exited sendLowCardsThresholdAlerts ");
+		}catch(Exception e){
+			logger.error("Exception in sending loyalty threshold alerts:::",e);
+		}
+		
+
+	}//sendLoyaltyThresholdAlerts()
+	
+}

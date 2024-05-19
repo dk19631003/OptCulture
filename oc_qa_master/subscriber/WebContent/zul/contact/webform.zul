@@ -1,0 +1,829 @@
+<?page title="web-form" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<style>
+
+
+.hovergridcolumn > div.z-column-cnt { 
+color: #FFFFFF;
+font-weight: bold;
+cursor: pointer;
+}
+.hideShowButtonClass{
+	display: initial !important;
+}
+
+</style>
+<window id="custWin" apply="org.mq.marketer.campaign.controller.contacts.WebformsController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+	<tabbox id="webformsTabBoxId" >
+			<tabs>
+				<tab label="Existing Web-forms" id="webformsTabId"/>
+				<tab label="Integrate Web-form" id="integrateWebformTabId" />
+			</tabs>	
+			
+			<tabpanels>
+				<tabpanel>
+					<div id= "existingFormsDivId" >
+						<grid id="webformsGridId" 
+							emptyMessage="No Web-form configurations  exist, To configure new Web-forms Click on 'Integrate Web-form' ">
+					 	
+					 		<columns  menupopup="auto">
+					      	<column label="Form Name" id="sortbyFormName"  sclass="hovergridcolumn" width="14%"  />
+					        <column label="Form URL" id="sortbyFormURL"  sclass="hovergridcolumn" />
+				            <column label="Activated On" id="sortbyActivatedOn"  sclass="hovergridcolumn" width="20%"/>
+					        <column label="Status" width="10%"/>
+					        <column label="Actions"  width="15%"/>
+					       
+					     </columns>
+					     <rows id="webformsRowsId" />
+					    
+					</grid>
+				</div>	
+				 <h:table width="100%">
+		    <h:tr>
+				<h:td align="right">
+			   		<label value="Web-forms  per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="webformsPerPageLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="webformsPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		   </h:tr>
+	   </h:table>
+				
+					<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						
+						
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						
+						<h:td align="right"><image src="/img/pause_icn.png"/></h:td>
+						<h:td  align="left" style="padding-right:30px;"><label value="- Pause" style="font-size:11px;" /> </h:td>
+						
+						<h:td align="right"><image src="/img/play_icn.png"/></h:td>
+						<h:td  align="left" style="padding-right:30px;"><label value="- Activate" style="font-size:11px;" /> </h:td>
+								
+						<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Delete" style="font-size:11px;" /> </h:td>
+						
+						</h:tr>
+			</h:table>	
+				</tabpanel>
+				
+				<tabpanel>
+				<label value="Tracks contacts information entered in your web-form and automatically saves it into new list" />
+				<div visible="true" id="urlDivId">
+					<groupbox sclass="gbStyle" closable="false" style="margin-top:10px;"  >
+						<caption label="URL Set-up "  style="font-weight:bold;" />
+						<h:table cellspacing="5" cellpadding="5" width="100%">
+							<h:tr >
+								<h:td valign="bottom" width="180">
+									<label value="Form Name: " />
+								</h:td>
+								<h:td  >
+									<textbox  id="formNameTbId" value = "" cols="30" maxlength="100"  width="250px"/>
+							</h:td>
+							
+							</h:tr>
+							<h:tr height="5"/>
+							<h:tr>
+								<h:td width="180"  valign="bottom">
+								<label value="Web-form URL: " />
+								</h:td>
+								<h:td >
+								<hbox>
+									<textbox  value="http://"  id="webformUrlTbId"  width="350px" cols="30"  />
+									<div id="urlAnchDivId" visible="false">
+									<a label="Edit URL"	style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="urlEditAnchId" />
+									</div>
+								</hbox>
+								</h:td>
+							</h:tr>
+							<h:tr height="5"/>
+							<h:tr>
+								<h:td width="180" valign="top" >
+									<label value="Form Type: "  />
+								
+							</h:td>
+							
+								<h:td colspan="2">
+								<groupbox width="880px">
+									<h:table style="background-color: #F8F8F8; border-bottom: 1px solid #CCCCCC; box-shadow: 0 0 2px #CCCCCC; padding: 10px;">
+										<radiogroup	id="formTypeRGId">
+											<h:tr>
+											
+												<h:td valign="top"
+													width="280px" align="left">
+													<radio
+														id="simpleSignUpRadioId" label="Simple sign-up"
+														  checked="true"/>
+												</h:td>
+												
+												<h:td valign="top"
+													width="280px" align="left">
+													
+													<radio
+														id="ltyEnrollSignUpRadioId" label="Sign-up with loyalty enrollment"
+														 />
+													
+												</h:td>
+												
+												<h:td valign="top" width="280px"
+													 align="left">
+													<radio
+														id="ltyCardVerificationRadioId" label="Loyalty card-verification"
+														 />
+												</h:td>
+												
+												<h:td valign="top" width="280px"
+													 align="left">
+													<radio
+														id="feedBackformRadioId" label="Feedback form"
+														 />
+												</h:td>
+												
+											</h:tr>
+											</radiogroup>
+									</h:table>
+									<div id="simpleSignUpDivId" visible="false">
+										<h:table>
+						
+											<h:tr height="20" />
+											<h:tr>
+												<h:td style="padding-left:30px;" width="200">
+														<label value="Enable Parental Consent Check : " />
+													</h:td>
+													<h:td>
+														<checkbox id="parentalConsentCbId" value="2" />
+												</h:td>
+												<h:td />
+											</h:tr>
+											</h:table>
+											<h:table>
+											<h:tr >
+												<h:td width="280">
+													<div id="parentalEmailDivId" visible="false">
+														<h:table  style="padding-left:60px;">
+															<h:tr>
+																<h:td >
+																	<label value="Send Parental Consent Email : " />
+																</h:td>
+																<h:td>
+																	<checkbox id="parentalConsentChkBox" label="" />
+																</h:td>
+															</h:tr>
+														</h:table>
+													</div>
+												</h:td>
+
+												<h:td>
+													<div id="parentalOptLtDiv" visible="false" style="z-index: 0;">
+														<h:table>
+															<h:tr>
+																<h:td valign="top" rowspan="2">
+																	<listbox id="parentalConsentEmailLbId" mold="select" sclass="contactsView">
+																		<listitem selected="true" label="Select Consent Message" />
+																	</listbox>
+																		<image id="previewImageId"	src="/images/Preview_icn.png" style="margin-left:20px;" />
+																		<a label="Preview"
+																			style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																			id="parentalPreviewBtnId" sclass="idle140" />
+																		<a label="Edit Message"
+																			style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																			id="parentalEditMsgBtnId" sclass="idle140" />
+																</h:td>
+															</h:tr>
+														</h:table>
+													</div>
+												</h:td>
+											</h:tr>
+											</h:table>
+										<h:table>
+											<h:tr>
+												<h:td style="padding-left:30px;">
+														<label width="300" value="Send email on successful form submission : " />
+													</h:td>
+													<h:td>
+														<checkbox id="sendSimpleSignMailOnsuccess" value="2" />
+													</h:td>
+													<h:td>
+														<h:table>
+																<h:tr>
+																	<h:td valign="top" rowspan="2" >
+																		<listbox id="SimpleSignEmailLbId" mold="select" sclass="contactsView" visible="false">
+																			<listitem selected="true" label="Select Message" />
+																		</listbox>
+																			<image id="previewSimpleSignImageId"	src="/images/Preview_icn.png" style="margin-left:20px;" />
+																			<a label="Preview"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="SimpleSignPreviewBtnId" sclass="idle140" />
+																			<a label="Edit Message"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="SimpleSignEditMsgBtnId" sclass="idle140" />
+																	</h:td>
+																</h:tr>
+														</h:table>
+													</h:td>
+											</h:tr>
+											<h:tr height="5" />
+											<h:tr>
+												<h:td style="padding-left:30px;">
+														<label width="300" value="Send SMS on successful form submission : " />
+													</h:td>
+													<h:td>
+														<checkbox id="sendSimpleSignSmsOnsuccess" value="2" />
+													</h:td>
+													<h:td>
+														<h:table>
+																<h:tr>
+																	<h:td valign="top" rowspan="2" >
+																		<listbox id="SimpleSignSmsLbId" mold="select" sclass="contactsView" visible="false">
+																			<listitem selected="true" label="Select Message" />
+																		</listbox>
+																			<image id="previewSimpleSignSmsImageId"	src="/images/Preview_icn.png" style="margin-left:20px;" />
+																			<a label="Preview"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="SimpleSignSmsPreviewBtnId" sclass="idle140" />
+																			<a label="Edit Message"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="SimpleSignSmsEditMsgBtnId" sclass="idle140" />
+																	</h:td>
+																</h:tr>
+														</h:table>
+													</h:td>
+											</h:tr>
+											<h:tr height="5" />
+											</h:table>
+											
+											<h:table>
+											<h:tr>
+												<h:td style="padding-left:30px;" width="135">
+													<label value="Save subscribers to list : " />
+												</h:td>
+												<h:td width="150">
+													<listbox id="subsListLbId" mold="select">
+														<listitem label="--Select List--" selected="true" />
+													</listbox>
+												</h:td>
+												<h:td>
+													<a id="createListAnchId" sclass="tbbLink"
+														label="Create List"
+														style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" />
+													<a id="editListAnchId" sclass="tbbLink"
+														label="Edit List" visible="false"
+														style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" />
+						
+												</h:td>
+											</h:tr>
+										</h:table>
+									</div>
+
+									<div id="ltySignUpDivId" visible="false">
+									
+									<h:table>
+											<h:tr height="50px">
+												<h:td  style="padding-left:57px;" width="180">
+													<label value="Select loyalty program to enroll : " />
+												</h:td>
+												<h:td width="200">
+													<listbox id="ltyProgramLbId" mold="select">
+														<listitem label="--Select Loyalty Program--"
+															selected="true" />
+													</listbox>
+												</h:td>
+												
+											</h:tr>
+										</h:table>
+						
+									<div id="cardselectionDiv">
+										<h:table>
+											<h:tr height="50px">
+												<h:td style="padding-left:57px;" width="180">
+													<label value="Card selection criteria : " />
+												</h:td>
+												<h:td rowspan="2">
+													<radiogroup id="cardSelectionRgId">
+														<radio id="autoSelectCardRadioId"
+															label="Auto-select first available card from virtual card-set"
+															radiogroup="cardSelectionRgId" checked="true" />
+														<radio id="pickCardSetRadioId"
+															label="Pick from card-set" radiogroup="cardSelectionRgId" />
+													</radiogroup>
+												</h:td>
+												<h:td>
+													<listbox id="pickFromCardSetLbId" mold="select" visible="false">
+														<listitem selected="true"
+															label="--Select Card-Set--">
+							
+														</listitem>
+							
+													</listbox>
+												</h:td>
+											</h:tr>
+										</h:table>
+									</div>
+						
+									<h:table>
+											<h:tr height="50px">
+												<h:td  style="padding-left:57px;" width="180">
+													<label value="Save subscribers to list : " />
+												</h:td>
+												<h:td width="150">
+													<listbox id="ltySubsListLbId" mold="select">
+														<listitem label="--Select List--"
+															selected="true" />
+													</listbox>
+												</h:td>
+												<h:td>
+													<a id="ltyCreateListAnchId" sclass="tbbLink"
+														label="Create List"
+														style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" />
+													<a id="ltyEditListAnchId" sclass="tbbLink"
+														label="Edit List" visible="false"
+														style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" />
+						
+												</h:td>
+											</h:tr>
+										</h:table>
+										<h:table>
+										<h:tr>
+										<h:tr height="50px">
+												<h:td  style="padding-left:57px;" width="180">
+														<label value="Allow mobile optin : " />
+													</h:td>
+													<h:td>
+														<checkbox id="mobileOptinCbId" value="2" />
+												</h:td>
+												<h:td />
+											</h:tr>
+										</h:tr>
+										</h:table>
+										
+										<h:table>
+										<h:tr>
+										<h:tr height="50px">
+												<h:td  style="padding-left:57px;" width="180">
+														<label value="do issue points : " />
+													</h:td>
+													<h:td>
+														<checkbox id="doIssuePointsId" value="2" />
+												</h:td>
+												<h:td />
+											</h:tr>
+										</h:tr>
+										</h:table>
+										
+									</div>
+									
+									
+									<div id="feedBackFormDivId" visible="false">
+										<h:table>
+						
+											<h:tr height="20" />
+											<h:tr>
+												<h:td style="padding-left:30px;">
+														<label width="300" value="Send email on successful form submission : " />
+													</h:td>
+													<h:td>
+														<checkbox id="sendFeedBackMailOnsuccess" value="2" />
+													</h:td>
+													<h:td>
+														<h:table>
+																<h:tr>
+																	<h:td valign="top" rowspan="2" >
+																		<listbox id="feedbackEmailLbId" mold="select" sclass="contactsView" visible="false">
+																			<listitem selected="true" label="Select Message" />
+																		</listbox>
+																			<image id="previewFeedbackImageId"	src="/images/Preview_icn.png" style="margin-left:20px;" />
+																			<a label="Preview"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="feedbackPreviewBtnId" sclass="idle140" />
+																			<a label="Edit Message"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="feedbackEditMsgBtnId" sclass="idle140" />
+																	</h:td>
+																</h:tr>
+														</h:table>
+													</h:td>
+											</h:tr>
+											<h:tr>
+												<h:td style="padding-left:30px;">
+														<label width="300" value="Send SMS on successful form submission : " />
+													</h:td>
+													<h:td>
+														<checkbox id="sendFeedbackSmsOnsuccess" value="2" />
+													</h:td>
+													<h:td>
+														<h:table>
+																<h:tr>
+																	<h:td valign="top" rowspan="2" >
+																		<listbox id="feedbackSmsLbId" mold="select" sclass="contactsView" visible="false">
+																			<listitem selected="true" label="Select Message" />
+																		</listbox>
+																			<image id="previewFeedbackSmsImageId"	src="/images/Preview_icn.png" style="margin-left:20px;" />
+																			<a label="Preview"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="feedbackSmsPreviewBtnId" sclass="idle140" />
+																			<a label="Edit Message"
+																				style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+																				id="feedbackSmsEditMsgBtnId" sclass="idle140" />
+																	</h:td>
+																</h:tr>
+														</h:table>
+													</h:td>
+											</h:tr>
+											</h:table>
+											<h:table>
+											<h:tr>
+												<h:td style="padding-left:30px;" width="135">
+													<label value="Save subscribers to list : " />
+												</h:td>
+												<h:td width="150">
+													<listbox id="subsListFeedBackId" mold="select">
+														<listitem label="--Select List--" selected="true" />
+													</listbox>
+												</h:td>
+												<h:td>
+													<a id="createListFeedBackId" sclass="tbbLink"
+														label="Create List"
+														style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" />
+													<a id="editListFeedBackId" sclass="tbbLink"
+														label="Edit List" visible="false"
+														style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" />
+						
+												</h:td>
+											</h:tr>
+										</h:table>
+									</div>
+			
+									
+								</groupbox>
+								</h:td>
+							
+							</h:tr>
+						<h:tr>
+						<h:td  >
+						
+							</h:td>
+						
+						</h:tr>
+							</h:table>
+							
+							
+							
+							<!-- <div id ="listDivId">
+								 <h:table>
+									<h:tr>
+										<h:td width="180">
+											<label value="Save subscribers to list : " />
+										</h:td>
+										<h:td width="200" >
+											<listbox id="subsListLbId"  mold="select"  >
+												<listitem label="Select List" selected="true"/>
+												</listbox>
+										</h:td>
+										<h:td>
+											<a id="createListAnchId"  sclass="tbbLink"
+														label="Create list"
+														style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+											
+										</h:td>
+										</h:tr>
+								</h:table> 
+							</div>
+							
+							
+							
+				        	
+			        	
+			        	<div id="welcomeEmailChkDiv" visible="false" >
+							<h:table>
+								<h:tr>
+							<h:td  >
+								<label value="Send Welcome Email :" />
+							</h:td>
+							
+							<h:td style="padding-left:50px;" >
+								
+								<checkbox id="welcomeEmailChkBox" checked="false"   />
+								
+							</h:td>	
+							<h:td  >
+							
+							<div id="welcomeEmailDiv" width="100%" visible="false" style="z-index: 0;">
+		          				<h:table>
+		          				<h:tr>
+		          					<h:td>
+		          					
+		          					</h:td>
+		          					
+		          					<h:td   valign="top" rowspan="2" >
+										<listbox id="welcomeEmailLbId"     mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Default Welcome Message">
+										   
+										 </listitem>
+										
+										</listbox>
+										
+										<image src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="welcomePreviewBtnId" sclass="idle140"/>
+										<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="welcomeEditMsgBtnId" sclass="idle140"/>
+					        		</h:td>
+					        	</h:tr>
+					        	</h:table>
+					        	</div>
+					        	</h:td>
+						</h:tr>
+						
+						
+						
+						 <h:tr >
+						<h:td width="190"/>
+							<h:td  style="padding-left:40px;">
+							
+							<div id="welcomeEmailDiv" width="100%" visible="false" style="z-index: 0;">
+		          				<h:table cellspacing="0" width="100%" cellpadding="0">
+		          				<h:tr>
+		          					<h:td width="120" style="padding:10px 0px 10px; 3px;">
+		          					
+		          						<label value=" Welcome Email :" />
+		          					</h:td>
+		          					
+		          					<h:td    >
+										<listbox id="welcomeEmailLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Default Welcome Message">
+										   
+										 </listitem>
+										
+										</listbox>
+										
+										<image src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="welcomePreviewBtnId" sclass="idle140"/>
+										<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="welcomeEditMsgBtnId" sclass="idle140"/>
+					        		</h:td>
+					        	</h:tr>
+					        	</h:table>
+					        	</div>
+					        	</h:td>
+					        	</h:tr> 
+					        	
+					 			</h:table>
+			 			
+			 			</div>-->
+			 			
+			 		
+						<div align="right">
+						<button id ="urlSubmitBtnId" label="Next" sclass="idle70 greenbtn"/>
+						</div>
+						
+						</groupbox>
+			</div>
+			
+			<div visible="false" id="mappingsDivId">
+			<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="Mappings " style="font-weight:bold;"  />
+				<div id="configDivId" style="margin-top:10px;margin-bottom:10px;">	
+						<label value="Forms in the Url :" />					
+						<listbox id="urlFormsToMlLbId" width="250px" sclass="contactsView" multiple="false"  mold="select"  >
+						
+						</listbox>
+						
+						<button label=" refresh" id="refreshBtnId"  visible="true"  style="padding:opx 10px" ></button>
+					
+			 	 </div>		
+						
+			     <div id="inputMappingsDivId">
+					<grid id="inputFieldsMappingsGrId"  >
+						 <columns>
+							   <column >Web-form Fields </column>
+							   	<column width="550px">Contact Attribute</column>
+							   	<column width="120px">Action</column>
+					    </columns>
+						<rows id="mappingRowsId"></rows>
+					 </grid>
+				 </div>
+				
+										     
+			     </groupbox>
+			     </div>
+			     <div visible="false" id="redirectUrlsDivId">
+			
+		
+				<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="Redirection URLs(Optional) " style="font-weight:bold;"  />
+			<div>
+			<label value="Please note that if no redirection URLs are provided,the form-submission will be redirected to  web-form URL by default. "></label>
+			</div>
+			<div visible="true" >
+			<h:table>
+				<h:tr>
+				<h:td >
+					<label value="Successful form submission:" />
+				</h:td>
+				<h:td>
+					<textbox id="successTbId"  width="500px" ></textbox>
+				</h:td>
+				</h:tr>
+				<h:tr>
+				<h:td >
+					<label value="Error in form submission:" />
+				</h:td>
+				<h:td>
+					<textbox id="errorTbId"  width="500px" ></textbox>
+				</h:td>
+				</h:tr>
+				<h:tr>
+				<h:td >
+					<label value="Existing subscriber:" />
+				</h:td>
+				<h:td>
+					<textbox id="existSubsciberTbId"  width="500px" ></textbox>
+				</h:td>
+				</h:tr>
+				</h:table>
+				<h:table>
+					<div id="childparentconsentDivId">
+						<h:tr>
+						<h:td >
+							<label value="Child need parent's consent:" id="parenatConsentLabelId" visible="false"/>
+						</h:td>
+						<h:td>
+							<textbox id="parenatConsentTbId"  width="500px" style="padding-left: 9px;margin-left: 4px;" visible="false"></textbox>
+						</h:td>
+					</h:tr>
+					</div>
+				</h:table>
+				</div>
+				</groupbox>
+				
+			
+			
+			</div>
+			
+			<div  id="configureDivId" visible="false">
+			<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="Configure " style="font-weight:bold;"  />
+						<div>
+						
+				<label value="Please update your form-action URL provided below and start receiving subscriptions to your configured list."/>	
+					
+					</div>
+					<div>
+					
+					<h:table>
+				<h:tr>
+				<h:td >
+					<label value="Form action URL:" />
+				</h:td>
+				<h:td>
+					<textbox id="ActionUrlTbId"  width="500px" ></textbox>
+				</h:td>
+				</h:tr>
+				</h:table>
+					</div>	
+					<div align="right">
+					<button id ="configureBackmitBtnId" label="Back" sclass="idle140 "/>
+						<button id ="exitBtnId" label="Exit" sclass="idle140 greenbtn"/>
+				</div>
+				</groupbox>
+				
+			</div>
+			<div visible="false" id="issueRewardDivId">
+				<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="Issue Reward(Optional) " style="font-weight:bold;"  />
+						
+						<div visible="true" >
+							<h:table>
+								<h:tr>
+									<h:td >
+										<label value="Issue Reward on Successful form submission :" />
+									</h:td>
+									<h:td>
+										<checkbox id="issueRewardCheckBoxId" value="2" />
+									</h:td>
+									<h:td>
+										<listbox id="issueRewardTypeListId" mold="select" visible="false">
+												 <listitem label="--Select List--" selected="true" />
+												 <listitem label="Currency" value="Currency"/>
+												 <listitem label="Points" value="Points"/>
+										</listbox>
+										<textbox visible="false" id="issueRewardTypeValueTextId"></textbox>
+									</h:td>
+								</h:tr>
+							</h:table>
+						</div>
+					</groupbox>
+			</div>
+			 <div align="right" id="buttonBackAndRedirect" visible="false">
+						<button id ="redirectBackmitBtnId" label="Back" sclass="idle140 "/>
+						<button id ="redirectSubmitBtnId" label="Save" sclass="idle140 greenbtn"/>
+			</div>
+			
+				
+			
+			<!-- <div id="tempDivId" visible="false">
+							<h:table>
+								<h:tr>
+								<h:td>
+									<vlayout>
+									<radiogroup id="formTypeRgId"/>
+									<radio label="Sign-up" radiogroup="formTypeRgId"  id="signUpRadioId" checked="true" />
+									<div id="signupDivId" >
+										<h:table>
+											<h:tr>
+										      <h:td style="padding-left:30px;"  valign="top"  >
+									     	    <checkbox label="With Loyalty Enrollment" id="loyaltyEnrollCbId" value="1" />
+									     	   </h:td>
+									     	    <h:td rowspan="3">
+									     	    	<vlayout id="loyaltyVLId" visible="false">
+									     	    	<radiogroup id="loyaltyRgId"/>
+													<radio  id="loyaltyAllRadioId" label="Consider all form-submission for enrollment" radiogroup="loyaltyRgId"  checked="true" />
+									     	    	<radio  id="loyaltyCheckedRadioId" label="Consider only those who have checked on loyalty enrollment box" radiogroup="loyaltyRgId" />
+									     	    	</vlayout>
+									     	    
+									     	    </h:td>
+												
+										     	     
+											</h:tr>
+											
+											</h:table>
+											
+											<div id="loyaltyDivId" visible="false">
+											
+											<h:table>
+											
+											<h:tr height="20" />
+										<h:tr>	
+										 <h:td  style="padding-left:70px;"  >
+									     <checkbox id="loyaltyCbId" label=" Send Loyalty Enrollment Email :" />
+									    </h:td>
+									   <h:td  >
+											<div id="loyaltylOptLtDiv"  visible="false" style="z-index: 0;">
+					          				<h:table >
+					          				<h:tr>
+					          					<h:td >
+					          					
+					          						<label value=" Send Loyalty Email :" />
+					          					</h:td>
+					          					
+					          					<h:td  valign="top" rowspan="2">
+													<listbox id="loyaltyEmailLbId"  mold="select" sclass="contactsView">
+													  <listitem  selected="true" label="Default Loyalty Opt-in Message">
+													   
+													 </listitem>
+													
+													</listbox>
+													
+													<image src="/images/Preview_icn.png" style="margin-left:20px;"/>
+													<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="loyaltyPreviewBtnId" sclass="idle140"/>
+													<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="loayltylEditMsgBtnId" sclass="idle140"/>
+								        		</h:td>
+								        	</h:tr>
+								        	</h:table>
+								        	</div>
+										</h:td>
+										
+										</h:tr>
+										
+										</h:table>
+											</div>
+											
+									
+									</div>
+									</vlayout>
+								</h:td>
+								</h:tr>
+								<h:tr>
+								<h:td>
+									<radio label="Loyalty Card verification"  id="loyaltyRadioId" radiogroup="formTypeRgId"  />
+								
+								</h:td>
+								</h:tr>
+							
+							</h:table>
+							</div> -->
+
+				</tabpanel>
+		
+			</tabpanels>
+			</tabbox>
+			 <window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+			<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+			
+</window>
+</zk>

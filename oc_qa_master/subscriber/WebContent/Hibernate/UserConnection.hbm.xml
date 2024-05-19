@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserConnection"
+		table="UserConnection">
+
+		<composite-id >
+			<key-property name="userId" column="userId" />
+			<key-property name="providerId" column="providerId" />
+			<key-property name="providerUserId" column="providerUserId" />
+		</composite-id>
+		
+		<property name="rank" type="java.lang.Long">
+			<column name="rank" />
+		</property>
+		
+		<property name="displayName" type="java.lang.String">
+			<column name="displayName" length="255" />
+		</property>
+		
+		<property name="imageUrl" type="java.lang.String">
+			<column name="imageUrl" length="255" />
+		</property>
+		
+		<property name="profileUrl" type="java.lang.String">
+			<column name="profileUrl" length="255" />
+		</property>
+		
+		<property name="accessToken" type="java.lang.String">
+			<column name="accessToken" length="255" />
+		</property>
+		
+		<property name="secret" type="java.lang.String">
+			<column name="secret" length="255" />
+		</property>
+		
+		<property name="refreshToken" type="java.lang.String">
+			<column name="refreshToken" length="255" />
+		</property>
+		
+		<property name="expireTime" type="java.lang.Long">
+			<column name="expireTime" />
+		</property>
+	</class>
+</hibernate-mapping>

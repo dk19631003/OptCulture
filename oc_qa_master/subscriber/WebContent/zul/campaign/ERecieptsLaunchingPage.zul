@@ -1,0 +1,778 @@
+<?page title="Digital Reciepts" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="eReceiptLaunchingWinId"
+		apply="org.mq.marketer.campaign.controller.campaign.EReceiptsLaunchingController"
+		width="100%" xmlns:h="native">
+		<style>
+
+
+
+			.redStar{ font-size:14px;color:red; }
+
+
+
+			
+			<![CDATA[ .z-label { font-size: 13px; font-family:
+			arial,sans-serif; } .z-radio { display: inline; }
+
+
+			]]>
+			
+			
+			
+			
+   </style>
+
+
+
+
+
+		<div width="100%" align="left">
+
+			<h:table cellspacing="0" cellpadding="2" width="100%">
+				<h:tr>
+					<h:td valign="top">
+
+						<label
+							value="You can create new e-receipt templates here. Saved templates can be used in your e-Receipts."
+							id="CreateDRInfId" />
+							<h:br />
+
+					</h:td>
+
+					<h:td width="310" align="right" vailgn="bottom">
+						<toolbarbutton id="createTemplateTBarBtnId"
+							label="Create New Template"
+							image="/images/create_new_template_icon.png" />
+					</h:td>
+				</h:tr>
+			</h:table>
+			<h:table width="100%">
+								<h:tr>
+								<h:td width="6%" >
+								<label value="Search  template : " style="font:bold"/> </h:td>
+								<h:td width="15%" ><textbox id="templateTextName"></textbox>
+								</h:td>
+								
+					<h:td  width="25%" align="right">
+			   		<label value="Templates per rows:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="templatePerPageLBId" style="margin-right:30px;">
+						<listitem label="10" selected="true" />
+						<listitem label="15" />
+						<listitem label="20" />
+					</listbox>
+				</h:td>
+					<h:td style="padding-top:5px;" width="15%">
+					<paging id="templatePagingId" detailed="true" pageSize="10" width="250px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+					</h:tr>
+					</h:table>
+		</div>
+
+		<div id="templateListDivId" style="margin:0 0 10px 0;">
+
+			<h:table cellspacing="2" cellpadding="0" width="100%">
+
+				<h:tr>
+					<h:td align="left" width="210px" valign="top">
+
+						<listbox width="198px" id="categoryListLbId"
+							sclass="templateList" visible="false" />
+
+
+						<div width="260px" id="newTemplatesCatDivId"
+							style="position:relative;padding-right:3px">
+<!-- 							<image src="/img/icons/add.gif"
+								id="folderImgId" tooltiptext="Create New Folder"
+								style="position: absolute; z-index: 100; top: 5px; left: 200px; cursor:pointer;" />
+							<tabbox mold="accordion" id="tabBoxId">
+								<tabs>
+									<tab
+										label="Drag and Drop Editor Templates">
+									</tab>
+									<tab label="Legacy Editor" visible="false"
+										id="LegacyEditorId">
+									</tab>
+
+								</tabs>
+
+								<tabpanels>
+									<tabpanel>
+
+										<listbox
+											id="newEditorTemplatesListId" width="250px"
+											sclass="templateList" />
+									</tabpanel>
+									<tabpanel>
+										<listbox
+											id="legacyEditorTemplatesListId" width="250px"
+											sclass="templateList" />
+									</tabpanel>
+
+
+								</tabpanels>
+							</tabbox> -->
+							<groupbox visible="true" closable="false">
+										<listbox id="newEditorTemplatesListId" width="270px" sclass="templateList" >
+										</listbox>
+										</groupbox>
+						</div>
+
+
+						<!-- </groupbox> -->
+
+
+
+
+					</h:td>
+
+					<menupopup id="manageFolderMpId"
+						sclass="myfilter">
+						<menuitem label="View Details"
+							id="viewFolderMId" />
+						<menuitem label="Change Folder Name"
+							id="changeFolderMId" />
+						<menuitem label="Delete Folder"
+							id="deleteFolderMId" />
+					</menupopup>
+					<h:td valign="top">
+						<!-- <groupbox  id="templatesGBoxId" closable="false">
+							<caption label="Templates" style="fony-weight:bold;" />
+							<div id="myTempDivId" visible="false" >
+							<h:table >
+							
+							<h:tr>
+							<h:td align="left">
+							<label value="Select folder:"/>
+							</h:td>
+							<h:td>
+							<listbox id="myTemplatesListId" width="250px" sclass="templateList" visible="false" rows="1" mold="select"/>
+							</h:td>
+							</h:tr>
+							</h:table>
+							</div> -->
+						<!-- <div id="templListDivId" style="overflow:auto; padding-bottom:5px; " width="100%" />
+						-->
+						<groupbox visible="true" closable="false">
+							<caption label=" Templates"
+								style="fony-weight:bold;" />
+							<div id="templListDivId"
+								style="padding-bottom:5px; overflow:auto;" width="100%" />
+						</groupbox>
+
+						<!-- </groupbox>
+						-->
+					</h:td>
+				</h:tr>
+			</h:table>
+
+			<div align="right" id="supIconDescriptionDivId"
+				style="margin:10px 10px 0 0;" visible="false">
+				<image src="/img/theme/preview_icon.png" style="vertical-align: middle;"/>
+				<label value=": Preview" sclass="note" />
+				<space width="30px" />
+				<image src="/img/email_page.gif" style="vertical-align: middle;"/>
+				<label value=": Send Test Email" sclass="note" />
+				<space width="30px" />
+				<image src="/img/theme/rename.png" style="vertical-align: middle;"/>
+				<label value=": Rename" sclass="note" />
+				<space width="30px" />
+				<image src="/img/copy.gif" style="vertical-align: middle;"/>
+				<label value=": Copy" sclass="note" />
+				<space width="30px" />
+				<image src="/images/Edit_icn.png" style="vertical-align: middle;"/>
+				<label value=": Edit" sclass="note" />
+				<space width="30px" />
+				<image src="/img/theme/draft_icon.png" style="vertical-align: middle;"/>
+				<label value=": Draft" sclass="note" />
+				<space width="30px" />
+				<image src="/img/theme/action_delete.gif" style="vertical-align: middle;"/>
+				<label value=": Delete" sclass="note" />
+				<space width="30px" />
+			</div>
+
+			<div align="right" id="powIconDescriptionDivId"
+				style="margin:10px 10px 0 0;" visible="false">
+				<image src="/img/theme/preview_icon.png" style="vertical-align: middle;"/>
+				<label value=": Preview" sclass="note" />
+				<space width="30px" />
+				<image src="/img/email_page.gif" style="vertical-align: middle;"/>
+				<label value=": Send Test Email" sclass="note" />
+				<space width="30px" />
+				<image src="/img/theme/rename.png" style="vertical-align: middle;"/>
+				<label value=": Rename" sclass="note" />
+				<space width="30px" />
+				<image src="/img/copy.gif" style="vertical-align: middle;"/>
+				<label value=": Copy" sclass="note" />
+				<space width="30px" />
+				<image src="/images/Edit_icn.png" style="vertical-align: middle;"/>
+				<label value=": Edit" sclass="note" />
+				<space width="30px" />
+				<image src="/img/theme/action_delete.gif" style="vertical-align: middle;"/>
+				<label value=": Delete" sclass="note" />
+				<space width="30px" />
+			</div>
+
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- 
+			<label id="selectedTemplateLblId" />
+			<hbox width="100%">
+			<div width="230px" style="margin-right:10px;" align="center">
+			<tabbox mold="accordion" id="tabBoxId">
+			<tabs>
+			<tab width="230px" sclass="segmentHead" label="Drag and Drop Templates">
+			</tab>
+			<tab width="230px" sclass="segmentHead"	label="Legacy Templates">
+			</tab>
+			</tabs>
+			<div>
+			<tabpanel>
+			<listbox id="myTemplatesListId"	sclass="segmentList" height="410px">
+			<listhead sizable="false">
+			<listheader maxlength="30"/>
+			</listhead>
+			</listbox>
+			</tabpanel>
+			<tabpanel>
+			<listbox id="digitalTemplatesListId" sclass="segmentList">
+			<listhead sizable="false">
+			<listheader maxlength="30"/>
+			</listhead>
+			</listbox>
+			</tabpanel>
+			</div>
+			</tabbox>
+			
+			</div>
+			
+			<vbox >
+			
+			<ckeditor id="digitalRecieptsCkEditorId" customConfigurationsPath="/js/ckConfig.js"
+			width="98%" height="450px">
+			</ckeditor>
+			
+			</vbox>
+			
+			
+			</hbox>
+			
+			
+			<h:table width="100%">
+			<h:tr>
+			
+			<h:td width="30%"></h:td>
+			<h:td colspan="2">
+			<label value="Selected Templates : " />  <label id="selectedTemplateLblId" /> <h:br/> 
+			
+			</h:td>
+			</h:tr>
+			<h:tr>
+			<h:td width="30%"></h:td>
+			<h:td>
+			
+			
+			
+			
+			</h:td>
+			
+			</h:tr>
+			<h:tr height="100px" width="100%">
+			<h:td width="30%"></h:td>
+			
+			<h:td colspan="2"
+			style="padding-right:70px;" width="70%" align="right">
+			<button id="submitBtnId" sclass="idle200 greenbtn" label="Save In My Templates" /> 
+			<button id="configTemplateBtnId"
+			sclass="idle140 greenbtn" label="Save As My Choice"  visible="false"/>
+			
+			</h:td>
+			
+			</h:tr>
+			</h:table>
+			
+			
+			
+			
+			<window id="winId" title="Save in My Templates"
+			border="normal" visible="false" width="400px" height="100px"
+			closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+			<hbox>
+			<label
+			value="Please provide template name:" />
+			<textbox id="templatNameTbId" />
+			</hbox>
+			<button label="Save Template"
+			id="saveInMyTempBtnId" />
+			</window>
+			
+			<window id="testDRWinId" visible="false" closable="true" title="Send Test Receipt" 
+			height="200px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+			onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+			<h:tr>
+			<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+			</h:tr>
+			<h:tr>
+			<h:td colspan="1"><label value="Email address:" /></h:td>
+			<h:td colspan="2"><textbox  id="testDRTbId"  width="160px"/></h:td>
+			</h:tr>
+			<h:tr>
+			<h:td/>
+			
+			<h:td  colspan="2" valign="center">	
+			<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+			<label value="To send a test receipt to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+			</h:td>
+			
+			
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+			<h:td><button label="Send" id="sendTestMailBtnId" /></h:td>
+			<h:td><button label="Cancel" id="cancelSendTestMailBtnId" /></h:td>
+			</h:tr>
+			</h:table>
+			</window>
+		-->
+
+
+
+
+
+
+
+
+
+		<menupopup id="manageActionsMpId" sclass="myfilter">
+			<!-- <menuitem label="Make A Copy" id="makeCopyMId"/> -->
+			<menuitem label="Save As" id="saveAsMId" />
+			<menuitem label="Send Test Receipt" id="sendTestReceiptMId" />
+			<menuitem label="Save As My Choice" id="saveAsMyChoiceMId" />
+			<menuitem label="View Details" id="viewDetailsMId" />
+			<menuitem label="Rename Template" id="renameTemplateMId" />
+			<menuitem label="Delete Template" id="deleteTemplateMId" />
+		</menupopup>
+
+		<window id="makeACopyWinId" title="Make A Copy" border="normal"
+			visible="false" width="400px" height="150px" closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+			<h:table>
+				<h:tr>
+					<h:td width="50%" align="center">
+						<label value="Please provide template name" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td width="50%" align="center">
+						<label value="Template Name:" />
+					</h:td>
+					<h:td>
+						<textbox id="templatNameTbId" maxlength="50" />
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td></h:td>
+					<h:td>
+						<button label="Save Template"
+							id="saveInMyTempBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+
+		</window>
+
+
+		<window id="viewDetailsWinId" title="View Details"
+			visible="false" width="420px" border="normal" closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table width="400px">
+				<h:tr>
+					<h:td height="30px" width="180px">
+						<label value="Folder Name : " />
+					</h:td>
+					<h:td>
+						<label id="templateNameLblId" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td height="30px">
+						<label value="Creation Date : " />
+					</h:td>
+					<h:td>
+						<label id="creationDateLblId" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td height="30px">
+						<label value="Last Modified Date : " />
+					</h:td>
+					<h:td>
+						<label id="lastAccLblId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+
+
+
+		</window>
+
+		<window id="renameTemplateWinId" title="Rename Template"
+			visible="false" width="420px" border="normal" closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table>
+				<h:tr>
+					<h:td colspan="2">
+						<label
+							value="Please provide new name for the template " />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td width="200px" align="center">
+						<label value="Template Name:" />
+					</h:td>
+					<h:td>
+						<textbox id="newTempltNameTbId" maxlength="50" />
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td align="center">
+						<button label="Rename" id="renameTempltBtnId" />
+						<button label="Cancel" id="cancelTempltBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+
+
+
+		</window>
+
+		<window id="winId" title="Share Template" border="normal"
+			visible="false" width="450px" height="200px" closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table>
+				<!-- <h:tr>
+					<h:td colspan="3">
+					
+					<textbox id="htmlStuffId3" value="test"  visible="false"/>
+					
+					<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+					
+					</h:td>
+					</h:tr> -->
+				<h:tr>
+					<label value="Select the User:" />
+					<h:td>
+						<listbox id="myTempListId" width="260px"
+							checkmark="true" multiple="true" rows="4" />
+					</h:td>
+					<h:td>
+						<button label="Submit" sclass="idle70"
+							id="myTemplatesSubmtBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+
+		</window>
+
+		<window id="previewWin" title="Preview" border="normal"
+			mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close"
+					onClick="previewWin.setVisible(false);event.stopPropagation();" />
+			</caption>
+			<div id="contentDivId" width="750px" height="500px"
+				style="overflow:auto">
+				<iframe id="html" width="100%" height="100%" />
+			</div>
+		</window>
+
+
+		<window id="newMyTemplatesSubWinId" visible="false"
+			position="center"
+			onClose="self.setVisible(false); event.stopPropagation();"
+			width="500px" height="200px" title="" closable="true">
+
+			<div visible="false" id="createFolderDivId">
+				<h:table border="0" width="75%" cellspacing="10px;"
+					align="center">
+					<h:tr height="20px;">
+						<h:td></h:td>
+						<h:td></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td width="200px" align="right">
+							Folder Name:
+						</h:td>
+						<h:td>
+							<textbox id="newFolderTbId" value=" "
+								maxlength="20" />
+						</h:td>
+					</h:tr>
+
+
+					<h:tr>
+						<h:td align="right">
+							<button sclass="idle70 greenbtn"
+								label="Add Folder" id="okBtnId" />
+						</h:td>
+						<h:td align="left">
+							<button label="Cancel" sclass="idle"
+								id="modifyCancelBtnId"
+								onClick="newMyTemplatesSubWinId.setVisible(false)" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+
+						<h:td align="center" colspan="2">
+							<h:div>
+								<label value="" id="folderErrorMsgLblId"
+									style="color:red;" />
+							</h:div>
+						</h:td>
+
+					</h:tr>
+				</h:table>
+			</div>
+
+
+		</window>
+
+
+		<window id="copywinId" title="Copy Template" border="normal"
+			visible="false" width="550px" height="200px" closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table>
+				<!-- <h:tr>
+					<h:td colspan="3">
+					
+					<textbox id="htmlStuffId3" value="test"  visible="false"/>
+					
+					<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+					
+					</h:td>
+					</h:tr> -->
+				<h:tr>
+					<h:td>
+						<label value="Name :" />
+						<textbox id="templatNameTbId" maxlength="25" />
+					</h:td>
+					<h:td>
+						<!-- <label value="Select folder:" /> -->
+						<listbox id="folderId" width="150px"
+							sclass="templateList" rows="1" mold="select" />
+					</h:td>
+					<h:td>
+						<button label="Submit" sclass="idle70"
+							id="myTemplatesSubmtBtnId" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+
+					<h:td align="center" colspan="2">
+						<label value="" id="folderErrorMsgLblId"
+							style="color:red;" />
+					</h:td>
+
+				</h:tr>
+			</h:table>
+
+		</window>
+
+		<window id="copyTemplateswinId" title="Move Template(s)"
+			border="normal" visible="false" width="auto" height="200px"
+			closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table>
+				<h:tr>
+					<h:td>
+						<label
+							value="All the template(s) should be moved to other folder(s) before deleting the folder." />
+						<!-- <textbox id="templatNameTbId" maxlength="25"  /> -->
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<label value="Select folder:" />
+						<listbox id="folderId" width="150px"
+							sclass="templateList" rows="1" mold="select" />
+						<!-- </h:td>
+							<h:td> -->
+						<button label="Submit" sclass="idle70"
+							id="myTemplatesSubmtBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+
+		</window>
+
+
+		<window id="editTemplateNamewinId" title="Edit Template Name"
+			border="normal" visible="false" width="auto" height="200px"
+			closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table>
+				<h:tr>
+					<h:td>
+						<label value="Change the template name to:" />
+						<textbox id="templatNameTbId" maxlength="50" />
+					</h:td>
+					<h:td>
+						<button label="Submit" sclass="idle70"
+							id="modifiedNameBtnId" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td align="center" colspan="2">
+						<label value="" id="folderErrorMsgLblId"
+							style="color:red;" />
+					</h:td>
+				</h:tr>
+			</h:table>
+
+		</window>
+
+		<window id="MoveTemplatewinId" title="Move Template"
+			border="normal" visible="false" width="auto" height="200px"
+			closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table>
+				<h:tr>
+					<h:td>
+						<label
+							value="Move the template to other folder" />
+						<!-- <textbox id="templatNameTbId" maxlength="25"  /> -->
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<label value="Select folder:" />
+						<listbox id="folderId" width="150px"
+							sclass="templateList" rows="1" mold="select" />
+					</h:td>
+					<h:td>
+						<button label="Submit" sclass="idle70"
+							id="moveMyTemplateSubmtBtnId" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td align="center" colspan="2">
+						<label value="" id="folderErrorMsgLblId"
+							style="color:red;" />
+					</h:td>
+				</h:tr>
+			</h:table>
+
+		</window>
+
+		<window id="RenameMoveTemplatewinId"
+			title="Rename Template" border="normal" visible="false"
+			width="350px" height="200px" closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+
+			<h:table>
+				<h:tr>
+					<h:td>
+						<label value="Rename :" width="10%"/>
+					</h:td>
+					<h:td align="left" width="60%">
+						<textbox id="templatNameTbId" width="220px" maxlength="34" />
+					</h:td>
+
+				</h:tr>
+				</h:table>
+				<h:table>
+				
+				<h:tr>
+					<h:td align="right" width="70%">
+						<button label="OK" sclass="idle70"
+							id="renameMoveTemplateBtnId" />
+					</h:td>
+					<h:td align="left">
+						<button label="Cancel" sclass="idle70"
+							id="cancelBtnId" />
+					</h:td>
+				</h:tr>
+				
+			</h:table>
+			<h:table>
+			<h:tr>
+					<h:td >
+						<label value="" id="folderErrorMsgLblId"
+							style="color:red;" />
+					</h:td>
+				</h:tr>
+			</h:table>
+		</window>
+		
+		<window id="testWinId" visible="false" closable="true"
+			title="Send Test Mail" height="200px" width="350px"
+			xmlns:h="http://www.zkoss.org/2005/zk/native"
+			onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="3">
+						<label id="msgLblId"
+							style="color:red;font-family:verdana;font-size:11px;" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="1">
+						<label value="Email address:" />
+					</h:td>
+					<h:td colspan="2">
+						<textbox id="testTbId" width="160px" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td />
+
+					<h:td colspan="2" valign="center">
+						<image src="/img/icons/icon_i.png"
+							style="vertical-align:bottom;" />
+						<label
+							value="To send a test email to multiple email addresses, enter the addresses comma separated."
+							style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td>
+
+
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td>
+						<button label="Send" id="sendTestMailBtnId" />
+					</h:td>
+					<h:td>
+						<button label="Cancel"
+							id="cancelSendTestMailBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+		</window>
+
+	</window>
+</zk>
+

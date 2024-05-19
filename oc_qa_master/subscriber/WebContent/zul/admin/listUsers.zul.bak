@@ -1,0 +1,174 @@
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.admin.UserController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+		
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+				<h:tr >
+					<h:td>
+						<label value="User Organization ID:" sclass="theme-lbHeading"/>
+						<listbox id="userOrgLbId" width="200px" mold="select" />
+					</h:td>
+					<h:td>
+						<label value="User Name :" sclass="theme-lbHeading"/>
+						<listbox id="userNameLbId" width="200px" mold="select" >
+							<listitem label="--All--" selected="true"/>
+						</listbox>
+					</h:td>
+					<h:td>
+						<div style="text-align:right;">
+							<label value="Search :" sclass="theme-lbHeading"/><textbox id="searchBox" width="200px"  />
+						</div>
+					</h:td>
+				</h:tr>
+			</h:table>
+		
+					<grid id="customersGridId"  emptyMessage="No users found..."	style="padding-bottom:1px; margin-bottom: 10px;">
+					 	<columns menupopup="auto">
+					 		
+					      
+					       <column label="User Id" visible="false" />
+					       <column label="User Name"  sort="auto" />
+					       <column label="User Organization"  sort="auto" />
+					       <column label="Full Name"/>
+					       <column label="Company Name" visible="false"/>
+					       <column label="Address" visible="false"/>
+					       <column label="Phone" visible="false"/>
+					       <column label="Crated Date" visible="false"/>
+					       <column label="Email Count"/>
+					       <column label="Used Email Count"/>
+					       <column label="SMS Count" visible="false"/>
+					       <column label="Used SMS Count" visible="false"/>
+					       <column label="Expiry Date"/>
+					       <!-- <column label="VMTA" visible="true"/> -->
+					       <column label="Email Route" visible="true"/>
+					       <column label="Enabled" visible="false"/>
+					     </columns>
+					</grid>
+					
+					 <h:table width="98%">
+					    <h:tr>
+							<h:td align="right">
+						   		<label value="Users per page:"  style="padding-right:5px;font-size:11px;"/>
+						   		<listbox rows="1" mold="select" id="usersPerPageLBId" style="margin-right:30px;">
+									<listitem label="5" selected="true" />
+									<listitem label="10"  />
+									<listitem label="15"/>
+								</listbox>
+							</h:td>
+							<h:td width="280px"  >
+								<paging id="userPagingId" detailed="true" pageSize="5" width="280px" 
+									class="contactsViewPaging" style="border:none;"  />
+							</h:td>
+					   </h:tr>
+				   </h:table>
+				<include id="editUserIncId" />
+				<label value="Except me Others please do not use the following text boxes-PROUMYA" style="color:red;font-size:12;font-weight:bold;" />
+				<div   >
+					<label value="userId" />
+					<textbox id="userIdTxtBoxId" />
+					<label value="user name" />
+					<textbox id="userNameTxtBoxId" />
+					<label value="user file" />
+					<textbox id="filenameTxtBoxId" />
+					<label value="total file" />
+					<textbox id="totFilenameTxtBoxId" />
+					<button id="runCleanBtnId" label="filter for user"/>
+					<button id="cleanBtnId" label="Clean for user"/>
+				</div>
+				<div visible="false">
+					
+					
+					<button id="fetchCountLbId" label="Phase :1 Fetch"/>
+					<button id="fetchCountLbId1" label="Phase : 2 Fetch"/>
+				</div>
+				
+				<groupbox  closable="false" style="margin:2px;">
+					<caption label="Cindies Loyalty Adjustments Block"/> 
+					
+					<div >
+						<h:table width="100%" cellpadding="0"  >
+						<h:tr height="25px" colspan="2">
+						<h:td><label value="Choose option" width="100px" /></h:td>
+							<h:td ><listbox id="chooseLbId" width="100px"  mold="select">
+										<listitem label="Single"  selected="true" />
+										<listitem label="Bulk"  />
+									</listbox></h:td>
+						</h:tr>
+						<h:tr height="25px" colspan="2">
+							<h:td width="100px"><label value="user" /></h:td>
+							<h:td width="100px"><textbox width="250px" id="userTbId" style="margin-left:10px;" /></h:td>
+							</h:tr>
+						
+								
+						</h:table>	
+					
+					</div>
+					<div id="fileDivId" visible="false">
+						<h:table width="100%" cellpadding="0" >
+						<h:tr height="25px" colspan="2">
+							<h:td width="100px"><label value="file" /></h:td>
+							<h:td width="100px"><textbox width="250px" id="fileTbId"  /></h:td>
+							</h:tr>
+						
+								
+						</h:table>	
+					
+					</div>
+					<div id="singleDivId" >
+					<h:table width="100%" cellpadding="0" >
+						
+						<h:tr height="25px" colspan="2" >
+							<h:td width="100px" ><label value="card Number" /></h:td>
+							<h:td width="100px"><textbox width="250px" id="cardTbId"  /></h:td>
+						</h:tr>
+								
+						</h:table>		
+					</div>
+					<div>
+						<h:table width="100%" cellpadding="0" >
+							<h:tr height="25px">
+								<h:td width="100px"><label value="Add" /></h:td>
+								<h:td width="100px">
+									<listbox id="addLbId" mold="select">
+										<listitem label="Points" value="Points" selected="true" />
+										<listitem label="USD" value="USD" />
+									</listbox>
+								</h:td>
+								<h:td width="100px"><textbox width="50px" id="addTbId" style="margin-left:10px;" /></h:td>
+								<h:td width="100px"><button id="addBtnId" label="OK" sclass="idle70 greenbtn" /></h:td>
+							</h:tr>
+							<h:tr height="5px" />
+							<h:tr height="25px">
+								<h:td width="100px"><label value="Subtract" id="redeemPointsTbId" /></h:td>
+								<h:td width="100px">
+									<listbox id="subLbId" mold="select">
+										<listitem label="Points" value="Points" selected="true" />
+										<listitem label="USD" value="USD" />
+									</listbox>
+								</h:td >
+								<h:td width="100px"><textbox width="50px" id="subTbId" style="margin-left:10px;" /></h:td>
+								<h:td width="100px"><button id="subtractBtnId" label="OK" sclass="idle70 greenbtn" /></h:td>
+							</h:tr>
+							</h:table>
+					</div>
+					</groupbox>
+					
+			<!--	<div visible="false">
+					<button id="genExtIdBtnId" label="Gen Ext Id" />
+					<button id="genEmailBtnId" label="Gen Email" />
+					<button id="genPhoneBtnId" label="Gen Mobile" />
+					<longbox id="startFromCountLbId" value="1"/>
+					<longbox id="maxCountLbId" />
+					<label value="Fetch:" />
+					<longbox id="fetchCountLbId" />
+				
+				
+				</div>
+			-->	
+
+	</window>
+</zk>
+
+			

@@ -1,0 +1,32 @@
+<zk>
+	<window id="templCatWinId" apply="" width="100%"  xmlns:h="http://www.w3.org/1999/xhtml">
+		<style src="/css/campaign.css" />
+	
+		<h:table cellspacing="2" cellpadding="0" width="100%" >
+			<h:tr>
+				<h:td colspan="2" align="right">
+					<hbox>
+						<image src="/img/theme/preview_icon.png" />
+						<label value=": Preview" sclass="note"/><space width="30px" />
+						<image src="/img/theme/use_icon.png" />
+						<label value=": Use this layout" sclass="note"/>
+					</hbox>
+				</h:td>
+			</h:tr>
+			<h:tr height="10"/>
+			<h:tr>
+				<h:td align="center" width="210px" valign="top">
+					
+					<listbox id="categoryListLbId"   sclass="templateList" width="210px" />
+					
+				</h:td>
+				<h:td  valign="top">
+					<div id="templListDivId" sclass="templListDivId" visible="false" 
+						style="overflow:auto;padding-bottom:5px;" width="100%">
+					</div>
+				</h:td>
+				
+			</h:tr>
+		</h:table>
+	</window>
+</zk>

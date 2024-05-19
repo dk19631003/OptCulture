@@ -1,0 +1,89 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  apply="org.mq.optculture.controller.loyalty.ValueCodesController" xmlns:h="native" xmlns:w="client">
+	<style >
+		.redStar{
+			font-size:14px;color:red;
+		}
+	</style>
+
+	<groupbox width="100%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+		<caption> <label value="Loyalty Custom Value-Codes"/> </caption>
+		<h:table>
+			<h:tr>
+			
+					<h:td width="200">
+					<label value="Value-Code Name: " /><label value="*" style="color:red;" />			
+					</h:td>
+					<h:td>
+					<textbox  width="150px" id="valueCodeNameTbId" />
+					</h:td>
+			</h:tr>
+			<h:tr>
+					<h:td >
+					<label value="Description:" />
+					<h:td ><textbox  id="descriptionTbId" rows="2" height="40px" width="300px"/></h:td>			
+					</h:td>
+				
+			</h:tr>
+			
+		</h:table>
+	<h:table>
+	<h:tr>
+	<h:td>
+		<button label="Save" id="saveValueCodesBtnId"	sclass="idle140 greenbtn" />
+	</h:td>
+	<h:td>
+		<button label="Cancel" id="cancelBtnId" sclass="idle140" visible="false"/>
+	</h:td>
+	</h:tr>
+	</h:table>
+	</groupbox>	
+	<h:table  width="100%" style="margin-top:10px;">
+	<h:tr>
+	<h:td width="70%">
+	<menupopup id="valueCodeMpId" />
+		<listbox id="valueCodeLbId" emptyMessage="No records  exist.." width="100%">
+			<listhead sizable="true"  style="background-color:#488eb0;" menupopup="auto">
+			<listheader label="Value-Code Name"  width="40%"  ><space/><textbox id="searchBoxId" placeholder="Search Value Code"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }"/> </listheader>
+			<listheader label="Description"  width="40%"/>			
+			<listheader label="Actions" width="20%" />
+			</listhead>
+		             		 
+		</listbox>	
+		</h:td>
+		</h:tr>
+		<h:tr>
+	     <h:td>
+				   		<h:table  align="right" width="50%">
+				   		<h:td width="220px">
+				   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+				   		<listbox rows="1" mold="select" id="valueCodePerPageLBId" style="margin-right:30px;position: absolute;">
+							<listitem label="5" />
+							<listitem label="10"  selected="true"  />
+							<listitem label="15"/>
+						</listbox>
+						</h:td>
+						
+						<h:td>
+						<paging id="valueCodePagingId" detailed="true" pageSize="10" width="250px" 
+							class="contactsViewPaging" style="border:none;"  />
+						</h:td>	
+						</h:table>	
+						</h:td>
+						<h:td width="50%" align="right">
+						<h:table cellspacing="0" cellpadding="2" align="right"
+				          style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			        <h:td align="right"> <image src="/images/Edit_icn.png"/></h:td>
+					<h:td align="right" style="padding-right:30px;"> <label value="- Edit Value-Code" style="font-size:11px;"/> </h:td>
+		</h:table>  
+						</h:td>
+						</h:tr>	
+					
+</h:table>
+	
+		
+</window>
+</zk>

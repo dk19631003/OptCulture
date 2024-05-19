@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+	<class name="org.mq.marketer.campaign.beans.ExportFileDetails"
+		table="export_file_details">
+		<id name="exportFileId" type="java.lang.Long">
+			<column name="export_file_id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="long">
+			<column name="user_id" />
+		</property>
+		
+		<property name="orgId" type="long">
+			<column name="org_id" />
+		</property>
+		
+		
+		<property name="fileType" type="string">
+			<column name="file_type" />
+		</property>
+		<property name="fileName" type="string">
+			<column name="file_name" />
+		</property>
+		
+		<property name="filePath" type="string">
+			<column name="file_path" />
+		</property>
+		
+		<property name="status" type="string">
+			<column name="status" />
+		</property>
+		
+		
+		<property name="createdTime" type="calendar">
+			<column name="created_time" />
+		</property>
+		<property name="deletedTime" type="calendar">
+			<column name="deleted_time" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,215 @@
+<?page title="Gallery" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="native">
+
+
+
+<style>
+.z-button .z-button-tl, .z-button .z-button-tr,
+ .z-button .z-button-bl, .z-button .z-button-br,
+.z-button .z-button-tm, .z-button .z-button-bm,
+ .z-button .z-button-cl, .z-button .z-button-cr, .z-button .z-button-cm {
+    background-image:none;
+}
+</style>
+
+
+
+<!--<zscript>
+	<![CDATA[
+     	import org.mq.marketer.campaign.general.PageUtil;
+
+     	String style = "font-weight:bold;font-size:15px;color:#313031;font-family:Arial,Helvetica,sans-serif;align:left";
+     	PageUtil.setHeader("My Gallery","",style,true);
+	]]>
+</zscript>-->
+
+<window id="galleryWinId" border="0" apply="org.mq.marketer.campaign.controller.gallery.GalleryController" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%" xmlns:w="http://www.zkoss.org/2005/zk/client">
+	 
+	 <window id="newGallerySubWinId" visible="false" position="center" onClose="self.setVisible(false); event.stopPropagation();"  
+				  		 width="500px" height="200px"  title="CHANGE IMAGE NAME" closable="true" >
+				  	<div>
+					  	<h:table border="0"  cellpadding="6" >
+					  			<!--<h:tr><h:td>please change Image Name:</h:td></h:tr>
+								--><h:tr>
+									<h:td width="200">Current Image Name:</h:td>
+									<h:td width="350" ><textbox id="oldimgNameTxtboxId" /></h:td>
+								</h:tr>
+								<h:tr>
+									<h:td width="200">Change Image Name:</h:td>
+									<h:td width="350" ><textbox id="changeImgNameTxtboxId" /></h:td>
+								</h:tr>
+								<h:tr>
+								<h:td height="80" valign="middle" align="center">
+									<!--<button  label="OK" width="100px" id="newGalsubWinokBtnId" onClick="galleryWinId.uploadImage();"/>--> 
+									<button  label="OK" width="100px" id="newGalsubWinokBtnId" />
+									</h:td>
+					</h:tr>
+								
+						</h:table>
+					</div>
+		</window>
+		
+<borderlayout width="100%" height="450px">
+	
+	<west border="normal" title="Folders" maxsize="200" 
+		autoscroll="true" size="200px" flex="true" splittable="false" collapsible="true">
+	<div >	
+	<vbox>
+		<h:table>
+			<h:tr>
+				 <h:td>
+					<a label="Create New Folder" style="font-size:12px;color:#006690;"  image="/img/icons/folder-icon.jpg"  w:onClick="viewFold(this);" width="200px"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td >
+					<div id="createFolderId" visible="false" width="90%" style="border:1px solid #E1E1E1;" >
+						<h:table cellspacing="10px" cellpadding="0"  width="100%" height="10%">
+							<h:tr>
+				     			<h:td><label value="Folder Name:" width="250px"  sclass="boldLbl" /></h:td>
+								<h:td> <textbox width="100px" id="newFolderTbId" value=" " maxlength="20"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td align="center" colspan="2"> 
+								<!--<image src="/img/icons/addfolder-but.jpg" id="okBtnId" onClick = "galleryWinId.createNewFolder(newFolderTbId,galleryListLbId)"/>-->
+									<image src="/img/icons/addfolder-but.jpg" id="okBtnId" />
+									<image src="/img/icons/cancel-but.jpg" id="cancelBtnId" w:onClick="viewFold(this);"/>
+									
+				     			 </h:td>
+							</h:tr>
+					    </h:table> 
+					</div>
+				</h:td>
+			</h:tr>
+		</h:table>
+		<h:table>
+			<!-- <h:tr>
+				<h:td>
+					<image src="/img/icons/files-icon.jpg" /><space bar="false" />
+					<label value="MyImages" style="font-weight:bold;"/>
+				</h:td>
+			</h:tr>
+			 -->
+			 <h:tr>
+				
+				   	<h:td border="normal">
+						<!--<listbox  id="galleryListLbId" sclass="templateList1" 
+						 onSelect="galleryWinId.getImages(selGalleryLblId,imagesDivId,folderOpnDivId);">-->
+						<listbox  id="galleryListLbId" sclass="templateList1">
+						 <listhead>
+						 <listheader image="/img/icons/files-icon.jpg" label="My Images" 
+						 style="font-weight:bold;font-size:12px;color:#000000;height:32px;" />
+						 </listhead>
+							<listitem forEach="${galleryWinId$GalleryController.galleryList}" value="${each}" >
+								<listcell label="${each}"  />
+							</listitem>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr>
+						<div id="allImagesDivId"  style="padding-top:20px;vertical-align:bottom;" align="left" >
+			  				<!--<toolbarbutton image="/img/icons/gallery-icon.jpg" label="View All Images" style="font-size:12px;color:#006690;"  
+			  				onClick="galleryWinId.getAllImages(selGalleryLblId,imagesDivId,folderOpnDivId);"/>-->
+						
+							<toolbarbutton image="/img/icons/gallery-icon.jpg" id="viewAllImageTbarBtnId" label="View All Images" style="font-size:12px;color:#006690;"/>
+						</div>
+				</h:tr>
+		</h:table>
+	 </vbox>
+	 </div>
+	</west>
+	
+	<center>
+		<borderlayout>
+			<center  autoscroll="true" title="" id="selGalleryLblId" >
+				<div id="imagesDivId"   width="100%" />
+			</center>
+			
+			<south border="0" title="" maxsize="200" autoscroll="true" size="60px" flex="false" splittable="false" collapsible="false">
+				<hbox > 
+					<div id="folderOpnDivId" width="100%" visible="false" >	
+						<separator/>
+						 <!--<fileupload image="/img/icons/upload-image.jpg" 
+						 onUpload="galleryWinId.upload(event.getMedia(),imagesDivId)" tooltiptext="Upload Images"/>-->
+						 <fileupload image="/img/icons/upload-image.jpg" id="uploadImgFileId" tooltiptext="Upload Images"/>
+						<!--  <image src="/img/icons/upload-image.jpg"  onClick="galleryWinId.upload(event.getMedia(),imagesDivId)" style="vertical-align:top;" tooltiptext="Upload Images"/> --> 
+						<space width="3px" />
+						<!--<image src="/img/icons/deletefolder.jpg" onClick="galleryWinId.deleteGallery(selGalleryLblId,imagesDivId,folderOpnDivId)" style="vertical-align:bottom;padding-top:2px" tooltiptext="Delete Folder" />-->
+						<image src="/img/icons/deletefolder.jpg" id="folderDeleteImgId" style="vertical-align:bottom;padding-top:2px" tooltiptext="Delete Folder" />
+						<space width="10px" />
+						<!--<image src="/img/icons/empty-foldr.jpg" onClick="galleryWinId.clearImages(imagesDivId,galleryListLbId,selGalleryLblId)" style="vertical-align:bottom;" tooltiptext="Clear All Images"/>-->
+						<image src="/img/icons/empty-foldr.jpg" id="clearAllImgsId" style="vertical-align:bottom;" tooltiptext="Clear All Images"/>
+					</div>
+				</hbox>
+			</south>
+			
+		</borderlayout>
+	</center>
+</borderlayout>
+<zscript>
+		<![CDATA[
+		        
+//		    void uploadDiv(){
+			//allImagesDivId.setVisible(false);
+			//uploadDivId.visible=!uploadDivId.visible;
+			//if(uploadDivId.visible)
+			//	imagesDivId.setHeight("100px");
+			//else
+			//	imagesDivId.setHeight("100px");
+			//}
+			
+//			galleryWinId.init(allImagesDivId,galleryListLbId,folderOpnDivId,newGallerySubWinId);
+//			galleryWinId.getImages(selGalleryLblId,imagesDivId,folderOpnDivId);
+		]]>
+	</zscript>
+     <script>
+	 function onImgMouseOver(thisObj) {
+		
+		
+      	thisObj.setStyle('margin:1px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;border:#E1E1E1 1px solid;');
+		var vboxExtIdArr = thisObj.getId().split('_');
+		vboxExtIdArr.getChildren
+		var vboxId = vboxExtIdArr[1];
+		var zoomId = 'zoom_' + vboxId;
+		var delId = 'del_' + vboxId;
+	
+		thisObj.$f(delId).setVisible(true); 
+		thisObj.$f(zoomId).setVisible(true);
+		
+		
+		
+      } 
+      
+      function onImgMouseOut(thisObj) {
+      
+      	thisObj.setStyle('margin:2px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;');
+      	
+      	var vboxExtIdArr = thisObj.getId().split('_');
+		vboxExtIdArr.getChildren
+		var vboxId = vboxExtIdArr[1];
+		var zoomId = 'zoom_' + vboxId;
+		var delId = 'del_' + vboxId;
+		
+      	thisObj.$f(delId).setVisible(false); 
+		thisObj.$f(zoomId).setVisible(false);
+     
+      } 
+
+		var visible = false;
+		
+		function viewFold(btn) {
+		if(!visible) {
+			jq(btn.$f('createFolderId')).hide().slideDown();
+			visible = true;
+			}
+
+   			else { 
+	  			jq(btn.$f('createFolderId')).show().slideUp();
+	   			visible = false;
+				}
+	  	}
+	  			    	
+        </script>
+</window>
+</zk>

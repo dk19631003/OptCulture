@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.OrganizationStores" table="org_stores">
+    <id name="storeId" type="java.lang.Long">
+      <column name="store_id"/>
+      <generator class="native"/>
+    </id>
+	<property name="homeStoreId" type="string" column="home_store_id" length="20" />
+    <property name="storeName" type="string" column="store_name" length="100" />
+    <property name="storeManagerName" type="string" column="store_manager_name"  length="200"/>
+	<property name="createdDate" type="calendar" column="created_date"  />
+	<property name="modifiedDate" type="calendar" column="modified_date" />
+	<property name="emailId" type="string" column="email_id" length="100" />
+	<property name="website" type="string" column="website" length="100" />
+	<property name="fromEmailId" type="string" column="from_email_id" length="100" />
+	<property name="replyToEmailId" type="string" column="reply_to_email_id" length="100" />
+	<property name="fromName" type="string" column="from_name" length="100" />
+		<property name="addressFlag" type="boolean">
+			<column name="address_flag" default="false" />
+		</property>
+		
+		<property name="addressStr" type="string">
+			<column name="address" length="1000"/>
+		</property>
+	
+	<many-to-one name="userOrganization"
+			class="org.mq.captiway.scheduler.beans.UserOrganization" foreign-key="orgId"
+			fetch="select" lazy="false">
+			<column name="org_id" />
+		</many-to-one>
+ </class>
+</hibernate-mapping>

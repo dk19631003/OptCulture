@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.OrganizationZone" table="org_zones">
+    <id name="zoneId" type="java.lang.Long">
+      <column name="zone_id"/>
+      <generator class="native"/>
+    </id>
+		<property name="zoneName" type="string">
+			<column name="zone_name" length="100"  />
+		</property>
+		<property name="Description" type="string">
+			<column name="description" length="50" />
+		</property>
+			<property name="createdDate" type="calendar">
+			<column name="created_date" length="50" />
+		</property>
+			<property name="modifiedDate" type="calendar">
+			<column name="modified_date" length="50" />
+		</property>
+			<property name="createdBy" type="string">
+			<column name="created_by" length="50" />
+		</property>
+			<property name="modifiedBy" type="string">
+			<column name="modified_by" length="50" />
+		</property>
+			<property name="domainId" type="long">
+			<column name="domain_id" length="50" />
+		</property>
+<!-- 
+		  <set name="subsidiaries" table="zone_subsidiary"
+			lazy="false" cascade="save-update"  fetch="select">
+			<key column="zone_id"/>
+			<many-to-many
+				class="org.mq.marketer.campaign.beans.OrganizationStores" column="sub_id"/>
+		</set>  -->
+		<set name="stores" table="zone_store"
+			lazy="false"  cascade="save-update" fetch="select">
+			<key column="zone_id"/>
+			<many-to-many
+				class="org.mq.marketer.campaign.beans.OrganizationStores" column="store_id"/>
+		</set>
+		
+		 <property name="deleteStatus" type="boolean" >
+			<column name="delete_status" default="false" />
+		</property> 
+		</class>
+</hibernate-mapping>
+		

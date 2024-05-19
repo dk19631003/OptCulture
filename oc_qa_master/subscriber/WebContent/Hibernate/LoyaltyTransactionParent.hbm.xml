@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyTransactionParent"
+		table="loyalty_transaction_parent">
+		<id name="transactionId" type="java.lang.Long" column="transaction_id">
+			<generator class="native" />
+		</id>
+		<property name="requestId" type="string">
+	      <column name="request_id" />
+	    </property>
+	    <property name="requestDate" type="string">
+	      <column name="request_date" />
+	    </property>
+	    <property name="pcFlag" type="string">
+	      <column name="pcflag" />
+	    </property>
+		<property name="membershipNumber" type="string">
+			<column name="membership_number"/>
+		</property>
+		<!-- <property name="customerId" type="string">
+			<column name="customer_id" />
+		</property>
+		<property name="emailId" type="string">
+			<column name="email_id" />
+		</property> -->
+		<property name="mobilePhone" type="string">
+			<column name="mobile_phone" />
+		</property>
+		<property name="transactionType" type="string">
+			<column name="transaction_type"/>
+		</property>
+		<!-- <property name="enteredAmount" type="double">
+			<column name="entered_amount" />
+		</property>
+		<property name="valueCode" type="string">
+			<column name="value_code"/>
+		</property> -->
+		<property name="createdDate" type="calendar">
+			<column name="created_date"/>
+		</property>
+		<property name="userName" type="string">
+			<column name="user_name"/>
+		</property>
+		<property name="status" type="string">
+			<column name="status"/>
+		</property>
+		<property name="errorMessage" type="string">
+			<column name="error_message"/>
+		</property>
+	</class>
+</hibernate-mapping>

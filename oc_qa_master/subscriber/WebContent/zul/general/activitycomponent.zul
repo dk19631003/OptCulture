@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<window  border="none" draggable="canvas2" minheight="16" minwidth="16" sizable="false" style="overflow:visible;"
+	sclass="myWin popupWin" id="activityComponentWinId"
+	apply="org.mq.marketer.campaign.controller.program.ActivityComponentController"
+	xmlns:h="http://www.zkoss.org/2005/zk/native" xmlns:w="http://www.zkoss.org/2005/zk/client" context="editPopup">
+	
+	<style>
+		.z-window-embedded-cnt {
+			padding:0;
+		}
+	</style>
+
+	<label id="prevCompLblId" visible="false" />
+	<label id="nextCompLblId" visible="false" />
+	
+	<menupopup id="editPopup" >
+	
+       <menuitem id="menuitemPropertiesId" image="/img/icons/edit_lists_icon.png" label="Properties"  />
+       <menuseparator />
+       <menuitem id="menuitemRemoveId" image="/img/icons/delete.png" label="Remove" />
+	
+	</menupopup>
+	
+	<!--<zscript><![CDATA[
+		public void resize(Event event) {
+			Window obj = (Window)event.getTarget();
+			Image image = (Image)obj.getFellow("image");
+			image.setWidth(obj.getWidth());
+			image.setHeight(obj.getHeight());
+		}
+		
+		public void select(Window current) {
+			org.zkforge.canvas.Canvas canvas = (org.zkforge.canvas.Canvas)current.getParent();
+			List children = canvas.getChildren();
+			for (int i=0; i<children.size(); i++) {
+				Window obj = (Window)children.get(i);
+				obj.setBorder("none");
+				obj.setStyle("position:absolute;padding:1px;");
+			}
+			current.setBorder("normal");
+			current.setStyle("position:absolute;padding:0px;");
+		}
+	
+		]]></zscript>
+
+	--><vbox sclass="disableSelection">
+	<div id="imageDiv" width="128px" height="80px" align="center" >
+			<image id="image"/>	
+					
+		<h:table width="128px" height="80px" border="0">
+		<h:tbody>
+		<h:tr style="height:20px;vertical-align:top;">
+			<h:td style="padding-left: 5px; padding-top: 3px; color: white;">
+				<label id="titleLblId" value="Title" style="font-size:10px;" />
+			</h:td>
+		</h:tr>
+		
+		<h:tr style="height:32px;vertical-align:top;">
+		
+			<h:td style="padding-left:3px; padding-right:35px; color:gray; text-align:left; ">
+				<label id="activityMessageLblId" value="Some Message" style="font-size:10px;"  />
+				
+				<div id="analysisDivId" visible="false" style="position:absolute;border:1px solid #CCCCCC;box-shadow:2px 2px 2px #CCCCCC;left:65px;">
+				<h:table width="60px"  border="0" cellspacing="0" cellpadding="0">
+					<h:tbody>
+					<h:tr bgcolor="#00A7D5">
+						<h:td style="padding-right: 2px; color: white;" align="right">
+							<!--<label id="currentLblId" value="12345" style="font-size:12px;" />
+							--><a id="currentLblId"></a>
+						</h:td>
+					</h:tr>
+					<h:tr bgcolor="#5ACCE5">
+						<h:td style="padding-right: 2px; color: white;" align="right">
+							<!--<label id="passedLblId" value="12345" style="font-size:12px;" />
+							--><a id="passedLblId"></a>
+						</h:td>
+					</h:tr>
+				</h:tbody>
+				</h:table>
+				</div>
+
+
+			</h:td>
+		</h:tr>
+		
+		<h:tr style="height:20px;vertical-align:top;">
+			<h:td style="padding-left: 5px; padding-top: 3px; color: darkgray;">
+				<label id="activityFooterLblId" value="Selected Campaign" style="font-size:10px;"  visible="true" />
+			</h:td>
+		</h:tr>
+		
+		</h:tbody>
+		</h:table>
+	</div>
+		
+	</vbox>
+	</window>
+	
+	

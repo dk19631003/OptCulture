@@ -1,0 +1,2433 @@
+<zk>
+	<style >
+	.redStar{
+	font-size:14px;color:red;
+    }
+    .symbolAnc {
+		color: black;
+	    font-size: 20px;
+	    text-decoration: none;
+	    width: 33px;
+	    height:40px;
+	    background-image: url("images/subject_symbols.png");
+	    display: inline-block;
+    }
+     .emojiAnc {
+	    font-size: 20px;
+	    width: 32px;
+	    height:27px;
+	    border-spacing: 0px;
+	    background-image: url("images/subject_emojis.png");
+	    display: inline-block;
+    }
+        .christmasAnc {
+	    font-size: 20px;
+	    width: 32px;
+	    height:27px;
+	    border-spacing: 0px;
+	    background-image: url("images/christmas_emojis.png");
+	    display: inline-block;
+    }
+	.z-hlayout-inner {
+		vertical-align:middle;
+	}
+</style>
+	<window id="campSettigWinId" border="0" width="100%" apply="org.mq.marketer.campaign.controller.campaign.CampSettingsController" xmlns:h="http://www.zkoss.org/2005/zk/native" xmlns:w="client">
+	<window id="personalizationTagsWinId" title="HTML Merge Fields" border="normal" mode="overlapped" visible="false" position="center">
+	 <zscript>
+	  <![CDATA[
+            void insertText(A a){
+                
+                String value = a.getTooltiptext().trim();
+                
+                if(value==null || value.trim().isEmpty()) {
+                 	value = a.getLabel().trim();
+                }
+				
+				Map mergTagsMap = (Map)personalizationTagsWinId.getAttribute("mergeTagMap");
+				value = mergTagsMap.containsKey(a.getTooltiptext()) ? (mergTagsMap.get(a.getTooltiptext())).toString() : value; 
+
+                String cp = caretPosTB.getValue();
+                if (cp == null || cp.length() == 0) {
+                    cp = "0";
+                }
+                try{
+                int caretPos = Integer.parseInt(cp);
+                if (caretPos != -1) {
+                    String currentValue = cSubTb.getValue();
+                    String newValue = currentValue.substring(0, caretPos) + value + currentValue.substring(caretPos);
+                    cSubTb.setValue(newValue);
+                }
+                
+                cSubTb.focus();
+                }catch(Exception e) {
+                e.printStackTrace();
+                }
+            }
+            ]]>
+        </zscript>
+        <script >
+        $.getScript("js/emoji_dict.js");
+        <![CDATA[
+                 
+				
+				function updateCaretPosition() {
+                    // get the zk widgets
+                    var scriptTB = zk.Widget.$(jq('$cSubTb'))
+                    var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+                   
+                    // get the js elements
+                    var jsScriptTB = document.getElementById(scriptTB.uuid)
+                    
+         //subject-line changes to convert the emojis to SYM_emojiName_ which present in emoji_dict.js files-suraj
+           
+                 //take value from jsScriptTB textbox
+                 var jsScriptTBValue = jsScriptTB.value;
+
+                 //subject-line text
+                 var subText="";
+                 
+               for(const charCodePoint of jsScriptTBValue) {
+
+                    //getting encoded value of each characters
+                    var encodedChar =charCodePoint.codePointAt(0).toString(16);
+                                        
+                    if(encodedChar.length == 5 ||encodedChar.length == 4 ){
+                    
+                       let decodedChar =  String.fromCodePoint("0x"+encodedChar); 
+
+                        //getting emoji-name from emojiDictionary(emoji_dict.js)
+                        
+                    	var nameOfEmoji =emojiDictionary[decodedChar];
+                    	if(nameOfEmoji == undefined|| nameOfEmoji == null){
+                    		//Emoji is not present in emojiDictionary(or emoji_dict.js file) 
+                    		continue;
+                    	}
+                    	var SYMNameOfEmoji ="|^SYM_"+ nameOfEmoji +"^|";
+                    	subText += SYMNameOfEmoji;
+                    }else{
+                     subText += charCodePoint;
+                   }
+                  }            
+               //set the value of jsScriptTB
+               jsScriptTB.value = subText;   
+               
+                            
+          //end- subject-line changes-suraj
+                    
+                    var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+
+                    // get the caret position
+                    
+                    var pos = getCaret(jsScriptTB);
+
+                    // set the caret position in the hidden text field
+                    jsCaretPosTB.value = pos;
+                    // trigger an event to send the caret position to the server
+                    if (document.createEvent) {
+                     var evt = document.createEvent('HTMLEvents');
+                     evt.initEvent( 'blur', false, false);
+                     jsCaretPosTB.dispatchEvent(evt);
+
+                     var evt2 = document.createEvent('HTMLEvents');
+                     evt2.initEvent( 'change', false, false);
+                     jsCaretPosTB.dispatchEvent(evt2);
+                    } else if (document.createEventObject) {
+                     jsCaretPosTB.fireEvent('onblur');
+                     jsCaretPosTB.fireEvent('onchange');
+                    }
+                }
+
+                function getCaret(el) {
+                	
+                	if (el.selectionStart) {
+                        return el.selectionStart;
+                    } else if (document.selection) {
+                        el.focus();
+
+                        var r = document.selection.createRange();
+
+                        
+                        if (r == null) {
+                        	
+                            return 0;
+                        }
+
+                        var re = el.createTextRange();
+                        	
+                                rc = re.duplicate();
+                        re.moveToBookmark(r.getBookmark());
+                        rc.setEndPoint('EndToStart', re);
+                        return rc.text.length;
+                    }else{
+                    	
+                    	if(el.value.length > 0) {
+                    		
+                    		el.selectionStart = el.value.length;
+                    		 return el.selectionStart;
+                    		
+                    	}
+                    	
+                    }
+                    return 0;
+
+
+                  
+                }
+                ]]>
+                </script>
+			<caption>
+				<toolbarbutton label="Close" onClick="personalizationTagsWinId.setVisible(false)"/>
+			</caption>
+			
+			
+			
+			
+			<div id="tagsDivId" height="360px" width="921px" style="overflow:auto;">
+			
+			<h:table>
+			<h:tr/>
+				<h:tr>
+					<h:td>
+						<label value="Select Type of Merge Tags "
+							style="font-weight: bold;font-size: 13px;" />
+					</h:td>
+					<h:td>
+						<radiogroup id="tagsTypeRgId">
+							<radio id="generalMergeTagRId" label="General Merge Tags" selected="true" />
+							<radio id="salesMergeTagRId"   label="Sales Merge Tags" />
+							<radio id="loyaltyMergeTagRId" label="Loyalty Merge Tags" />
+						</radiogroup>
+					</h:td>
+				</h:tr>
+			</h:table>
+					<div id="generalTagsDivId"  style="overflow:auto">
+					<h:table >
+					<h:tr>
+						<h:td width="450px">
+						<h:table>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Email"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_emailId^|"  tooltiptext = "Email" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" />
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="First Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_firstName^|" tooltiptext = "First Name"  onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_lastName^|" tooltiptext = "Last Name" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Address Line 1"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_addressOne^|" tooltiptext ="Street" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Address Line 2"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_addressTwo^|" tooltiptext="Address Two" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="City"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_city^|"  tooltiptext = "City" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="State"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_state^|" tooltiptext= "State" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		</h:table></h:td>
+					 		<h:td width="450px"><h:table>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Country"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_country^|" tooltiptext= "Country" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Zip / Pin"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_pin^|" tooltiptext= "ZIP" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Phone"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_phone^|" tooltiptext= "Mobile" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Gender"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_gender^|" tooltiptext= "Gender" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Birthday"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_birthday^|" tooltiptext= "BirthDay" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Anniversary"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_anniversary^|" tooltiptext= "Anniversary" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 			</h:tr>
+					 			<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Organization Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_organizationName^|" tooltiptext= "Organization Name" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 			<h:tr height="20px"/>
+				 				</h:tr>
+					 			</h:table>
+					 		</h:td>
+					 	</h:tr>
+					 	
+					 	</h:table>
+					</div>
+					<div id="storeTagsDivId"  visible="false">
+						<h:table>
+						<h:tr>
+							<h:td width="450px">
+							<h:table>
+						<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storeName^|" tooltiptext= "Store Name" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store Manager"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storeManager^|" tooltiptext= "Store Manager" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store Phone"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storePhone^|" tooltiptext= "Store Phone" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store Email"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storeEmail^|" tooltiptext= "Store Email" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store Street"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storeStreet^|" tooltiptext= "Store Street" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store City"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storeCity^|" tooltiptext= "Store City" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 			<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store State"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storeState^|" tooltiptext= "Store State" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Store Zip"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_storeZip^|" tooltiptext= "Store Zip" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store Address"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreAddress^|" tooltiptext= "Last Purchase Store Address" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>	
+					 	
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Date"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseDate^|" tooltiptext= "Last Purchase Date" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreName^|" tooltiptext= "Last Purchase Store Name" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store Manager"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreManager^|" tooltiptext= "Last Purchase Store Manager" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		</h:table></h:td>
+					 		<h:td width="450px"> <h:table>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store Phone"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStorePhone^|" tooltiptext= "Last Purchase Store Phone" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store Email"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreEmail^|" tooltiptext= "Last Purchase Store Email" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store Street"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreStreet^|" tooltiptext= "Last Purchase Store Street" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store City"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreCity^|" tooltiptext= "Last Purchase Store City" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 	
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store State"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreState^|" tooltiptext= "Last Purchase Store State" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Purchase Store Zip"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_lastPurchaseStoreZip^|" tooltiptext= "Last Purchase Store Zip" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Date_Today"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^DATE_today^|" tooltiptext= "|^DATE_today^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Date_Tomorrow"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^DATE_tomorrow^|" tooltiptext= "|^DATE_tomorrow^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Date_7_Days"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^DATE_7_days^|" tooltiptext= "|^DATE_7_days^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Date_30_Days"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^DATE_30_days^|" tooltiptext= "|^DATE_30_days^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Date_X_Days"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^DATE_X_days^|" tooltiptext= "|^DATE_X_days^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px" />
+					 		
+					 		</h:table></h:td>
+					 		
+					 		</h:tr>
+						</h:table>
+					</div>
+					<div id="loyaltyTagsDivId"  visible="false">
+					<h:table>
+					
+					 		<h:td width="550px"><h:table>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Membership Number"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyMembershipNumber^|" tooltiptext= "Loyalty Membership Number" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+							<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Membership Pin"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyMembershipPin^|" tooltiptext= "Loyalty Membership Pin" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Refreshed On"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyRefreshedOn^|" tooltiptext= "Loyalty Refreshed On" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Member Tier"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyMemberTier^|" tooltiptext= "Loyalty Member Tier" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Member Status"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyMemberStatus^|" tooltiptext= "Loyalty Member Status" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Enrollment Date"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyEnrollmentDate^|" tooltiptext= "Loyalty Enrollment Date" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 			<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Enrollment Source"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyEnrollmentSource^|" tooltiptext= "Loyalty Enrollment Source" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Enrollment Store"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyEnrollmentStore^|" tooltiptext= "Loyalty Enrollment Store" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Registered Phone"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyRegisteredPhone^|" tooltiptext= "Loyalty Registered Phone" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Points Balance"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyPointsBalance^|" tooltiptext= "Loyalty Points Balance" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Membership Currency Balance"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyMembershipCurrencyBalance^|" tooltiptext= "Loyalty Membership Currency Balance" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Gift Balance"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyGiftBalance^|" tooltiptext= "Loyalty Gift Balance" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		</h:table></h:td>
+					 		<h:td width="550px"><h:table>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Hold Balance"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyHoldBalance^|" tooltiptext= "Loyalty Hold Balance" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Reward Activation Period"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyRewardActivationPeriod^|" tooltiptext= "Loyalty Reward Activation Period" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Last Earned Value"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyLastEarnedValue^|" tooltiptext= "Loyalty Last Earned Value" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Last Redeemed Value"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyLastRedeemedValue^|" tooltiptext= "Loyalty Last Redeemed Value" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 			
+					 		</h:tr>
+					 		
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Membership Password"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyMembershipPassword^|" tooltiptext= "Loyalty Membership Password" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Login Url"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyLoginUrl^|" tooltiptext= "Loyalty Login Url" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Reward Expiration Period"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyRewardExpirationPeriod^|" tooltiptext= "Loyalty Reward Expiration Period" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Gift Amount Expiration Period"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyGiftAmountExpirationPeriod^|" tooltiptext= "Loyalty Gift Amount Expiration Period" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Membership Expiration Date"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyMembershipExpirationDate^|" tooltiptext= "Loyalty Membership Expiration Date" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Gift-card Expiration Date"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyGiftCardExpirationDate^|" tooltiptext= "Loyalty Gift-card Expiration Date" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Last Bonus Value"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyLastBonusValue^|" tooltiptext= "Loyalty Last Bonus Value" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 			
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Reward Expiring Value"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyRewardExpiringValue^|" tooltiptext= "Loyalty Reward Expiring Value" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Loyalty Gift Amount Expiring Value"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_loyaltyGiftAmountExpiringValue^|" tooltiptext= "Loyalty Gift Amount Expiring Value" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		</h:table></h:td>
+					
+					</h:table>
+					</div>
+				
+				
+			</div>	
+			
+			<div id="symbolDivId"  width="680px" height="430px" style="overflow:auto" >
+				<label value="Select Symbol" style="font-weight: bold;font-size: 13px;"/>
+				<h:br/><h:br/>
+				
+				<!-- <h:img src="images/subject_symbols.png"  usemap="#smap"/>
+				
+				<h:map name="smap">
+				  <h:area shape="rect" coords="0,0,32,40" alt="Sun" onclick="insertSymbol(self.alt);"/>
+				  <h:area shape="rect" coords="32,0,32,40" alt="Mercury" href="mercur.htm" onclick="insertSymbol(self.alt);"/>
+				  <h:area shape="rect" coords="124,58,8" alt="Venus" href="venus.htm" onclick="insertSymbol(self.alt);"/>
+				</h:map>
+				 -->
+				 
+			 	<h:table cellspacing="0" cellpadding="0" border="0" >
+			 	<h:tr>
+			 	<h:td> <a  sclass="symbolAnc"  style="background-position: -0px 0px;" tooltiptext="|^SYM_BLACK_SUN_WITH_RAYS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px 0px;" tooltiptext="|^SYM_CLOUD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px 0px;" tooltiptext="|^SYM_UMBRELLA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px 0px;" tooltiptext="|^SYM_SNOWMAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px 0px;" tooltiptext="|^SYM_COMET^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px 0px;" tooltiptext="|^SYM_BLACK_STAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px 0px;" tooltiptext="|^SYM_WHITE_STAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px 0px;" tooltiptext="|^SYM_LIGHTNING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px 0px;" tooltiptext="|^SYM_THUNDERSTORM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px 0px;" tooltiptext="|^SYM_SUN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px 0px;" tooltiptext="|^SYM_ASCENDING_NODE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px 0px;" tooltiptext="|^SYM_DESCENDING_NODE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px 0px;" tooltiptext="|^SYM_CONJUNCTION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -416px 0px;" tooltiptext="|^SYM_OPPOSITION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -453px 0px;" tooltiptext="|^SYM_BLACK_TELEPHONE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px 0px;" tooltiptext="|^SYM_WHITE_TELEPHONE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px 0px;" tooltiptext="|^SYM_BALLOT_BOX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px 0px;" tooltiptext="|^SYM_BALLOT_BOX_WITH_CHECK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px 0px;" tooltiptext="|^SYM_BALLOT_BOX_WITH_X^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px 0px;" tooltiptext="|^SYM_SALTIRE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -40px;" tooltiptext="|^SYM_UMBRELLA_WITH_RAIN_DROPS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -40px;" tooltiptext="|^SYM_HOT_BEVERAGE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -40px;" tooltiptext="|^SYM_WHITE_SHOGI_PIECE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -40px;" tooltiptext="|^SYM_BLACK_SHOGI_PIECE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -40px;" tooltiptext="|^SYM_SHAMROCK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -40px;" tooltiptext="|^SYM_REVERSED_ROTATED_FLORAL_HEART_BULLET^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -40px;" tooltiptext="|^SYM_BLACK_LEFT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -40px;" tooltiptext="|^SYM_BLACK_RIGHT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -40px;" tooltiptext="|^SYM_WHITE_LEFT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -40px;" tooltiptext="|^SYM_WHITE_UP_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -40px;" tooltiptext="|^SYM_WHITE_RIGHT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -40px;" tooltiptext="|^SYM_WHITE_DOWN_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -40px;" tooltiptext="|^SYM_SKULL_AND_CROSSBONES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -40px;" tooltiptext="|^SYM_CAUTION_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -40px;" tooltiptext="|^SYM_RADIOACTIVE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -40px;" tooltiptext="|^SYM_BIOHAZARD_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -40px;" tooltiptext="|^SYM_CADUCEUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -40px;" tooltiptext="|^SYM_ANKH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -40px;" tooltiptext="|^SYM_ORTHODOX_CROSS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -40px;" tooltiptext="|^SYM_CHI_RHO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -80px;" tooltiptext="|^SYM_CROSS_OF_LORRAINE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -80px;" tooltiptext="|^SYM_CROSS_OF_JERUSALEM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -80px;" tooltiptext="|^SYM_STAR_AND_CRESCENT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -80px;" tooltiptext="|^SYM_FARSI_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -80px;" tooltiptext="|^SYM_ADI_SHAKTI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -80px;" tooltiptext="|^SYM_HAMMER_AND_SICKLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -80px;" tooltiptext="|^SYM_PEACE_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -80px;" tooltiptext="|^SYM_YIN_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_HEAVEN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_LAKE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_FIRE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_THUNDER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_WIND^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_WATER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_MOUNTAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -80px;" tooltiptext="|^SYM_TRIGRAM_FOR_EARTH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -80px;" tooltiptext="|^SYM_WHEEL_OF_DHARMA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -80px;" tooltiptext="|^SYM_WHITE_FROWNING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -80px;" tooltiptext="|^SYM_WHITE_SMILING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -80px;" tooltiptext="|^SYM_BLACK_SMILING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -120px;" tooltiptext="|^SYM_WHITE_SUN_WITH_RAYS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -120px;" tooltiptext="|^SYM_FIRST_QUARTER_MOON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -120px;" tooltiptext="|^SYM_LAST_QUARTER_MOON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -120px;" tooltiptext="|^SYM_MERCURY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -120px;" tooltiptext="|^SYM_FEMALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -120px;" tooltiptext="|^SYM_EARTH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -120px;" tooltiptext="|^SYM_MALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -120px;" tooltiptext="|^SYM_JUPITER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -120px;" tooltiptext="|^SYM_SATURN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -120px;" tooltiptext="|^SYM_URANUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -120px;" tooltiptext="|^SYM_NEPTUNE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -120px;" tooltiptext="|^SYM_PLUTO_^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -120px;" tooltiptext="|^SYM_ARIES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -120px;" tooltiptext="|^SYM_TAURUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -120px;" tooltiptext="|^SYM_GEMINI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -120px;" tooltiptext="|^SYM_CANCER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -120px;" tooltiptext="|^SYM_LEO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -120px;" tooltiptext="|^SYM_VIRGO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -120px;" tooltiptext="|^SYM_LIBRA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -120px;" tooltiptext="|^SYM_SCORPIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -160px;" tooltiptext="|^SYM_SAGITTARIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -160px;" tooltiptext="|^SYM_CAPRICORN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -160px;" tooltiptext="|^SYM_AQUARIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -160px;" tooltiptext="|^SYM_PISCES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -160px;" tooltiptext="|^SYM_WHITE_CHESS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -160px;" tooltiptext="|^SYM_WHITE_CHESS_QUEEN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -160px;" tooltiptext="|^SYM_WHITE_CHESS_ROOK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -160px;" tooltiptext="|^SYM_WHITE_CHESS_BISHOP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -160px;" tooltiptext="|^SYM_WHITE_CHESS_KNIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -160px;" tooltiptext="|^SYM_WHITE_CHESS_PAWN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -160px;" tooltiptext="|^SYM_BLACK_CHESS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -160px;" tooltiptext="|^SYM_BLACK_CHESS_QUEEN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -160px;" tooltiptext="|^SYM_BLACK_CHESS_ROOK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -160px;" tooltiptext="|^SYM_BLACK_CHESS_BISHOP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -160px;" tooltiptext="|^SYM_BLACK_CHESS_KNIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -160px;" tooltiptext="|^SYM_BLACK_CHESS_PAWN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -160px;" tooltiptext="|^SYM_BLACK_SPADE_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -160px;" tooltiptext="|^SYM_WHITE_HEART_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -160px;" tooltiptext="|^SYM_WHITE_DIAMOND_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -160px;" tooltiptext="|^SYM_BLACK_CLUB_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -200px;" tooltiptext="|^SYM_WHITE_SPADE_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px 200px;" tooltiptext="|^SYM_BLACK_HEART_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -200px;" tooltiptext="|^SYM_BLACK_DIAMOND_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -200px;" tooltiptext="|^SYM_WHITE_CLUB_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -200px;" tooltiptext="|^SYM_HOT_SPRINGS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -200px;" tooltiptext="|^SYM_QUARTER_NOTE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -200px;" tooltiptext="|^SYM_EIGHTH_NOTE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -200px;" tooltiptext="|^SYM_BEAMED_EIGHTH_NOTES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -200px;" tooltiptext="|^SYM_BEAMED_SIXTEENTH_NOTES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -200px;" tooltiptext="|^SYM_MUSIC_FLAT_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -200px;" tooltiptext="|^SYM_MUSIC_NATURAL_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -200px;" tooltiptext="|^SYM_MUSIC_SHARP_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -200px;" tooltiptext="|^SYM_WEST_SYRIAC_CROSS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -200px;" tooltiptext="|^SYM_EAST_SYRIAC_CROSS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -200px;" tooltiptext="|^SYM_UNIVERSAL_RECYCLING_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -200px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_1_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -200px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_2_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -200px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_3_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -200px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_4_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -200px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_5_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -240px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_6_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -240px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_7_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -240px;" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_GENERIC_MATERIALS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -240px;" tooltiptext="|^SYM_BLACK_UNIVERSAL_RECYCLING_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -240px;" tooltiptext="|^SYM_RECYCLED_PAPER_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -240px;" tooltiptext="|^SYM_PARTIALLY_RECYCLED_PAPER_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -240px;" tooltiptext="|^SYM_PERMANENT_PAPER_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -240px;" tooltiptext="|^SYM_WHEELCHAIR_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -240px;" tooltiptext="|^SYM_DIE_FACE_1^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -240px;" tooltiptext="|^SYM_DIE_FACE_2^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -240px;" tooltiptext="|^SYM_DIE_FACE_3^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -240px;" tooltiptext="|^SYM_DIE_FACE_4^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -240px;" tooltiptext="|^SYM_DIE_FACE_5^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -240px;" tooltiptext="|^SYM_DIE_FACE_6^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -240px;" tooltiptext="|^SYM_WHITE_CIRCLE_WITH_DOT_RIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -240px;" tooltiptext="|^SYM_WHITE_CIRCLE_WITH_TWO_DOTS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -240px;" tooltiptext="|^SYM_BLACK_CIRCLE_WITH_WHITE_DOT_RIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -240px;" tooltiptext="|^SYM_BLACK_CIRCLE_WITH_TWO_WHITE_DOTS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -240px;" tooltiptext="|^SYM_MONOGRAM_FOR_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -240px;" tooltiptext="|^SYM_MONOGRAM_FOR_YIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -280px;" tooltiptext="|^SYM_DIGRAM_FOR_GREATER_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -280px;" tooltiptext="|^SYM_DIGRAM_FOR_LESSER_YIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -280px;" tooltiptext="|^SYM_DIGRAM_FOR_LESSER_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -280px;" tooltiptext="|^SYM_DIGRAM_FOR_GREATER_YIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -280px;" tooltiptext="|^SYM_WHITE_FLAG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -280px;" tooltiptext="|^SYM_BLACK_FLAG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -280px;" tooltiptext="|^SYM_HAMMER_AND_PICK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -280px;" tooltiptext="|^SYM_ANCHOR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -280px;" tooltiptext="|^SYM_CROSSED_SWORDS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -280px;" tooltiptext="|^SYM_STAFF_OF_AESCULAPIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -280px;" tooltiptext="|^SYM_SCALES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -280px;" tooltiptext="|^SYM_ALEMBIC^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -280px;" tooltiptext="|^SYM_FLOWER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -280px;" tooltiptext="|^SYM_GEAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -280px;" tooltiptext="|^SYM_STAFF_OF_HERMES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -280px;" tooltiptext="|^SYM_ATOM_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -280px;" tooltiptext="|^SYM_FLEUR_DE_LIS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -280px;" tooltiptext="|^SYM_OUTLINED_WHITE_STAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -280px;" tooltiptext="|^SYM_WARNING_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -280px;" tooltiptext="|^SYM_HIGH_VOLTAGE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -320px;" tooltiptext="|^SYM_DOUBLED_FEMALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -320px;" tooltiptext="|^SYM_DOUBLED_MALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -320px;" tooltiptext="|^SYM_INTERLOCKED_FEMALE_AND_MALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -320px;" tooltiptext="|^SYM_MALE_AND_FEMALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -320px;" tooltiptext="|^SYM_MALE_WITH_STROKE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -320px;" tooltiptext="|^SYM_MALE_WITH_STROKE_AND_MALE_AND_FEMALE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -320px;" tooltiptext="|^SYM_VERTICAL_MALE_WITH_STROKE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -320px;" tooltiptext="|^SYM_HORIZONTAL_MALE_WITH_STROKE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -320px;" tooltiptext="|^SYM_MEDIUM_WHITE_CIRCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -320px;" tooltiptext="|^SYM_MEDIUM_BLACK_CIRCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -320px;" tooltiptext="|^SYM_MEDIUM_SMALL_WHITE_CIRCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -353px -320px;" tooltiptext="|^SYM_MARRIAGE_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -383px -320px;" tooltiptext="|^SYM_DIVORCE_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -429px -320px;" tooltiptext="|^SYM_UNMARRIED_PARTNERSHIP_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -462px -320px;" tooltiptext="|^SYM_COFFIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -485px -320px;" tooltiptext="|^SYM_FUNERAL_URN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -516px -320px;" tooltiptext="|^SYM_NEUTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -545px -320px;" tooltiptext="|^SYM_CERES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -577px -320px;" tooltiptext="|^SYM_PALLAS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -606px -320px;" tooltiptext="|^SYM_JUNO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a  sclass="symbolAnc"  style="background-position: -0px -360px;" tooltiptext="|^SYM_VESTA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -33px -360px;" tooltiptext="|^SYM_CHIRON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -66px -360px;" tooltiptext="|^SYM_BLACK_MOON_LILITH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -99px -360px;" tooltiptext="|^SYM_SEXTILE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -132px -360px;" tooltiptext="|^SYM_SEMISEXTILE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -162px -360px;" tooltiptext="|^SYM_QUINCUNX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -194px -360px;" tooltiptext="|^SYM_SESQUIQUADRATE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -224px -360px;" tooltiptext="|^SYM_WHITE_DRAUGHTS_MAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -257px -360px;" tooltiptext="|^SYM_WHITE_DRAUGHTS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -289px -360px;" tooltiptext="|^SYM_BLACK_DRAUGHTS_MAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a  sclass="symbolAnc"  style="background-position: -320px -360px;" tooltiptext="|^SYM_BLACK_DRAUGHTS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+
+</h:tr>
+
+	 		<!-- <h:tr >
+			 		
+			 		
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -2px -3px;" tooltiptext="|^SYM_BLACK_SUN_WITH_RAYS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_CLOUD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_UMBRELLA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_SNOWMAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_COMET^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_BLACK_STAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_WHITE_STAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_LIGHTNING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_THUNDERSTORM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_SUN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_ASCENDING_NODE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_DESCENDING_NODE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_CONJUNCTION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_OPPOSITION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_BLACK_TELEPHONE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_WHITE_TELEPHONE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_BALLOT_BOX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_BALLOT_BOX_WITH_CHECK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_BALLOT_BOX_WITH_X^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -3px;" tooltiptext="|^SYM_SALTIRE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -2px -43px;" tooltiptext="|^SYM_UMBRELLA_WITH_RAIN_DROPS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="symbolAnc" style="background-position: -34px -43px;" tooltiptext="|^SYM_HOT_BEVERAGE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2616;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_SHOGI_PIECE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2617;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_SHOGI_PIECE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2618;" sclass="symbolAnc" tooltiptext="|^SYM_SHAMROCK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2619;" sclass="symbolAnc" tooltiptext="|^SYM_REVERSED_ROTATED_FLORAL_HEART_BULLET^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x261A;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_LEFT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x261B;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_RIGHT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x261C;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_LEFT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x261D;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_UP_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x261E;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_RIGHT_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x261F;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_DOWN_POINTING_INDEX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2620;" sclass="symbolAnc" tooltiptext="|^SYM_SKULL_AND_CROSSBONES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2621;" sclass="symbolAnc" tooltiptext="|^SYM_CAUTION_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2622;" sclass="symbolAnc" tooltiptext="|^SYM_RADIOACTIVE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2623;" sclass="symbolAnc" tooltiptext="|^SYM_BIOHAZARD_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2624;" sclass="symbolAnc" tooltiptext="|^SYM_CADUCEUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2625;" sclass="symbolAnc" tooltiptext="|^SYM_ANKH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2626;" sclass="symbolAnc" tooltiptext="|^SYM_ORTHODOX_CROSS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2627;" sclass="symbolAnc" tooltiptext="|^SYM_CHI_RHO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x2628;" sclass="symbolAnc" tooltiptext="|^SYM_CROSS_OF_LORRAINE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2629;" sclass="symbolAnc" tooltiptext="|^SYM_CROSS_OF_JERUSALEM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x262A;" sclass="symbolAnc" tooltiptext="|^SYM_STAR_AND_CRESCENT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x262B;" sclass="symbolAnc" tooltiptext="|^SYM_FARSI_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x262C;" sclass="symbolAnc" tooltiptext="|^SYM_ADI_SHAKTI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x262D;" sclass="symbolAnc" tooltiptext="|^SYM_HAMMER_AND_SICKLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x262E;" sclass="symbolAnc" tooltiptext="|^SYM_PEACE_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x262F;" sclass="symbolAnc" tooltiptext="|^SYM_YIN_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2630;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_HEAVEN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2631;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_LAKE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2632;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_FIRE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2633;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_THUNDER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2634;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_WIND^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2635;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_WATER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2636;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_MOUNTAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2637;" sclass="symbolAnc" tooltiptext="|^SYM_TRIGRAM_FOR_EARTH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2638;" sclass="symbolAnc" tooltiptext="|^SYM_WHEEL_OF_DHARMA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2639;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_FROWNING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x263A;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_SMILING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x263B;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_SMILING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x263C;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_SUN_WITH_RAYS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x263D;" sclass="symbolAnc" tooltiptext="|^SYM_FIRST_QUARTER_MOON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x263E;" sclass="symbolAnc" tooltiptext="|^SYM_LAST_QUARTER_MOON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x263F;" sclass="symbolAnc" tooltiptext="|^SYM_MERCURY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2640;" sclass="symbolAnc" tooltiptext="|^SYM_FEMALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2641;" sclass="symbolAnc" tooltiptext="|^SYM_EARTH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2642;" sclass="symbolAnc" tooltiptext="|^SYM_MALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2643;" sclass="symbolAnc" tooltiptext="|^SYM_JUPITER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2644;" sclass="symbolAnc" tooltiptext="|^SYM_SATURN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2645;" sclass="symbolAnc" tooltiptext="|^SYM_URANUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2646;" sclass="symbolAnc" tooltiptext="|^SYM_NEPTUNE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2647;" sclass="symbolAnc" tooltiptext="|^SYM_PLUTO_^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2648;" sclass="symbolAnc" tooltiptext="|^SYM_ARIES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2649;" sclass="symbolAnc" tooltiptext="|^SYM_TAURUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x264A;" sclass="symbolAnc" tooltiptext="|^SYM_GEMINI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x264B;" sclass="symbolAnc" tooltiptext="|^SYM_CANCER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x264C;" sclass="symbolAnc" tooltiptext="|^SYM_LEO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x264D;" sclass="symbolAnc" tooltiptext="|^SYM_VIRGO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x264E;" sclass="symbolAnc" tooltiptext="|^SYM_LIBRA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x264F;" sclass="symbolAnc" tooltiptext="|^SYM_SCORPIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x2650;" sclass="symbolAnc" tooltiptext="|^SYM_SAGITTARIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2651;" sclass="symbolAnc" tooltiptext="|^SYM_CAPRICORN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2652;" sclass="symbolAnc" tooltiptext="|^SYM_AQUARIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2653;" sclass="symbolAnc" tooltiptext="|^SYM_PISCES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2654;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CHESS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2655;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CHESS_QUEEN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2656;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CHESS_ROOK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2657;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CHESS_BISHOP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2658;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CHESS_KNIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2659;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CHESS_PAWN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x265A;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CHESS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x265B;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CHESS_QUEEN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x265C;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CHESS_ROOK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x265D;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CHESS_BISHOP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x265E;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CHESS_KNIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x265F;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CHESS_PAWN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2660;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_SPADE_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2661;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_HEART_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2662;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_DIAMOND_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2663;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CLUB_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x2664;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_SPADE_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2665;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_HEART_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2666;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_DIAMOND_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2667;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CLUB_SUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2668;" sclass="symbolAnc" tooltiptext="|^SYM_HOT_SPRINGS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2669;" sclass="symbolAnc" tooltiptext="|^SYM_QUARTER_NOTE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x266A;" sclass="symbolAnc" tooltiptext="|^SYM_EIGHTH_NOTE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x266B;" sclass="symbolAnc" tooltiptext="|^SYM_BEAMED_EIGHTH_NOTES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x266C;" sclass="symbolAnc" tooltiptext="|^SYM_BEAMED_SIXTEENTH_NOTES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x266D;" sclass="symbolAnc" tooltiptext="|^SYM_MUSIC_FLAT_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x266E;" sclass="symbolAnc" tooltiptext="|^SYM_MUSIC_NATURAL_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x266F;" sclass="symbolAnc" tooltiptext="|^SYM_MUSIC_SHARP_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2670;" sclass="symbolAnc" tooltiptext="|^SYM_WEST_SYRIAC_CROSS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2671;" sclass="symbolAnc" tooltiptext="|^SYM_EAST_SYRIAC_CROSS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2672;" sclass="symbolAnc" tooltiptext="|^SYM_UNIVERSAL_RECYCLING_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2673;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_1_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2674;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_2_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2675;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_3_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2676;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_4_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2677;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_5_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x2678;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_6_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2679;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_TYPE_7_PLASTICS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x267A;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLING_SYMBOL_FOR_GENERIC_MATERIALS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x267B;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_UNIVERSAL_RECYCLING_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x267C;" sclass="symbolAnc" tooltiptext="|^SYM_RECYCLED_PAPER_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x267D;" sclass="symbolAnc" tooltiptext="|^SYM_PARTIALLY_RECYCLED_PAPER_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x267E;" sclass="symbolAnc" tooltiptext="|^SYM_PERMANENT_PAPER_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x267F;" sclass="symbolAnc" tooltiptext="|^SYM_WHEELCHAIR_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2680;" sclass="symbolAnc" tooltiptext="|^SYM_DIE_FACE_1^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2681;" sclass="symbolAnc" tooltiptext="|^SYM_DIE_FACE_2^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2682;" sclass="symbolAnc" tooltiptext="|^SYM_DIE_FACE_3^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2683;" sclass="symbolAnc" tooltiptext="|^SYM_DIE_FACE_4^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2684;" sclass="symbolAnc" tooltiptext="|^SYM_DIE_FACE_5^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2685;" sclass="symbolAnc" tooltiptext="|^SYM_DIE_FACE_6^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2686;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CIRCLE_WITH_DOT_RIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2687;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_CIRCLE_WITH_TWO_DOTS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2688;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CIRCLE_WITH_WHITE_DOT_RIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2689;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_CIRCLE_WITH_TWO_WHITE_DOTS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x268A;" sclass="symbolAnc" tooltiptext="|^SYM_MONOGRAM_FOR_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x268B;" sclass="symbolAnc" tooltiptext="|^SYM_MONOGRAM_FOR_YIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x268C;" sclass="symbolAnc" tooltiptext="|^SYM_DIGRAM_FOR_GREATER_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x268D;" sclass="symbolAnc" tooltiptext="|^SYM_DIGRAM_FOR_LESSER_YIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x268E;" sclass="symbolAnc" tooltiptext="|^SYM_DIGRAM_FOR_LESSER_YANG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x268F;" sclass="symbolAnc" tooltiptext="|^SYM_DIGRAM_FOR_GREATER_YIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2690;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_FLAG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2691;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_FLAG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2692;" sclass="symbolAnc" tooltiptext="|^SYM_HAMMER_AND_PICK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2693;" sclass="symbolAnc" tooltiptext="|^SYM_ANCHOR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2694;" sclass="symbolAnc" tooltiptext="|^SYM_CROSSED_SWORDS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2695;" sclass="symbolAnc" tooltiptext="|^SYM_STAFF_OF_AESCULAPIUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2696;" sclass="symbolAnc" tooltiptext="|^SYM_SCALES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2697;" sclass="symbolAnc" tooltiptext="|^SYM_ALEMBIC^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2698;" sclass="symbolAnc" tooltiptext="|^SYM_FLOWER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x2699;" sclass="symbolAnc" tooltiptext="|^SYM_GEAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x269A;" sclass="symbolAnc" tooltiptext="|^SYM_STAFF_OF_HERMES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x269B;" sclass="symbolAnc" tooltiptext="|^SYM_ATOM_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x269C;" sclass="symbolAnc" tooltiptext="|^SYM_FLEUR_DE_LIS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x269D;" sclass="symbolAnc" tooltiptext="|^SYM_OUTLINED_WHITE_STAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A0;" sclass="symbolAnc" tooltiptext="|^SYM_WARNING_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A1;" sclass="symbolAnc" tooltiptext="|^SYM_HIGH_VOLTAGE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x26A2;" sclass="symbolAnc" tooltiptext="|^SYM_DOUBLED_FEMALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A3;" sclass="symbolAnc" tooltiptext="|^SYM_DOUBLED_MALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A4;" sclass="symbolAnc" tooltiptext="|^SYM_INTERLOCKED_FEMALE_AND_MALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A5;" sclass="symbolAnc" tooltiptext="|^SYM_MALE_AND_FEMALE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A6;" sclass="symbolAnc" tooltiptext="|^SYM_MALE_WITH_STROKE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A7;" sclass="symbolAnc" tooltiptext="|^SYM_MALE_WITH_STROKE_AND_MALE_AND_FEMALE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A8;" sclass="symbolAnc" tooltiptext="|^SYM_VERTICAL_MALE_WITH_STROKE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26A9;" sclass="symbolAnc" tooltiptext="|^SYM_HORIZONTAL_MALE_WITH_STROKE_SIGN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26AA;" sclass="symbolAnc" tooltiptext="|^SYM_MEDIUM_WHITE_CIRCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26AB;" sclass="symbolAnc" tooltiptext="|^SYM_MEDIUM_BLACK_CIRCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26AC;" sclass="symbolAnc" tooltiptext="|^SYM_MEDIUM_SMALL_WHITE_CIRCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26AD;" sclass="symbolAnc" tooltiptext="|^SYM_MARRIAGE_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26AE;" sclass="symbolAnc" tooltiptext="|^SYM_DIVORCE_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26AF;" sclass="symbolAnc" tooltiptext="|^SYM_UNMARRIED_PARTNERSHIP_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B0;" sclass="symbolAnc" tooltiptext="|^SYM_COFFIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B1;" sclass="symbolAnc" tooltiptext="|^SYM_FUNERAL_URN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B2;" sclass="symbolAnc" tooltiptext="|^SYM_NEUTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B3;" sclass="symbolAnc" tooltiptext="|^SYM_CERES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B4;" sclass="symbolAnc" tooltiptext="|^SYM_PALLAS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B5;" sclass="symbolAnc" tooltiptext="|^SYM_JUNO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr><h:tr >
+<h:td> <a label="&#x26B6;" sclass="symbolAnc" tooltiptext="|^SYM_VESTA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B7;" sclass="symbolAnc" tooltiptext="|^SYM_CHIRON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B8;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_MOON_LILITH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26B9;" sclass="symbolAnc" tooltiptext="|^SYM_SEXTILE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26BA;" sclass="symbolAnc" tooltiptext="|^SYM_SEMISEXTILE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26BB;" sclass="symbolAnc" tooltiptext="|^SYM_QUINCUNX^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26BC;" sclass="symbolAnc" tooltiptext="|^SYM_SESQUIQUADRATE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26C0;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_DRAUGHTS_MAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26C1;" sclass="symbolAnc" tooltiptext="|^SYM_WHITE_DRAUGHTS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26C2;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_DRAUGHTS_MAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="&#x26C3;" sclass="symbolAnc" tooltiptext="|^SYM_BLACK_DRAUGHTS_KING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr> -->
+			 	</h:table>
+		</div>
+		
+		<div id="emojiDivId"  width="690px" height="450px" style="overflow:auto" >
+				<label value="Select Symbol" style="font-weight: bold;font-size: 13px;"/>
+				<h:table style="border-spacing:0px"> 
+<h:tr>
+<h:td> <a sclass="christmasAnc"  style="background-position: -17px -18px;" tooltiptext="|^SYM_CLINKING_GLASSES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -49px -18px;" tooltiptext="|^SYM_BOTTLE_WITH_POPPING_CORK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -81px -18px;" tooltiptext="|^SYM_MRS_CLAUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -114px -18px;" tooltiptext="|^SYM_WRAPPED_GIFT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -147px -18px;" tooltiptext="|^SYM_BIRTHDAY_CAKE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -181px -18px;" tooltiptext="|^SYM_SANTA_CLAUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -213px -18px;" tooltiptext="|^SYM_CHRISTMAS_TREE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -247px -18px;" tooltiptext="|^SYM_DOLLAR_BANKNOTE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -279px -18px;" tooltiptext="|^SYM_MONEY_WITH_WINGS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -312px -18px;" tooltiptext="|^SYM_MONEY_BAG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -348px -18px;" tooltiptext="|^SYM_MONEY_MOUTH_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a sclass="christmasAnc"  style="background-position: -378px -18px;" tooltiptext="|^SYM_SHUSHING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>
+<h:tr>
+<h:td> <a sclass="emojiAnc"  style="background-position: -17px -18px;" tooltiptext="|^SYM_SMILING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -18px;" tooltiptext="|^SYM_DISBELIEF^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -18px;" tooltiptext="|^SYM_SAD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -18px;" tooltiptext="|^SYM_ANNOYANCE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -18px;" tooltiptext="|^SYM_GRINNING_FACE_WITH_BIG_EYES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -18px;" tooltiptext="|^SYM_GRINNING_FACE_WITH_SMILING_EYES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -18px;" tooltiptext="|^SYM_BEAMING_FACE_WITH_SMILING_EYES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -18px;" tooltiptext="|^SYM_GRINNING_SQUINTING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -18px;" tooltiptext="|^SYM_GRINNING_FACE_WITH_SWEAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -18px;" tooltiptext="|^SYM_ROLLING_ON_THE_FLOOR_LAUGHING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -18px;" tooltiptext="|^SYM_FACE_WITH_TEARS_OF_JOY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -18px;" tooltiptext="|^SYM_UPSIDE_DOWN_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -18px;" tooltiptext="|^SYM_WINKING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -18px;" tooltiptext="|^SYM_SMILING_FACE_WITH_SMILING_EYES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -18px;" tooltiptext="|^SYM_SMILING_FACE_WITH_HALO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -18px;" tooltiptext="|^SYM_SMILING_FACE_WITH_HEARTS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -18px;" tooltiptext="|^SYM_SMILING_FACE_WITH_HEART_EYES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -18px;" tooltiptext="|^SYM_STAR_STRUCK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -18px;" tooltiptext="|^SYM_FACE_BLOWING_A_KISS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -18px;" tooltiptext="|^SYM_KISSING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -50px;" tooltiptext="|^SYM_KISSING_FACE_WITH_SMILING_EYES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -50px;" tooltiptext="|^SYM_LOUDLY_CRYING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -50px;" tooltiptext="|^SYM_FACE_SCREAMING_IN_FEAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -50px;" tooltiptext="|^SYM_CONFOUNDED_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -50px;" tooltiptext="|^SYM_PERSEVERING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -50px;" tooltiptext="|^SYM_DISAPPOINTED_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -50px;" tooltiptext="|^SYM_DOWNCAST_FACE_WITH_SWEAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -50px;" tooltiptext="|^SYM_WEARY_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -50px;" tooltiptext="|^SYM_TIRED_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -50px;" tooltiptext="|^SYM_YAWNING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -50px;" tooltiptext="|^SYM_FACE_WITH_STEAM_FROM_NOSE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -50px;" tooltiptext="|^SYM_HOT_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -50px;" tooltiptext="|^SYM_PARTYING_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -50px;" tooltiptext="|^SYM_WAVING_HAND^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -50px;" tooltiptext="|^SYM_FESTIVUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -50px;" tooltiptext="|^SYM_FATHERS_DAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -50px;" tooltiptext="|^SYM_MOTHERS_DAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -50px;" tooltiptext="|^SYM_WEDDING_MARRIAGE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -50px;" tooltiptext="|^SYM_PREGNANT_WOMAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -50px;" tooltiptext="|^SYM_WOMAN_DANCING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -78px;" tooltiptext="|^SYM_PERSON_ROWING_BOAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -78px;" tooltiptext="|^SYM_PERSON_SWIMMING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -78px;" tooltiptext="|^SYM_TANGERINE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -78px;" tooltiptext="|^SYM_CHESTNUT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -78px;" tooltiptext="|^SYM_MOON_CAKE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -78px;" tooltiptext="|^SYM_PIE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -78px;" tooltiptext="|^SYM_HOT_BEVERAGE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -78px;" tooltiptext="|^SYM_PRETZEL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -78px;" tooltiptext="|^SYM_BAGEL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -78px;" tooltiptext="|^SYM_PANCAKES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -78px;" tooltiptext="|^SYM_WAFFLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -78px;" tooltiptext="|^SYM_CHEESE_WEDGE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -78px;" tooltiptext="|^SYM_MEAT_ON_BONE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -78px;" tooltiptext="|^SYM_POULTRY_LEG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -78px;" tooltiptext="|^SYM_CUT_OF_MEAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -78px;" tooltiptext="|^SYM_BACON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -78px;" tooltiptext="|^SYM_HAMBURGER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -78px;" tooltiptext="|^SYM_FRENCH_FRIES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -78px;" tooltiptext="|^SYM_PIZZA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -78px;" tooltiptext="|^SYM_HOT_DOG^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -108px;" tooltiptext="|^SYM_SANDWICH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -108px;" tooltiptext="|^SYM_TACO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -108px;" tooltiptext="|^SYM_BURRITO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -108px;" tooltiptext="|^SYM_CANDY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -108px;" tooltiptext="|^SYM_LOLLIPOP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -108px;" tooltiptext="|^SYM_HERB^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -108px;" tooltiptext="|^SYM_MELON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -108px;" tooltiptext="|^SYM_JACK-O-LANTERN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -108px;" tooltiptext="|^SYM_BLOSSOM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -108px;" tooltiptext="|^SYM_BOUQUET^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -108px;" tooltiptext="|^SYM_SUNFLOWER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -108px;" tooltiptext="|^SYM_CHERRY_BLOSSOM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -108px;" tooltiptext="|^SYM_ROSE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -108px;" tooltiptext="|^SYM_HIBISCUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -108px;" tooltiptext="|^SYM_TULIP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -108px;" tooltiptext="|^SYM_WHITE_FLOWER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -108px;" tooltiptext="|^SYM_FOUR_LEAF_CLOVER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -108px;" tooltiptext="|^SYM_SUPER_BOWL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -108px;" tooltiptext="|^SYM_SKIING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -108px;" tooltiptext="|^SYM_SOCCER_BALL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -138px;" tooltiptext="|^SYM_SWEAT_DROPLETS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -138px;" tooltiptext="|^SYM_SNOW_FLAKE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -138px;" tooltiptext="|^SYM_DASHING_AWAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -138px;" tooltiptext="|^SYM_SUN_WITH_FACE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -138px;" tooltiptext="|^SYM_CRESCENT_MOON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -138px;" tooltiptext="|^SYM_SPARKLES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -138px;" tooltiptext="|^SYM_SUNRISE_OVER_MOUNTAINS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -138px;" tooltiptext="|^SYM_SUNRISE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -138px;" tooltiptext="|^SYM_SUNSET^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -138px;" tooltiptext="|^SYM_FOUNTAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -138px;" tooltiptext="|^SYM_TENT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -138px;" tooltiptext="|^SYM_FOGGY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -138px;" tooltiptext="|^SYM_NIGHT_WITH_STARS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -138px;" tooltiptext="|^SYM_SNOW-CAPPED_MOUNTAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -138px;" tooltiptext="|^SYM_MOUNTAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -138px;" tooltiptext="|^SYM_VOLCANO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -138px;" tooltiptext="|^SYM_MOUNT_FUJI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -138px;" tooltiptext="|^SYM_CAMPING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -138px;" tooltiptext="|^SYM_BEACH_WITH_UMBRELLA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -138px;" tooltiptext="|^SYM_DESERT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -168px;" tooltiptext="|^SYM_DESERT_ISLAND^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -168px;" tooltiptext="|^SYM_NATIONAL_PARK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -168px;" tooltiptext="|^SYM_SUMMER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -168px;" tooltiptext="|^SYM_SPRING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -168px;" tooltiptext="|^SYM_GUY_FAWKES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -168px;" tooltiptext="|^SYM_MOON_VIEWING_CEREMONY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -168px;" tooltiptext="|^SYM_RED_PAPER_LANTERN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -168px;" tooltiptext="|^SYM_WORKING_FROM_HOME^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -168px;" tooltiptext="|^SYM_STADIUM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -168px;" tooltiptext="|^SYM_CLASSICAL_BUILDING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -168px;" tooltiptext="|^SYM_BUILDING_CONSTRUCTION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -168px;" tooltiptext="|^SYM_HUT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -168px;" tooltiptext="|^SYM_DERELICT_HOUSE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -168px;" tooltiptext="|^SYM_HOUSE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -168px;" tooltiptext="|^SYM_OFFICE_BUILDING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -168px;" tooltiptext="|^SYM_JAPANESE_POST_OFFICE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -168px;" tooltiptext="|^SYM_POST_OFFICE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -168px;" tooltiptext="|^SYM_HOSPITAL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -168px;" tooltiptext="|^SYM_BANK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -168px;" tooltiptext="|^SYM_HOTEL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -198px;" tooltiptext="|^SYM_LOVE_HOTEL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -198px;" tooltiptext="|^SYM_CONVENIENCE_STORE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -198px;" tooltiptext="|^SYM_SCHOOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -198px;" tooltiptext="|^SYM_DEPARTMENT_STORE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -198px;" tooltiptext="|^SYM_FACTORY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -198px;" tooltiptext="|^SYM_JAPANESE_CASTLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -198px;" tooltiptext="|^SYM_CASTLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -198px;" tooltiptext="|^SYM_WEDDING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -198px;" tooltiptext="|^SYM_TOKYO_TOWER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -198px;" tooltiptext="|^SYM_STATUE_OF_LIBERTY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -198px;" tooltiptext="|^SYM_CHURCH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -198px;" tooltiptext="|^SYM_MOSQUE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -198px;" tooltiptext="|^SYM_HINDU_TEMPLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -198px;" tooltiptext="|^SYM_CITYSCAPE_AT_DUSK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -198px;" tooltiptext="|^SYM_SYNAGOGUE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -198px;" tooltiptext="|^SYM_SHINTO_SHRINE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -198px;" tooltiptext="|^SYM_KAABA^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -198px;" tooltiptext="|^SYM_CITYSCAPE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -198px;" tooltiptext="|^SYM_BRIDGE_AT_NIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -198px;" tooltiptext="|^SYM_HANUKKAH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -228px;" tooltiptext="|^SYM_CAROUSEL_HORSE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -228px;" tooltiptext="|^SYM_FERRIS_WHEEL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -228px;" tooltiptext="|^SYM_ROLLER_COASTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -228px;" tooltiptext="|^SYM_LOCOMOTIVE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -228px;" tooltiptext="|^SYM_RAILWAY_CAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -228px;" tooltiptext="|^SYM_HIGH-SPEED_TRAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -228px;" tooltiptext="|^SYM_BULLET_TRAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -228px;" tooltiptext="|^SYM_TRAIN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -228px;" tooltiptext="|^SYM_METRO^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -228px;" tooltiptext="|^SYM_LIGHT_RAIL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -228px;" tooltiptext="|^SYM_STATION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -228px;" tooltiptext="|^SYM_TRAM^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -228px;" tooltiptext="|^SYM_MONORAIL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -228px;" tooltiptext="|^SYM_MOUNTAIN_RAILWAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -228px;" tooltiptext="|^SYM_TRAM_CAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -228px;" tooltiptext="|^SYM_BUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -228px;" tooltiptext="|^SYM_ONCOMING_BUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -228px;" tooltiptext="|^SYM_TROLLEYBUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -228px;" tooltiptext="|^SYM_MINIBUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -228px;" tooltiptext="|^SYM_AMBULANCE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -258px;" tooltiptext="|^SYM_FIRE_ENGINE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -258px;" tooltiptext="|^SYM_POLICE_CAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -258px;" tooltiptext="|^SYM_ONCOMING_POLICE_CAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -258px;" tooltiptext="|^SYM_TAXI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -258px;" tooltiptext="|^SYM_ONCOMING_TAXI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -258px;" tooltiptext="|^SYM_AUTOMOBILE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -258px;" tooltiptext="|^SYM_ONCOMING_AUTOMOBILE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -258px;" tooltiptext="|^SYM_SPORT_UTILITY_VEHICLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -258px;" tooltiptext="|^SYM_PICKUP_TRUCK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -258px;" tooltiptext="|^SYM_DELIVERY_TRUCK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -258px;" tooltiptext="|^SYM_ARTICULATED_LORRY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -258px;" tooltiptext="|^SYM_TRACTOR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -258px;" tooltiptext="|^SYM_RACING_CAR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -258px;" tooltiptext="|^SYM_MOTORCYCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -258px;" tooltiptext="|^SYM_MOTOR_SCOOTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -258px;" tooltiptext="|^SYM_AUTO_RICKSHAW^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -258px;" tooltiptext="|^SYM_BICYCLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -258px;" tooltiptext="|^SYM_KICK_SCOOTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -258px;" tooltiptext="|^SYM_BUS_STOP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -258px;" tooltiptext="|^SYM_MOTORWAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -288px;" tooltiptext="|^SYM_RAILWAY_TRACK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -288px;" tooltiptext="|^SYM_FUEL_PUMP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -288px;" tooltiptext="|^SYM_POLICE_CAR_LIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -288px;" tooltiptext="|^SYM_HORIZONTAL_TRAFFIC_LIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -288px;" tooltiptext="|^SYM_VERTICAL_TRAFFIC_LIGHT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -288px;" tooltiptext="|^SYM_CONSTRUCTION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -288px;" tooltiptext="|^SYM_ANCHOR^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -288px;" tooltiptext="|^SYM_SAILBOAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -288px;" tooltiptext="|^SYM_SPEEDBOAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -288px;" tooltiptext="|^SYM_PASSENGER_SHIP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -288px;" tooltiptext="|^SYM_FERRY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -288px;" tooltiptext="|^SYM_MOTOR_BOAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -288px;" tooltiptext="|^SYM_SHIP^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -288px;" tooltiptext="|^SYM_AIRPLANE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -288px;" tooltiptext="|^SYM_SMALL_AIRPLANE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -288px;" tooltiptext="|^SYM_AIRPLANE_DEPARTURE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -288px;" tooltiptext="|^SYM_AIRPLANE_ARRIVAL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -288px;" tooltiptext="|^SYM_PARACHUTE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -288px;" tooltiptext="|^SYM_SEAT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -288px;" tooltiptext="|^SYM_HELICOPTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -318px;" tooltiptext="|^SYM_SUSPENSION_RAILWAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -318px;" tooltiptext="|^SYM_MOUNTAIN_CABLEWAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -318px;" tooltiptext="|^SYM_AERIAL_TRAMWAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -318px;" tooltiptext="|^SYM_A_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -318px;" tooltiptext="|^SYM_B_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -318px;" tooltiptext="|^SYM_C_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -318px;" tooltiptext="|^SYM_D_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -318px;" tooltiptext="|^SYM_E_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -318px;" tooltiptext="|^SYM_F_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -318px;" tooltiptext="|^SYM_G_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -318px;" tooltiptext="|^SYM_H_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -318px;" tooltiptext="|^SYM_I_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -318px;" tooltiptext="|^SYM_J_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -318px;" tooltiptext="|^SYM_K_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -318px;" tooltiptext="|^SYM_L_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -318px;" tooltiptext="|^SYM_M_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -318px;" tooltiptext="|^SYM_N_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -318px;" tooltiptext="|^SYM_O_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -318px;" tooltiptext="|^SYM_P_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -318px;" tooltiptext="|^SYM_Q_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -348px;" tooltiptext="|^SYM_R_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -348px;" tooltiptext="|^SYM_T_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -348px;" tooltiptext="|^SYM_V_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -348px;" tooltiptext="|^SYM_W_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -348px;" tooltiptext="|^SYM_X_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -348px;" tooltiptext="|^SYM_Y_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -348px;" tooltiptext="|^SYM_Z_WORD^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -348px;" tooltiptext="|^SYM_ZZZ^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -348px;" tooltiptext="|^SYM_Dingbat_1^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -348px;" tooltiptext="|^SYM_Dingbat_2^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -348px;" tooltiptext="|^SYM_Dingbat_3^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -348px;" tooltiptext="|^SYM_Dingbat_4^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -348px;" tooltiptext="|^SYM_Dingbat_5^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -348px;" tooltiptext="|^SYM_Dingbat_6^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -348px;" tooltiptext="|^SYM_Dingbat_7^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -348px;" tooltiptext="|^SYM_Dingbat_8^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -348px;" tooltiptext="|^SYM_Dingbat_9^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -348px;" tooltiptext="|^SYM_Dingbat_10^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -348px;" tooltiptext="|^SYM_GROWING_HEART^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -348px;" tooltiptext="|^SYM_GREEN_HEART^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -378px;" tooltiptext="|^SYM_BLUE_HEART^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -378px;" tooltiptext="|^SYM_YELLOW_HEART^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -378px;" tooltiptext="|^SYM_PURPLE_HEART^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -378px;" tooltiptext="|^SYM_HEART_DECORATION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -378px;" tooltiptext="|^SYM_LOVE_LETTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -378px;" tooltiptext="|^SYM_WHITE_HEART^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -378px;" tooltiptext="|^SYM_VALENTINES_DAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -378px;" tooltiptext="|^SYM_HEARTS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -378px;" tooltiptext="|^SYM_ANGER_SYMBOL^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -378px;" tooltiptext="|^SYM_SPEECH_BALLOON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -378px;" tooltiptext="|^SYM_ONE_EYE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -378px;" tooltiptext="|^SYM_THOUGHT_BALLOON^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -378px;" tooltiptext="|^SYM_BARBER_POLE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -378px;" tooltiptext="|^SYM_CORONAVIRUS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -378px;" tooltiptext="|^SYM_DIWALI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -513px -378px;" tooltiptext="|^SYM_EASTER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -544px -378px;" tooltiptext="|^SYM_EMOJI_MOVIE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -578px -378px;" tooltiptext="|^SYM_FALL_AUTUMN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -612px -378px;" tooltiptext="|^SYM_GRADUATION^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -644px -378px;" tooltiptext="|^SYM_NEW_YEARS_EVE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+<h:tr>
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -17px -408px;" tooltiptext="|^SYM_QUEENS_BIRTHDAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -49px -408px;" tooltiptext="|^SYM_THANKSGIVING^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -81px -408px;" tooltiptext="|^SYM_VETERANS_DAY^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -114px -408px;" tooltiptext="|^SYM_SNOW_MAN^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -147px -408px;" tooltiptext="|^SYM_TELEPHONE_RECEIVER^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -181px -408px;" tooltiptext="|^SYM_BIKINI^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -213px -408px;" tooltiptext="|^SYM_ONE_PIECE_SWIMSUIT^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -247px -408px;" tooltiptext="|^SYM_BRIEFS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -279px -408px;" tooltiptext="|^SYM_MOUTH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -312px -408px;" tooltiptext="|^SYM_KISS_MARK^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -348px -408px;" tooltiptext="|^SYM_EYES^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -378px -408px;" tooltiptext="|^SYM_WATER_WAVE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -412px -408px;" tooltiptext="|^SYM_MEGAPHONE^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -444px -408px;" tooltiptext="|^SYM_WAVE_DASH^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+<h:td> <a label="" sclass="emojiAnc"  style="background-position: -479px -408px;" tooltiptext="|^SYM_SHOPPING_BAGS^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" /></h:td>  
+</h:tr>	
+
+</h:table>
+			</div>
+			<!--<h:img src="images/subject_emojis.png"  usemap="#smap"/>-->
+      </window>
+		
+		<div>
+			<label value="Set your preferences for the new email campaign." />
+		</div>
+		
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption> <label value="Basic Settings"/> </caption>
+			
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;" >
+				
+				<h:tr height="50">
+					<h:td valign="bottom" width="150">
+						<label value="Email Name:"/>
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					
+					<h:td valign="bottom" colspan="2">
+						<textbox  id="cNameTbId" value="" name="campaignNameTb"  width="250px"  constraint="no empty: Please specify an email name" maxlength="100"/>
+						<label value="" id="nameStatusLblId"/>
+					</h:td>
+				</h:tr>
+				
+
+
+				<h:tr height="26">
+					<h:td>	</h:td>
+
+					<h:td valign="top" style="padding-top:5px;">	
+						<image src="/img/icons/icon_i.png"  />	
+					</h:td>
+					
+					<h:td valign="top" style="padding-top:3px;"> 	
+						<label value="Email name is only for your reference and will not appear in the sent email. " sclass="labelPos" />
+					</h:td>
+					
+				</h:tr>
+				
+				
+					<h:tr height="50">
+					<h:td valign="bottom" width="150">
+						<label value="Campaign Category:"/>
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					
+					<h:td valign="bottom" colspan="2">
+						<listbox  id="categoryLbId"  rows="1" mold="select" style="position:relative;" width="200px">
+						
+						<listitem label="Select Category" selected="true" ></listitem>
+						</listbox>
+						
+							<image src="/img/icons/icon_q.png" tooltip="help2"  style="padding-left:40px;" id="helpImgId" visible="false"/>
+						<popup id="help2"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="You need to enable subscriber preference center for this setting" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+						
+					</h:td>
+				</h:tr>
+				
+				
+				
+				<h:tr height="30" >
+					<h:td style="padding-top:20px;">
+						<label value="Subject:" />
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					
+					<h:td colspan="2" style="padding-top:20px;">
+						<textbox id="cSubTb" width="250px" value=""  w:onClick="updateCaretPosition()"  w:onChanging="updateCaretPosition()"
+							w:onFocus="updateCaretPosition() " name="cSubTb" maxlength="200" />
+							 <space width="5px"/>
+							<textbox id="caretPosTB" visible="false" />
+						<label visible="false" value="A carefully crafted Subject gets better opens, recommended length 50 - 55 characters." sclass="labelPos" />
+						<listbox id="couponLbId" width="150px" sclass="cb_250w" visible="false" mold="select" style="margin:0 5px;"/>
+						<toolbarbutton id="couponTbId"  label="Insert Promo-code" visible="false" sclass="tbbLink" 
+				style="margin:0 0 0 5px; text-decoration: underline; color:#2787BA; font-weight:bold;font-size:12px;"/>
+					</h:td>
+				</h:tr>
+				
+				<h:tr>
+					<h:td>
+					</h:td>
+					<h:td style="padding-bottom:5px;"  colspan="2">
+						
+							 <a label="Insert Merge Tags" sclass="cb_250w" style="color:#43A0BA;" id="mergeTagsAId"  width = "50px"/>
+							 <a label="Insert Symbols" sclass="cb_250w" style="color:#43A0BA;margin-left:15px;"	id="symbolTagsAId" width = "50px"/>
+							 <a label="Insert emojis" sclass="cb_250w" style="color:#43A0BA;margin-left:15px;"  id="emojiTagsAId" width= "50px"/>
+					</h:td>
+				
+				</h:tr>
+			
+				
+				<h:tr height="50">
+					<h:td >
+						<label value="From Name:" />
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					
+					<h:td colspan="2">
+						<textbox id="cFromNameTb" width="250px" value=""
+							constraint="no empty: Please enter From name" maxlength="60" />
+							<image src="/img/icons/icon_q.png" tooltip="help1"  style="padding-left:40px;" />
+							<popup id="help"  width="400px"  style="bgcolor:#CCCCCC" >
+								<h:table   >
+									<h:tr>
+										<h:td>
+											<image src="/img/icons/icon_bulb.png" />
+										</h:td>
+										<h:td>
+											<label value="A carefully crafted Subject gets better opens," />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+										</h:td>
+										<h:td>
+											<label value="recommended length 50 - 55 characters." />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+							<popup id="help1"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="Name displayed as 'From' in the email" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+							
+							<popup id="help3"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="In test email user's home store details will be displayed" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+							
+							<popup id="help4"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="In test email user's last purchase store details will be displayed" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+							
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="50">
+				<h:td >
+					<label value="From Email Address:" />
+							<label value="*" sclass="redStar"/>
+						</h:td>
+						
+						<h:td colspan="2">
+							<combobox  id="cFromEmailCb" readonly="true" sclass="cb_250w" /> 
+						    <label value="or" style="font-weight: bold;padding-left:10px;" />
+							<a label="Register" id="regFrmEmlAnchId" style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;" popup="regEmailPopupId" /> 
+							<label value="new Email Address" style="padding-left:5px;" />	
+							<popup id="regEmailPopupId" width="400px">
+								
+								   <h:table >
+								    <h:tr>
+								     	<h:td>
+								   			Enter Email Address :
+								   		</h:td>
+								   	</h:tr>
+								   	<h:tr>
+								   		<h:td>
+								   	 		<textbox id="cFromEmailTb" width="250px"  value="" name="cFromEmailTb" maxlength="60" />
+								   		
+								   		</h:td>
+								   	</h:tr>
+								   	<h:tr height="20" />
+								   	<h:tr>	
+								   		<h:td align="right">	 
+								   	 		<button label="Cancel" sclass="idle70" id="cancelBtnId" /> 
+											<button label="Submit" sclass="idle140 greenbtn" id="submitBtnId" />
+									 	</h:td>
+									 </h:tr>
+									 </h:table> 
+								
+							</popup>	
+						</h:td>
+					</h:tr>
+					
+					<h:tr height="40" valign="bottom">
+						<h:td style=" padding-bottom: 5px;">
+							<label value=" Reply Email Address:" />
+							<label value="*" sclass="redStar"/>
+						</h:td>
+						
+						<h:td colspan="2">
+							<combobox sclass="cb_250w" id="cReplyEmailCb" readonly="true"/>
+							<label value="or" style="font-weight: bold;padding-left:10px;" />
+							<a label="Register" id="regRepToEmlAnchId"  style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;" popup="regEmailPopupId" />
+							<label value="new Email Address" style="padding-left:5px;" />
+							<!--<popup id="regRepToEmailPopupId" width="370px">
+								<vbox>
+								   <h:table >
+								    <h:tr>
+								     	<h:td>
+								   			Enter  Email Address :
+								   		</h:td>
+								   	</h:tr>
+								   	<h:tr>	
+								   		<h:td>	 
+								   	 		<textbox id="cRepToEmailTb" width="250px" value="" name="cFromEmailTb" maxlength="60" /> 
+											 <toolbarbutton label="Submit" onClick="campSettigWinId.registerNewFromEmail(cFromEmailTb);"/> 
+											<button label="Submit" sclass="idle136" id="repToSubmitBtnId" />
+									 	</h:td>
+									 </h:tr>
+									 </h:table> 
+								</vbox>
+							</popup>	
+							--><!-- <textbox id="cReplyEmailTb" value=""
+								width="250px"
+								constraint="no empty: Please enter an email address"
+								maxlength="60" /> -->
+							
+				</h:td>
+			</h:tr>
+
+		<h:tr height="26">
+			<h:td>	</h:td>
+
+			
+			
+			<h:td valign="top" colspan="2" style="padding-left:275px;"> 	
+				<image src="/img/icons/icon_i.png"  />	
+				<label	value="Confirmation email will be sent for verification."	sclass="labelPos" />
+			</h:td>
+		</h:tr>
+		
+		<h:tr height="10"/>
+
+			 <h:tr >
+			
+				<h:td valign="top">
+					<label value="Select Email Category:" visible="false" />
+					<label value="*" sclass="redStar" visible="false"/>
+				</h:td>
+				
+				<h:td colspan="2">
+					<combobox width="250px" id="cCategoryCb" value="0" readonly="true" visible="false"/>
+				</h:td>
+				
+				</h:tr> 
+			</h:table>
+			</groupbox>
+			
+					
+					
+	<groupbox width="95%" id="cAddressGb" style="margin-top:10px;"	sclass="gbStyle" closable="false">
+	<caption>
+		<checkbox id="cAddressCbId"	checked="true" visible="false"/>
+		<label value="Sender Address"/>
+	</caption>
+	
+	
+	<div id="addrContentDivId" visible="true">
+		<h:table cellspacing="0" cellpadding="5" width="100%" border="0">
+			
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+					<label value="Use Custom Footer" />
+				</h:td>
+				<h:td valign="top">
+					<checkbox id="customFooterId" checked="false" />
+				</h:td>
+			</h:tr>
+			
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+				<label value="Address in Footer" />
+				</h:td>
+				<h:td valign="top">
+					<div id="postalAddressDivId">
+						<radiogroup id="addrRgId"  orient="vertical"/>
+							<vlayout>
+								
+									<hlayout>
+										<radio radiogroup="addrRgId" checked="true" id="postalAddressRbId"   />
+										<a label="Modify" 
+										style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="changeAddressId" />
+									</hlayout>
+									<hlayout>
+										 <radio radiogroup="addrRgId" id="homeStoreAddressDetailsId" label="Auto-fill with contact's homestore address"/> <image src="/img/icons/icon_q.png" tooltip="help3"  />
+									</hlayout>
+									<hlayout>
+										<radio radiogroup="addrRgId" id="lastPurchaseStoreId" label="Auto-fill with contact's last purchase store address"/> <image src="/img/icons/icon_q.png" tooltip="help4" />
+									</hlayout>
+									<hlayout>
+									<radio radiogroup="addrRgId" label="Use store address"  id="storeAddressId"/>
+									<listbox id="storesLbId" width="200px" mold="select"/>
+									<label id="storeAddrLblId" visible="false" />
+									</hlayout>
+							</vlayout>
+					</div>
+				
+				<div visible="false" id="changeAddressDivId">
+					<h:table width="85%" cellspacing="10" cellpadding="0" align="left" style="padding-left:20px;">
+						<h:tr>
+							<h:td width="150">
+								<label value="Address one" />
+								<label value="*"  sclass="redStar" />
+							</h:td>
+							
+							<h:td>
+								<textbox id="cAddressOneTbId" cols="25" maxlength="45" value=""/>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<label value="Address two" />
+							</h:td>
+							
+							<h:td>
+								<textbox id="cAddressTwoTbId" cols="25" maxlength="45"  value=""/>
+							</h:td>
+						</h:tr>
+					 
+						<h:tr>
+							<h:td>
+								<label value="City" />
+								<label value="*" sclass="redStar"/>
+							</h:td>
+							
+							<h:td>
+								<textbox id="cCityTbId" cols="25" maxlength="20" value=""/>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<label value="State" />
+								<label value="*" sclass="redStar"/>
+							</h:td>
+							
+							<h:td>
+								<textbox id="cStateTbId" cols="25" maxlength="20" value=""/>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<label value="Country" />
+								<label value="*" sclass="redStar"/>
+							</h:td>
+							
+							<h:td>
+								<textbox id="cCountryTbId" cols="25" maxlength="20" value=""/>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<label value="Zip / Pin" />
+								<!-- <label value="*" sclass="redStar"/> -->
+							</h:td>
+							
+							<h:td>
+								<textbox id="cPinLbId" cols="25" maxlength="20" />
+								
+								<image
+											src="/img/icons/icon_q.png" tooltip="help10"
+											style="padding-left:40px;" />
+											<popup id="help10" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Required for countries where postal/ZIP codes are used."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+								
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<label value="Phone" />
+							</h:td>
+							
+							<h:td>
+								<textbox id="cPhoneTbId" 
+								tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+								xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+								
+								cols="25" maxlength="30" />
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td></h:td>
+							<h:td>
+								<button label="Save"  sclass="idle70 greenbtn" id="doneAnchId" /> 
+								<space/>
+								<button label="Cancel" id="cancelAddressId" sclass="idle70" /> 
+								
+							</h:td>
+						</h:tr>
+					</h:table>
+				</div>				
+					
+				</h:td>
+		
+			</h:tr>
+			<h:tr>
+				<h:td></h:td>
+				<h:td >
+					
+				
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+				<label value="Include Before Address" />
+				</h:td>
+				<h:td>
+					<checkbox id="orgNameChkBoxId" checked="true" label="Organization Name" />
+					<checkbox id="orgUnitChkBoxId"  label="Organization Unit" />
+					
+				</h:td>
+			
+			</h:tr>
+						
+			</h:table>
+						
+						
+		</div>
+						
+						
+						
+						
+						
+						
+						
+		<!--<label id="postalAddressTbId" multiline="false" style="font-size:13px;word-wrap: break-word;" value="" />
+						
+						
+						
+						
+		--></groupbox>
+		
+		<groupbox width="95%" id="gaAddressGb" style="margin-top:10px;"	sclass="gbStyle" closable="false">
+			<caption>
+				<checkbox id="gaSettingsCbId"	checked="true" visible="false"/>
+				<label value="Google Analytics Settings"/>
+			</caption>
+			<div id="gbAnalyticsDivId" visible="true">
+			<h:table cellspacing="0" cellpadding="0"   width="97%" align="left" style="padding-left:20px;" >
+				<h:tr>
+					<h:td width="195px">
+						<label value="Enable tracking links" />
+					</h:td>
+					<h:td>
+						<checkbox id="gaChekbxId"  sclass="theme-lbHeading" checked="false" onCheck="gaTitleDivId.visible=!gaTitleDivId.visible; gaCampTitleTxtbxId.setFocus(true)" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td></h:td>
+					<h:td>
+						<div id="gaTitleDivId" visible="false">
+							<h:table cellspacing="0" cellpadding="0"   align="left" width="100%">
+								<h:tr>
+									<hlayout>
+										<label value="Campaign Name (utm_campaign) variable "  sclass="theme-lbHeading" />
+										<textbox id="gaCampTitleTxtbxId" width="250px" constraint="no empty:It should not be empty"/>
+									</hlayout>
+								</h:tr>
+						
+								<h:tr>
+								<h:td width="246px"></h:td>
+									<h:td valign="top" style="padding-top:5px;">	
+										<image src="/img/icons/icon_i.png"  />	
+									</h:td>
+									<h:td valign="top" style="padding-top:3px;"> 	
+										<label value="Campaign Source (utm_source) variable: This value will be set to the name of your OptCulture email campaign." sclass="labelPos" /><h:br/>
+										<label value="Campaign Medium (utm_medium) variable: This value will be set to email for the email and view as web versions." sclass="labelPos" /> 
+									</h:td>
+								</h:tr>
+								</h:table>	
+						</div>
+					</h:td>
+				</h:tr>
+						</h:table>
+			</div>
+		</groupbox>
+		
+			
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false" open="true" >
+			<caption>
+				<label value="Optional Settings"/>
+				<toolbarbutton id="optSettingsTbBtnId" image="/img/icons/icon_plus.png" />
+			</caption>
+			<div id="gbContentDivId" visible="false">
+			
+			
+			<h:table cellspacing="0" cellpadding="0"   width="85%" align="left" style="padding-left:20px;" >
+				<h:tr>
+					<h:td valign="top">
+						<label value="Preview Text For Campaign" />
+					</h:td>
+					<h:td>
+						<checkbox id="cPreviewTextCb"
+							onCheck="cPreviewTextHboxId.visible = !cPreviewTextHboxId.visible"
+							checked="false" />
+						</h:td>
+						<h:tr>
+						<h:td></h:td>
+						<h:td>
+							<div id="cPreviewTextHboxId" style="text-align:left;" align="left" visible="false">
+							<h:table>
+							<h:tr>
+								<h:td>
+								
+								<label value="Text:" style="padding-right:5px;" />
+								<textbox id="cPreviewTextTb"
+									width="250px"
+									maxlength="200" />
+							
+								</h:td>
+							</h:tr>
+							</h:table>
+							</div>
+							</h:td>
+							</h:tr>
+							</h:tr>
+						<h:tr>
+					<h:td valign="top">
+						<label value="Web page Version" />
+					</h:td>
+					
+					<h:td valign="top">
+						<checkbox id="cWebPageCb"
+							label="Include a link to view a web page version of this email"
+							onCheck="cWebLinkHboxId.visible = !cWebLinkHboxId.visible"
+							checked="true" />
+						</h:td>
+						</h:tr>
+						
+						
+						<h:tr>
+						<h:td></h:td>
+						<h:td>
+						
+						
+						<div id="cWebLinkHboxId" style="text-align:left;" align="left" visible="true">
+						<h:table>
+							<h:tr>
+								<h:td>
+								
+								<label value="Text:" style="padding-right:5px;" />
+								<textbox id="cWebLinkTextTb"
+									width="250px" value=" Having Trouble viewing this email?"
+									maxlength="200" />
+							
+								</h:td>
+								<h:td width="20"></h:td>
+								<h:td>	
+							
+								<label value="Link  Text:" style="padding-right:5px;"/>
+								<textbox id="cWebLinkUrlTextTb"
+									width="150px" value=" Click here" maxlength="200" />
+							
+								
+								</h:td>
+							</h:tr>
+							<h:tr></h:tr>
+							<h:tr>
+							<h:td>
+							<!--APP-3431 -->
+							<hlayout>
+							<label value="Alignment:"/>
+							<radiogroup id="alignmentRbId">
+							<radio id="leftRadioButtonId" label="Left" style="padding-right:5px;"></radio>
+							<radio id="centerRadioButtonId" label="Center" style="padding-right:5px;" checked="true"></radio>
+							<radio id="rightRadioButtonId" label="Right" style="padding-right:5px;"></radio>
+							</radiogroup>
+							</hlayout>
+							</h:td>
+							</h:tr>							
+						</h:table>
+						</div>
+						</h:td>
+					</h:tr>
+				
+				<h:tr height="15"/>
+				
+				<h:tr>
+					<h:td valign="top" width="170" style="padding-top:5px;">
+						<label value=" Permission Reminder" />
+					</h:td>
+					
+					<h:td>
+						<radiogroup id="cPermRemRb">
+							<radio label="On" 
+								onCheck="permRemDivId.visible= true" checked="true" />
+							<radio label="Off"
+								onCheck="permRemDivId.visible=false;"  />
+						</radiogroup>
+						</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td></h:td>
+							<h:td>
+							
+						<div id="permRemDivId" visible="true">
+							<textbox id="permRemTextId" rows="3" height="50px" cols="50" value="You are receiving this email because you had opted in on our website."
+								maxlength="200" />
+							<h:br />
+							
+						</div>
+							
+							</h:td>
+						
+						</h:tr>
+					<h:tr height="15"/>
+				
+				<!--<h:tr>
+					<h:td >
+						<label value= "Unsubscribe"/>
+					</h:td>
+					
+					<h:td >
+						<label value="Text:" style="padding-right:5px;" />
+						<textbox value="You may unsubscribe if you do not wish to receive our mails" width="400px" readonly="true"/>
+						</h:td>
+						</h:tr>
+						<h:tr height="10"></h:tr>
+						<h:tr>
+							<h:td></h:td>
+							<h:td>
+						<image src="/img/icons/add_icon.png" style="padding-left:30px;" />
+						<label value="This field is compulsary and cannot br editted" />								
+							
+							</h:td>
+						</h:tr>
+					<h:tr height="10"/>
+				-->
+				
+				<h:tr >
+					<h:td >
+						<label value="Personalize the &quot;To:&quot; Field:" />
+					</h:td>
+					<h:td>
+						<checkbox id="toNameChkId"  sclass="theme-lbHeading" checked="false" onCheck="persToDivId.visible=!persToDivId.visible" />
+					</h:td>
+					</h:tr>
+					
+					<h:tr>
+					<h:td></h:td>
+					<h:td>
+						<div id="persToDivId" visible="false">
+							<hlayout>
+							<label value="Select tag for recipient name:"  sclass="theme-lbHeading"/>
+							<listbox  id="phLbId" mold="select" rows="1" >
+							<listitem label="First Name" value="firstName" selected="true"/>
+							<listitem label="Last Name" value="lastName"/>
+							<listitem label="Full Name" value="fullName"/>
+							</listbox>
+							<image src="/img/icons/icon_q.png" tooltip="help5" />
+							</hlayout>
+							<popup id="help5"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="In test email tag for recipient name will be displayed from user's details" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr height="15"/>
+				<h:tr>
+					<h:td valign="top">
+						<label value="Allow Template To Download as PDF" />
+					</h:td>
+					
+					<h:td valign="top">
+						<checkbox id="downloadPdf"	checked="false"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+		</div>
+		
+		</groupbox>
+		
+		
+			<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			
+					<!--<h:tr >
+						<h:td align="right" style="padding-left:30px;" > <image src="/img/icons/add_icon.png"/></h:td>
+						<h:td align="left" style="padding-right:20px;" > <label value=" Information"/> </h:td>
+						<h:td align="right"><image src="/img/icons/edit_lists_icon.png"/></h:td>
+						<h:td align="left" style="padding-right:20px;"><label value=" Help"/> </h:td>
+						<h:td align="right"><image src="/img/icons/copy.png"/></h:td>
+						<h:td  align="left" style="padding-right:30px;"><label value=" Tip"/> </h:td>
+					</h:tr>
+					<h:tr height="30"></h:tr>
+					--><h:tr >
+						
+						<h:td colspan="6" style="padding-right:30px;">
+								<button label="Save as Draft" sclass="idle140"  id="saveAsDraftBtnId" visible="false"/>
+								<button label="Back" id="backBtnId" sclass="idle140" visible="false"/>
+									<space/>
+								<button label="Save" sclass="idle140 greenbtn" id="saveBtnId"/>
+						</h:td>
+					
+					</h:tr>
+			
+			
+			</h:table>	
+		
+	</window>
+</zk>

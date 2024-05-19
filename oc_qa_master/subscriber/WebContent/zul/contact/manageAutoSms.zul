@@ -1,0 +1,422 @@
+<zk>
+	<window id="reportsWinId"  apply="org.mq.marketer.campaign.controller.contacts.ManageAutoSmsController" xmlns:w="client"  xmlns:h="native" width="100%">
+	
+	
+	<script>
+			<![CDATA[
+			
+			function updateCaretPosition() {
+			//alert("hai");
+			// get the zk widgets
+			var scriptTB = zk.Widget.$(jq('$SMSMsgTbId'))
+			var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+			
+			// get the js elements
+			var jsScriptTB = document.getElementById(scriptTB.uuid)
+			var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+			
+			// get the caret position
+			var pos = getCaret(jsScriptTB);
+			
+			// set the caret position in the hidden text field
+			jsCaretPosTB.value = pos;
+			
+			// trigger an event to send the caret position to the server
+			if (document.createEvent) {
+			var evt = document.createEvent('HTMLEvents');
+			evt.initEvent( 'blur', false, false);
+			jsCaretPosTB.dispatchEvent(evt);
+			
+			var evt2 = document.createEvent('HTMLEvents');
+			evt2.initEvent( 'change', false, false);
+			jsCaretPosTB.dispatchEvent(evt2);
+			} else if (document.createEventObject) {
+			jsCaretPosTB.fireEvent('onblur');
+			jsCaretPosTB.fireEvent('onchange');
+			}
+			}
+			
+			 function getCaret(el) {
+             	
+             	if (el.selectionStart) {
+                     return el.selectionStart;
+                 } else if (document.selection) {
+                     el.focus();
+
+                     var r = document.selection.createRange();
+
+                     
+                     if (r == null) {
+                     	
+                         return 0;
+                     }
+
+                     var re = el.createTextRange();
+                     	
+                             rc = re.duplicate();
+                     re.moveToBookmark(r.getBookmark());
+                     rc.setEndPoint('EndToStart', re);
+                     return rc.text.length;
+                 }else{
+                 	
+                 	if(el.value.length > 0) {
+                 		
+                 		//el.selectionStart = el.value.length;
+                 		 return el.selectionStart;
+                 		
+                 	}
+                 	
+                 }
+                 return 0;
+
+
+               
+             }
+             
+             
+             
+            function updateTranTemCaretPosition() {
+				//var scriptTB1 = zk.Widget.$(jq(jq('$transTempContentTxtBxId')))
+				var scriptTB1 = zk.Widget.$(jq('$transTempContentTxtBxId'))
+				//alert('transTempContentTxtBxId object id is ::'+scriptTB1);
+				//var caretPosTB1 = zk.Widget.$(jq(jq('$transCaretPosTB')))
+				var caretPosTB1 = zk.Widget.$(jq('$transCaretPosTB'))
+				
+				// get the js elements
+				var jsScriptTB1 = document.getElementById(scriptTB1.uuid)
+            	//alert('hai 123'+jsScriptTB.value);
+				var jsCaretPosTB1 = document.getElementById(caretPosTB1.uuid)
+			
+				// get the caret position
+				var pos = getCaret(jsScriptTB1);
+				//alert('position value is ::'+pos);
+				// set the caret position in the hidden text field
+				jsCaretPosTB1.value = pos;
+			
+				// trigger an event to send the caret position to the server
+				if (document.createEvent) {
+					var evt = document.createEvent('HTMLEvents');
+					evt.initEvent( 'blur', false, false);
+					jsCaretPosTB1.dispatchEvent(evt);
+			
+					var evt2 = document.createEvent('HTMLEvents');
+					evt2.initEvent( 'change', false, false);
+					jsCaretPosTB1.dispatchEvent(evt2);
+				} else if (document.createEventObject) {
+					jsCaretPosTB1.fireEvent('onblur');
+					jsCaretPosTB1.fireEvent('onchange');
+				}
+			}
+             
+             
+             
+             
+			]]>
+			</script>
+
+		
+		<script type="text/javascript">
+			
+			<![CDATA[
+
+			function changeStep(inNum, isNext) {
+
+			var inA = zk.Widget.$('$step'+inNum+'AId'); var inClass =
+			inA.getSclass(); if(isNext==false && inClass !=
+			'req_step_completed') { return; }
+
+			for(var i=1; i<=3; i++ ) { var currA =
+			zk.Widget.$('$step'+i+'AId');
+
+
+			var currASclass = currA.getSclass();
+
+			if(currASclass == 'req_step_current') {
+
+			inA.setSclass('req_step_current');
+			currA.setSclass('req_step_completed'); break; } } // for
+
+			zk.Widget.$('$step1DivId').setVisible(false);
+			zk.Widget.$('$step2DivId').setVisible(false);
+			zk.Widget.$('$step3DivId').setVisible(false);
+
+
+			zk.Widget.$('$step'+inNum+'DivId').setVisible(true);
+
+			parent.window.scrollTo(0,0); };
+
+			]]>
+			
+	</script>
+		
+		 <h:table  cellspacing="0" cellpadding="0" width="100%"	border="0" bgcolor="#EEF2F5" >
+			<h:tr height="50">
+				<h:td width="290">
+					<label value="Type of Auto-SMS :" style="font-weight:bold;font-size:12px;margin-left:10px;"/>
+					<listbox id="typeOfAutoSMSListLbId" mold="select" width="150px"/>
+				</h:td>
+				<h:td width="250">.
+					<label value=" Message :" style="font-weight:bold;font-size:12px;margin-left:10px;"/>
+					<!-- <listbox id="messageListLbId" mold="select" width="150px"/> -->
+					<combobox id="msgListCmbBxId"  readonly="true" />
+				</h:td>
+				<h:td width="250" align="center">
+				<a label="Send Test SMS"  style="color:#2886B9;font-weight:bold;text-decoration: underline;" 
+					id="sendTestMsgBtnId" />
+				</h:td>
+				<h:td>
+				<button id="deleteBtnId" label="Delete" sclass="idle140" />
+				</h:td>
+			</h:tr>
+		</h:table>
+		<h:table>
+		</h:table>
+		<groupbox width="99%" sclass="gbStyle" style="margin-top:10px;" closable="false" >
+			<caption label="Create SMS" />
+			<h:table cellspacing="5" cellpadding="5" border="0"	width="100%" align="left" style="padding-left:20px;">
+				
+				<h:tr height="20">
+					<h:td width="150">
+						<label value="Sender ID :"
+							style="font-size:12px;">
+						</label>
+					</h:td>
+					<h:td>
+						<textbox value="" id="senderIdTbId"></textbox>
+					</h:td>
+					<h:td>
+						<div id="multipleSenderIdDivId"
+							visible="false">
+							<label
+								value="Select SenderId of Your Choice:"
+								style="font-size:12px;" sclass="labelPos" />
+							<listbox id="multipleSenderIdsLbId" rows="1"
+								mold="select" style="font-size:12px;" width="200px"
+								visible="true" />
+						</div>
+					</h:td>
+				</h:tr>
+
+				<h:tr>
+					<h:td valign="top" width="100" style="margin-top:15px;">
+						<label value="Message: " />
+					</h:td>
+					<h:td valign="top" width="375">
+						<textbox id="caretPosTB" visible="false" /> 
+						<textbox id="SMSMsgTbId" width="350px" rows="12" height="165px" maxlength="800"
+						style="font-family: Arial,Helvetica,sans-serif;font-size:14px;line-height: 1.5em;margin-top:10px;padding-bottom:25px;padding-top:25px;"
+						 name="SMSMsgTbId" context="editPopup"  w:onClick="updateCaretPosition()"  
+								 	w:onChanging="updateCaretPosition()" w:onFocus="updateCaretPosition()"/>
+						 	<!-- <label value="" id="headerLblId" style="color:#666666;left:10px;position:relative;top:-210px;"/>
+						 	<label value="" id="optOutLblId" style="color:#666666;left:10px;position:relative;top:-18px;"/> -->
+						 	
+					</h:td>
+					<h:td rowspan="2" valign="top">
+					
+						<div id="tranSactinalMsgDivId" visible="false">
+							<h:table >
+								<h:tr>
+									<h:td width="100px;">
+										<combobox id="transTempCmbBxId"  readonly="true" />
+									</h:td>
+									<h:td><space/>	
+									<label value="or"/>
+									</h:td>
+									<h:td>
+										<toolbarbutton id="addNewTempTBId"  image="/images/action_add.gif" sclass="tbbLink"
+											label="Add New Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+									</h:td>
+								</h:tr>
+							
+							</h:table>
+						</div>
+						
+						<div id="outBoundedDivId" visible="false">
+						
+							<h:table cellspacing="5" cellpadding="5" border="0" width="100%">
+								<h:tr>
+									<h:td>
+										<listbox
+											id="insertMergetagsLbId" mold="select" width="200px">
+											<listitem
+												label="Insert Merge Tags" selected="true" />
+										</listbox>
+									</h:td>
+								</h:tr>
+
+								<h:tr>
+									<h:td>
+										<div id="insertCouponDivId" visible="true">
+										<listbox 
+											id="insertCouponLbId" mold="select" width="200px">
+											<listitem
+												label="Insert Discount Code" selected="true" />
+										
+										
+										</listbox> <label value="or" /> 
+										<toolbarbutton id="addNewCouponTBId"  image="/images/action_add.gif" sclass="tbbLink"
+											label="Add Discount Code"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+										</div>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<div id="insertKeywrdDivId" visible="true">
+										<listbox
+											id="insertKeywordLbId" mold="select" width="200px">
+											<listitem
+												label="Insert Keyword" selected="true" />
+										</listbox> <label value="or" />
+										<toolbarbutton id="addNewKeywrdTBId" image="/images/action_add.gif" sclass="tbbLink"
+											label="Add Keyword"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+										</div>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<div id="insertValueCodeDivId" visible="false">
+										<listbox
+											id="insertValueCodeLbId" mold="select" width="200px">
+											<listitem
+												label="Insert Value Code" selected="true" />
+										</listbox> <label value="or" />
+										<toolbarbutton id="addNewValueCodeTBId" image="/images/action_add.gif" sclass="tbbLink"
+											label="Add ValueCode"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+										</div>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<textbox
+											value="Use Url Shortener" width="300px" id="linkURLTxtBoxId" />
+										<button id="insertLinkBtnId"
+											label="Insert" sclass="idle70" />
+
+									</h:td>
+								</h:tr>
+
+							</h:table>
+
+						</div>
+
+
+					</h:td>
+
+				</h:tr>
+				<h:tr>
+					<h:td />
+					<h:td valign="top"
+						 colspan="2" >
+						<label value="No. of Characters / Messages :"
+							style="font-weight:bold;" />
+						<textbox id="charCountTbId"
+							readonly="true" value="0" width="70px" />
+						<label value="(160 Characters per SMS)" />
+					</h:td>
+				</h:tr>
+				<h:tr height="20" />
+				<h:tr>
+					<h:td valign="top">
+						<label value="Send a Test SMS:" />
+					</h:td>
+					<h:td valign="top" colspan="2">
+
+						<textbox value="Enter Mobile Number(s)..."
+							id="mblNoTxtBoxId" width="280px" />
+						<button sclass="idle70"
+							id="sendTestSmsBtnId" label="Send" style="margin-left:5px;" />
+					</h:td>
+
+				</h:tr>
+				<h:tr height="18">
+					<h:td></h:td>
+
+					<h:td valign="center"
+						style="padding-top:2px;" colspan="2">
+						<image src="/img/icons/icon_i.png"
+							style="vertical-align:bottom;" />
+						<label
+							value="To send test SMS to multiple mobile numbers, give them as comma separated values."
+							style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td>
+
+				</h:tr>
+				<h:tr height="20" />
+
+
+			</h:table>
+			
+		
+
+		</groupbox>
+			<div align="right" style="padding-top:30px;" > 
+			<button id="newBtnId" label="Save As..." sclass="idle140 greenbtn" />
+			<button id="updateBtnId" label="Save" sclass="idle140 greenbtn" />
+		
+			</div>
+		
+	<window id="createNewTemplateWinId" visible="false" closable="true" title="Create Auto-SMS" 
+						height="180px" width="450px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="2">
+						<label value="Please provide a name to save new auto-SMS template with."/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Message Name :" /></h:td>
+					<h:td ><textbox  id="newTempNameTbId" value="" w:onFocus="this.setValue('')" width="160px"/></h:td>
+				</h:tr>
+				
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Add" sclass="idle70 greenbtn" id="submitBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+		
+		<window id="testSmsWinId" visible="false" closable="true" title="Send Test SMS" 
+						height="195px" width="400px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<!-- <h:tr>
+					<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr> -->
+				<h:tr>
+					<h:td width="100px" colspan="1"><label value=" Mobile Number:" /></h:td>
+					<h:td colspan="2"><textbox  id="smsTbId" width="160px"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td/>
+					
+					<h:td  colspan="2" valign="center">	
+						<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+						<label value="To send a test SMS to multiple mobile numbers, enter them as comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td>
+					
+					
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					
+				</h:tr>
+			</h:table>
+			<h:table cellspacing="2" cellpadding="1" align="right" >
+		    <h:tr height="10"/>
+			<h:tr >
+				<h:td  style="padding-right:20px;">
+					<button label="Send" id="sendTestSmsBtnId" />
+					<button label="Cancel" id="cancelSendTestSmsBtnId" />
+				</h:td>
+			</h:tr>
+			</h:table>	
+		</window>
+		
+		
+		</window>
+</zk>

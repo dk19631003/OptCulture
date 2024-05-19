@@ -1,0 +1,403 @@
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.useradmin.ManageUsersController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+				  
+		<tabbox id="manageUsersTabBoxId" >
+			<tabs>
+				<tab label="Current Users" />
+				<tab label="Create New User" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<!--<h:table cellspacing="0" cellpadding="4" width="100%" border="0" style="padding:10px 0px;border-radius:5px;">
+					<h:tr >
+						<h:td width="310" >
+							<label value="Search : "/>
+						
+							<textbox id="searchBoxId" value="Search User..." 
+								w:onClick="javascript: if(this.getValue()=='Search User...') {  this.setValue(''); }" 
+								w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Search User...'); }" focus="true"/> 
+							 
+						</h:td>
+						
+						<h:td width="400px"  >
+							<div>
+								<label value="User By :" sclass="boldLabel"/>
+							
+								<listbox id="userByLbId" rows="1" mold="select" style="position:relative;left:10px;">
+									<listitem label="All" selected="true"/>
+									<listitem label="Organization Unit"/>
+									<listitem label="Role"/>
+									<listitem label="Status"/>
+									
+								</listbox>
+								<listbox id="filterOptionLbId" rows="1" mold="select" style="position:relative;left:10px;" width="100px">
+									<listitem label="Select" selected="true"/>
+								</listbox>
+								
+							</div>
+						</h:td>
+						
+						<h:td align="right" >
+							 <button  id="userFilterBtnId" sclass="idle140"	label="Filter" />
+							 <a label="Reset" id="resetSearchCriteriaAnchId" />
+						</h:td>
+					
+					</h:tr>
+					</h:table >
+					
+					
+					-->
+					<!-- <div>
+						<h:table cellspacing="0" cellpadding="4" width="100%" border="0" style="padding:10px 0px;border-radius:5px;">
+					<h:tr >
+					<h:td>
+							
+								<label value="Search by :" sclass="boldLabel"/>
+								
+								<label id="orgId" value="Org.Unit :"  style="font-weight:bold;"/>
+						<listbox id="searchByOrgID" width="150px" mold="select" height="36%">
+						<listitem label="All" selected="true"/>
+						</listbox>
+								<listbox id="searchByOrgID" rows="1" mold="select" style="position:relative;left:10px;">
+									<listitem label="All" selected="true"/>
+									
+								</listbox>
+					</h:td>
+					
+					<h:td  >
+							 <button  id="storeFilterBtnId" sclass="idle140"	label="Filter" />
+							 <a label="Reset" id="resetSearchCriteriaAnchId" />
+					</h:td>
+					</h:tr>
+					</h:table>
+					</div> -->
+					<grid id="customersGridId"  emptyMessage="No users exist, To create new user Click on 'Create new User' Button"	
+						style="padding-bottom:1px; margin-bottom: 10px;">
+					 	
+					 	<columns menupopup="auto" sizable="true" >
+					       <column label="User Name"  sort="auto" />
+					       <column label="Email Id" />
+					       <column label="Name" />
+				           <column label="Org. Unit" />
+					       <column label="Role" />
+					       <column label="Status" />
+					       <column label="Actions" />
+					       
+					     </columns>
+					    <auxhead id="contactsListFilterAhId" visible="true">
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+              				<auxheader>
+			                	<listbox mold="select" sclass="filterSearchOpt">
+              						<listitem label="Equals" selected="true"/> 
+              						<listitem label="Not Equals" />
+              					</listbox>
+             						<listbox mold="select" width="60%">
+              						<listitem label="" value="" selected="true"/>
+		                			<listitem label="Active" value="Active"/>
+		                			<listitem label="In Active" value="In Active"/>
+              					</listbox>
+              				</auxheader>
+	           		     	<auxheader align="center">
+		             			<toolbarbutton src="/img/cancel.gif" tooltiptext="Clear filter" style="cursor:pointer;"/>
+		             		</auxheader> 
+		             	</auxhead> 
+					</grid>
+					<div>
+						<popup id="changePwdPopupId" width="300px" >
+			 
+							Enter New Password
+				            <textbox id="changePwdTbId" maxlength="25" type="password" value ="" /> 
+							
+							<button label="Change Password" id="changePwdBtnId" />
+						</popup>
+					</div>
+					
+					<h:tr>
+			<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"><image src="/img/theme/preview_icon.png " /></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- View" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/icons/Change-password.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Change Password" style="font-size:11px;" /> </h:td>
+						
+					</h:tr>
+			</h:table>
+			</h:tr>
+					
+				</tabpanel>
+				<tabpanel>
+					<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="User Details"  />
+						<h:table>
+							<h:tr>
+								<h:td width="200">
+									<label value="User Name: " /><label value=" * " style="color:red;" />
+								</h:td>
+								<h:td>
+									<textbox  id="userNameTbId" value = "" cols="30" maxlength="400" />
+									<label id="nameStatusLblId" />
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<!-- <h:tr>
+								<h:td>
+								<label value="Password " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="passwordTbId" value="" cols="30" maxlength="25" type="password"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Reenter Password " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="rePasswordTbId" value="" cols="30" maxlength="25" type="password"/>
+								</h:td>
+							</h:tr> -->
+						
+							
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="First Name " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="firstNameTbId" value="" cols="30" maxlength="50"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Last Name" />
+								</h:td>
+								<h:td><textbox cols="30" value="" id="lastNameTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Email Id " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox cols="30" value="" id="emailIdTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr >
+										<h:td><label value="Phone" />
+										</h:td>
+										<h:td ><textbox cols="30" id="phoneTbId" 
+										tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+										xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+										 maxlength="15"/>
+										</h:td>
+									</h:tr>	
+							<h:tr >
+								<h:td><label value="Activate User:" />
+								</h:td>
+								<h:td>
+									<checkbox id="activateUserChkBoxId" checked="true"/>
+								</h:td>
+							</h:tr>	
+							
+							<h:tr height="10"/>
+							
+							<div id="domaindivId" visible="false">
+							<h:tr >
+								<h:td><label value="Organization Unit: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><listbox id="domainLbId" width="200px" mold="select"/>
+								<a label="Add New" id="addNewDomainAnchId" style="margin-left:10px;"/>
+								</h:td>
+							</h:tr>	
+							</div>
+							<h:tr height="10"/>
+							
+							<h:tr >
+								<h:td><label value="Organization Unit: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox cols="30" value="" id="domainTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Role" /><label value="*" style="color:red;"/>
+								</h:td>
+								<h:td>
+									<listbox id="RoleLbId" width="200px"  mold="select">
+										
+										<!--<listitem label="Basic User" value="ROLE_USER_BASIC" selected="true"/>
+										<listitem label="Power User" value="ROLE_USER_POWER" />
+										
+									--></listbox>
+									<label id="isPwrUserExistsLblId" style="color:red;"/>
+									
+								</h:td>
+							</h:tr>		
+							
+						</h:table>
+					</groupbox>
+					<groupbox closable="false" style="padding:15px 10px;" sclass="gbStyle">
+					<caption label="Address Details" />
+					<h:table >
+						<h:tr>
+							<h:td   width="200">
+					
+								<label value="Address One" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="addressOneTbId" value="" cols="30" maxlength="200"/>
+							</h:td>
+						</h:tr>
+						<h:tr height="10"/>
+						<h:tr>
+							<h:td><label value="Address Two" />
+							</h:td>
+							<h:td ><textbox id="addressTwoTbId" value="" cols="30" maxlength="100"/>
+							</h:td>
+						</h:tr>
+						<h:tr height="10"/>
+						<h:tr >
+							<h:td><label value="City" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td ><textbox cols="30" value="" id="cityTbId" maxlength="45"/>
+							</h:td>
+						</h:tr>	
+						<h:tr height="10"/>
+						<h:tr >
+						<h:td><label value="State" /><label value="*" style="color:red;"/>
+						</h:td>
+						<h:td ><textbox id="stateTbId" value="" cols="30" maxlength="45"/>
+						</h:td>
+						</h:tr>
+						<h:tr height="10"/>	
+						<h:tr >
+							<h:td><label value="Country" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td ><textbox cols="30" value="" id="countryTbId" maxlength="45"/>
+							</h:td>
+						</h:tr>	
+						<h:tr height="10"/>
+						<h:tr >
+							<h:td><label value="Zip Code" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td ><textbox id="pinTbId"   cols="30" maxlength="20"/>
+							</h:td>
+						</h:tr>	
+									
+								
+					</h:table>
+					</groupbox>
+		
+					
+					<div id="creditsDivId" visible="false">
+					<groupbox sclass="gbStyle" closable="false" style="padding:15px 10px" >
+						<caption label="Assign Credits"  />
+						
+						<h:table >
+							<h:tr>
+								<h:td  width="200">
+									<label value="Email limit:" />
+								</h:td>
+								<h:td>	
+									<intbox id="emailLimitIntBoxId" value="0"  width="200px" />
+									
+								
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td>
+								
+								<label value="Enable SMS" />
+								</h:td>
+								<h:td>
+								
+								<checkbox id="enableSMSChkId"    />
+								
+							</h:td>
+							</h:tr>
+						</h:table>	
+						
+						
+						<div id="smsDivId" visible="false" style="padding:10px;">
+							
+							<label value="SMS limit:" style="display:inline-block;width:200px;"/>
+							<intbox id="SMSimitIntBoxId" value="0"  width="200px" />
+							
+						</div>
+					
+					
+					</groupbox>
+					</div>
+					<div align="right" style="padding:10px 10px;">
+						<button label="Back" visible="false" sclass="idle140" id="backBtnId" />
+						<button label="Edit" visible="false" sclass="idle140 greenbtn" id="editUserBtnId" />
+						
+						<button label="Create" sclass="idle140 greenbtn" id="createUserBtnId"/>
+						<button label="Save" visible="false" sclass="idle140 greenbtn" id="saveUserBtnId"/>
+					</div>
+				
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+				
+
+	<window id="createDomainWinId" visible="false" closable="true" title="Create Organization Unit" 
+						height="180px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Organization Unit Name :" /></h:td>
+					<h:td ><textbox  id="domainNameTbId" value="" width="160px"/></h:td>
+				</h:tr>
+				
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Cancel" sclass="idle70"  id="cancelDomainBtnId" /><button label="Save" sclass="idle70 greenbtn" id="saveDomainBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+		
+	
+	
+	</window>
+</zk>
+
+			

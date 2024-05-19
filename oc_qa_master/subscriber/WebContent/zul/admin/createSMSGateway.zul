@@ -1,0 +1,477 @@
+<zk>
+	<window id="createSmsGatewayWinId" border="0" width="100%"	apply="org.mq.marketer.campaign.controller.admin.CreateSMSGatewayController"
+							xmlns:h="http://www.zkoss.org/2005/zk/native" 	xmlns:w="http://www.zkoss.org/2005/zk/client">
+			<style src="/css/campaign.css"  />		
+			
+			<tabbox id="organizationStoresTabBoxId" >
+			<tabs>
+				<tab label="SMS Gateways" id="gatewaysTabId"/>
+				<tab label="Add Message Receiving Numbers" id="addMsgRecvNumTabId" />
+			</tabs>	
+			<tabpanels>
+				<tabpanel>
+			
+			
+			<groupbox closable="false"  sclass="gbStyle" style="margin-top:10px;" id="viewGatewayGBId">
+					     <caption label="View Gateways" style="font-weight:bold;padding:0px 4px;font-size:12px;"   />
+					     
+					     
+				
+				<div id="smsGatwaysDivId" >	     
+					     
+					<grid id="smsGatwaysGId" emptyMessage="No gateways Found..." >
+						<columns  menupopup="auto" >
+						   <column label="Country "  />
+					       <column label="Gateway Name"  />
+				           <column label="Account Type" />
+					       <column label="User Name" />
+					       <column label="Created Date" />
+					       <column label="Action" />
+					      </columns>
+					      <rows id="smsGatwaysRowsId" />
+					</grid>    
+					
+					</div> 
+					
+					
+					<h:table width="98%">
+					    <h:tr>
+							<h:td align="right">
+						   		<label value="Gateways per page:"  style="padding-right:5px;font-size:11px;"/>
+						   		<listbox rows="1" mold="select" id="gatewaysPerPageLBId" style="margin-right:30px;">
+									<listitem label="5" selected="true" />
+									<listitem label="10"  />
+									<listitem label="15"/>
+								</listbox>
+							</h:td>
+							<h:td width="280px"  >
+								<paging id="gatewaysPagingId" detailed="true" pageSize="5" width="280px" 
+									class="contactsViewPaging" style="border:none;"  />
+							</h:td>
+					   </h:tr>
+				   </h:table>
+				   
+				   	<h:table idth="100%" align="right"
+				style=  "font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						
+						
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						
+						</h:tr>
+			</h:table>	
+				
+					     
+				<div id="newGatewayDivID" >
+				
+				<toolbarbutton id="addGatewayTbId" image="/images/action_add.gif" sclass="tbbLink"
+					label="create Gateway"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				
+				</div>		     
+					     
+			     
+			 </groupbox>
+			 
+			 
+			 <groupbox closable="false"  sclass="gbStyle" style="margin-top:10px;" id="craeteGatewayGBId" visible="false"  >
+				 <caption label="Create SMS Gateway" style="font-weight:bold;padding:0px 4px;font-size:12px;" />
+					     
+					 <h:table >
+						
+							<h:tr>
+								<h:td width="160px" >
+									<label value="Country:"  />
+									<label value="*" sclass="redStar" />
+								</h:td>
+								<h:td >
+									<listbox id="countryLbId"  mold="select" width="180px" />
+								
+								</h:td>    
+							</h:tr>
+							
+							<h:tr>
+								<h:td >
+									<label value="Account Type:"  />
+									<label value="*" sclass="redStar" />
+								
+								</h:td>
+								<h:td >
+									<listbox id="accTypeLbId" mold="select" width="180px" />
+								
+								</h:td>    
+							</h:tr>
+							
+							<h:tr>
+								<h:td >
+									<label value="Gateway Name :"  />
+									<label value="*" sclass="redStar" />
+								
+								</h:td>
+								<h:td >
+									<combobox id="gatwaycmbboxId" />
+								
+								</h:td>  
+								
+								
+							</h:tr>
+							
+							<h:tr>
+								<h:td >
+									<label value="User ID:"  />
+									<label value="*" sclass="redStar" />
+								
+								</h:td>
+								<h:td >
+									<textbox id="userIdTxtboxId" />
+								
+								</h:td>    
+							</h:tr>
+							
+							<h:tr>
+								<h:td >
+									<label value="Password:"  />
+									<label value="*" sclass="redStar" />
+								
+								</h:td>
+								<h:td >
+									<textbox id="pwdTxtboxId" type="password" />
+								
+								</h:td>    
+							</h:tr>
+							
+							<h:tr>
+								<h:td >
+									<label value="Sender ID"  />
+								
+								</h:td>
+								<h:td >
+									<textbox id="senderIdTxtboxId"  />
+								
+								</h:td>    
+							</h:tr>
+							
+							<h:tr>
+							<h:td>
+							<!-- <div id="peIdRow" visible="false">
+								     		<h:table>
+								     		<h:tr>
+											<h:td>
+											<label value="Principal Entity ID"  />
+								
+											</h:td>
+											<h:td  >
+									
+											<textbox id="peId" />
+								
+											</h:td>
+											</h:tr>
+											</h:table>
+							</div> -->
+							<label value="Principal Entity ID"  />
+								
+								</h:td>
+								<h:td >
+									<textbox id="peId"  />
+							</h:td>    
+							</h:tr>
+							
+							<h:tr>
+								<h:td >
+									<label value="API ID"  />
+								
+								</h:td>
+								<h:td >
+									<textbox id="apiIdTxtboxId"  />
+								
+								</h:td>    
+							</h:tr>
+							
+							<h:tr>
+								<h:td >
+									<label value="Mode"   />
+									<label value="*" sclass="redStar" />
+								
+								</h:td>
+								<h:td >
+									<listbox id="modeLbId" mold="select" width="180px"  >
+									<listitem label="SMPP"  />
+									<listitem label="HTTP" selected="true" />
+									</listbox>
+								
+								</h:td>  
+								
+								<h:td >
+									<div id="httpRelatedChkbxDivId" visible="true">
+									    <checkbox id="enableMultiThreadChkId" label="Enable Multi Threading" checked="false" style="display:inline-block;" />
+									</div>
+									<div id="smppRelatedChkbxDivId" visible="false">
+										<checkbox id="enableCheckSessionAliveChkId" label="Enable Check Session Alive" checked="false" style="display:inline-block;" />
+									</div>
+								
+								</h:td>    
+							</h:tr>
+							</h:table>
+							
+							
+							
+						<div id="smppDivId" visible="false">
+							<h:table>
+								
+								
+									<h:tr>
+										<h:td width="160px">
+											<label value="System ID"  />
+											<label value="*" sclass="redStar" />
+										
+										</h:td>
+										<h:td >
+											<textbox id="sysIDTxtboxId"  />
+										
+										</h:td>    
+									</h:tr>
+									
+									<h:tr>
+										<h:td >
+											<label value="System Password:"  />
+											<label value="*" sclass="redStar" />
+										
+										</h:td>
+										<h:td >
+											<textbox id="sysPwdTxtboxId" type="password" />
+										
+										</h:td>    
+									</h:tr>
+									
+									<h:tr>
+										<h:td >
+											<label value="System Type"  />
+										
+										</h:td>
+										<h:td >
+											<textbox id="sysTypeTxtboxId"  />
+										
+										</h:td>    
+									</h:tr>
+									
+									<h:tr>
+										<h:td >
+											<label value="IP"  />
+											<label value="*" sclass="redStar" />
+										
+										</h:td>
+										<h:td >
+											<textbox id="ipTxtboxId"  />
+										
+										</h:td>    
+									</h:tr>
+									
+									<h:tr>
+										<h:td >
+											<label value="Port"  />
+											<label value="*" sclass="redStar" />
+										
+										</h:td>
+										<h:td >
+											<textbox id="portTxtboxId"  />
+										
+										</h:td>    
+									</h:tr>
+								
+									
+							</h:table>
+						</div>
+						
+						<h:table>
+							
+							<h:tr>
+								<h:td width="160px">
+									<label value="Pull Reports" />
+								
+								</h:td>
+								<h:td >
+									<checkbox id="pullReportsChkId"  />
+								
+								</h:td>    
+							</h:tr>
+							</h:table>
+							
+							<div id="pullReportsDivId" visible="false">
+							
+							<h:table>
+							
+							<h:tr>
+								<h:td width="160px">
+									<label value="URL to Fetch Reports:" />
+								
+								</h:td>
+								<h:td >
+									<textbox id="pullReportsTxtId"  />
+								
+								</h:td>    
+							</h:tr>
+							</h:table>
+							
+							</div>
+							
+							
+							
+							<h:table>
+							<h:tr>
+								<h:td width="160px">
+									<label value="Postpaid"  />
+								
+								</h:td>
+								<h:td >
+									<checkbox id="postpaidChkId"  />
+								
+								</h:td>    
+							</h:tr>
+							</h:table>
+							
+							<div id="postpaidDivId" visible="false">
+							
+							<h:table>
+							
+							<h:tr>
+								<h:td width="160px">
+									<label value="URL to get Balance:" />
+								
+								</h:td>
+								<h:td >
+									<textbox id="postpaidTxtId"  />
+								
+								</h:td>    
+							</h:tr>
+							</h:table>
+							
+							</div>
+							
+							<h:table>
+							<h:tr>
+								<h:td width="160px">
+									<label value="Two way"  />
+								
+								</h:td>
+								<h:td >
+									<checkbox id="twoWayChkId"  />
+								
+								</h:td>    
+							</h:tr>
+							</h:table>
+							
+							<div id="twoWayDivId" visible="false">
+							
+							<h:table>
+							
+							<h:tr>
+								<h:td width="160px">
+									<label value="Sender ID:" />
+								
+								</h:td>
+								<h:td >
+									<textbox id="twoWayTxtId"  />
+								
+								</h:td>    
+							</h:tr>
+							</h:table>
+							
+							</div>
+							
+							
+							
+							<h:table width="100%" >
+							    <h:tr >
+										
+								  <h:td align="left">
+								   <button label="Submit " sclass="idle140 greenbtn" id="saveBtnId" style="padding:left;40px"/>
+								   <button label="Cancel" sclass="idle140 " id="cancelBtnId" style="padding:left;40px"/>
+								  </h:td>
+						   		</h:tr>
+	   						</h:table>
+							
+						
+					     
+			 </groupbox>
+			 
+			 </tabpanel>
+			 
+			
+			 <tabpanel>
+			 
+			  <h:table>
+					<h:tr>
+						<h:td width="160px">
+							<label value="Country"  />
+						
+						</h:td>
+						<h:td >
+							<listbox id="countryLBId"  mold="select" width="200px"/>
+						
+						</h:td>    
+					</h:tr>
+					
+					
+						
+					<h:tr>
+						<h:td width="160px">
+							<label value="Type"  />
+						
+						</h:td>
+						<h:td >
+							<listbox id="typeLBId" mold="select"  width="200px"/>
+							
+						
+						</h:td>    
+					</h:tr>
+					
+					
+					<h:tr>
+						<h:td width="160px">
+							<label value="Number"  />
+						
+						</h:td>
+							<h:td >
+							<textbox  id="msgRecvNumTxtId" width="200px" />
+						
+						</h:td>  
+						
+						<h:td>
+		     				<toolbarbutton id="addNumberTbId" image="/images/action_add.gif" sclass="tbbLink" 
+								label="Add to List"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+		     			</h:td> 
+						<h:td >
+							<combobox  id="msgRecvNumCmbId" width="200px" readonly="true"/>
+						
+						</h:td>   
+		     			
+					</h:tr>
+					
+				
+					
+					
+					
+				</h:table>
+				
+				<h:br />
+				
+				<h:table width="100%" >
+				    <h:tr >
+							
+					  <h:td align="center">
+					   <button label="Save " sclass="idle140 greenbtn" id="saveNumBtnId" style="padding:left;40px"/>
+					   <button label="Cancel" sclass="idle140 " id="cancelNumBtnId" style="padding:left;40px"/>
+					  </h:td>
+			   		</h:tr>
+ 				</h:table>
+			 
+			 
+			 </tabpanel>
+			 </tabpanels>
+			 </tabbox>
+			 
+			 
+			
+	 </window>
+				     
+</zk> 

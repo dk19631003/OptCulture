@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.CustomerFeedback"
+		table="customer_feedback">
+		<id name="feedBackId" type="java.lang.Long">
+			<column name="FeedBack_id" />
+			<generator class="native" />
+		</id>
+		<property name="userId" type="long">
+			<column name="user_id" />
+		</property>
+		<property name="contactId" type="long">
+			<column name="contact_id" />
+		</property>
+		<property name="udf1" type="string">
+			<column name="udf1" length="200" />
+		</property>
+		<property name="udf2" type="string">
+			<column name="udf2" length="200" />
+		</property>
+		<property name="udf3" type="string">
+			<column name="udf3" length="200" />
+		</property>
+		<property name="udf4" type="string">
+			<column name="udf4" length="200" />
+		</property>
+		<property name="udf5" type="string">
+			<column name="udf5" length="200" />
+		</property>
+		<property name="udf6" type="string">
+			<column name="udf6" length="200" />
+		</property>
+		<property name="udf7" type="string">
+			<column name="udf7" length="200" />
+		</property>
+		<property name="udf8" type="string">
+			<column name="udf8" length="200" />
+		</property>
+		<property name="udf9" type="string">
+			<column name="udf9" length="200" />
+		</property>
+		<property name="udf10" type="string">
+			<column name="udf10" length="200" />
+		</property>
+		<property name="udf11" type="string">
+			<column name="udf11" length="200" />
+		</property>
+		<property name="udf12" type="string">
+			<column name="udf12" length="200" />
+		</property>
+		<property name="udf13" type="string">
+			<column name="udf13" length="200" />
+		</property>
+		<property name="udf14" type="string">
+			<column name="udf14" length="200" />
+		</property>
+		<property name="udf15" type="string">
+			<column name="udf15" length="200" />
+		</property>
+		<property name="udf16" type="string">
+			<column name="udf16" length="200" />
+		</property>
+		<property name="udf17" type="string">
+			<column name="udf17" length="200" />
+		</property>
+		<property name="udf18" type="string">
+			<column name="udf18" length="200" />
+		</property>
+		<property name="udf19" type="string">
+			<column name="udf19" length="200" />
+		</property>
+		<property name="udf20" type="string">
+			<column name="udf20" length="200" />
+		</property>
+		<property name="customerNo" type="string">
+			<column name="customer_no" length="200" />
+		</property>
+		<property name="DOCSID" type="string">
+			<column name="doc_sid" length="200" />
+		</property>
+		<property name="feedBackMessage" type="string">
+			<column name="feedBack_message" length="200" />
+		</property>
+		<property name="source" type="string">
+			<column name="source" length="200" />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="store" type="string">
+			<column name="store" length="200" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,25 @@
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.admin.LatestSalesDetailsController" 
+				 xmlns:w="client" xmlns:h="native" width="100%">
+				  
+		<div style="text-align:right;margin-bottom:10px;">
+			<label value="Search with Org. Id : "/><textbox id="searchBox" focus="true"/>
+		</div>
+		
+		<grid id="customersGridId"  mold="paging" pageSize="10" emptyMessage="No data.">
+		 	<columns >
+		      
+		       <column label="Org. Name" sort="auto" />
+		       <column label="Org. Id"  sort="auto" />
+		       <column label="User Name" sort="auto"/>
+		       <column label="Sales Data Last Pulled On" />
+		       <column label="Earliest Sales Date" />
+		       <column label="Latest Sales Date" />
+		       <column label="Receipt Number Count" sort="auto"/>
+		     </columns>
+		</grid>
+
+	</window>
+</zk>
+
+			

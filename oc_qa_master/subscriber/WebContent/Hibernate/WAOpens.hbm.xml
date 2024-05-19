@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.WAOpens" table="wa_opens">
+		<id name="openId" type="java.lang.Long">
+			<column name="open_id" />
+			<generator class="native" />
+		</id>
+		<many-to-one name="sentId"
+			class="org.mq.marketer.campaign.beans.WACampaignSent"
+			foreign-key="open_sentFkey" fetch="select" lazy="false">
+			<column name="sent_id" not-null="true" />
+		</many-to-one>
+		<property name="openDate" type="calendar">
+			<column name="open_date" />
+		</property>
+		
+
+	</class>
+</hibernate-mapping>

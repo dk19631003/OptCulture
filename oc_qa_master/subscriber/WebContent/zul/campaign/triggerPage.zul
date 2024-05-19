@@ -1,0 +1,595 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/zkspring/security" prefix="sec"?>
+<zk>
+<window id="NewTrigWinId"  width="100%" xmlns:h="native"
+xmlns:w="http://www.zkoss.org/2005/zk/client" apply="org.mq.marketer.campaign.controller.campaign.NewEventTriggerController" >
+	<h:table width="100%">
+     		<h:tr>
+     			<h:td align="right">
+     					<button id="backBtnId" label="Back" sclass="idle140" />		
+     			</h:td>
+     		</h:tr>
+     </h:table>
+     
+     <groupbox>
+     	<caption label="Trigger Settings"/>
+     	
+     	<h:table>
+     		<h:tr>
+     			<h:td valign="top" width="200px" align="right" >
+     				<div style="margin-right:10px;"><label value="Trigger Name :"  /><h:span style="color:red"> * </h:span></div>
+     			</h:td>
+     				
+     			<h:td valign="top"  align="left">
+     				<div ><textbox id="eventTriggerNameTbId" width="225px" /><h:br/>
+     				<image src="/img/icons/icon_i.png"  />
+     				<label style="color: #4D4C4C;font-size: 12px;font-style: italic;" value="Trigger name is only for your reference and will not appear in the actual email." /></div>
+     			</h:td>	
+     		</h:tr>
+     	
+     		<h:tr>
+     			<h:td valign="top" width="200px" align="right">
+     				<div style="margin-right:10px;margin-top:10px;"><label value=" Initiate this Trigger : " /><h:span style="color:red"> * </h:span></div>
+     			</h:td>
+     			
+     			<h:td valign="top">
+     			
+     				<div >
+  							<h:table  width="100%" >
+       							
+       								<radiogroup id="triggerTypeGbxId">
+        								
+        									<h:tr><h:td styly="padding-top:10px;"><radio id="contactDateTypeRbnId" label="Based on contact's date field" w:onCheck="toggleDivContents(this);"  />
+													 <div id="divId_1" visible="false">
+  																<h:table class="myTabPad">
+  																	<h:tr>
+  																		<h:td><image src="/img/nodejoin.gif" /></h:td>
+  																		<h:td>
+  																			  <label value="Select mailing List : "  />
+  																		</h:td>
+  																	 	<h:td>		   
+  																			  <div id="contMlDivId" style="display:inline;">				 	 			
+  																				<listbox  id="mailingLstLbId" mold="select"  width="300px" multiple="true" > 
+																				</listbox> 	 	
+																			  </div>			
+  																		</h:td>
+  																	</h:tr>
+  																	<h:tr>
+  																		<h:td><image src="/img/nodejoin.gif" /></h:td>
+  																		<h:td >	
+  																			<label value="Select contact field :" style="padding-right:10px;" />
+  																		</h:td>
+  																		<h:td>
+  																					<listbox id="mlDateFields" mold="select" width="200px" />
+  																				    <label id="noDateCustLbId" value="No date custom fields exist"  style="color:red" visible="false" />
+  																		</h:td>
+  																	</h:tr>
+  																	
+  																	
+  																	<h:tr>
+  																		<h:td><image src="/img/nodejoin.gif" visible="false" /></h:td>
+  																		<h:td >	    
+  																				   <label value="Select type : " visible="false"  />
+  																		</h:td>
+  																		<h:td>		   
+  																				   <listbox  mold="select" id="contactTrigTypeLbId" width="200px" visible="false">
+  																				     	 <listitem  selected="selected" label="Birthday" value="Bday"></listitem >
+  																				         <listitem label="Anniversary" value="ANIV"></listitem>
+  																				   </listbox>	
+  																		</h:td>
+  																	</h:tr>
+  																	
+  																</h:table>
+        													</div>
+        									</h:td></h:tr>
+        									
+        									<h:tr><h:td styly="padding-top:10px;"><radio id="specificTypeRbnId"  label="Based on a specific date " w:onCheck="toggleDivContents(this)"  />
+        													 <div id="divId_2" visible="false">
+        													 	<h:table  class="myTabPad"><h:tr>
+        													 			  <h:td><image src="/img/nodejoin.gif" /></h:td>	
+        													 	          <h:td>
+        													 					<label value="Select a specific date : " />
+        													 			  </h:td>
+        													 			  <h:td>
+        													 			  		
+        													 			  		<listbox id="customTriggerEventLbId" width="150px" mold="select" ></listbox>
+        													 					<label value="or" style="padding:10px;"/><a id="addCustEvntTlbId" label="Add" style="font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif;font-size:13px;vertical-align:inherit;color:#43A0BA;"  />
+        													 					<label value="new custom date " />
+        													 					<h:br/>	
+        													 					<label id="custDateLbId" style="padding-left:3px;color:#43A0BA;"  />
+        													 			  
+        													 			  </h:td>
+        													 			</h:tr>
+        													 			<h:tr>  
+        													 			  <h:td valign="top"><image src="/img/nodejoin.gif" /></h:td>	
+        													 			  <h:td valign="top">
+        													 					<label value="Select the mailing list(s) :" /> 
+        													 			  </h:td>
+        													 			  <h:td>		  
+        													 					<div id="dateMlDivId">
+        													 						<listbox  id="basedOnSpecificDateMailingLstLbId" mold="select" height="100px;"  width="300px" multiple="true" > 
+																						</listbox>
+        													 					</div>
+        													 					<label value="Use CTRL key to select multiple" />	
+        													 			  </h:td>
+        													 			</h:tr>
+        													 	</h:table>
+        													 </div> 
+        									</h:td></h:tr>
+     									
+        									<h:tr><h:td styly="padding-top:10px;"><radio id="campaignOpnTypeRbnId" label="Based on a email campaign being opened" w:onCheck="toggleDivContents(this);" /> 
+        											<div id="divId_4" visible="false">
+        												<h:table  class="myTabPad"><h:tr>
+        												 		<h:td valign="top"><image src="/img/nodejoin.gif" /></h:td>	
+        														<h:td>
+        															<label value="Email names : "/>
+        															<div id="openCampaignDivId" style="display:inline;">
+        																	 
+        															</div>
+        														</h:td>
+        												</h:tr></h:table>
+        											</div>
+        									 </h:td></h:tr>
+        									
+	        								<h:tr><h:td styly="padding-top:10px;"><radio id="linkTypeRbnId"  label="Based on a link being clicked" w:onCheck="toggleDivContents(this)"  />
+	        									<div id="divId_3" visible="false">
+	        											<h:table  class="myTabPad"><h:tr>
+	        													<h:td valign="top"><image src="/img/nodejoin.gif" /></h:td>	
+	        													<h:td>
+	        													    <label value="Select the campaign :" />
+	        													</h:td>
+	        													 <h:td>    
+	        													    <div id="linkCampaignDivId" style="display:inline;">
+	        													 		<listbox  id="campaignsLbId" mold="select" />
+	        															<toolbarbutton image="/images/icon_preview_big.png" label="Preview" id="previewToolBtnId" 
+	        																						style="font-weight:bold;color:#43A0BA;" />
+	        														</div>	
+	        												      </h:td>
+	        												    </h:tr>
+	        												    <h:tr> 
+	        												     <h:td valign="top"><image src="/img/nodejoin.gif" /></h:td>	 
+	        													 <h:td valign="top">
+	        													   	<label value="Select URL :" />
+	        													 </h:td> 
+	        													 <h:td valign="top"> 	
+	        														 <listbox id="urlSetLbId" width="300px" multiple="true" height="100px" mold="select" ></listbox> 
+	        														 <label id="noURLExitLbId" value="No URL(s) exist for the selected email." style="color:red;" />
+	        													 </h:td>
+	        													</h:tr>
+	        											</h:table>
+	        										</div> 
+	        									</h:td></h:tr>
+			        				</radiogroup>
+			        		</h:table>
+     				</div>
+     			</h:td>
+     		</h:tr>
+     		
+     		<h:tr>
+     			<h:td valign="top" width="200px" align="right">
+     				<div style="margin-right:10px;"><label value="Trigger the event :" /><h:span style="color:red"> * </h:span></div>
+     			</h:td>
+     			<h:td valign="top" width="500px">
+     				
+			        							<div> 				 	 			
+			        									<listbox id="triggerActionLbId" width="100px" mold="select" style="float:left;">
+			        										<listitem  label="After" w:onClick="zk.Widget.$('$beforeAfterMsgDivId').show();"></listitem>
+			        										<listitem id="beforeListItemId" label="Before"  w:onClick="zk.Widget.$('$beforeAfterMsgDivId').show();"></listitem>
+			        										<listitem id="onListItemId" label="On" w:onClick="zk.Widget.$('$beforeAfterMsgDivId').hide();"></listitem>
+			        										<listitem id="whenListItemId" label="When" visible="false" w:onClick="zk.Widget.$('$beforeAfterMsgDivId').hide();"></listitem>
+			        									</listbox>
+			        									
+			        									<div id="beforeAfterMsgDivId" style="float:left;">
+			        										
+			        										<listbox id="numbersLbId" mold="select" >
+																	<!-- <listitem  label="0(Immediately)" value="0"></listitem>
+																	<listitem label="1" value="1"></listitem>
+																	<listitem label="2" value="2"></listitem>
+																	<listitem label="3" value="3"></listitem>
+																	<listitem label="4" value="4"></listitem>
+																	<listitem label="5" value="5"></listitem>
+																	<listitem label="6" value="6"></listitem>
+																	<listitem label="7" value="7"></listitem>
+																	<listitem label="8" value="8"></listitem>
+																	<listitem label="9" value="9"></listitem>
+																	<listitem label="10" value="10"></listitem>
+																	<listitem label="11" value="11"></listitem>
+																	<listitem label="12" value="12"></listitem>
+																	<listitem label="13" value="13"></listitem>
+																	<listitem label="14" value="14"></listitem>
+																	<listitem label="15" value="15"></listitem>
+																	<listitem label="16" value="16"></listitem>
+																	<listitem label="17" value="17"></listitem>
+																	<listitem label="18" value="18"></listitem>
+																	<listitem label="19" value="19"></listitem>
+																	<listitem label="20" value="20"></listitem> -->
+															</listbox>
+			        										
+			        										<listbox id="hoursDaysLbId" width="100px" mold="select">
+			        											<listitem label="hour(s)" value="60" selected="true"></listitem>
+			        											<listitem label="day(s)" value="1440" ></listitem>
+			        										</listbox>	
+			        										
+			        									</div>
+			        									<div style="padding-top:8px;">
+			        									
+			        										<label id="trigActionLabelId"  style="padding-left:10px;" value=" the date "  />
+			        									</div>
+			        							</div>
+			        							
+     			</h:td>
+     			
+     		</h:tr>
+     		
+			        							
+     		<h:tr>
+     			<h:td>
+     			<div visible="false"><label value="Filter Parameters :" /></div>
+     			</h:td>
+     			<h:td>
+     			<div visible="false"><checkbox  id="ignoreTriggerTypeChkBx" label="  Ignore similar trigger type contact to be re send." /></div>
+     			</h:td>
+     		</h:tr>
+     		
+     		<h:tr>
+     			<h:td valign="top" width="200px" align="right">
+     				<div  style="margin:8px 10px 0 0"><label value="Event :" /><h:span style="color:red"> * </h:span></div>
+     			</h:td>
+     			
+     			<h:td valign="top">
+     				<div style="margin-left:2px;"> 				 	 			
+     					<div ><checkbox id="sendCampChkBxId" label="Send an email campaign" w:onClick="displaySendCampaignDiv(zk.Widget.$(jq('$sendCampChkBxId')[0]));" /> 
+     						<div id="sendCampaignsDivId" visible="false" > 	
+      							 <listbox  id="sendCampaignsLbId" mold="select" width="300px"></listbox>
+      							 <toolbarbutton label="Preview" style="text-decoration:underline;" id="previewToolBtnId2" ></toolbarbutton>
+      						 	 <!-- <toolbarbutton label="Configure" style="text-decoration:underline;" id="configTlbBtnId" w:onClick="jq('$campConfigSettngDivId').slideToggle(1000)" ></toolbarbutton>-->
+      							 	<toolbarbutton label="Configure" style="text-decoration:underline;" id="configTlbBtnId" w:onClick="viewDivision(this);" ></toolbarbutton>		 
+    							 <div id="campConfigSettngDivId" visible="false">
+    							 			 		<h:table cellpadding="8px">
+						        			<h:tr>
+						        				<h:td> <label value="Send from this name :" /> 
+						        				</h:td>
+						        				<h:td><textbox id="trigCampNameTbId" />  <image src="/img/QuestionmarkButton-16x16.png" tooltip="sendNameDesc" style="cursor: help" />
+						        				</h:td> 
+						        			</h:tr>
+						        			
+						        			<h:tr>
+						        				<h:td> 		<label value="Send from this email address :" />  </h:td>
+						        				<h:td>		<combobox  id="trigCampFromCbId">  </combobox>   <image src="/img/QuestionmarkButton-16x16.png" tooltip="sendNameDesc1" style="cursor: help" />	</h:td>
+						        			</h:tr>
+						        			
+						        			<h:tr>
+						        				<h:td> 		<label value="Send reply email to :" /> </h:td>
+						        				<h:td> 		<combobox  id="trigCampReplyCbId" ></combobox>  <image src="/img/QuestionmarkButton-16x16.png" tooltip="sendNameDesc2" style="cursor: help" />	</h:td>
+						        			</h:tr>
+						        			
+						        			<h:tr>
+						        				<h:td colspan="2" align="center"> 		 
+						        						<button id="sendgOptSaveBtnId" label="Save"></button>
+						        						<button id="sendOptCancelBtnId" label="Cancel" w:onClick="viewDivision(this);"></button>
+						        				</h:td>
+						        			</h:tr>
+						        		</h:table>		
+						        		
+						        		<popup id="sendNameDesc"   width="400px" style="bgcolor:#CCCCCC" >
+											<h:table >
+												<h:tr>
+													<h:td>
+														<label  value="Name displayed as 'From' in the email" sclass="labelPos" />
+													</h:td>
+												</h:tr>
+												
+											</h:table>								
+										
+										</popup>
+										<popup id="sendNameDesc1"   width="400px" style="bgcolor:#CCCCCC" >
+											<h:table >
+												<h:tr>
+													<h:td>
+														<label  value="Email will be displayed as 'From Email'" sclass="labelPos" />
+													</h:td>
+												</h:tr>
+												
+											</h:table>								
+										
+										</popup>
+										<popup id="sendNameDesc2"   width="400px" style="bgcolor:#CCCCCC" >
+											<h:table >
+												<h:tr>
+													<h:td>
+														<label  value="Email will be displayed as 'Reply Email'" sclass="labelPos" />
+													</h:td>
+												</h:tr>
+												
+											</h:table>								
+										
+										</popup>
+						        		
+						        		
+						        		
+						        		<!-- <popup id="sendNameDesc" width="300px">
+											<html>
+											   <![CDATA[
+												 <span style="font-family:arial;font-size:12px;">   
+														
+												</span>
+												]]>
+											</html>
+										</popup> -->				 
+    							 	</div>  
+      							 			 
+     							</div><h:br/>
+     					 </div>
+     							 
+						<!-- SMS changes begins w:onClick="displaySendSMSDiv(zk.Widget.$(jq('$sendSMSChkBxId')[0]));"-->			
+						<div id="smsDivId"  visible="false">
+  							 <checkbox id="sendSMSChkBxId" label="Send SMS campaign" w:onClick="displaySendSMSDiv(zk.Widget.$('$sendSMSChkBxId'));" /> 
+  							 <div id="sendSmsCampDivId" visible="false">
+  							 	<listbox  id="sendSMSCampaignsLbId" mold="select" width="300px" ></listbox>
+  							 </div><h:br/>
+					 	</div>
+     					<!-- SMS changes ends -->
+     							 			
+     							 
+     							 			
+						<div ><checkbox id="addToMlChkBxId" label="Add the contact to an additional contact list" w:onClick="displayAddToMLDiv(zk.Widget.$('$addToMlChkBxId'));" />
+				      		<div id="addToMlDivId"  visible="false"><listbox id="addToMlLbId"   height="100px;"  multiple="true" width="300px;"></listbox><label value="Use CTRL key to select multiple" /> <h:br/><h:br/> 
+				      		
+				      		 <label value=" If contact already exists in mailing list ?" /><h:br/> 
+				      			<radiogroup id="ifContExistsRbxId"> 
+				      			<radio label=" ignore contact" checked="true" w:onClick="zk.Widget.$('$mergeContIgnCustFlag').setVisible(false);" /> 
+				      			<radio label=" merge contact" w:onClick="zk.Widget.$(jq('$mergeContIgnCustFlag')[0]).setVisible(true);" /> 
+				      			<radio label=" replace contact" w:onClick="zk.Widget.$(jq('$mergeContIgnCustFlag')[0]).setVisible(true);" /> 
+				      			 <div id="mergeContIgnCustFlag" visible="false" ><!-- <checkbox checked="true" id="ignoreCustFieldsCbxId" label=" Ignore custom fields ?" />  --> <label value="Note: Matching custome field name(s) will be merged/replaced." /> </div>  </radiogroup>
+				           </div><h:br/> 
+					    </div>
+     							      		
+     					<div  id="removeFrCampMlDivId"><checkbox id="removeFrCampMlChkBxId" label="Remove  contact(s) from  contact list "/> <h:br/>  </div>
+     				</div>
+     			</h:td>
+     		</h:tr>
+     		
+     		<!--  -->
+     		<h:tr>
+     			<h:td  width="200px" align="right">
+     				<div style="margin:8px 10px 0 0"><label value="Is Trigger active :" /> </div>	
+     			</h:td>
+     			<h:td >
+     				<div >
+     					<checkbox id="triggerStatusChkBxId" label="Yes, this trigger is active." />
+     				</div>
+     			</h:td>
+     		</h:tr>
+     		
+     		<h:tr>
+     			<h:td>
+     			</h:td>
+     			
+     			<h:td valign="top">
+     				<div>	 			 	 			
+						<button label="Save" id="saveBtnId" sclass="idle70 greenbtn" />
+						<!-- "if(jq('$eventTriggerNameTbId').val() == '') { jq.alert('Please enter trigger name'); return; }" -->
+						<button label="Cancel" id="cancelBtnId" sclass="idle70"  />
+      				</div>
+     			</h:td>
+     		</h:tr>
+     	
+     	
+     		<script>
+     		<![CDATA[
+     		         
+     		    function displaySendCampaignDiv(obj) {
+     		    	if(obj.isChecked()) { 
+     		    		//zk.Widget.$(jq('$campConfigSettngDivId')[0]).show();
+     		    		zk.Widget.$("$sendCampaignsDivId").show();
+     		    	} else { 
+     		    		//zk.Widget.$(jq('$campConfigSettngDivId')[0]).hide();
+     		    		zk.Widget.$("$sendCampaignsDivId").hide(); 
+     		    	}
+     		    } 
+     		    
+     		// SMS changes begins 
+     		   function displaySendSMSDiv(obj) {
+
+     			   if(obj.isChecked()){
+     				  //zk.Widget.$(jq('$sendSmsCampDivId')[0]).show();
+     				   zk.Widget.$("$sendSmsCampDivId").show();
+     			   }
+     			   else {
+     					//zk.Widget.$(jq('$sendSmsCampDivId')[0]).hide();
+     					zk.Widget.$("$sendSmsCampDivId").hide();
+     			   }
+     		   }
+     		//SMS changes ends
+
+     		    function displayAddToMLDiv(obj2) {
+     		    	if(obj2.isChecked()) { 
+     		    		//zk.Widget.$(jq('$addToMlDivId')).show(); 
+     		    		zk.Widget.$("$addToMlDivId").show(); 
+     		    	} else { 
+     		    		//zk.Widget.$(jq('$addToMlDivId')).hide(); 
+     		    		zk.Widget.$("$addToMlDivId").hide(); 
+     		    	} 
+     		    }
+     			
+     		
+     		
+     		
+     			function toggleDivContents(radioObj) {
+				
+     				//var triggerGbxId = zk.Widget.$(jq('$triggerTypeGbxId'));
+     				var triggerGbxId = zk.Widget.$("$triggerTypeGbxId");
+     				//alert(' n child  size :'+triggerGbxId.nChildren);
+     				
+     				//  Enable/Disable radio respective divs ,
+     				//  Also change the tr color.
+     				var triggerGbxId = zk.Widget.$("$triggerTypeGbxId");
+     				
+     				var radioArr = ["contactDateTypeRbnId" ,"specificTypeRbnId" ,"campaignOpnTypeRbnId" ,"linkTypeRbnId"];
+     				//alert('radioArr.nChildren ::'+radioArr.length);
+     				var divArr = ["$divId_1" , "$divId_2" , "$divId_4" ,"$divId_3"];
+     				for(var i=0; i<=radioArr.length ; i++) {
+     					
+     					if(radioObj.getId() == radioArr[i]) {
+     						 zk.Widget.$(divArr[i]).setVisible(true);
+     					}
+     					else  if(!(zk.Widget.$(divArr[i]) == undefined)){
+     						zk.Widget.$(divArr[i]).setVisible(false);
+     					}
+     				}
+     				
+     				
+     				
+     				
+     				// Mailing LIst and campaigns Lists are generated only once and used twice in screen
+     				// also controlling the triggered actions zk.Widget.$("$pwd");
+     				
+     				//var mlWidget = zk.Widget.$(jq('$mailingLstLbId'));
+     				//var campaignWidget = zk.Widget.$(jq('$campaignsLbId'));
+     				//var previewLink = zk.Widget.$(jq('$previewToolBtnId'));
+     				
+     				//var trigActLb = zk.Widget.$(jq('$triggerActionLbId'));
+     				
+     				var mlWidget = zk.Widget.$("$mailingLstLbId");
+     				var campaignWidget = zk.Widget.$("$campaignsLbId");
+     				var previewLink = zk.Widget.$("$previewToolBtnId");
+     				
+     				var trigActLb = zk.Widget.$("$triggerActionLbId");
+     				
+     				var whenLi = trigActLb.getChildAt(3);
+     				var onLi = trigActLb.getChildAt(2);
+     				var beforeLi = trigActLb.getChildAt(1);
+     				
+     				//alert('instance of '+ mlWidget.$instanceof(zul.wgt.Listbox));
+     				//alert('instance of '+ mlWidget.$class);
+     				if(radioObj == zk.Widget.$("$contactDateTypeRbnId")) {
+ 						
+ 						mlWidget.setMultiple(false);
+ 						mlWidget.setHeight('');
+ 						if(zk.Widget.$("$contMlDivId").nChildren < 1) {
+ 							mlWidget.detach();
+ 							//mlWidget.setMultiple(false);
+ 							//mlWidget.setCheckmark(false);
+ 							zk.Widget.$("$contMlDivId").appendChild(mlWidget); 
+ 							
+ 						}
+ 						whenLi.hide();
+						onLi.show();
+						beforeLi.show();
+						zk.Widget.$("$removeFrCampMlChkBxId").setLabel('Remove the contact from the contact list that they are in.'); 
+						zk.Widget.$("$trigActionLabelId").setValue(' the date');
+ 					}	else if(radioObj == zk.Widget.$("$specificTypeRbnId"))  {
+ 						
+ 						//mlWidget.detach(); 
+ 						//mlWidget.setMultiple(true);
+ 						//mlWidget.setHeight('100px');
+						//mlWidget.setCheckmark(true);
+ 						//zk.Widget.$("$dateMlDivId").appendChild(mlWidget);
+ 						
+ 						whenLi.hide();
+ 						//zAu.send(new zk.Event(mlWidget, "onFoo", {foo: 'my data'}, {toServer:true}));
+ 						onLi.show();
+ 						beforeLi.show();
+ 						
+ 						zk.Widget.$("$removeFrCampMlChkBxId").setLabel('Remove the contact from the contact list that they are in.');
+ 						zk.Widget.$("$trigActionLabelId").setValue(' the date');
+ 					
+ 					}  else if(radioObj == zk.Widget.$("$linkTypeRbnId")) {
+ 						
+ 						
+ 						if(zk.Widget.$(jq('$linkCampaignDivId')).nChildren < 1) {
+ 							campaignWidget.detach();
+ 							previewLink.detach();
+ 							zk.Widget.$("$linkCampaignDivId").appendChild(campaignWidget);
+ 							zk.Widget.$("$linkCampaignDivId").appendChild(previewLink);
+ 						}
+ 						
+ 						whenLi.show();
+						onLi.hide();
+						beforeLi.hide();
+						
+						zk.Widget.$("$removeFrCampMlChkBxId").setLabel('Remove the contact from the contact lists that I send the  campaign to when the specified link is clicked.');
+						zk.Widget.$("$trigActionLabelId").setValue('Of Clicking the Link');
+						
+ 					} else if (radioObj == zk.Widget.$("$campaignOpnTypeRbnId")) {
+ 						campaignWidget.detach();
+ 						previewLink.detach();
+ 						zk.Widget.$("$openCampaignDivId").appendChild(campaignWidget);
+ 						zk.Widget.$("$openCampaignDivId").appendChild(previewLink);
+ 						
+ 						whenLi.show(); 
+ 						onLi.hide();
+ 						beforeLi.hide();
+ 						
+ 						zk.Widget.$("$removeFrCampMlChkBxId").setLabel('Remove the contact from the contact lists that I send the  campaign campaign to when it\'s opened.');
+ 						zk.Widget.$("$trigActionLabelId").setValue(' Opening the email');
+ 					}
+ 					
+     			}
+     			
+     			
+     			var visible = false;
+     			
+    			function viewDivision(btn) {
+    				if(!visible) {
+    					zk.Widget.$("$campConfigSettngDivId").setVisible(true);
+    					visible = true;
+    				}else { 
+    					zk.Widget.$("$campConfigSettngDivId").setVisible(false);
+    			   			visible = false;
+    				}
+    		  	}
+     			
+     			
+     			]]>	
+     		</script>
+     	
+     	</h:table>
+     </groupbox>
+     
+     <window id="previewWinId" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWinId.setVisible(false)"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+				<html id="html" />
+			</div>
+		</window>
+		
+		<window id="createCustomWindId" title="Create Custom Event" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="createCustomWindId.setVisible(false)"/>
+			</caption>
+			
+			<h:table id="contentDivId" width="550px" height="200px" style="overflow:auto">
+				
+				<h:tr>
+					<h:td colspan="2"></h:td>
+				</h:tr>
+				
+				<h:tr>	
+					<h:td align="right">	<label value="Enter Custom Event Name :" /> </h:td>
+					<h:td align="left">	<textbox id="newCustEvntTbId" /> </h:td>
+				</h:tr>
+				
+				<h:tr>	
+					<h:td align="right"> <label value="Select Custom Event Date :" />  </h:td>
+					<h:td align="left">
+					 <datebox id="custEvtDtBxId" cols="18" format="dd-MM-yyyy" onCreate="self.value = new Date()"   use="org.mq.marketer.campaign.custom.MyDatebox"   /> <!-- <datebox id="custEvtDtBxId" width="165px"  use="org.mq.marketer.campaign.custom.MyDatebox" /> -->
+						<!-- <timebox id="eventTimeBoxId" cols="12"  onCreate="self.value = new Date()" mold="rounded" />  -->
+					</h:td>
+				</h:tr>
+				
+				<h:tr>	
+					<h:td align="right"> <button label="Submit" id="submitBtnId" />  </h:td>
+					<h:td align="left"> <button label="Cancel"  >
+					  <attribute name="onClick"><![CDATA[
+		               	createCustomWindId.visible = false;
+		            ]]></attribute>
+					</button>	</h:td>
+				</h:tr>
+			</h:table>
+		</window>
+
+</window>
+</zk>

@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="OCLOYALTY_LOYALTYISSUANCEREQS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="OCLoyaltyIssuanceReq">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="header">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="requestId" type="xs:string" />
+                    <xs:element name="pcFlag" type="xs:string" />
+                    <xs:element name="requestDate" type="xs:string" />
+                    <xs:element name="storeNumber" type="xs:string" />
+                     <xs:element name="subsidiaryNumber" type="xs:string" minOccurs="0"/>
+                     <xs:element name="receiptNumber" type="xs:string" minOccurs="0"/>
+                    <xs:element name="docSID" type="xs:string" />
+                    <xs:element name="sourceType" type="xs:string" minOccurs="0"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="membership">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="issueCardFlag" type="xs:string" />
+                    <xs:element name="cardNumber" type="xs:string" />
+                    <xs:element name="cardPin" type="xs:string" />
+                    <xs:element name="phoneNumber" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="amount">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="type" type="xs:string" />
+                    <xs:element name="enteredValue" type="xs:string" />
+                    <xs:element name="valueCode" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="discounts" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="promotions" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="OCLOyaltyPromotions" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="name" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="appliedPromotion" maxOccurs="unbounded" minOccurs="0" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="items" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="OCLoyaltyItem" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="itemCategory" type="xs:string" />
+                          <xs:element name="departmentCode" type="xs:string" />
+                          <xs:element name="itemClass" type="xs:string" />
+                          <xs:element name="itemSubClass" type="xs:string" />
+                          <xs:element name="DCS" type="xs:string" />
+                          <xs:element name="vendorCode" type="xs:string" />
+                          <xs:element name="skuNumber" type="xs:string" />
+                          <xs:element name="billedUnitPrice" type="xs:string" />
+                          <xs:element name="quantity" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="customer">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="customerId" type="xs:string" />
+                    <xs:element name="firstName" type="xs:string" />
+                    <xs:element name="lastName" type="xs:string" />
+                    <xs:element name="phone" type="xs:string" />
+                    <xs:element name="emailAddress" type="xs:string" />
+                    <xs:element name="addressLine1" type="xs:string" />
+                    <xs:element name="addressLine2" type="xs:string" />
+                    <xs:element name="city" type="xs:string" />
+                    <xs:element name="state" type="xs:string" />
+                    <xs:element name="postal" type="xs:string" />
+                    <xs:element name="country" type="xs:string" />
+                    <xs:element name="birthday" type="xs:string" />
+                    <xs:element name="anniversary" type="xs:string" />
+                    <xs:element name="gender" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="user">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="userName" type="xs:string" />
+                    <xs:element name="organizationId" type="xs:string" />
+                    <xs:element name="token" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

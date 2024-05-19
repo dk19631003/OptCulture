@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.WAClicks"
+		table="wa_clicks">
+		<id name="clickId" type="java.lang.Long">
+			<column name="click_id" />
+			<generator class="native" />
+		</id>
+		<many-to-one name="sentId"
+			class="org.mq.marketer.campaign.beans.WACampaignSent"
+			foreign-key="click_sentFkey" fetch="select" >
+			<column name="sent_id" />
+		</many-to-one>
+		<property name="clickUrl" type="java.lang.String">
+			<column name="click_Url" length="500" />
+		</property>
+		<property name="clickDate" type="calendar">
+			<column name="click_date" />
+		</property>
+		<property name="waCampUrlId" type="java.lang.Long">
+			<column name="wa_campUrl_id" />
+		</property>
+	</class>
+</hibernate-mapping>

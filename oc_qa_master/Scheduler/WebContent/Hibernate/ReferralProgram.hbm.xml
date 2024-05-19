@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.ReferralProgram"
+		table="referral_program">            
+		
+		<id name="referralId" type="java.lang.Long" column="referral_id">
+			<generator class="native" />
+		</id>
+		
+		
+		<property name="status" type="string">
+			<column name="status"  />
+		</property>
+		
+		
+		<property name="programName" type="string">
+			<column name="name" length="60"/>
+		</property>
+			
+		<property name="userId" type="long">
+			<column name="created_by" />
+		</property>
+		
+		<property name="modifiedBy" type="string">
+			<column name="modified_by" />
+		</property>
+	
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+	
+	
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+	
+	
+	
+		<property name="orgId" type="long">
+			<column name="org_id" />
+		</property>
+	
+	
+	
+		<property name="startDate" type="calendar">
+			<column name="start_date" />
+		</property>
+		
+		<property name="endDate" type="calendar">
+			<column name="end_date" />
+		</property>
+		
+		
+	
+		<property name="discountforReferrertype" type="string">
+			<column name="Discount_for_referrer_type"  />
+		</property>
+		
+		<property name="discountforReferrervalue" type="double">
+			<column name="Discount_for_referrer_value"  />
+		</property>
+
+		<property name="refereeMPV" type="string">
+			<column name="referee_MPV"  />
+		</property>
+
+		<property name="noLimit" type="boolean">
+			<column name="no_limit" default="true"/>
+		</property>
+		
+		
+		<property name="rewardonReferraltype" type="string" >
+			<column name="reward_on_referral_type" />
+		</property>
+		
+			<property name="rewardonReferralVC" type="string" >
+			<column name="reward_on_referral_VC" />
+		</property>
+		
+		<property name="rewardonReferralValue" type="string" >
+			<column name="reward_on_referral_value" />
+		</property>
+		
+		<property name="couponId" type="java.lang.Long">
+			<column name="coupon_id" />
+		</property>
+		
+		
+
+
+	</class>
+</hibernate-mapping>
+
+
+

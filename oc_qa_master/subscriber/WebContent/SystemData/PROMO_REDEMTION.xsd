@@ -1,0 +1,60 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="COUPONCODEREDEEM_REQUESTS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="COUPONCODEREDEEMREQ" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HEADERINFO">
+                <xs:complexType>
+                  <xs:all>
+                   <xs:element name="REQUESTID" type="xs:string"/>
+                  <xs:element name="PCFLAG" type="xs:string" minOccurs="0"/>
+                  <xs:element name="STORENUMBER" type="xs:string" minOccurs="0"/>
+                  <xs:element name="SOURCETYPE" type="xs:string" minOccurs="0"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="COUPONCODEINFO">
+                <xs:complexType>
+                  <xs:all>
+                  	<xs:element type="xs:string" name="COUPONNAME" minOccurs="0"/>
+                    <xs:element type="xs:string" name="COUPONCODE"/>
+                    <xs:element type="xs:string" name="STORENUMBER"/>
+                    <xs:element type="xs:string" name="DOCSID"/>
+                     <xs:element type="xs:string" name="SUBSIDIARYNUMBER" minOccurs="0"/>
+                      <xs:element type="xs:string" name="RECEIPTNUMBER" minOccurs="0"/>
+                       <xs:element type="xs:string" name="RECEIPTAMOUNT" minOccurs="0"/>
+                    
+                    <xs:element type="xs:string" name="CUSTOMERID"/>
+                    <xs:element type="xs:string" name="PHONE"/>
+                    <xs:element type="xs:string" name="EMAIL"/>
+                   
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="PURCHASECOUPONINFO">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="TOTALAMOUNT"/>
+                    <xs:element type="xs:string" name="TOTALDISCOUNT"/>
+                    <xs:element type="xs:string" name="USEDLOYALTYPOINTS"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="USERDETAILS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="USERNAME"/>
+                    <xs:element type="xs:string" name="ORGID"/>
+                    <xs:element type="xs:string" name="TOKEN"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.CampaignSent" table="campaign_sent">
+    <id name="sentId" type="java.lang.Long" >
+      <column name="sent_id" unique="true"/>
+      <!-- <generator class="native"/> -->
+    </id>
+	<property name="emailId" type="string">
+      <column name="email_id" not-null="true"/>
+    </property>
+	<many-to-one name="campaignReport" class="org.mq.captiway.scheduler.beans.CampaignReport" foreign-key="CampaignRepFkey"  fetch="select" lazy="false">
+      <column name="cr_id" not-null="true"/>
+    </many-to-one>
+	<property name="opens" type="int">
+      <column name="opens"/>
+    </property>
+	<property name="clicks" type="int">
+      <column name="clicks"/>
+    </property>
+    <property name="status" type="string" >
+      <column name="status" length="20" not-null="true"/>
+    </property>
+    <property name="contactId" type="java.lang.Long">
+      <column name="contact_id"/>
+    </property>
+    <property name="campaignId" type="java.lang.Long">
+      <column name="campaign_id"/>
+    </property>
+    <property name="contactPhValStr" type="text">
+      <column name="contactPhValStr"/>
+    </property>
+    
+ </class>
+</hibernate-mapping>

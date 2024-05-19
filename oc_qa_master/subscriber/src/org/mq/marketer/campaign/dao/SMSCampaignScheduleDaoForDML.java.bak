@@ -1,0 +1,5 @@
+package org.mq.marketer.campaign.dao;
+
+public class SMSCampaignScheduleDaoForDML {
+
+}

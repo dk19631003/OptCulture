@@ -1,0 +1,203 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	
+	<window id="smsReportsWinId" style="margin-top:10px;" apply="org.mq.marketer.campaign.controller.campaign.SMSCampReports" width="100%" xmlns:h="http://www.zkoss.org/2005/zk/native">
+	
+	<h:table cellpadding="0" cellspacing="0" width="100%" >
+		
+			<!-- <h:tr>
+				<h:td align="left">
+					<label value="SMS Campaign Report" sclass="theme-lbHeading" />
+				</h:td>
+			</h:tr> -->
+			<!-- <h:tr>
+				<h:td colspan="2">
+				
+				<h:hr sclass="theme-hrLine" />
+				
+				</h:td>
+			</h:tr> -->
+			<!-- <h:tr>
+				<h:td>
+					<label value="SMS : " />
+					<space width="5px" />
+					<label id="smsCampNamelbId" sclass="theme-lbHeading " />
+				</h:td>
+			</h:tr> -->
+			
+			<!-- <h:tr height="10" /> -->
+			<h:tr>
+			
+			
+			<h:td>
+				<label value="Select Dates to view the campaign list:" sclass="theme-lbHeading"/>
+							<space/>
+							<label value="From"/>
+							<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							format="dd-MMM-yyyy" constraint="no future"/><space/>
+							<label value="To "/>
+							<datebox id="toDateboxId" readonly="true"
+							use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy"/>
+			</h:td>
+			
+			
+ 
+			  <!-- <h:td>
+				<listbox id="campaignListLbId"  rows="1" mold="select" width="150px" visible="false"/>
+				<textbox id="searchTbId" value="Email Name..." w:onClick="javascript: if(this.getValue()=='Email Name...') {  this.setValue(''); }"  visible="false" width="80px"  style="font-size:11px;" />
+			</h:td>   -->
+			<h:td>
+				<button label="Get Reports" sclass="idle140 greenbtn" id="getBitweenDatesBtnId"/>
+				<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+			</h:td> 
+		
+		</h:tr> 
+	
+	</h:table>
+	
+	<separator height="15px"/>
+	
+	<grid id="reportGridId" mold="paging" emptyMessage="No Records Found..." pageSize="10" >
+			
+		<columns menupopup="auto" >
+			<column label="Date Sent" width="140px" />
+			<column label="SMS Name" />
+			<column label="List(s)" width="120px"/>
+			<column label="Sent"  width="100px" />
+			<column label="Unique Clicks %" width="120px" />
+			
+			<!--<column label="Opens %" width="70px" />
+			<column label="Clicks %" width="70px" />
+			<column label="Unsubs %"  width="70px" />
+			--><column label="Undelivered%"  width="150px"/>
+			<column label="Source Type" width="200px" visible="false"/>
+			
+		</columns>
+	</grid>
+	
+<div style="padding:20 0 20 0;">
+		
+	<label id="msgLblId" value=" " style="position:relative;left:10px;font-size:11px;color:#10418c;" />
+</div>
+			<h:table align="right" style="padding-top:10px;">
+				<h:tr>
+					<h:td >
+						<button label="Back" sclass="idle140" id="backBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>		
+
+	
+		<!--<h:table cellpadding="0" cellspacing="0" width="95%" align="center">
+			<h:tr>
+				<h:td>
+					<label value="Report" sclass="theme-lbHeading" />
+					<h:div align="right" style="float:right;">
+						<button label="Back" id="backBtnId" />
+					</h:div>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td >
+					<h:hr sclass="theme-hrLine" />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<h:table cellpadding="2" cellspacing="2" width="100%">
+						<h:tr>
+							<h:td>
+								<label value="Email : " />
+								<space width="5px" />
+								<label id="smsCampNamelbId" value="${smsCampName}" sclass="theme-lbHeading " />
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<h:div style="overflow-x:auto;width:910px;" >
+									<grid id="reportGridId" mold="paging" pageSize="10"  visible="false" height="335px">
+										<columns >
+											<column label="Date Sent" width="150px" />
+											<column label="SMS Name" width="250px"/>
+											<column label="List Name(s)" width="90px">
+											<column label="Sent"  width="75px" />
+											<column label="Opens %"  width="75px"/>
+											<column label="Clicks %"  width="75px"/>
+											<column label="Unsubs %"  width="75px" />
+											<column label="Bounces %"  width="75px"/>
+											<column label="Source Type" width="150px"/>
+										
+											<column label="Date Sent" width="145px" />
+											<column label="Email Name" />
+											<column label ="List Name(s)" width="150px"/>
+											<column label="Sent"  width="80px" />
+											<column label="Opens %"  width="60px"/>
+											<column label="Clicks %"  width="60px"/>
+											<column label="Unsubs %"  width="65px" />
+											<column label="Bounces %"  width="70px"/>
+											<column label="Source Type" width="150px"/>
+										
+										</columns>
+									</grid>
+								</h:div>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<label id="msgLblId" value=" " style="position:relative;left:10px;font-size:11px;color:#10418c;" />
+							</h:td>
+						</h:tr>
+					</h:table>
+				 <zscript>
+						<![CDATA[
+						/*if(fromPage.equals("admin/dashBoard"))
+							reportsWinId.getReports(campName,reportGridId,msgLblId,eachUserId);*/
+						
+							
+						
+						]]>
+					</zscript> 
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<separator></separator>
+					<h:table cellpadding="2" cellspacing="2" width="100%" >
+						<h:tr>
+							<h:td>
+								<div id="metricsid" visible="false">
+									<label value="Consolidated metircs" sclass="theme-lbHeading" />
+									<separator />
+									<listbox id="campConsolLbId" sclass="contactsView" >
+										<listhead sizable="true">
+											<listheader label=" " width="400px" maxlength="15"/>
+											<listheader label="Sent"  width="95px"/>
+											<listheader label="Unsubs %"  width="95px" align="center"/>
+											<listheader label="Bounce %"  width="95px" align="center"/>
+											<listheader label="Opens %"  width="95px" align="center"/>
+											<listheader label="Clicks %"  width="95px" align="center"/>
+										
+										</listhead>
+									</listbox>
+									 <zscript>
+										<![CDATA[
+											if(!fromPage.equals("admin/dashBoard")){
+											if(reportGridId.getPageSize() > 0){
+												metricsid.setVisible(true);
+												reportsWinId.getCampaignConsolidatedReport(campName,campConsolLbId);
+											}else{
+												
+												metricsid.setVisible(false);
+											}
+										}
+										]]>
+									</zscript> 
+								</div>
+							</h:td>
+						</h:tr>
+					</h:table>
+				</h:td>
+			</h:tr>
+		</h:table>
+	--></window>
+</zk>

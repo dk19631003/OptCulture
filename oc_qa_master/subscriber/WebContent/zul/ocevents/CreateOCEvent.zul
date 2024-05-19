@@ -1,0 +1,328 @@
+
+
+<zk>
+   <script type="text/javascript" src="js/quill/quill.js"></script>
+   <style >
+      .redStar{
+      font-size:14px;color:red;
+      }
+      .symbolAnc {
+      color: black;
+      font-size: 20px;
+      text-decoration: none;
+      width: 33px;
+      height:40px;
+      background-image: url("images/subject_symbols.png");
+      display: inline-block;
+      }
+      .z-hlayout-inner {
+      vertical-align:middle;
+      }
+   </style>
+   <window id="campSettigWinId" border="0" width="100%" apply="org.mq.optculture.controller.ocevent.CreateOCEventController" xmlns:h="http://www.zkoss.org/2005/zk/native" xmlns:w="client">
+    
+      <groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+      <caption> <label value="Create Event"/> </caption>
+      <h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;" >
+      <h:tr height="50">
+      <h:td valign="bottom" width="150" colspan="1">
+      <label value="Event Title:"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="2">
+      <textbox  id="eNameTbId" value=""  width="250px"  constraint="no empty: Please specify an event tiltle." maxlength="100"/>
+      </h:td>
+      <h:td valign="bottom" colspan="3" width="150">
+      <label value="Address Line1:"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="4">
+      <textbox  id="a1NameTbId" value="" name="addressLine1NameTb"  width="250px"  constraint="no empty: Please specify Address Line 1" maxlength="100"/>
+      </h:td>
+      </h:tr>
+      <h:tr height="50">
+      <h:td valign="bottom" width="150" colspan="1">
+      <label value="Event Start:"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="2">
+      <datebox id="eventStartDateboxId" format="yyyy-MM-dd HH:mm:ss" use="org.mq.marketer.campaign.custom.MyDatebox"  cols="18" />
+ 	  <image src="/img/icons/icon_q.png" tooltip="help2"  style="padding-left:40px;" id="helpImgId" visible="false"/>
+      <popup id="help2"   width="400px" style="bgcolor:#CCCCCC" >
+      <h:table >
+      <h:tr>
+      <h:td>
+      <label  value="You need to enable subscriber preference center for this setting" sclass="labelPos" />
+      </h:td>
+      </h:tr>
+      </h:table>
+      </popup>
+      </h:td>
+      <h:td valign="bottom" colspan="3" width="150">
+      <label value="Address Line2:"/>
+      </h:td>
+      <h:td valign="bottom" colspan="4">
+      <textbox  id="a2NameTbId" value=""   width="250px"  maxlength="100"/>
+      </h:td>
+      </h:tr>
+      <h:tr height="50">
+      <h:td valign="bottom" width="150" colspan="1">
+      <label value="Event End"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="2">
+      <datebox id="eventEndDateboxId" format="yyyy-MM-dd HH:mm:ss"   use="org.mq.marketer.campaign.custom.MyDatebox"  
+       cols="18"  />
+      </h:td>
+      <h:td valign="bottom" colspan="3" width="150">
+      <label value="State:"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="4">
+      <textbox  id="stateTbId" value=""   width="250px"  constraint="no empty: Please specify a state" maxlength="100"/>
+      </h:td>
+      </h:tr>
+      <h:tr height="50">
+      <h:td valign="bottom" width="150" colspan="1">
+      <label value="City:"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="2">
+      <textbox  id="cityTbId" value=""  width="250px"  constraint="no empty: Please specify city." maxlength="100"/>
+      </h:td>
+      <h:td valign="bottom" colspan="3" width="150">
+      <label value="Zip Code"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="4">
+      <textbox  id="zipTbId" value=""   width="250px"  constraint="no empty: Please specify zip code" maxlength="100"/>
+      </h:td>
+      </h:tr>
+      <h:tr height="50">
+      
+      
+      
+      
+<h:td valign="bottom" width="150" colspan="1">
+      <label value="Event duration type"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="2" width="150">
+      <radiogroup id="eventDayTypeRadioGrId" />
+	  <radio label="One Day" id="eventRadioOneDayId" radiogroup="eventDayTypeRadioGrId"
+							selected="true" value="oneDay"/>
+	  <radio label="Multiple Days" id="eventRadioMultipleDaysId" radiogroup="eventDayTypeRadioGrId"
+							 value="multipleDays" />
+	  </h:td>						
+      <h:td valign="bottom" colspan="3" width="150">
+      <label value="Store"/>
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td valign="bottom" colspan="4">
+      <textbox  id="storeTbId" value=""   width="250px"  constraint="no empty: Please specify store" maxlength="100"/>
+      </h:td>
+      </h:tr>
+      <h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;">
+      	  <h:tr height="20"/>
+     
+      <h:tr height="50">
+      <h:td >
+      <label value="Subtitle :" />
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td colspan="2">
+      <textbox id="subtitleTb" width="820px" maxlength="500" 
+         constraint="no empty: Please give a subtitle"  />
+      </h:td>
+      </h:tr>
+      <separator />
+	  <separator />
+	    <h:tr height="50">
+      <h:td >
+      <label value="Left Button Label :" />
+      </h:td>
+      <h:td colspan="2">
+      <textbox id="leftButtonLabelTb" width="820px" maxlength="500" 
+          />
+      </h:td>
+      </h:tr>
+      <separator />
+	  <separator />
+	   <h:tr height="50">
+      <h:td >
+      <label value="Left Button URL :" />
+      </h:td>
+      <h:td colspan="2">
+      <textbox id="leftButtonURLTb" width="820px" maxlength="500" 
+           />
+      </h:td>
+      </h:tr>
+      <separator />
+	  <separator />
+	  
+	   <h:tr height="50">
+      <h:td >
+      <label value="Right Button Label :" />
+      </h:td>
+      <h:td colspan="2">
+      <textbox id="rightButtonLabelTb" width="820px" maxlength="500" 
+          />
+      </h:td>
+      </h:tr>
+      <separator />
+	  <separator />
+	   <h:tr height="50">
+      <h:td >
+      <label value="Right Button URL :" />
+      </h:td>
+      <h:td colspan="2">
+      <textbox id="rightButtonURLTb" width="820px" maxlength="500" 
+           />
+      </h:td>
+      </h:tr>
+      <separator />
+	  <separator />
+	  
+	  <h:tr height="20"/>
+      <h:tr height="50">
+      <h:td >
+      <label value="Description:" />
+      <label value="*" sclass="redStar"/>
+      </h:td>
+      <h:td colspan="2">
+      <html>
+      <body>
+      <div id="quillEditor" style="height:200px;"></div>
+      <div id="counter">0 characters</div>
+      </body>
+      </html>               
+      </h:td>
+      </h:tr>
+      <separator />
+	  <separator />
+      </h:table>
+      <h:table cellspacing="15" cellpadding="1" width="85%" align="left" style="padding-left:20px;">
+      <h:tr height="26">
+      <h:td>	</h:td>
+      </h:tr>
+      <h:tr height="10"/>
+      <h:tr>
+      <h:td>
+      <label value="Events List View Images:" />
+      <label value="*" sclass="redStar"/>
+      </h:td>
+	  <h:td valign="top">
+		<groupbox closable="true" width="800px" height="350px">
+			<caption label="Images" />
+			<div id="imagesDivId" width="100%" height="320px" style="overflow:auto;"  />
+		</groupbox>
+	  </h:td>
+	  <h:td colspan="2" spacing="15px"><separator spacing="15px"/></h:td>	  
+      <h:td colspan="3">
+	  <button id="uploadBtn" width="130px" upload="true,maxsize=-1,multiple=true" label="Upload Image"/>
+      </h:td>
+      </h:tr>
+      </h:table>
+      </h:table>
+      <h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+      <h:td colspan="6" style="padding-right:30px;">
+      <button label="Save &amp; Exit" id="saveBtnId" sclass="idle140 greenbtn"  onClick='Clients.evalJavaScript("onclickSave();")' />
+      <space/>
+      <button label="Cancel" sclass="idle140" id="cancelBtnId"/>
+      </h:td>
+      </h:table>
+      </groupbox>
+   <html>
+      <![CDATA[
+         <script type="text/javascript">
+         	/**get cursor position and insert merge tag in header field*/
+         	function insertAtCursor(myField, myValue) {
+         	    //IE support
+         	    	if (document.selection) {
+         		        myField.focus();
+         		        sel = document.selection.createRange();
+         		        sel.text = myValue;
+         	    	}
+         	    	//MOZILLA and others
+         	    	else if (myField.selectionStart || myField.selectionStart == '0') {
+         		        var startPos = myField.selectionStart;
+         		        var endPos = myField.selectionEnd;
+         		        myField.value = myField.value.substring(0, startPos)
+         		            + myValue
+         		            + myField.value.substring(endPos, myField.value.length);
+         		    } else {
+         		        myField.value += myValue;
+         		    }
+         		} 
+         	var headerText;
+         	function displayIndivOnKeyup(){
+         	 	   var currentText = jq('$headerId').val();
+         	 	  jq('$headderContentId').text(currentText);
+         	}
+         	
+         	function onclickSave(){
+         		console.log("Hi1");
+         		var quillData = JSON.stringify({'htmlQuill':htmlQuill, 'htmlQuillText':validateQuill});
+         		console.log(zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onClickSaveEventData', quillData)));
+				console.log(quillData);	          
+         	}
+         	
+         </script>
+         ]]>
+   </html>
+   <div style="display:none">
+			<textbox id="jsonData"></textbox>
+   </div>
+		<div class="splitRight" id="additionalFieldsId">
+		<textbox id="bodyContentId"></textbox>
+		</div>
+		
+			<script>
+		 function onImgMouseOver(thisObj) {
+	      	
+	      	thisObj.setStyle('margin:1px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;border:#E1E1E1 1px solid;');
+			var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+			var delId = 'del_' + vboxId;
+		
+			thisObj.$f(delId).setVisible(true); 
+			thisObj.$f(zoomId).setVisible(true);
+			
+	      } 
+      
+	      function onImgMouseOut(thisObj) {
+	      
+	      	thisObj.setStyle('margin:2px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;');
+	      	
+	      	var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+			var delId = 'del_' + vboxId;
+			
+	      	thisObj.$f(delId).setVisible(false); 
+			thisObj.$f(zoomId).setVisible(false);
+	     
+	      } 
+
+			var visible = false;
+		
+			function viewFold(btn) {
+				if(!visible) {
+					
+					jq(btn.$f('createFolderId')).hide().slideDown();
+					visible = true;
+				}else { 
+			  			jq(btn.$f('createFolderId')).show().slideUp();
+			   			visible = false;
+				}
+		  	}
+    </script>
+    
+		
+   </window>
+
+</zk>
+

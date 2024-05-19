@@ -1,0 +1,18 @@
+<?page title="Reachable Test Page for ZK" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window title="Reachable Test Page for ZK" border="normal">
+	<label value="Welcome To Application"/>
+	<button label="Greet" onClick="greet()"></button>
+	<zscript>
+		<![CDATA[
+			void greet() {
+				try{
+				Messagebox.show("Test successful");
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		]]>
+	</zscript>
+</window>
+</zk>

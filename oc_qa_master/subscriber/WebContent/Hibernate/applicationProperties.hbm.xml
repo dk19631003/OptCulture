@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ApplicationProperties"
+		table="application_properties">
+		<id name="pId" type="java.lang.Long" column="p_id">
+			<generator class="native" />
+		</id>
+		<property name="key" type="string">
+			<column name="props_key" default="''" />
+		</property>
+		<property name="value" type="string">
+			<column name="props_value" default="''" />
+		</property>
+	</class>
+</hibernate-mapping>

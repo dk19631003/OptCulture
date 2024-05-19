@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!-- Database connection settings -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">
+			jdbc:mysql://qcdbv2.chwgfb3idcu0.us-east-2.rds.amazonaws.com:3306/optculture_2_0_app
+		</property>
+		<property name="connection.username">qcdev</property>
+		<property name="connection.password">P%7qF`h676Dev</property>
+		<!-- JDBC connection pool (use the built-in) -->
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<property name="hibernate.c3p0.min_size">3</property>
+		<property name="hibernate.c3p0.max_size">150</property>
+		<property name="hibernate.c3p0.timeout">100</property>
+		<property name="hibernate.c3p0.idle_test_period">60</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="autoCommitOnClose">true</property>
+		<property name="maxIdleTimeExcessConnections">90</property> 
+		<!-- MySQL dialect//different for different Database -->
+		<property name="hibernate.dialect">
+			org.mq.captiway.scheduler.services.OCMySQLDialect
+		</property>
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+		<!-- Disable the second-level cache -->
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">false</property>
+		<property name="hbm2ddl.auto">update</property><property name="current_session_context_class">thread</property>
+		<!-- Disable the second-level cache -->
+		<property name="hibernate.c3p0.acquire_increment">1</property>
+	</session-factory>
+</hibernate-configuration>

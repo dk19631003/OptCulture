@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.MastersToTransactionMappings"
+		table="masters_to_transaction_mappings" >
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id"  />
+		</property>
+		
+		<property name="listId" type="java.lang.Long">
+			<column name="list_id"  />
+		</property>
+		
+		<many-to-one name="parentId"
+			class="org.mq.marketer.campaign.beans.POSMapping" foreign-key="posId" fetch="select" lazy="false">
+			<column name="parent_id" />
+		</many-to-one>
+		
+		<many-to-one name="childId"
+			class="org.mq.marketer.campaign.beans.POSMapping" foreign-key="posId" fetch="select" lazy="false">
+			<column name="child_id" />
+		</many-to-one>
+		
+		<!-- <property name="parentId" type="string">
+			<column name="parent_id"  />
+		</property> -->
+		
+		<!-- <property name="childId" type="string">
+			<column name="child_id" />
+		</property> -->
+		
+		<property name="type" type="string">
+			<column name="type"  />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		
+		
+		<property name="lastModifieddDate" type="calendar">
+			<column name="last_modifiedd_date" />
+		</property>
+		
+		
+		
+		
+	</class>
+</hibernate-mapping>

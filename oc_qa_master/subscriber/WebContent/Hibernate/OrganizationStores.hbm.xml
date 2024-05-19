@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.OrganizationStores" table="org_stores">
+    <id name="storeId" type="java.lang.Long">
+      <column name="store_id"/>
+      <generator class="native"/>
+    </id>
+	<property name="homeStoreId" type="string" column="home_store_id" length="20" />
+    <property name="storeName" type="string" column="store_name"  />
+    <property name="storeManagerName" type="string" column="store_manager_name"  />
+	<property name="createdDate" type="calendar" column="created_date"  />
+	<property name="modifiedDate" type="calendar" column="modified_date" />
+	<property name="emailId" type="string" column="email_id"  />
+	<property name="website" type="string" column="website"  />
+	<property name="fromEmailId" type="string" column="from_email_id"  />
+	<property name="replyToEmailId" type="string" column="reply_to_email_id"  />
+	<property name="fromName" type="string" column="from_name"  />
+		<property name="addressFlag" type="boolean">
+			<column name="address_flag" default="false" />
+		</property>
+		
+		<property name="addressStr" type="string">
+			<column name="address" length="1000"/>
+		</property>
+	<property name="storeBrand" type="string" column="store_brand" />
+	<property name="locality" type="string" column="locality" />
+	<property name="city" type="string" column="city" />	
+	<property name="state" type="string" column="state" />
+	<property name="country" type="string" column="country" />
+	<property name="zipCode" type="string" column="zip_code" />
+	<property name="mobileNo" type="string" column="mobile_no" />					
+	<property name="subsidiaryId" type="string" column="subsidary_id"  />
+	<property name="subsidiaryName" type="string" column="subsidiary_name"  />
+    <property name="domainId" type="java.lang.Long" column="domain_id"  />
+	
+	<many-to-one name="userOrganization"
+			class="org.mq.marketer.campaign.beans.UserOrganization" foreign-key="orgId"
+			fetch="select" lazy="false">
+			<column name="org_id" />
+		</many-to-one>
+
+<property name="ERPStoreId" type="string">
+			<column name="ERP_store_id"  />
+		</property>
+	<property name="timeZone" type="string" column="time_zone"/>
+	<property name="latitude" type="string" column="latitude" />
+	<property name="longitude" type="string" column="longitude" />
+    <property name="storeImagePath" type="string" column="store_Image_Path"/>
+    <property name="brandImagePath" type="string" column="brand_Image_Path"/>
+    <property name="description" type="string" column="description" />
+    <property name="googleMapLink" type="string" column="google_map_link" />
+    
+ 
+ </class>
+</hibernate-mapping>

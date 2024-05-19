@@ -1,0 +1,220 @@
+<zk>
+	<window border="0" width="100%" apply="org.mq.optculture.controller.loyalty.AddLoyaltyCardsController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<div>
+			<label
+				value="Add card-sets to get started with your card-based loyalty or gift program." />
+		</div>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;"
+			closable="false">
+			<caption><label value="Create Card-Set" /></caption>
+
+			<h:table cellspacing="0" cellpadding="0" width="85%"
+				align="left" style="padding-left:20px;">
+
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Card-Set Name:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td colspan="2">
+						<textbox id="cardSetNameTbId" value=""
+							name="cardSetNameTbId" width="250px" maxlength="60" />
+					</h:td>
+				</h:tr>
+
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Card-Set Type:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td colspan="2">
+						<radiogroup id="ltyCardTypeRadioGrId" />
+						<radio label="Physical Cards" id="physicalRadioId" radiogroup="ltyCardTypeRadioGrId"
+							selected="true" value="Physical" />
+						<radio label="Virtual Cards" id="virtualRadioId" radiogroup="ltyCardTypeRadioGrId"
+							 value="Virtual" />
+						<!-- <listbox id="cardsetTypeLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Virtual" value="Virtual" selected="true" />
+							<listitem label="Physical" value="Physical" />
+						</listbox> -->
+					</h:td>
+				</h:tr>
+
+				<h:tr height="50">
+					<h:td width="150">
+						<label value="Quantity:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td colspan="2">
+						<textbox id="quantityNameTbId" value=""
+							name="quantityNameTb" width="150px" maxlength="60" />
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="50">
+					<h:td width="150">
+						<label value="Card No. Generation Type:" />
+					</h:td>
+
+					<h:td colspan="2">
+						<listbox id="genTypeLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Random" value="Random" selected="true"/>
+							<listitem label="Sequential" value="Sequential" />
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td width="150">
+						<label value="Status:" />
+					</h:td>
+
+					<h:td colspan="2">
+						<listbox id="statusLbId" rows="1" mold="select"	style="position:relative;" width="200px">
+							<listitem label="Active" value="Active" selected="true"/>
+							<listitem label="Suspended" value="Suspended"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Tier Assignment:" />
+					</h:td>
+					
+					<h:td colspan="2">
+						<radiogroup id="tierAssignmentRadioGrId" />
+						<radio label="Automatic" id="autoAssignRadioId" radiogroup="tierAssignmentRadioGrId"
+							selected="true" value="auto"/>
+						<radio label="Link tier to card-set" id="linkTierRadioId" radiogroup="tierAssignmentRadioGrId"
+							 value="link"/>
+						<listbox id="selTierLbId" width="100px" mold="select" style="position:relative;"  disabled="true" >
+							<listitem label="Select Tier" value="0" selected="true"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td></h:td>
+					<h:td >
+						<button id="addBtnId" sclass="idle140 greenbtn"
+							label="Add">
+						</button>
+					</h:td>
+				</h:tr>
+				<h:tr height="30"></h:tr>
+			</h:table>
+		</groupbox>
+	<!-- 	<groupbox width="95%" id="migrateCardsGb"
+			style="margin-top:10px;" sclass="gbStyle" closable="false">
+			<caption>
+				<label value="Migrate Cards" />
+			</caption>
+			<h:table cellspacing="0" cellpadding="0" width="97%"
+				align="left" style="padding-left:20px;">
+				<h:tr>
+					<h:td width="195px">
+						<label value="Migrate External Cards:" />
+					</h:td>
+					<h:td>
+						<checkbox id="migrateCardsChekbxId"
+							sclass="theme-lbHeading" checked="false" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td></h:td>
+					<h:td>
+						<label value="Card-set Name:" />
+						<textbox id="cardNameTbId" value=""
+							name="cardNameTb" width="200px" maxlength="100" />
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td></h:td>
+					<h:td>
+						<label value="Browse Csv file:" />
+						<textbox id="fileTbId" value="" name="fileTb"
+							width="100px" maxlength="100" />
+						<button id="browseBtnId"
+							sclass="idle140" label="Browse">
+						</button>
+						<button id="uploadBtnId"
+							sclass="idle140 greenbtn" label="Upload">
+						</button>
+						<a label="Download Sample File"
+							style="color:#2886B9;text-decoration: underline;"
+							id="downloadSampleFileId" sclass="idle140" />
+					</h:td>
+				</h:tr>
+			</h:table>
+		</groupbox> -->
+		<div width="100%" align="left" style="padding-left:20px;margin-top:30px;">
+			<separator />
+			<grid emptyMessage="No card-set found" width="80%">
+				<columns>
+					<column label="Card-Set Name" width="150px" />
+					<column label="Quantity " width="100px" />
+					<column label="Card-Set Type" width="150px" />
+					<column label="Card No. Generation Type" width="200px" />
+					<column label="Status" width="100px" />
+					<column label="Linked Tier" width="150px" />
+					<column label="Actions" />
+				</columns>
+				<rows id="cardSetRowsId" />
+			</grid>
+			<label value="Note :" style="font-weight:bold;" />
+			<label value="Card-sets once created can't be edited." />
+		</div>
+		<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+		<h:tr height="20"></h:tr>
+					<h:tr >
+						<h:td colspan="6" style="padding-right:30px;">
+								<button label="Previous" sclass="idle140"  id="previousBtnId" />
+								<button label="Next" id="nextBtnId" sclass="idle140 greenbtn" />
+						</h:td>
+					</h:tr>
+			</h:table>	
+			
+			
+		 <window id="exportWinId" title="Export Card-Set" border="normal" visible="false" width="550px" height="200px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<h:table cellspacing="0" cellpadding="0" width="85%"
+				align="left" style="padding-left:30px;margin-top:10px;">
+
+				<h:tr height="30">
+					<h:td valign="top" width="150" style="margin-top:20px;">
+						<label value="Choose the cards you would like to export:" />
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="40">
+				<h:td valign="top" width="150" style="margin-top:20px;">
+						<label value="Filter by Status:" style="font-weight:bold;"/>
+						<listbox id="statusLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Inventory" value="Inventory" selected="true"/>
+							<listitem label="Active" value="Activated"/>
+							<listitem label="Enrolled" value="Enrolled"/>
+							<listitem label="Registered" value="Registered" />
+							<listitem label="All" value="All" />
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="10"></h:tr>
+			</h:table>
+			<h:table cellspacing="2" cellpadding="1" align="right" >
+		    <h:tr height="10"></h:tr>
+					<h:tr >
+						<h:td colspan="6" style="padding-right:30px;">
+								<button label="Export as csv" sclass="idle140 greenbtn"  id="exportBtnId" />
+								<button label="Cancel" id="cancelBtnId"  width="50" sclass="idle140 " />
+						</h:td>
+					</h:tr>
+					</h:table>
+					</window>
+			
+
+	</window>
+</zk>

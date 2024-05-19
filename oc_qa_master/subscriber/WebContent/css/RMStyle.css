@@ -1,0 +1,353 @@
+/* ---------- Captiway CSS --------- */
+.logo{
+	cursor:pointer;
+}
+
+.rbg {
+	background: url(../img/rootTableBG/rtop_corner.gif) no-repeat right;
+	width: 7px;
+	height: 7px;
+}
+
+.tbg {
+	background: url(../img/rootTableBG/top_part.gif) repeat-x;
+	height: 7px;
+	line-height: 7px;
+}
+
+.lbg {
+	background: url(../img/rootTableBG/ltop_corner.gif) no-repeat;
+	width: 7px;
+	height: 7px;
+}
+
+.mdl {
+	/* background: #f7f7f7 url(../img/rootTableBG/middle_part.gif) repeat-x bottom; */
+	/* border-left:solid 1px #b2b0b1; */
+	border:solid 1px #b2b0b1;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 7px rgba(0,0,0, 0.3) inset;
+}
+
+.mdl.camp_steps{
+	padding: 5px 20px;
+	box-shadow: 0 0 3px rgba(0,0,0, 0.2) inset;
+	margin: 5px 0;
+}
+
+.lmdl {
+	border-left: solid 1px #b2b0b1;
+	background: #f7f7f7 url(../img/rootTableBG/middle_part.gif) repeat-x
+		bottom;
+}
+
+.rmdl {
+	border-right: solid 1px #b2b0b1;
+	background: #f7f7f7 url(../img/rootTableBG/middle_part.gif) repeat-x
+		bottom;
+}
+
+.rdbg {
+	background: url(../img/rootTableBG/rdown_corner.gif) no-repeat right;
+	width: 7px;
+	height: 7px;
+}
+
+.tdbg {
+	background: url(../img/rootTableBG/down_part.gif) repeat-x;
+	height: 7px;
+}
+
+.ldbg {
+	background: url(../img/rootTableBG/ldown_corner.gif) no-repeat;
+	width: 7px;
+	height: 7px;
+}
+
+.theme-lbHeading {
+	font-family: verdena, Arial, sans-serif;
+	color: #333;
+	font-size: 12 px;
+	font-weight: bold;
+}
+
+.theme-subHeading {
+	font-weight: bold;
+	font-size: 13px;
+	color: #333;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: underline;
+}
+
+theme-hrLine {
+	color: #000;
+	border: #fcb257 0px solid;
+	height: 1px;
+}
+
+.templListDivId {
+	border: #E1E1E1 1px solid;
+	width: 600px;
+	backgrond-color: #f9f9f9;
+}
+
+.st_hb {
+	border-color: #5496b6;
+	/*border-top: #5496b6 1px solid;*/
+	border-bottom: #CCCCCC 1px solid;
+	border-right: none;
+	border-left: none;
+	padding: 5px 0px 5px 2px;
+}
+
+.homeHeaderLable {
+	font-size: 13px;
+	font-weight: bold;
+	padding-left: 5px;
+	color: #333333
+}
+
+.subHeadings {
+	font-family: verdana, Arial;
+	font-size: 13px;
+	font-weight: bold;
+	position: relative;
+	left: 5px;
+	color: #333;
+}
+
+.formHr {
+	color: #fcb257;
+	background-color: #fcb257;
+	border: #fcb257 0px solid;
+	height: 1px;
+}
+
+.toolbarbtn {
+	font-family: verdana, Arial;
+	font-size: 12px;
+	color: #000;
+	text-decoration: none;
+}
+
+.lbSHeading {
+	font-weight: bold;
+	font-family: verdena, Arial;
+	font-size: 13px;
+	color: #333;
+}
+
+.lbHeading {
+	font-weight: bold;
+	font-size: 15px;
+	color: #313031;
+	All font-family: Aria3 .6l, Helvetica, sans-serif;
+}
+
+.rootDiv {
+	align: center;
+}
+
+.borderStyle {
+	border: #fcb257 1px solid;
+}
+
+.resLb {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	/*font-weight:bold;*/
+}
+
+.boldLabel {
+	font-weight: bold;
+	font-size: 0.8em;
+	color: #333;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.gbStyle {
+	/* border: 1px solid #d9d9d9; */
+}
+
+.alink {
+	color:#00638F;
+	font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif;
+	font-size:13px;
+	margin:0 8px;
+}
+
+
+.spamBtnStyle {
+	font-weight: bold;
+	background: url(../img/theme/spam_score.gif) no-repeat;
+	width: 172px;
+	height: 23px;
+	color: #000;
+}
+
+#footerright {
+	color: #333333;
+	font-size: 11px;
+	padding-top: 10px;
+	text-align: center;
+}
+
+#footerright hr {
+	border-color: #4D4D4D;
+	color: #4D4D4D;
+	width: 98%;
+}
+
+.astrick {
+	font-size: 15px;
+	color: red;
+}
+
+#footer {
+	background: url(../img/fotterBG.gif) no-repeat center center;
+	padding: 30px 0px;
+	font: 11px verdana;
+	color: #6d6e71;
+	text-align: center;
+}
+.templatePrviewVb {
+	width:200px;
+	margin-left:4px;
+	margin-top:5px;
+	padding:5px;
+	float:left;
+	/*border:#E1E1E1 1px solid;*/
+}
+
+.templateBg {
+	background: url(../img/theme/template_bg.gif) no-repeat;
+} 
+
+
+.rmListHeader {
+	border: 1px solid; 
+}
+
+.messagesLbl {
+	color: #444444;
+	font-size: 12px;
+	line-height: 17px;
+}
+
+
+/* Error div css */
+.errorCss {
+	color:#EF2C2C;
+	font-weight:bold;
+	font-size:14px;
+	font-family:verdena;
+	margin-left:8px;
+}
+
+/* Messages Div css */
+.wayerror {
+	color: #900;
+	font-weight: bold;
+	background-color: #EDB9B1;
+	padding: 5px;
+	border: 1px solid #BB8888;
+	margin-top: 5px;
+	margin-bottom: 8px;
+	padding-left: 28px;
+	background-image: url(../img/theme/error-16x16.gif);
+	background-repeat: no-repeat;
+	background-position: 5px 5px;
+	-moz-border-radius: 3px;
+	text-align: left;
+}
+
+.waymsg {
+	color: #173F2C;
+	font-weight: bold;
+	background-color: #DFFFEF;
+	padding: 5px;
+	border: 1px solid #628F79;
+	margin-top: 5px;
+	margin-bottom: 8px;
+	padding-left: 28px;
+	background-image: url(../img/theme/tick_green.png);
+	background-repeat: no-repeat;
+	background-position: 5px 5px;
+	-moz-border-radius: 3px;
+	text-align: left;
+}
+
+.popupWin{
+	overflow: visible !important;
+}
+
+/*   Header styles */
+
+.headerFirst {
+		background: url('../images/db_sprite_h.png') left -217px;
+		height:31px;
+		width:8px;
+	}
+	.headerLast {
+		background: url('../images/db_sprite_h.png') right -434px;
+		height:31px;
+		width:8px;
+	}
+	.headerMiddle {
+		background: url('../images/db_sprite_h.png') right -248px	;
+		height:31px;
+	}
+	
+	.headerMiddle2 {
+		background: url('../images/db_sprite_h.png') right -403px	;
+		height:31px;
+	}
+	
+	.headerSep{
+		background: url('../images/db_sprite_h.png') no-repeat right -465px  ;
+		height: 31px;
+	    line-height: 31px;
+	    padding: 0 10px;
+	}
+	.headerSep2{
+		background: url('../images/db_sprite_h.png') no-repeat right -310px  ;
+		height: 31px;
+	    line-height: 31px;
+	    padding: 0 10px;
+	    display:inline-block;
+	}
+	.smsIcon{
+		background: url("../images/db_sprite_img.png") no-repeat -321px -5px  ;
+		padding:0 8px;
+		}
+	.emailIcon{
+		background: url('../images/db_sprite_img.png') no-repeat -304px -5px  ;
+		padding:0 8px;
+		}
+	.feedbackIcon{
+		background: url("../images/db_sprite_img.png") no-repeat -334px -5px  ;
+		padding:0 8px;
+		}
+	.supportIcon{
+		background: url("../images/db_sprite_img.png") no-repeat -374px -5px  ;
+		padding:0 8px;
+		}
+	.logoutIcon{
+		background: url('../images/db_sprite_img.png') no-repeat -280px -4px  ;
+		padding:0 8px;
+		}
+	.headerLink {
+	    color: #FFFFFF;
+    	text-decoration: none;
+	}
+	.headerLink:hover {
+    	text-decoration: underline;
+	}
+	.tutorialIcon {
+		background: url("../images/db_sprite_img.png") no-repeat -354px -5px  ;
+		padding:0 8px;
+	}
+
+
+/* End of Messages Div Css */

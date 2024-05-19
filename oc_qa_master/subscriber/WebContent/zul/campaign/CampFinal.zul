@@ -1,0 +1,576 @@
+<zk>
+
+	<style dynamic="true">
+		.z-grid { margin: 5px; } .red.z-row > td.z-row-inner {
+		background: #E8C2C1; } .blue.z-row > td.z-row-inner {
+		background: #C1E0E8; } .gray.z-row > td.z-row-inner {
+		background: #D6D6D6; } .yellow.z-row > td.z-row-inner {
+		background: #E8E7C1; } .green.z-row > td.z-row-inner {
+		background: #CDE8C1; } tr.z-row .z-detail-outer { background:
+		none; } tr.z-row td.z-row-inner { border-left-width: 0;
+		border-right-width: 0; border-color: gray; } .z-column
+		.z-column-cnt { padding: 2px; font-weight: bold; }
+		.z-detail-faker > td > div { padding-bottom: 5px; }
+		tr.z-row.last td:first-child { background: #F1EFC6; }
+		tr.z-row.last td:first-child span { font-weight: bold; color:
+		#06488E; }
+
+		.link { font-size:10px; }
+
+		
+
+	</style>
+
+	<window id="cConfirmWinId" border="none" width="100%"
+			apply="org.mq.marketer.campaign.controller.campaign.CampFinalController"
+			 xmlns:h="http://www.zkoss.org/2005/zk/native"
+			  xmlns:w="http://www.zkoss.org/2005/zk/client">
+	
+		<style src="/css/campaign.css" />
+		
+		<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+				<html id="html" />
+			</div>
+		</window>
+		
+		<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)"/>
+		</caption>
+		<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+		<iframe id="iframeId" width="100%" height="100%"/>
+		</div>
+	</window>
+		
+		<window id="viewSegRuleWinId" title="Segment Rule" border="normal"	 mode="overlapped" visible="false" position="center" width="670px" >
+				<label value="Segment Rule is:" /> 
+				<separator/>
+				<label value="" id="segRuleLblId" style="inline:block;word-wrap: break-word;margin:15px 15px;" sclass="listsLb" multiline="true" />
+				<separator />
+				<separator />
+				<separator />
+				<div align="center">
+				<button label="Close" sclass="idle70" onClick="viewSegRuleWinId.setVisible(false)"  />
+				</div>
+		</window>
+		
+		<window id="resendOptionWinId" width="400px" title="Resend" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton image="img/icons/close_blue.gif" onClick="resendOptionWinId.setVisible(false)"/>
+			</caption>
+			
+			<h:table cellpadding="2" cellspacing="2">
+			
+				<h:tr>
+					<h:td colspan="2">
+						<label id="errMsgLblId" style="color:red;font-size:10px" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td style="padding:5px">
+						<label value="Select Date"/>
+						<datebox id="resendOptionDbId" use="org.mq.marketer.campaign.custom.MyDateBoxWithDateAndTime" constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy HH:mm"/>
+					</h:td>
+					<h:td style="padding:5px">
+						<label value="Resend for contacts who have "/>
+						<listbox id="resendOptionLbId" mold="select">
+							<listitem label="not opened" selected="true" value="1"/>
+							<listitem label="not clicked any URLs" value="2"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2"  align="right" style="padding-right: 15px;">
+						<button label="Submit" sclass="idle70" id="resendBtnId"/>
+					</h:td>
+				</h:tr>
+				
+			</h:table>
+		</window>
+		
+		<window id="resendEditorWinId" width="900px" title="Use different content" border="normal" 
+							height="700px" mode="overlapped" visible="false" position="center,top" style="overflow:auto;">
+			<caption>
+				<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="resendEditorWinId.setVisible(false)"/>
+			</caption>
+			<include id="resendIncId" />
+		</window>
+
+		<!--<h:table cellspacing="0" cellpadding="0"   width="100%" align="center">
+			<h:tr >
+				<h:td>
+					<label id="headerLblId" value="Create Email (Step 6 of 6)" sclass="theme-lbHeading" />
+				</h:td>
+				<h:td align="right">
+					<button label="Back" id="backBtnId">
+						<attribute name="onClick">
+							org.mq.marketer.campaign.general.PageUtil.goToPreviousPage();
+						</attribute>
+					</button>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td colspan="2">
+					<h:hr width="100%"/>
+				</h:td>
+			</h:tr>
+		</h:table>
+				
+			
+		-->
+		<div>
+			<label value="Review campaign details and schedule it. "/>
+		
+		</div>
+		
+		
+		<groupbox sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption label="Email Settings" style="font-weight:bold;"></caption>
+				<h:table cellspacing="10" cellpadding="0" align="left"  width="100%">
+					<h:tr >
+						<h:td width="155px"  align="left">
+							<label value="Edit email settings"/>
+						</h:td>
+						<h:td>
+							<image id="subjectImgEditId" src="/img/icons/small_edit_icon.png" tooltiptext="Edit" style="cursor:pointer">
+							</image>
+						</h:td>
+					</h:tr>
+					<h:tr >
+						<h:td width="155px">
+							<label value="Email Name"/>
+						</h:td>
+						<h:td>
+							<label id="cName" value="${cConfirmWinId$CampFinalController.campaign.campaignName}" sclass="label13px" style="font-weight:bold;"/>
+						</h:td>
+					</h:tr>
+					
+					<h:tr >
+					<h:td >
+						<label value="Campaign Category:" id="categoryLblId"  />
+					</h:td>
+					
+					<h:td>
+							<label id="cCategoryName"  sclass="label13px"/>
+						</h:td>
+						</h:tr>
+					
+					
+					
+					<h:tr >
+						<h:td>
+							<label value="Subject"/>
+						</h:td>
+						<h:td>
+							<label id="cSubject" value="${cConfirmWinId$CampFinalController.campaign.subject}" sclass="label13px"/>
+						</h:td>
+					</h:tr>
+					<h:tr >
+						<h:td>
+							<label value="From Name"/>
+						</h:td>
+						<h:td>
+							<label id="cFromName" value="${cConfirmWinId$CampFinalController.campaign.fromName}" sclass="label13px"/>
+						</h:td>
+					</h:tr>
+					<h:tr >
+						<h:td>
+							<label value="From Email Address"/>
+						</h:td>
+						<h:td>
+							<label id="cFromEmail" value="${cConfirmWinId$CampFinalController.campaign.fromEmail}" sclass="label13px"/>
+						</h:td>
+					</h:tr>
+					<h:tr >
+						<h:td>
+							<label value="Reply Email Address"/>
+						</h:td>
+						<h:td>
+							<label id="cReplyEmail" value="${cConfirmWinId$CampFinalController.campaign.replyEmail}" sclass="label13px"/>
+						</h:td>
+					</h:tr>
+				</h:table>
+		</groupbox>
+			
+
+		<groupbox sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption label="Submitted Email Content" style="font-weight:bold;"></caption>
+			<h:table width="100%">
+				<h:tr >
+					<h:td colspan = "2">
+						<label value="You submitted an HTML email"/>
+						<space/><space/>
+						<image src="/img/icons/small_edit_icon.png" id="editCampHtmlImgId" tooltiptext="Edit" style="cursor:pointer">
+						</image>
+						<image src="/img/theme/preview_icon.png" id="htmlPreviewImgId"  tooltiptext="Preview" sclass="previewImp"/>
+						</h:td>
+				</h:tr>
+				<h:tr >
+					<h:td colspan = "2">
+						<label value="You submitted a plain text email"/>
+						<space/>
+						<image src="/img/icons/small_edit_icon.png" tooltiptext="Edit" id="editTextImgId" style="cursor:pointer">
+							
+						</image>
+						<image src="/img/theme/preview_icon.png" id="textPreviewImgId" tooltiptext="Preview" sclass="previewImp"/>
+ 					</h:td>
+				</h:tr>
+				<h:tr >
+					<h:td colspan = "2">
+						<hbox>
+							<label value="You have selected " style="display:block; width:120px;"/>
+							<div id="listNamesDivId" style="float:left; padding:0 8px;"/>
+							<!-- <label value="${campaign.listNames}" style="font-weight:bold;" /> -->
+							<label value=" list(s)" id="recipentsSourceLblId"/>
+							<space /><space/>
+							<image src="/img/icons/small_edit_icon.png" id="editCampListImgId" tooltiptext="Edit" style="cursor:pointer">
+							</image>
+						</hbox>
+					</h:td>
+				</h:tr>
+				
+				<h:tr >
+					<h:td colspan = "3">
+					    <!-- <label value="Included PromoCodes in this campaign : " />
+					    <space width="18px"/>
+					    <label id="listOfIncludedPromoCodes"/> -->
+					    <div id="includedPromoCodesDivId" width="100%" height="25px" />
+						<space /><space/>
+ 					</h:td>
+				</h:tr>
+				<h:tr>	
+					<h:td colspan="3">
+					<label value="Send a Test Email   :"/>
+					<space width="80px"/>
+						<textbox id="testEmailTbId" value="Email Address..."  cols="15"  width="20%" sclass="textMailTb">
+			 			</textbox>	
+						<button label="Send" id="okBtnId" sclass="idle70"/>
+			 			<div style="padding-left:200px;">
+							<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+							<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+						</div>
+			 			
+					</h:td>
+				</h:tr>
+			</h:table>
+		</groupbox>		
+		
+		
+	<groupbox sclass="gbStyle" style="margin-top:10px;" closable="false">
+		<caption label="Email Scheduling Options" style="font-weight:bold;"></caption>
+			<radiogroup id="scheduleRgId" />
+			<h:table cellspacing="0" cellpadding="2" width="100%" >
+			
+						<h:tr height="40" >
+							<h:td width="170" >
+								<radio label="Choose Date and Time"  id="prtDateRadioId" selected="true" radiogroup="scheduleRgId"/>
+							</h:td>
+							
+							<h:td>
+								<div id="prtDtDivId" width="100%">
+									<image src="/img/QuestionmarkButton-16x16.png" tooltiptext="Select the date &amp; time and click on ‘Select’ to add one schedule." style="cursor: help" />
+									<!-- <datebox id="prtDtBxId" use="org.mq.marketer.campaign.custom.MyDateBoxHybrid"  constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy" /> -->
+									<datebox id="prtDtBxId" use="org.mq.marketer.campaign.custom.MyDateBoxWithDate" constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy"/>
+									<listbox id="hoursListBxId" width="50px" mold="select"/>
+									<label value="Hours" />
+									<listbox  id="mintsListBxTd" width="50px" mold="select">
+										<listitem label="00" />
+										<listitem label="15" />
+										<listitem label="30" />
+										<listitem label="45" />
+									</listbox>
+									<label value="Minutes"/>
+									<button label="Select" id="prtDtBtnId" sclass="idle70"/>
+								</div>
+							</h:td>
+						</h:tr>
+						</h:table>
+						<h:table cellspacing="0" cellpadding="2" width="100%" >
+							
+							<h:tr height="40" >
+								<h:td width="170" >
+									<radio  label="Send Periodically" id="sendPeriodicallyId" radiogroup="scheduleRgId"/>
+								</h:td>
+								
+								<h:td>
+								<div id="frqDivId" visible="false" width="100%">
+									Start Date
+									<datebox id="startDtBxId" use="org.mq.marketer.campaign.custom.MyDateBoxWithDateAndTime" constraint="no past" readonly="true" cols="18" 
+									format="MMM dd, yyyy HH:mm" style="padding-right:15px;"/>
+									End Date
+									<datebox id="endDtBxId" use="org.mq.marketer.campaign.custom.MyDateBoxWithDateAndTime" constraint="no past" readonly="true" cols="18" 
+									format="MMM dd, yyyy HH:mm" style="padding-right:15px;"/>
+									Frequency
+									<listbox mold="select" id="frqLbId" sclass="fieldLB" width="125px">
+										<listitem label="Every Day" value="5" onCreate="self.setAttribute(&quot;step&quot;,1)" selected="true"></listitem>
+										<listitem label="Every Week" value="5" onCreate="self.setAttribute(&quot;step&quot;,7)" ></listitem>
+										<listitem label="Every Fortnight" value="5" onCreate="self.setAttribute(&quot;step&quot;,14)"></listitem>
+										<listitem label="Every Month" value="2" onCreate="self.setAttribute(&quot;step&quot;,1)"></listitem>
+										<listitem label="Every Year" value="1" onCreate="self.setAttribute(&quot;step&quot;,1)"></listitem>
+									</listbox>
+									<button label="Select" id="frqBtnId" sclass="idle70"/>
+									
+								</div>
+								</h:td>
+							</h:tr>
+							</h:table>
+							
+							<label id="schErrorLblId" sclass="errorCss" />
+		<grid id="schedGrdId" fixedLayout="true"  visible="false">
+			<columns >
+				<column label=""  width="40px"/>
+				<column label="Scheduled Date"  width="25%"/>
+				<column label="Status" align="center"  width="20%"/>
+				<column label="Actions" align="center" />
+			</columns>
+			<rows id="schedGrdRowsId"/>
+		</grid>
+		
+		<separator/>
+		<label value="Upcoming Schedule" style = "font-weight:bold;margin-left: 30px;"></label>
+		<separator/>
+		<!-- <div width="57%"> -->
+		<h:table width="58%"><h:tr>
+		<h:td>
+		<listbox id="activeCampaingsListlbId" 
+			sclass="contactsView" multiple="true"   style="margin-left: 30px;"  >
+				
+				<listhead sizable="false" style="background-color:#488eb0; margin-left: 30px;" >
+					<listheader label="" visible="false" />
+					<listheader label="Upcoming Scheduled Date"    align="center"  maxlength="40" width="45%"  />
+					<listheader label="Status"   align="center"  />
+					<listheader label="Action"  align="center"  />
+				</listhead>
+		</listbox>
+		</h:td>
+		</h:tr></h:table>
+		<!-- </div> -->
+			<separator/>
+		<separator/>
+		<div id="campaignActiveTillDivId" visible="false" >
+		<h:table>
+			<h:tr>
+				<h:td>
+					<label value="This campaign is scheduled till "
+						
+						style="margin-left: 30px;">
+					</label>
+				</h:td>
+				<h:td>
+					<label  id="campActiveTillDateLbId" 
+						style="margin-left: 2px;">
+					</label>
+					<label id="calenderLbId" visible="false"></label>
+				</h:td>
+				<h:td>
+					<label value="with" 
+						style="margin-left: 2px;">
+					</label>
+				</h:td>
+				<h:td>
+					<label id="numOfTimeCampActiveLbId" 
+						style="margin-left: 2px;">
+					</label>
+				</h:td>
+				<h:td>
+					<a label="View All Upcoming Schedules"
+						id="viewAllActiveSchedAnchId"
+						style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-left:30px;" />
+						
+				</h:td>
+			</h:tr>
+		</h:table>
+		</div>	
+		
+		<h:br></h:br>
+		<h:br></h:br>
+		<separator/>
+		<label value="Last Schedule" style = "font-weight:bold;margin-left: 30px;"></label>
+		<separator/>
+		<h:table width="58%"><h:tr>
+		<h:td>
+			<listbox id="sentCampaingsListlbId" 
+			sclass="contactsView" multiple="true" mold="paging" width="96%"  style="margin-left: 30px;" >
+				<listhead sizable="false" style="background-color:#488eb0;" >
+					<listheader label="Date" visible="false" />
+					<listheader label="Last Scheduled Date"   align="center"/>
+					<listheader label="Status" align="center" />
+				</listhead>
+			</listbox>
+		</h:td>
+		</h:tr></h:table>
+		<separator/>
+		<separator/>
+		<div id="campaignSentDivId" visible="false"  >
+		<label value="This campaign was first scheduled on"
+			style="margin-left: 30px;">
+		</label>
+		<label id="campaignSentLbId"></label>
+		<a label="View All Archived Schedules"  visible="false"
+			id="viewAllArchivedSchedAnchId"
+			style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-left:106px;" />
+		</div>
+		
+		<h:br></h:br>
+		<h:br></h:br>
+		<separator/>
+		<h:br></h:br>
+		<h:br></h:br>
+		<separator/>
+	</groupbox>
+	
+	<window id="viewAllActiveSchedulesWinId"  title="All Upcoming Schedules " closable="false" 
+			visible="false" border="normal" width="750px" height="400px"  style="overflow:auto;" position="center" top="45px"
+					 xmlns:h="http://www.zkoss.org/2005/zk/native"
+			  xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<radiogroup id="alertsTypeRgId" />
+		<separator/>
+		<h:table width="100%" cellspacing="0" cellpadding="0">
+			<h:tr>
+				<h:td colspan="2">
+					<label id="msgLblId"
+						value="Below is a list of all the active schedules of this email campaign:" style="padding-left:10px;"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+			<h:td>
+			<separator/>
+			
+		<bandbox id="campActionsBandBoxId" buttonVisible="false" mold="rounded" disabled="true" readonly="true" width="200px" value="Bulk Action" 
+			style="font-weight:bold;padding:10px; ">
+						
+			<bandpopup>
+						
+				<h:table width="100%" cellspacing="0" cellpadding="3">
+					<h:tr>
+						<h:td width="150"> <label  value="Delete Selected: " sclass="boldLabel" /> </h:td>
+						<h:td align="right"> <button id="delSelectedId" label="Delete" sclass="idle70 greenbtn"/> </h:td>
+					</h:tr>
+
+					<h:tr> <h:td colspan="2"><h:hr/> </h:td> </h:tr>
+					
+					<h:tr bgcolor="#f5f8fb">
+						<h:td colspan="2" align="right">
+							<button label="Close" sclass="idle70" onClick="campActionsBandBoxId.close();"/>
+						 </h:td>
+					</h:tr>
+				</h:table>
+			</bandpopup>
+		</bandbox>
+										
+			</h:td>
+			</h:tr>
+
+			</h:table>
+			<separator/>
+			
+			
+			<listbox id="campListlbId"  width="100%"  style="align:center;" checkmark="true" multiple="true" sclass="contactsView" 
+				rows="5"  >
+				
+				<listhead sizable="true" style="background-color:#488eb0;" >
+					
+ 					<listheader label="" width="30px" align="center"/>
+					<listheader label="Upcoming Scheduled Date"   align="center" style="padding-left:10px;" maxlength="40"/>
+					<listheader label="Status" align="center" width="200px"/>
+					<listheader label="Action" align="center" width="200px"/>
+
+				</listhead>
+			</listbox>
+			
+			<separator/>
+			<div width="99%" align="left">
+			<a label="View More Schedules" 
+						id="viewMoreActiveSchedAnchId"
+						style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-left:20px; " />
+			<label id="noRecordsActiveLbId" value="No more schedules found." style="color: rgb(00, 00, 00); font-weight: bold;  margin-left: 20px;"></label>
+			</div>
+			<separator/>
+			<separator/>
+			<label id="bulkDeleteLbId" visible="false" style="color:#2886B9;font-weight:bold;margin-left:30px;"></label>
+			<separator/>
+			<separator/>
+			<div width="97%" align="right">
+		<!-- 	<label id="noRecordsActiveLbId" value="No more records found."></label> -->
+					<button label="OK" id="submitBtnId"
+						sclass="idle70 greenbtn" />
+			</div>
+	</window>
+	
+	
+	<window id="viewAllArchivedSchedulesWinId"  title="All Archived Schedules " closable="false" 
+			visible="false" border="normal" width="750px" height="365px"  style="overflow:auto;" position="center" top="45px"
+					 xmlns:h="http://www.zkoss.org/2005/zk/native"
+			  xmlns:w="http://www.zkoss.org/2005/zk/client">
+	
+		<radiogroup id="alertsTypeRgId" />	
+		<separator/>
+		<separator/>
+		<h:table width="100%" cellspacing="0" cellpadding="0">
+			<h:tr>
+				<h:td colspan="2">
+					<label id="msgLblId"
+						value="Below is a list of all the archived schedules of this email campaign:"  style="padding-left:10px;"/>
+				</h:td>
+			</h:tr>
+			</h:table>
+			<separator/>
+			<listbox id="campListlbId"   width="100%"  style="align:center;" 
+			 checkmark="true" multiple="true" sclass="contactsView" rows="5"  >
+				<listhead sizable="true" style="background-color:#488eb0;" >
+ 					<listheader label="" align="center"/>
+					<listheader label="Sent Date"   align="center" />
+					<listheader label="Status" align="center" />
+				</listhead>
+			</listbox>
+			<separator/>
+			<separator/>
+			 <div width="99%" align="left"> 
+			<a label="View More Schedules" 
+						id="viewMoreArchievedSchedAnchId"
+						style="color:#2886B9;font-weight:bold;text-decoration: underline; margin-left: 20px;"   />
+			<label id="noRecordsArchivedLbId" value="No more schedules found." style="color: rgb(00, 00, 00); font-weight: bold;  margin-left: 20px;"></label>
+			</div>
+			
+			<separator/>
+			<separator/>
+			<label id="bulkDeleteLbId" visible="false" style="color:#2886B9;font-weight:bold;margin-left:30px;"></label>
+			<separator/>
+			<separator/>
+			<separator/>
+			<separator/>
+			<div width="97%" align="right">
+				<!-- <label id="noRecordsArchivedLbId" value="No more records found."></label> -->
+					<button label="OK" id="submitBtnId"
+						sclass="idle70 greenbtn" />
+			</div>
+	</window>
+	
+	<h:table cellspacing="5" cellpadding="0"   width="100%" align="left">
+		<h:tr>
+			<h:td align="left">
+				<button id="closeBtnId" label="Close" onClick="" visible="false" />
+			</h:td>
+			<h:td align="right">
+				<button label="Save as Draft" id="saveAsDrftBtnId" sclass="idle140" />
+				<button label="Schedule" id="saveBtnId" sclass="idle140 greenbtn" />			
+			</h:td>
+		</h:tr>
+		<!--<h:tr>
+			<h:td align="right" colspan="2" >
+				<label value="You can save an active campaign as a draft, if you do not wish to send now." 
+				style="font-size:11px;"/>
+			</h:td>
+		</h:tr>
+	--></h:table>
+								
+								
+
+	</window>
+</zk>
+
+

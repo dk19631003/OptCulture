@@ -1,0 +1,127 @@
+<zk>
+<window  id="loyaltyDetailRepWinId" width="100%" apply ="org.mq.optculture.controller.loyalty.LoyaltyDetailedReportController" xmlns:h="native">
+
+	<h:table cellspacing="0" cellpadding="4"  width="100%" border="0" bgcolor="#F2F6F9" style="padding:3px;border-solid:1px;border-color:#FFFFFF">
+		<h:tr bgcolor="#F2F6F9">
+			
+			<h:td width="385" ><label value="Program Name : " style="font-weight:bold;" /><label id="prgmNamelblId" maxlength="50"/></h:td>
+			
+			<h:td width="300px" ><label value="Program Creation Date : " style="font-weight:bold;" /><label   id="dateLblId" /> </h:td>
+			
+			<h:td  >
+   				<a label="View Program Details" style="font-weight:bold;color:#43A0BA;" id="viewPrgmBtnId" />
+	   		</h:td>	
+	   			<popup id="ltyPwdPopupId" width="200px">
+							Enter Loyalty Password
+				            <textbox id="ltyPwdTbId" maxlength="25" type="password" value ="" /> 
+				            <div align="right" style="margin-top:5px;"><button label="Submit" id="submitPwdBtnId" /></div>
+							
+						</popup>
+		
+		</h:tr>
+		
+		</h:table >
+		
+		<h:table cellspacing="0" cellpadding="4"  width="100%" border="0">
+		
+		
+		<h:tr>
+		
+		<h:td valign="top" width="235">
+		
+			<groupbox sclass="gbStyle" closable="false" >
+			<caption label="Program Reports"  />
+				
+					<h:table cellspacing="0px" cellpadding="0px"  align="center"  >
+					
+						 <h:tr >  
+					     <h:td  valign="center">  
+					       <toolbarbutton label="Program Overview" image="/images/loyalty/Loyalty-Overview.png" style="font-weight:bold;color:#6EB6CB;padding-left:2px;" id="prgmOvrwToolbarBtnId"/>
+							<div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Summary of program's performance, liability &amp; total transactions last week"/>
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   <h:tr height="20" />
+					   
+					   <h:tr >
+					   
+					        <h:td valign="center"  >   
+					       <toolbarbutton label="KPIs Report" image ="/images/loyalty/KPI-Report.png" style="font-weight:bold;color:#6EB6CB;" id="kpiReporttoolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext"  value="Comparative analysis of total revenue &amp; visits by loyalty vs non-loyalty customers" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					   <h:tr >
+					      <h:td  valign="center" >	
+					       <toolbarbutton label="Liability Report" image ="/images/loyalty/Liability-Report.png" style="font-weight:bold;color:#6EB6CB;" id="liabilityReportToolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Summary of cards &amp; their outstanding balances" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					    
+					     <h:tr >
+					     <h:td valign="center">	
+					        <toolbarbutton label="Store Report" image ="/images/loyalty/Store-Report.png" style="font-weight:bold;color:#6EB6CB;" id="storeToolbarBtnId"/>
+					        <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Provides liability, transaction totals by type &amp; total enrollments for each store" />
+					       </div>
+					     </h:td>
+					   </h:tr> 
+					  
+					   
+					    <h:tr height="20" />
+					   
+					   <h:tr >
+					    
+					     	<h:td valign="bottom">	
+					       <toolbarbutton label="Customers Report" image ="/images/loyalty/Registered-Customer-Report.png" style="font-weight:bold;color:#6EB6CB;" id="regCustomersReportToolbarBtnId"/>
+					       <div style="padding-left:23px;">  
+					       <label sclass="lefttext" value="Provides total enrollments per day along with details of individual membership" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					   
+					    <h:tr >
+					    
+					     <h:td valign="center">	
+					       <toolbarbutton label="Transactions Report" image ="/images/loyalty/Transaction-Report.png" style="font-weight:bold;color:#6EB6CB;" id="transactionToolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Provides total transactions per day &amp; by type, with details of each transaction" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					</h:table>
+			</groupbox>
+		
+		
+		</h:td>
+		
+		
+		<h:td colspan="2" valign="top" height="100%">
+			
+				<include id="rightId" width="100%" 
+					src="/zul/report/ltyProgramOverviewReport.zul" use=""/>
+		</h:td>
+		
+		</h:tr>
+		
+	</h:table>
+	<div align="right" style="padding:10px 10px;">
+		
+				<button label="Back to Reports"  sclass="idle140" id="backBtnId" />
+		</div>
+	
+    <style src="/css/reports.css" />
+  </window>
+</zk>

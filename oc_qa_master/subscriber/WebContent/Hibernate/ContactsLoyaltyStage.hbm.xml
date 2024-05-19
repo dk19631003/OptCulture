@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.ContactsLoyaltyStage" table="contacts_loyalty_stage">
+
+    <id name="loyaltyStageId" type="java.lang.Long">
+      <column name="loyalty_stage_id"/>
+      <generator class="native"/>
+    </id>
+
+    <property name="contactId" type="long">
+            <column name="contact_id" />
+    </property>
+    
+    <property name="customerId" type="string">
+      <column name="customer_id"/>
+    </property>
+    
+    <property name="emailId" type="string">
+      <column name="email_id"/>
+    </property>
+    
+    <property name="phoneNumber" type="string">
+      <column name="phone_number" />
+    </property>
+    
+    <property name="cardNumber" type="string">
+      <column name="card_number" />
+    </property>
+    
+	<property name="cardPin" type="string">
+      <column name="card_pin"/>
+    </property>
+    
+    <property name="locationId" type="string">
+      <column name="location_id"/>
+    </property>
+    
+    <property name="userName" type="string">
+       <column name="user_name"/>
+    </property>
+    
+    <property name="status" type="string">
+      <column name="status"/>
+    </property>
+    
+    <property name="trxId" type="long">
+            <column name="trx_id" />
+    </property>
+     <property name="serviceType" type="string">
+      <column name="service_type"/>
+    </property>
+     <property name="reqType" type="string">
+      <column name="req_type"/>
+    </property>
+    
+ </class>
+</hibernate-mapping>
+
+

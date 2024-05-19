@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UpdateOptSyncData"
+		table="opt_sync_data">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" not-null="true" />
+		</property>
+		
+		
+		<property name="optSyncId" type="java.lang.Long">
+		<column name="opt_sync_id" />
+		</property>
+		
+		<property name="optSyncName" type="string">
+			<column name="opt_sync_name"  length="60" />
+		</property>
+		
+		<property name="status" type="string">
+			<column name="status" length="30"  />
+		</property>
+		
+		<property name="pluginStatus" type="string">
+			<column name="plugin_status" length="16" default="'A'" />
+		</property>
+		
+		<property name="optSyncHitTime" type="calendar">
+	        <column name="opt_sync_hit_time"/>
+	    </property>
+		
+		<property name="optSyncModifiedTime" type="calendar">
+	        <column name="opt_sync_modified_time"/>
+	    </property>
+		
+	
+		<property name="count" type="java.lang.Integer">
+			<column name="count"  default="0" />
+		</property>
+		
+		<property name="emailId" type="string">
+			<column name="email_id" length="512"  />
+		</property>
+	
+	 	<property name="enabledOptSyncFlag" type="string">
+			<column name="enabled_opt_sync_flag"  length="16" default="'N'"/>
+		</property> 
+		
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_Id" />
+		</property>
+		
+		<property name="onAlertsBy" type="string">
+			<column name="on_alerts_by"  />
+		</property>
+		
+			<property name="downAlertSentTime" type="calendar">
+	        <column name="down_alert_sent_ime"/>
+	    </property>
+	</class>
+</hibernate-mapping>

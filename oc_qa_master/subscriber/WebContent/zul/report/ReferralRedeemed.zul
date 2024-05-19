@@ -1,0 +1,85 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="couponWinId"  apply="org.mq.marketer.campaign.controller.report.ReferralRedeemedController" xmlns:w="client" xmlns:h="native"
+		width="100%">
+		<div id="couponsReportDivId">
+	
+					
+					
+				<grid id="
+					couponsGridId " emptyMessage="No records Found...">
+					<columns menupopup="auto" sizable="true">
+						<column label="Contact Email"   width="17%"/>
+						<column label="Contact Mobile"  width="17%" />
+						<column label="Referral Codes"  width="17%" />
+						<column label="Used by Mobile No" width="17%" />
+						<column label="Used by Email" width="17%" />
+						<column label="User by Membership No" style="white-space: normal;" width="17%"/>
+						 <column label="Total Revenue"  width="17%" /> 
+						<!-- <column label="Points Redeemed"  sclass="hovergridcolumn" style="white-space: normal;"/> -->
+					</columns>
+					<rows id="RedeemedRowsId"/>
+					</grid>
+
+					<h:table width="100%" cellspacing="0"
+						cellpadding="0" style="padding-top:10px;">
+						<h:tr bgcolor="#F9F9F9">
+
+							<h:td align="right">
+								<label value="Items per page:"
+									style="padding-right:5px;font-size:11px;" />
+								<listbox rows="1" mold="select"
+									id="pageSizeLbId" style="margin-right:30px;">
+									<listitem label="5" selected="true"  />
+									<listitem label="10"/>
+									<listitem label="20"/>
+									<listitem label="50" />
+								</listbox>
+							</h:td>
+							<h:td width="280px">
+								<paging id="RedeemedRepListBottomPagingId"
+									detailed="true" pageSize="5" width="280px"
+									class="contactsViewPaging" style="border:none;" />
+							</h:td>
+						</h:tr>
+						
+					</h:table>
+					
+					<div id="exportDivId" >
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />
+			 	   			<comboitem label=" .xls " value="xls" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file." style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId" />
+				</div>
+				
+	
+	
+					
+	</div>
+	<window id="custExport" title="Select Fields to Export" border="normal"  width="600px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+   <div id="chkDivId" width="700px" style="margin:15px;" />
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+	<h:tr><h:td >
+ <a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />  
+ <a label="Clear All" id="clearAllAnchr" /> </h:td> 	<h:td>
+<div align="right" style="margin:10px 40px 0 0;">
+<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+		<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);"  />
+</div>
+</h:td></h:tr>
+</h:table>
+</window>
+
+
+	</window>
+</zk>

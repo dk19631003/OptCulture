@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="LOYALTYISSUANCEREQS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="LOYALTYISSUANCEREQ">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HEADERINFO">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="REQUESTID" type="xs:string" />
+                    <xs:element name="PCFLAG" type="xs:string" minOccurs="0"/>
+                    <xs:element name="STORENUMBER" type="xs:string" minOccurs="0"/>
+                    <xs:element name="SUBSIDIARYNUMBER" type="xs:string" minOccurs="0"/>
+                    <xs:element name="SOURCETYPE" type="xs:string" minOccurs="0"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ISSUANCEINFO">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="EMPID" type="xs:string" />
+                    <xs:element name="STORELOCATIONID" type="xs:string" />
+                    <xs:element name="DOCSID" type="xs:string" minOccurs="0"/>
+					<xs:element name="RECEIPTNUMBER" type="xs:string" minOccurs="0"/>                   
+		          	<xs:element name="CUSTOMERID" type="xs:string" />
+                    <xs:element name="CARDNUMBER" type="xs:string" />
+                   <!--  <xs:element name="TIERNAME" type="xs:string" minOccurs="0"/> -->
+                    <xs:element name="CARDPIN" type="xs:string" />
+                    <xs:element name="CARDTYPE" type="xs:string" />
+                    <xs:element name="VALUECODE" type="xs:string" />
+                    <xs:element name="ENTEREDAMOUNT" type="xs:string" />
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="USERDETAILS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="USERNAME" type="xs:string" />
+                    <xs:element name="ORGANISATION" type="xs:string" />
+                    <xs:element name="TOKEN" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

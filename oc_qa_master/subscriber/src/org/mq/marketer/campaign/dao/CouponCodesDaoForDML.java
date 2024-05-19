@@ -1,0 +1,681 @@
+
+
+package org.mq.marketer.campaign.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.mq.marketer.campaign.beans.CouponCodes;
+import org.mq.marketer.campaign.beans.Coupons;
+import org.mq.marketer.campaign.general.Constants;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+public class CouponCodesDaoForDML extends AbstractSpringDaoForDML {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+
+	private SessionFactory sessionFactory;
+
+	private JdbcTemplate jdbcTemplate;
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+/*
+	public CouponCodes find(Long id) {
+		return (CouponCodes) super.find(CouponCodes.class, id);
+	}*/
+
+	public void saveOrUpdate(CouponCodes couponcodes) {
+		super.saveOrUpdate(couponcodes);
+	}
+
+	public void delete(CouponCodes couponcodes) {
+		super.delete(couponcodes);
+	}
+	/*
+	public CouponCodes findById(Long coupId){
+		
+			String qry="FROM CouponCodes where couponId="+coupId+" ";
+			List<CouponCodes> coupCodeList = getHibernateTemplate().find(qry);
+	    	if(coupCodeList.size() > 0)
+	    		return coupCodeList.get(0);
+	    	else 
+	    		return null;
+		
+	}
+	
+	public  int findTotCountCouponCodes(long coupCodeId) {
+	    	
+		
+		String qry ="SELECT COUNT(*) FROM  CouponCodes  WHERE  couponId ="+coupCodeId + 
+				" AND status NOT IN('"+Constants.COUP_CODE_STATUS_INVENTORY+"')";
+		int count =   ((Long)getHibernateTemplate().find(qry).get(0)).intValue();
+		return count;
+	    	
+	} */// findTotCountCoupons
+	
+	/*
+		public List<CouponCodes> findByCouponCode(Long coupCodeId,int startIdx,int endIdx) {
+			List<CouponCodes> coupCodesList = null;
+			String query = "FROM CouponCodes WHERE  couponId ="+coupCodeId+" AND status NOT IN('"+Constants.COUP_CODE_STATUS_INVENTORY+"') ORDER BY redeemedOn DESC "; 
+			
+			coupCodesList = executeQuery(query, startIdx, endIdx);
+			
+			if(coupCodesList != null && coupCodesList.size() >0) {
+				return coupCodesList;
+			}
+			return null;
+		
+	} */// findByCouponCode
+	
+	/**
+	 * 
+	 * @param couponId
+	 * @param status if null returned all cc count
+	 * @return count as a long value
+	 */
+	/*public long getCouponCodeCountByStatus(Long couponId, String status) {
+		
+		String query=null;
+
+		if(status==null || status.trim().equalsIgnoreCase("All")) {
+			 query = "SELECT  COUNT(ccId) FROM CouponCodes WHERE couponId ="+couponId;
+		}
+		else {
+		 query = "SELECT  COUNT(ccId) FROM CouponCodes WHERE couponId ="+couponId+" AND status ='"+status.trim()+"' ";
+		}
+
+		long count =  ((Long)getHibernateTemplate().find(query).get(0)).longValue();
+		
+		return count;
+		
+	} */// findByCouponCode
+
+	
+	/**
+	 * 
+	 * @param cCode
+	 * @param orgId
+	 * @return
+	 */
+	/*public CouponCodes testForCouponCodes(String cCode, long orgId) {
+		List<CouponCodes> list = null;
+		String query = "FROM CouponCodes  WHERE orgId ="+orgId+" AND couponCode ='"+cCode+"'";
+		list  = getHibernateTemplate().find(query);
+		if(list!= null && list.size()>0) {
+			return list.get(0);
+		}
+			
+		return null;
+	}*/
+	/** find coupon codes object based on coupon code and organizaion 
+	 * @param coupCode
+	 * @param orgId
+	 * @return
+	 */
+	/*public CouponCodes findByCouponCode(String coupCode, Long orgId,String status) {
+		
+		try {
+			String qry = "FROM CouponCodes WHERE orgId ="+orgId +" AND couponCode ='"+coupCode+"' AND status ='"+status+"'";
+			
+			List<CouponCodes> tempList = null;
+			
+			tempList = executeQuery(qry, 0, 1);
+			if(tempList != null && tempList.size() > 0) {
+				
+				return tempList.get(0);
+			}
+				
+				return null;
+		} catch (Exception e) {
+		*/	// TODO Auto-generated catch block
+			/*logger.error("Exception ::" , e);
+			return null;
+		}
+		
+	}*/
+	
+	/*public long findRedeemdCountByCoupId(Long CouponId) {
+		String qry = "SELECT COUNT(ccId) FROM  CouponCodes WHERE couponId ="+CouponId+"  AND status  IN('"+Constants.COUP_CODE_STATUS_REDEEMED+"')";
+		logger.info("findRedeemdCountByCoupId quuery is >>::"+qry);
+		long count=((Long)getHibernateTemplate().find(qry).get(0)).longValue();
+		return count;
+	}*/ // findRedeemdCountByCoupId
+
+/** find total issued coupons based on coupon Object
+ * @param couponObj
+ * @return
+ */
+/*public long findIssuedCoupCodeByCoup(Long CouponId){
+	
+	String qry = "SELECT COUNT(ccId) FROM  CouponCodes WHERE couponId ="+CouponId+"  AND status NOT IN('"+Constants.COUP_CODE_STATUS_INVENTORY+"')";
+	
+	long count=((Long)getHibernateTemplate().find(qry).get(0)).longValue();
+	return count;
+}//findIssuedCoupCodeByCoup
+*/
+
+
+/** find total redeemed coupons based on status and coupon Object
+ * @param couponObj
+ * @param status
+ * @return
+ */
+/*public long findRedeemdCoupCodeByCoup(Long CouponId,Long orgId,String status){
+	
+	String qry = "SELECT COUNT(ccId) FROM  CouponCodes WHERE orgId ="+orgId +" AND  couponId ="+CouponId+" AND status='"+status+"'" ;
+	
+	long count=((Long)getHibernateTemplate().find(qry).get(0)).longValue();
+	return count;
+}*///findRedeemdCoupCodeByCoup
+
+/** find cumulative Total revenue of each individual coupon
+ * that value stored in  top level coupon report screen
+ * @param couponId
+ * @return
+ */
+/*public double  findTotRevenue(Long couponId,Long orgId){
+	
+	String qry="SELECT SUM(totRevenue) FROM CouponCodes WHERE orgId ="+orgId +" AND couponId ="+couponId;
+	double  count=((Double)getHibernateTemplate().find(qry).get(0)).doubleValue();
+	return count;
+	
+}*/
+
+// find coup[on code by email id
+/*public List<CouponCodes> findCouponCodeByEmail(String coupCode,Long orgId,String email) {
+	try {
+		String qry = "FROM CouponCodes WHERE orgId ="+orgId +" AND couponCode ='"+coupCode+"' AND issuedTo ='"+email+"' " ;
+		
+		List<CouponCodes> tempList = null;
+		tempList = getHibernateTemplate().find(qry);
+		
+		if(tempList != null && tempList.size() > 0) {
+			return tempList;
+		}
+			
+		return null;
+	} catch (Exception e) {
+		*/// TODO Auto-generated catch block
+		/*logger.error("Exception ::" , e);
+		return null;
+	}
+	
+}*/
+// find coupon coide by phone
+/*public List<CouponCodes> findCouponCodeByPhone(String coupCode,Long orgId,String phone){
+	try {
+		String qry = "FROM CouponCodes WHERE orgId ="+orgId +" AND couponCode ='"+coupCode+"' AND issuedTo ='"+phone+"' " ;
+		
+		List<CouponCodes> tempList = null;
+		
+		tempList = getHibernateTemplate().find(qry);
+		
+		if(tempList != null && tempList.size() > 0) {
+			return tempList;
+		}
+			
+		return null;
+	} catch (Exception e) {
+		*/// TODO Auto-generated catch block
+		/*logger.error("Exception ::" , e);
+		return null;
+	}
+	
+}*/
+// find coupon code by customer id
+
+/*public List<CouponCodes> findCouponCodeByCustId(String coupCode,Long orgId,String custId){
+	try {
+		String qry = "FROM CouponCodes WHERE orgId ="+orgId +" AND couponCode ='"+coupCode+"' AND issuedTo ='"+custId+"' " ;
+		
+		List<CouponCodes> tempList = null;
+		
+		tempList = getHibernateTemplate().find(qry);
+		
+		if(tempList != null && tempList.size() > 0) {
+			return tempList;
+		}
+			
+		return null;
+	} catch (Exception e) {
+		*/// TODO Auto-generated catch block
+		/*logger.error("Exception ::" , e);
+		return null;
+	}
+	
+}*/
+
+/*
+public long findIssuedCoupCodeByCoup(Long CouponId) {
+
+	String qry = "SELECT COUNT(ccId) FROM  CouponCodes WHERE couponId ="
+			+ CouponId + "  AND status NOT IN('"
+			+ Constants.COUP_CODE_STATUS_INVENTORY + "')";
+
+	long count = ((Long) getHibernateTemplate().find(qry).get(0))
+			.longValue();
+
+	return count;
+}*/
+
+//changed for intimacy's requirement
+/*public List<Object[]>  getCouponCodeObj(Long coupId,int firstResult,int maxResults){
+	  try {
+		  
+		  String query = "select couponCode,status,issuedTo,redeemedTo,campaignName,issuedOn,redeemedOn,totDiscount,totRevenue,contactId from CouponCodes  where couponId="+coupId+" AND status NOT IN('"
+			+ Constants.COUP_CODE_STATUS_INVENTORY + "') ORDER BY issuedOn DESC";
+		  logger.debug(">> query is  ::"+query);
+		  List cList = executeQuery(query, firstResult, maxResults);
+		  return cList;
+	  } catch (Exception e) {
+		  logger.error("** Error : " + e.getMessage() + " **");
+		  return null;
+	  } 
+}
+
+	public List<Object[]>  getCouponCodeObj_old(Long coupId,int firstResult,int maxResults){
+		  try {
+			  
+			  
+			  
+			  String query = "select cc.issued_o, c.*  from CouponCodes cc, Contacts c  where cc.couponId="+coupId+" c. AND status NOT IN('"
+				+ Constants.COUP_CODE_STATUS_INVENTORY + "') ORDER BY issuedOn DESC";
+			  List cList = executeQuery(query, firstResult, maxResults);
+			  return cList;
+		  } catch (Exception e) {
+			  logger.error("** Error : " + e.getMessage() + " **");
+			  return null;
+		  } 
+	}
+
+	public CouponCodes findCoupCodeByContactId(String contId,Long orgId, String couponCodeStr) {
+		
+		String qry = "FROM CouponCodes WHERE orgId ="+orgId +" AND couponCode ='"+couponCodeStr+"' AND status NOT IN('"
+			+ Constants.COUP_CODE_STATUS_REDEEMED + "', '"+Constants.COUP_CODE_STATUS_EXPIRED+"')  AND contactId  in ("+contId+")" ;
+		
+		logger.debug(" finding Contact Id is  :::::::::"+qry);
+		List<CouponCodes> tempList = null;
+		
+		tempList = getHibernateTemplate().find(qry);
+		
+		if(tempList != null && tempList.size() > 0) {
+			return tempList.get(0);
+		}
+			
+		return null;
+		
+	}
+	
+	
+	public List<CouponCodes> findCoupCodeLstByContactId(String contId,Long orgId, String couponCodeStr) {
+		
+		String qry = "FROM CouponCodes WHERE orgId ="+orgId +" AND couponCode ='"+couponCodeStr+"'  AND contactId  in ("+contId+")" ;
+		
+		logger.debug(" finding Contact Id is  :::::::::"+qry);
+		List<CouponCodes> tempList = null;
+		
+		tempList = getHibernateTemplate().find(qry);
+		
+		if(tempList != null && tempList.size() > 0) {
+			return tempList;
+		}
+			
+		return null;
+		
+	}
+	
+	public List<CouponCodes> isPromoExistForRedeem(String custIdStr,String emailId,String phone, String promoStr,Long orgId) {
+		List<CouponCodes> promoList = null;
+		
+		
+		String appnStr = "";
+		if(custIdStr != null && custIdStr.trim().length() > 0 && emailId != null && 
+				emailId.trim().length() > 0 && phone != null && phone.trim().length() > 0 ){
+			appnStr = "( redeemCustId like  '%"+custIdStr+"%' OR redeemEmailId like  '%"+emailId+"%'  OR redeemPhnId like  '%"+phone+"%')";
+			
+		}else if(custIdStr != null && custIdStr.trim().length() > 0 && emailId != null && emailId.trim().length() > 0){
+			appnStr = "( redeemCustId like  '%"+custIdStr+"%' OR redeemEmailId like  '%"+emailId+"%')";
+		}else if(custIdStr != null && custIdStr.trim().length() > 0 && phone != null && phone.trim().length() > 0){
+			appnStr = "( redeemCustId like  '%"+custIdStr+"%' OR redeemPhnId like  '%"+phone+"%')";
+		}else if(emailId != null && emailId.trim().length() > 0 && phone != null && phone.trim().length() > 0 ){
+			appnStr = "(  redeemEmailId like  '%"+emailId+"%' OR redeemPhnId like  '%"+phone+"%')";
+		}else if(custIdStr != null && custIdStr.trim().length() > 0 && (emailId == null || emailId.trim().length() ==0 &&  phone == null || phone.trim().length() == 0)){
+			appnStr = "( redeemCustId like  '%"+custIdStr+"%')";
+		}else if(emailId != null && emailId.trim().length() > 0 && (custIdStr == null || custIdStr.trim().length() ==0 &&  phone == null || phone.trim().length() == 0)){
+			appnStr = "( redeemEmailId like  '%"+emailId+"%')";
+		}else if(phone != null && phone.trim().length() > 0 && (custIdStr == null || custIdStr.trim().length() ==0 &&  emailId == null || emailId.trim().length() == 0)){
+			appnStr = "( redeemPhnId like  '%"+phone+"%')";
+		}
+		
+		String qry = "FROM CouponCodes WHERE orgId ="+orgId +" AND couponCode ='"+promoStr+"'  AND  "+appnStr+" AND status IN('"+ Constants.COUP_CODE_STATUS_REDEEMED + "') ";
+		
+		logger.debug(" finding Contact Id is  :::::::::"+qry);
+		promoList = getHibernateTemplate().find(qry);
+		return promoList;
+		
+	}
+	
+	
+	
+	public List<CouponCodes> findByCouponId(Long couponId,int startIdx, int endIdx) {
+		List<CouponCodes> coupCodesList = null;
+		String query = "FROM CouponCodes WHERE  couponId ="+couponId+" AND status NOT IN('"+Constants.COUP_CODE_STATUS_REDEEMED+"') ORDER BY ccId DESC "; 
+		logger.info("CouponCodes findByCouponId query is  :"+query);
+		coupCodesList = executeQuery(query, startIdx, endIdx);
+		
+		if(coupCodesList != null && coupCodesList.size() >0) {
+			logger.info("size is  ::"+coupCodesList.size());
+			return coupCodesList;
+		}
+		return null;
+		
+	}
+	*/
+	
+	
+	/*public long findCoupCodeCountByCoupAndStatus(Long CouponId,String status){
+		String query ="";
+	*/		  
+			  //query = "SELECT COUNT(ccId) FROM  CouponCodes WHERE  couponId ="+CouponId+" AND status in ('"+Constants.COUP_CODE_STATUS_INVENTORY+"')";
+			/*  query = "SELECT COUNT(ccId) FROM  CouponCodes WHERE  couponId ="+CouponId+" AND status  in ("+status+")"; 
+			  logger.info("count qury is ::"+query);
+		long count=((Long)getHibernateTemplate().find(query).get(0)).longValue();
+		return count;
+	}*///findRedeemdCoupCodeByCoup
+	
+	/*
+	public List<Object[]>  getCouponCodeByCond(Long coupId ,int firstResult, int maxResults){
+		  try {
+			  
+			  List cList = null;
+	*/		  
+			  /*String query = "select contact_id, COUNT(ccId)  from  CouponCodes WHERE couponId="+coupId+"  "
+			  		+ " AND status IN ('"+ Constants.COUP_CODE_STATUS_REDEEMED + "') AND contactId is not null GROUP BY contactId";*/
+		/*	  
+			  String query = "select contact_id, COUNT(coupon_code_id)  from  coupon_codes WHERE coupon_id="+coupId+"  "
+				  		+ " AND status IN ('"+ Constants.COUP_CODE_STATUS_REDEEMED + "') AND contact_id is not null GROUP BY contact_id";
+			  
+			  cList = jdbcTemplate.query(query, new RowMapper() {
+					 public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+						 
+						 Object[] object =  new Object[2];
+						 object[0] = rs.getLong(1);
+						 object[1] = rs.getInt(2);
+						 
+						return object;
+					 }
+					
+				});
+				
+				
+		*/	  
+			  
+			 // List cList = executeQuery(query, firstResult, maxResults);
+		/*	  return cList;
+		  } catch (Exception e) {
+			  e.printStackTrace();
+			  logger.error("** Error : " + e.getMessage() + " **");
+			  return null;
+		  } 
+	}*/
+	/*
+	public Long getCouponCodeCountByCond(Long coupId ){
+		
+		 try {
+			  String query = "from CouponCodes WHERE couponId="+coupId+"  AND status IN('"+ Constants.COUP_CODE_STATUS_REDEEMED + "') GROUP BY contactId";
+	*/		  
+			 // System.out.println("query is  >>"+query);
+		/*	  List returnList = getHibernateTemplate().find(query);
+			  if(returnList == null || returnList.size() == 0){
+				  return 0l;
+			  }else {
+				  long count=returnList.size();
+				  return count;
+			  }
+		 } catch (Exception e) {
+			 e.printStackTrace();
+			  logger.error("** Error : " + e.getMessage() + " **");
+			  return 0l;
+		  } 
+			  
+	}*/
+/*
+	public List<CouponCodes> findCouponCodeByDocSid(String docSid, Long orgId) {
+		List<CouponCodes> couponCodesList = null;
+		 try {
+			  String query = "from CouponCodes WHERE docSid= '"+docSid+"'  AND orgId = "+orgId;
+			  logger.info("coupon codes list ......................:"+query);
+			  couponCodesList = getHibernateTemplate().find(query);
+			
+			  logger.info("coupon codes list size ::::"+couponCodesList.size());
+		 } catch (Exception e) {
+			  logger.error("** Exception : " ,e);
+		 }
+		 return couponCodesList;
+	}*///findCouponCodeByDocSid
+
+	/*public CouponCodes findByDocSid(String docSidStr, String reqCoupcode,Long orgId) {
+		List<CouponCodes> couponCodesList = null;
+		 try {
+			  String query = "FROM CouponCodes WHERE docSid= '"+docSidStr+"' AND status= '"+ Constants.COUP_CODE_STATUS_REDEEMED +"' "
+			  				 + " AND orgId = "+orgId+" AND couponCode = '"+reqCoupcode+"'" ;
+			  logger.info("coupon codes list ......................:"+query);
+			  couponCodesList = getHibernateTemplate().find(query);
+			  if(couponCodesList != null && couponCodesList.size() > 0){
+					return couponCodesList.get(0);
+				}
+				else return null;
+		 } catch (Exception e) {
+			  logger.error("** Exception : " ,e);
+		 }
+		 return null;
+	}*/
+/*
+	public int findTotalStoreCount(Long userOrgId, String fromDateString,
+			String toDateString) {
+		
+		String qry ="SELECT  COUNT(DISTINCT storeNumber) FROM  CouponCodes  WHERE orgId ="+userOrgId+" AND " +
+				"storeNumber IS NOT NULL AND redeemedOn between '"+fromDateString+"' AND '"+toDateString+"'";
+		
+		
+		if(fromDateString.equals(Constants.STRING_NILL) && fromDateString.equals(Constants.STRING_NILL)){
+			qry ="SELECT  COUNT(DISTINCT storeNumber) FROM  CouponCodes  WHERE orgId ="+userOrgId+" " +
+					"AND storeNumber IS NOT NULL ";
+		}
+		
+		int count =   ((Long)getHibernateTemplate().find(qry).get(0)).intValue();
+		return count;
+	}
+	*/
+/*public List<Map<String, Object>> findAllStoresRedemptionList(long userOrgId, int start_Idx, int endIdx, String couponId, String fromDateString, String toDateString) {
+    	
+    	try {
+			List<Object[]> promoCodeList = null;
+			
+			logger.info("start_Idx is ::" +start_Idx +" >>>>and end Idx is ::"+endIdx);
+		*/	//Following will not fetch the records for null store_number if any, its obvious from query written, jussst mentioned explicitly.
+		/*	String qry = "SELECT store_number, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as COUNT  " +
+					"FROM coupon_codes WHERE orgId ="+userOrgId+" AND coupon_id ="+couponId+" " +
+							"AND store_number IS NOT NULL AND coupon_code IS NOT NULL AND redeemed_on between '"+fromDateString+"' AND '"+toDateString+"'" +
+							"GROUP BY store_number ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;
+			
+			
+			
+			if(couponId.equals("") && !fromDateString.equals(Constants.STRING_NILL) && !toDateString.equals(Constants.STRING_NILL)){
+				qry = "SELECT store_number, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as COUNT " +
+						"FROM coupon_codes WHERE orgId ="+userOrgId+
+								" AND store_number IS NOT NULL AND coupon_code IS NOT NULL AND redeemed_on between '"+fromDateString+"' AND '"+toDateString+"'" +
+								"GROUP BY store_number ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;
+			}else if(!couponId.equals("") && fromDateString.equals(Constants.STRING_NILL) && toDateString.equals(Constants.STRING_NILL)){
+				qry = "SELECT store_number, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as COUNT  " +
+						"FROM coupon_codes WHERE orgId ="+userOrgId+" AND coupon_id ="+couponId+" " +
+								"AND store_number IS NOT NULL AND coupon_code IS NOT NULL "+
+								"GROUP BY store_number ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;
+			}else if(couponId.equals("") && fromDateString.equals(Constants.STRING_NILL) && toDateString.equals(Constants.STRING_NILL)){
+				qry = "SELECT store_number, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as " +
+						"COUNT FROM coupon_codes WHERE orgId ="+userOrgId+" AND " +
+						"store_number IS NOT NULL AND coupon_code IS NOT NULL GROUP BY store_number ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;
+			}
+			*/
+			//String qry ="SELECT promo_code, ROUND(SUM((quantity*sales_price)+tax),2) AS REVENUE , COUNT(customer_id) AS COUNT FROM  retail_pro_sales  WHERE user_id ="+userId+" AND promo_code IS NOT NULL GROUP BY promo_code ORDER BY sales_date DESC LIMIT  "+start_Idx+","+endIdx;
+			/*logger.info("findPromocodeList is >>>::"+qry);
+			return jdbcTemplate.queryForList(qry);
+			
+		} catch (DataAccessException e) {
+			logger.error("Exception ::" , e);
+			return null;
+		}
+    	
+    } */// findStoreRedemptionList 
+/*
+public int findTotalCountOfStoreRelatedToPromo(Long userOrgId, Long couponId) {
+	String qry ="SELECT  COUNT(DISTINCT storeNumber) FROM  CouponCodes  WHERE orgId ="+userOrgId+" AND " +
+			"storeNumber IS NOT NULL AND couponId ="+couponId;
+	
+	int count =   ((Long)getHibernateTemplate().find(qry).get(0)).intValue();
+	return count;
+}
+
+public int findTotalCountForStore(Long userOrgId, String store,
+		String fromDateString, String toDateString) {
+	
+	String qry ="SELECT  COUNT(DISTINCT couponId) FROM  CouponCodes  WHERE orgId ="+userOrgId+
+			" AND storeNumber = '"+store+"' AND redeemedOn between '"+fromDateString+"' AND '"+toDateString+"'";
+	
+	
+	if(fromDateString.equals(Constants.STRING_NILL) && fromDateString.equals(Constants.STRING_NILL)){
+		qry ="SELECT  COUNT(DISTINCT couponId) FROM  CouponCodes  WHERE orgId ="+userOrgId+" " +
+				" AND storeNumber = '"+store+"'";
+	}
+	
+	int count =   ((Long)getHibernateTemplate().find(qry).get(0)).intValue();
+	return count;
+}
+*/
+/*public List<Map<String, Object>> findStoreRedemptionList(Long userOrgId,
+		String store, int start_Idx, int endIdx, String couponId,
+		String fromDateString, String toDateString) {
+	try {
+		List<Object[]> promoCodeList = null;
+		String qry = Constants.STRING_NILL;
+	*/	/*//logger.info("start_Idx is ::" +start_Idx +" >>>>and end Idx is ::"+endIdx);
+		//Following will not fetch the records for null store_number if any, its obvious from query written, jussst mentioned explicitly.
+		String qry = "SELECT coupon_id, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as COUNT  " +
+				"FROM coupon_codes WHERE orgId ="+userOrgId+" AND coupon_id ="+couponId+" " +
+						"AND store_number IS NOT NULL AND coupon_code IS NOT NULL AND store_number = '"+store+"' AND redeemed_on between '"+fromDateString+"' AND '"+toDateString+"'" +
+						"GROUP BY coupon_id ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;*/
+		
+		
+		
+		/*if(couponId.equals("") && !fromDateString.equals(Constants.STRING_NILL) && !toDateString.equals(Constants.STRING_NILL)){*/
+		/*	qry = "SELECT c.coupon_name AS name, ROUND(SUM(cc.tot_revenue),2) AS REVENUE, COUNT(cc.coupon_code_id) as COUNT " +
+		*/	/*		"FROM coupon_codes cc left outer join coupons c on cc.coupon_id=c.coupon_id WHERE orgId ="+userOrgId+
+							" AND store_number IS NOT NULL AND cc.coupon_code IS NOT NULL AND cc.store_number = '"+store+"' AND cc.redeemed_on between '"+fromDateString+"' AND '"+toDateString+"'" +
+							"GROUP BY cc.coupon_id ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;
+	*/		/*}else if(!couponId.equals("") && fromDateString.equals(Constants.STRING_NILL) && toDateString.equals(Constants.STRING_NILL)){
+			qry = "SELECT store_number, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as COUNT  " +
+					"FROM coupon_codes WHERE orgId ="+userOrgId+" AND coupon_id ="+couponId+" " +
+							"AND store_number IS NOT NULL AND store_number = '"+store+"' AND coupon_code IS NOT NULL "+
+							"GROUP BY coupon_id ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;
+		}else if(couponId.equals("") && fromDateString.equals(Constants.STRING_NILL) && toDateString.equals(Constants.STRING_NILL)){
+			qry = "SELECT store_number, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as " +
+					"COUNT FROM coupon_codes WHERE orgId ="+userOrgId+" AND " +
+					"store_number IS NOT NULL AND store_number = '"+store+"' AND coupon_code IS NOT NULL GROUP BY coupon_id ORDER BY redeemed_on DESC LIMIT  "+start_Idx+","+endIdx;
+		}*/
+		
+		//String qry ="SELECT promo_code, ROUND(SUM((quantity*sales_price)+tax),2) AS REVENUE , COUNT(customer_id) AS COUNT FROM  retail_pro_sales  WHERE user_id ="+userId+" AND promo_code IS NOT NULL GROUP BY promo_code ORDER BY sales_date DESC LIMIT  "+start_Idx+","+endIdx;
+		/*logger.info("findPromocodeList is >>>::"+qry);
+		return jdbcTemplate.queryForList(qry);
+		
+	} catch (DataAccessException e) {
+		logger.error("Exception ::" , e);
+		return null;
+	}
+}*/
+
+	public int updatePromoStatus(Coupons coupObj, int noOfDays){
+		
+		String qry = "UPDATE CouponCodes set status = '"+Constants.COUP_CODE_STATUS_EXPIRED+"', expiredOn = now() where couponId = "+ coupObj.getCouponId() +" "
+				+ "AND status = '"+Constants.COUP_CODE_STATUS_ACTIVE+"' AND DATE_ADD("+ coupObj.getCouponCreatedDate() +", "+ noOfDays +") > now()";
+		
+		int updateCount = executeUpdate(qry);
+		return updateCount;
+	}
+	
+	public int updateCouponByBday(CouponCodes couponCodes, Calendar bday, int noOfDays){
+		
+		String qry = "UPDATE CouponCodes set status = '"+Constants.COUP_CODE_STATUS_EXPIRED+"', expiredOn = now() where couponId = "+couponCodes.getCouponId()+" "
+				+ " AND status = '"+Constants.COUP_CODE_STATUS_ACTIVE+"' AND DATE_ADD("+bday+", "+noOfDays+") > now()";
+		int updateCount = executeUpdate(qry);
+		return updateCount;
+	}
+	
+	public int updateCouponByAnnv(CouponCodes couponCodes, Calendar annv, int noOfDays){
+		
+		String qry = "UPDATE CouponCodes set status = '"+Constants.COUP_CODE_STATUS_EXPIRED+"', expiredOn = now() where couponId = "+couponCodes.getCouponId()+" "
+				+ " AND status = '"+Constants.COUP_CODE_STATUS_ACTIVE+"' AND DATE_ADD("+annv+", "+noOfDays+") > now()";
+		int updateCount = executeUpdate(qry);
+		return updateCount;
+	}
+	
+/*	public List<CouponCodes> getAllActiveCon(CouponCodes couponCodes){
+		
+		try{
+			List<CouponCodes> couList = null;
+			String qry = "FROM CouponCodes where status = '"+Constants.COUP_CODE_STATUS_ACTIVE+"' ";
+			couList = executeQuery(qry);
+			if(couList!= null && couList.size()>0) {
+				return couList;
+			}
+			return null;
+		}catch(DataAccessException e){
+			logger.error("Exception ::" , e);
+			return null;	
+		}
+	}
+*/
+	
+	public void updateRevenueOnStackableTrx(Long coupId, String docSidStr) {
+		
+		try {
+			String qry = " UPDATE CouponCodes SET totRevenue=NULL WHERE  couponId ="+coupId.longValue() +" AND docSid='"+docSidStr+"' AND redeemedOn<now()";
+			executeUpdate(qry);
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+		}
+	}
+	
+public int updateCouponCodeStatus(String Status,String coupCode, Long orgId) {
+		int rowsUpdated = 0;
+		try {
+			String qry = " UPDATE CouponCodes SET status='"+Status+ "' WHERE  orgId="+orgId.longValue()+" AND couponCode ='"+coupCode+"' AND status in('"+Constants.COUP_CODE_STATUS_ACTIVE+"','"+Constants.COUP_CODE_STATUS_INVENTORY+"','"+Constants.COUP_CODE_STATUS_ISSUED+"')";
+			rowsUpdated = executeUpdate(qry);
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+		}
+		return rowsUpdated;
+	}
+	
+	/*public Double getTotRevOnThisRecpt(Long coupId, String docSidStr) {
+		
+		String qry="SELECT SUM(totRevenue) FROM CouponCodes WHERE  couponId ="+coupId+ "  AND docSid='"+docSidStr+"' AND redeemedOn<now() ";
+		double  totRevenue=((Double)getHibernateTemplate().find(qry).get(0)).doubleValue();
+		return totRevenue;
+		
+	}*/
+}//EOF

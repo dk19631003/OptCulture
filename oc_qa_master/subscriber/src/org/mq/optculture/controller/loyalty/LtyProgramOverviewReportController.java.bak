@@ -1,0 +1,874 @@
+package org.mq.optculture.controller.loyalty;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.LoyaltyCardSet;
+import org.mq.marketer.campaign.beans.LoyaltyProgram;
+import org.mq.marketer.campaign.beans.LoyaltyProgramTier;
+import org.mq.marketer.campaign.beans.OrganizationStores;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.LineChartEngine;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.optculture.business.loyalty.LoyaltyProgramService;
+import org.mq.optculture.data.dao.LoyaltyCardSetDao;
+import org.mq.optculture.data.dao.LoyaltyProgramTierDao;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkex.zul.impl.JFreeChartEngine;
+import org.zkoss.zul.CategoryModel;
+import org.zkoss.zul.Chart;
+import org.zkoss.zul.Column;
+import org.zkoss.zul.Columns;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Flashchart;
+import org.zkoss.zul.Foot;
+import org.zkoss.zul.Footer;
+import org.zkoss.zul.Grid;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.PieModel;
+import org.zkoss.zul.Radio;
+import org.zkoss.zul.Radiogroup;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
+import org.zkoss.zul.SimpleCategoryModel;
+import org.zkoss.zul.SimplePieModel;
+
+public class LtyProgramOverviewReportController  extends GenericForwardComposer {
+	
+	private LoyaltyProgramService ltyPrgmSevice;
+	private Long userId;
+	private Long prgmId;
+	private LoyaltyProgram prgmObj;
+	private TimeZone clientTimeZone;
+	private Label listLblId,performanceLblId;
+	private Rows transRowsId,liabilityRowsId,storeRowsId,tierRowsId;
+	private Foot transFooterId,liabilityFooterId,storeFooterId,tierFooterId;
+	private Radio revenueRadioId,visitsRadioId;
+	private Div pieLabelDivId,pieChartDivId,tierDivId;
+	private Radiogroup performanceRadioGrId;
+	private Chart performanceChartId,activeStoresChartId;
+	private Flashchart optinMediumChartId;
+	private Calendar startDate,endDate;
+	private Columns liabilityColsId,tierColsId;
+	private static final String DATE_DIFF_TYPE_DAYS = "days";
+	private Columns storeColsId;
+	private Column giftCardIssId;
+	private Grid storeLbId,tierSummaryLbId;
+	private List<OrganizationStores> storeList;
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	public LtyProgramOverviewReportController() {
+		ltyPrgmSevice = new LoyaltyProgramService();
+		userId = GetUser.getUserObj().getUserId();
+		session = Sessions.getCurrent();
+		prgmId = (Long) session.getAttribute("PROGRAM_REPORT_DETAILS");
+		prgmObj = ltyPrgmSevice.getProgmObj(prgmId);
+		List<LoyaltyCardSet> list = ltyPrgmSevice.getCardsetList(prgmId);
+	}
+
+	public void doAfterCompose(Component comp) throws Exception {
+
+		super.doAfterCompose(comp);
+		clientTimeZone =(TimeZone)Sessions.getCurrent().getAttribute("clientTimeZone");
+		if(prgmObj.getTierEnableFlag() == 'Y'){
+			tierDivId.setVisible(true);
+		}else{
+			tierDivId.setVisible(false);
+		}
+		storeList = ltyPrgmSevice.getAllStores(GetUser.getUserObj().getUserOrganization().getUserOrgId());
+		getDateValues();
+		performanceChartId.setEngine(new LineChartEngine());
+		performanceLblId.setValue("("+MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone)+" - "+
+				MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone)+")");
+		revenueRadioId.setSelected(true);
+		setPlotData();
+		
+
+		listLblId.setValue("("+MyCalendar.calendarToString(new MyCalendar(clientTimeZone), MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone)+")");
+		
+		redrawLiabilityCount(prgmId);
+		redrawTransactionsCount(prgmId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null));
+		redrawTierSummary(prgmId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null));
+		setPieChartData();
+		resetTierCols();
+		
+		redrawRegStore();
+		activeStoresChartId.setEngine(new JFreeChartEngine());
+		setStoreActivityData();
+		
+	
+	}
+
+	private void getDateValues() {
+		endDate = new MyCalendar(clientTimeZone);
+		endDate.set(MyCalendar.HOUR_OF_DAY, 23);
+		endDate.set(MyCalendar.MINUTE, 59);
+		endDate.set(MyCalendar.SECOND, 59);
+		
+		startDate = new MyCalendar(clientTimeZone);
+		startDate.set(MyCalendar.HOUR_OF_DAY, 00);
+		startDate.set(MyCalendar.MINUTE, 00);
+		startDate.set(MyCalendar.SECOND, 00);
+		
+		startDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - 7);
+		endDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - 1);
+	}
+
+	private void setPlotData() {
+		
+		logger.debug(" >> before setPlotData time In millis ::"+System.currentTimeMillis());
+		
+		logger.debug(" startDateStr :"+MyCalendar.calendarToString(startDate, null)+ " AND endDateStr Str ::"+MyCalendar.calendarToString(endDate, null));
+		
+		CategoryModel model = new SimpleCategoryModel();
+		
+		if(performanceRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase("revenue")) {
+			List<Object[]> loyaltyRevenue = ltyPrgmSevice.getLoyaltyRevenueByPrgmId(userId,prgmId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),null,null,DATE_DIFF_TYPE_DAYS);
+			Double totalRevenue = ltyPrgmSevice.getTotalRevenueByUserId(userId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null));
+			Map<String, Double> revenueMap = null; 
+
+			if(loyaltyRevenue != null && loyaltyRevenue.size() > 0) {
+				revenueMap = new HashMap<String, Double>();
+				for (Object[] obj : loyaltyRevenue) {
+					double revRate = (Double.parseDouble(obj[0].toString()) / totalRevenue) *100;
+					revenueMap.put(obj[1].toString(), revRate);
+				}
+			}
+			
+			
+			Calendar tempCal=Calendar.getInstance();
+			tempCal.setTimeZone(clientTimeZone);
+			tempCal.setTimeInMillis(startDate.getTimeInMillis());
+			String currDate = "";
+			
+			performanceChartId.setYAxis("Revenue");
+			
+			do {
+				currDate = ""+tempCal.get(startDate.DATE);
+				if(revenueMap != null) {
+					model.setValue("Revenue from Loyalty Customers", currDate, revenueMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? revenueMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+				}
+				else {
+					model.setValue("Revenue from Loyalty Customers", currDate, 0);
+				}
+				tempCal.set(Calendar.DATE, tempCal.get(Calendar.DATE) + 1);
+			}while(tempCal.before(endDate) || tempCal.equals(endDate));
+			
+		}
+		else if(performanceRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase("visits")) {
+			List<Object[]> loyaltyVisits = ltyPrgmSevice.getLoyaltyVisitsByPrgmId(userId,prgmId,MyCalendar.calendarToString(startDate, null)
+					,MyCalendar.calendarToString(endDate, null),null,null,DATE_DIFF_TYPE_DAYS);
+			Long totalVisits = ltyPrgmSevice.getTotalVisitsByUserId(userId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null));
+			Map<String, Double> visitsMap = null; 
+			if(loyaltyVisits != null && loyaltyVisits.size() > 0) {
+				visitsMap = new HashMap<String, Double>();
+				for (Object[] obj : loyaltyVisits) {
+					double visitRate = (Double.parseDouble(obj[0].toString()) / totalVisits) *100;
+					visitsMap.put(obj[1].toString(), visitRate);
+				}
+			}
+			
+			Calendar tempCal=Calendar.getInstance();
+			tempCal.setTimeZone(clientTimeZone);
+			tempCal.setTimeInMillis(startDate.getTimeInMillis());
+			String currDate = "";
+
+			performanceChartId.setYAxis("Visits");
+			
+			do {
+				currDate = ""+tempCal.get(startDate.DATE);
+				if(visitsMap != null) {
+					model.setValue("Visits of Loyalty Customers", currDate, visitsMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? visitsMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+				}
+				else {
+					model.setValue("Visits of Loyalty Customers", currDate, 0);
+				}
+				tempCal.set(Calendar.DATE, tempCal.get(Calendar.DATE) + 1);
+			}while(tempCal.before(endDate) || tempCal.equals(endDate));
+		}
+		
+		
+		
+		performanceChartId.setModel(model);
+
+		
+	}
+
+	public void onCheck$performanceRadioGrId() {
+		setPlotData();
+	}
+	
+	private void setPieChartData() {
+		
+
+		logger.debug(">>>>>>>>>>>>> before setPieChartData time in millis ::"+System.currentTimeMillis());
+		
+		int storeCount = ltyPrgmSevice.getEnrollmentCountByOptinMedium(prgmId,userId,Constants.CONTACT_LOYALTY_TYPE_POS,
+				MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null));
+		int webformCount = ltyPrgmSevice.getEnrollmentCountByOptinMedium(prgmId,userId,Constants.CONTACT_LOYALTY_TYPE_WEBFORM,
+				MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null));
+		int offlineCount = ltyPrgmSevice.getEnrollmentCountByOptinMedium(prgmId,userId,Constants.CONTACT_LOYALTY_TYPE_OFFLINE,
+				MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null));
+		
+		if(storeCount == 0 && webformCount == 0 && offlineCount == 0){
+			pieLabelDivId.setVisible(false);
+			pieChartDivId.setVisible(false);
+			return;
+		}
+		PieModel model = new SimplePieModel();
+		
+		model.setValue("Store", new Double(storeCount));
+		model.setValue("Web-Form", new Double(webformCount));
+		model.setValue("Offline", new Double(offlineCount));
+		optinMediumChartId.setModel(model);
+
+		logger.debug(">>>>>>>>>>>>> after setPieChartData time in millis ::"+System.currentTimeMillis());
+	}
+	
+	private void setStoreActivityData() {
+		logger.debug(" >> before setPlotData time In millis ::"+System.currentTimeMillis());
+
+		logger.debug(" startDateStr :"+MyCalendar.calendarToString(startDate, null)+ " AND endDateStr Str ::"+MyCalendar.calendarToString(endDate, null));
+
+		CategoryModel model = new SimpleCategoryModel();
+
+		long totalVisits = ltyPrgmSevice.getAllTransactionsCountByPrgmId(userId,prgmId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null));
+		List<Object[]> storeVisits = ltyPrgmSevice.getTransactionCountByStores(userId,prgmId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null)); 
+		Map<String, Double> storesMap = null; 
+		if(storeVisits != null && storeVisits.size() > 0) {
+			storesMap = new HashMap<String,Double>();
+			for(int i=0; i<5; i++) {
+				if(storeVisits.size() > i && storeVisits.get(i) != null){
+					if(storeVisits.get(i)[0] != null && storeVisits.get(i)[0] != null){
+						double storeVisitRate = (Double.parseDouble(storeVisits.get(i)[1].toString()) / totalVisits) *100;
+						storesMap.put(storeVisits.get(i)[0].toString(), storeVisitRate);
+					}
+				}
+			}
+		}
+
+		if(storesMap != null) {
+			Set<String> keySet = storesMap.keySet();
+			for (String key : keySet) {
+				model.setValue("Store Activity", key, storesMap.get(key));
+			}
+		}
+		else {
+			model.setValue("Store Activity", "", 0);
+		}
+
+		activeStoresChartId.setModel(model);
+
+	}
+
+	
+	private void redrawLiabilityCount(Long prgmId) {
+		resetGridCols();
+		Components.removeAllChildren(liabilityRowsId);
+		Components.removeAllChildren(liabilityFooterId);
+		long totCount = 0;
+		double totAmount = 0.00;
+		long totPoints = 0;
+		DecimalFormat f = new DecimalFormat("#0.00");
+		
+		if(prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD)) {
+			Row row = null;
+
+			row = new Row();
+			Object[] obj = ltyPrgmSevice.getLiabilityData(prgmId,null,null);
+
+			row.appendChild(new Label("Active"));
+			row.appendChild(new Label(obj[0]==null?0+"":obj[0]+""));
+			totCount = totCount + (obj[0] == null ? 0 : Long.parseLong(obj[0]+""));
+
+			row.appendChild(new Label(obj[1]==null?f.format(0.00):obj[1]+""));
+			totAmount = totAmount + (obj[1] == null ? 0.00 : Double.parseDouble(obj[1]+""));
+
+			row.appendChild(new Label(obj[2]==null?0+"":obj[2]+""));
+			totPoints = totPoints + (obj[2] == null ? 0 : Long.parseLong(obj[2]+""));
+
+			row.setParent(liabilityRowsId);
+
+			row = new Row();
+			long inventoryCount = ltyPrgmSevice.getInventoryCardsCount(prgmId,null);
+			row.appendChild(new Label("Inventory"));
+			row.appendChild(new Label(inventoryCount+""));
+			totCount = totCount + inventoryCount;
+			//Liability Amount
+			row.appendChild(new Label("--"));
+			//Liability Points
+			row.appendChild(new Label("--"));
+
+			row.setParent(liabilityRowsId);
+		}
+		else {
+			Row row = null;
+
+			row = new Row();
+			Object[] obj = ltyPrgmSevice.getLiabilityData(prgmId,null,null);
+
+			row.appendChild(new Label("Mobile"));
+			row.appendChild(new Label(obj[0]==null?0+"":obj[0]+""));
+			totCount = totCount + (obj[0] == null ? 0 : Long.parseLong(obj[0]+""));
+
+			row.appendChild(new Label(obj[1]==null?f.format(0.00):obj[1]+""));
+			totAmount = totAmount + (obj[1] == null ? 0.00 : Double.parseDouble(obj[1]+""));
+
+			row.appendChild(new Label(obj[2]==null?0+"":obj[2]+""));
+			totPoints = totPoints + (obj[2] == null ? 0 : Long.parseLong(obj[2]+""));
+
+			row.setParent(liabilityRowsId);
+
+			row.setParent(liabilityRowsId);
+		}
+		
+		Footer footer = new Footer();
+		footer.appendChild(new Label("TOTAL"));
+		footer.setParent(liabilityFooterId);
+		
+		footer = new Footer();
+		footer.appendChild(new Label(totCount+""));
+		footer.setParent(liabilityFooterId);
+		
+		footer = new Footer();
+		footer.appendChild(new Label(f.format(totAmount)));
+		footer.setParent(liabilityFooterId);
+		
+		footer = new Footer();
+		footer.appendChild(new Label(totPoints+""));
+		footer.setParent(liabilityFooterId);
+		
+	}
+
+	private void resetGridCols() {
+		Components.removeAllChildren(liabilityColsId);
+
+		if(prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE) || 
+				prgmObj.getProgramType().equalsIgnoreCase(OCConstants.LOYALTY_PROGRAM_TYPE_DYNAMIC)) {
+			Column memType = new Column("Membership Type");
+			memType.setWidth("40%");
+			memType.setParent(liabilityColsId);
+			Column enrollCount = new Column("No.of Enrollments");
+			enrollCount.setWidth("40%");
+			enrollCount.setParent(liabilityColsId);
+			Column amount = new Column("Currency");
+			amount.setWidth("30%");
+			amount.setParent(liabilityColsId);
+			Column points = new Column("Points");
+			points.setWidth("30%");
+			points.setParent(liabilityColsId);
+
+		}
+		else {
+			Column memType = new Column("Card Status");
+			memType.setWidth("35%");
+			memType.setParent(liabilityColsId);
+			Column enrollCount = new Column("Number of Cards");
+			enrollCount.setWidth("45%");
+			enrollCount.setParent(liabilityColsId);
+			Column amount = new Column("Currency");
+			amount.setWidth("30%");
+			amount.setParent(liabilityColsId);
+			Column points = new Column("Points");
+			points.setWidth("30%");
+			points.setParent(liabilityColsId);
+
+		}
+
+
+	}
+	private void resetTierCols() {
+		Components.removeAllChildren(tierColsId);
+
+		if(prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)) {
+			Column tierName = new Column("Tier Name (Tier Level)");
+			tierName.setWidth("40%");
+			tierName.setParent(tierColsId);
+			/*Column upgradedCount = new Column("Upgraded");
+			upgradedCount.setWidth("30%");
+			upgradedCount.setParent(tierColsId);
+			Column visits = new Column("Visits");
+			visits.setWidth("30%");
+			visits.setParent(tierColsId);*/
+			Column revenue = new Column("Revenue");
+			revenue.setWidth("30%");
+			revenue.setParent(tierColsId);
+
+		}
+		else {
+			Column tierName = new Column("Tier Name (Tier Level)");
+			tierName.setWidth("40%");
+			tierName.setParent(tierColsId);
+			/*Column enrolledCount = new Column("Enrolled");
+			enrolledCount.setWidth("40%");
+			enrolledCount.setParent(tierColsId);
+			Column upgradedCount = new Column("Upgraded");
+			upgradedCount.setWidth("30%");
+			upgradedCount.setParent(tierColsId);*/
+			Column visits = new Column("Visits");
+			visits.setWidth("30%");
+			visits.setParent(tierColsId);
+			Column revenue = new Column("Revenue");
+			revenue.setWidth("30%");
+			revenue.setParent(tierColsId);
+
+		}
+	}
+	
+	private void redrawTierSummary(Long prgmId,String startDateStr,
+			String endDateStr){
+		resetTierCols();
+		DecimalFormat f = new DecimalFormat("#0.00");
+		/*Map<Long, Long> enrolledCount ;
+		List<Object[]> upgradedCount ;*/
+		//long totCount = 0, totCount1 = 0;
+	    long totVisits = 0;
+	    double totRevenue = 0.00;
+	    Components.removeAllChildren(tierColsId);
+	    try
+	    {
+	    /*LoyaltyCardSetDao loyaltyCardSetDao = (LoyaltyCardSetDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_CARD_SET_DAO);
+		List<Object[]> linktierList = loyaltyCardSetDao.fetchCardSetAndLinkedTierByPrgmId(prgmId);
+		String linkCardSetStr = "";
+		String linkTierStr = "";
+		if(linktierList !=null && linktierList.size()>0){
+			for(Object[] obj:linktierList){
+				if(linkCardSetStr.length() == 0) {
+					linkCardSetStr = linkCardSetStr + obj[0].toString();
+					}
+					else {
+						linkCardSetStr = linkCardSetStr + Constants.DELIMETER_COMMA + obj[0];
+						
+					}
+				if(linkTierStr.length() == 0) {
+					linkTierStr = linkTierStr + obj[1].toString();
+					}
+					else {
+						linkTierStr = linkTierStr + Constants.DELIMETER_COMMA + obj[1];
+						
+					}
+			}
+			enrolledCount = ltyPrgmSevice.getTierEnrolledCount(userId,prgmId,startDateStr,endDateStr,linkCardSetStr,linkTierStr);
+			}else{
+				enrolledCount = new HashMap<Long, Long>(0);
+			}*/
+        
+	    LoyaltyProgramTierDao loyaltyProgramTierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+		List<LoyaltyProgramTier> listOfTiers = loyaltyProgramTierDao.fetchTiersByProgramId(prgmId);
+		
+			
+			//tierobjArr =ltyPrgmSevice.getTierVisitsAndRevenue(userId, prgmId,startDateStr,endDateStr,tierStr);
+			if(listOfTiers != null && listOfTiers.size() > 0){
+				for(LoyaltyProgramTier tier : listOfTiers){
+				
+				Row row = null;
+				row = new Row();
+				row.appendChild(new Label(tier.getTierName()+" "+"("+tier.getTierType()+")"));
+				/*if(!prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)) {
+				row.appendChild(new Label(enrolledCount.get(tier.getTierId())!= null? enrolledCount.get(tier.getTierId())+"":0+""));
+				totCount = totCount +( enrolledCount.get(tier.getTierId()) != null? enrolledCount.get(tier.getTierId()):0);
+				}
+				upgradedCount = ltyPrgmSevice.getTierUpgradedCount(userId,prgmId,startDateStr,endDateStr,tier.getTierId());
+				if(upgradedCount != null && upgradedCount.size()>0) {
+					for(Object[] obj : upgradedCount) {
+					    row.appendChild(new Label(obj[0]==null? 0+"" :obj[0]+""));
+					    totCount1 = totCount1 + (obj[0] == null ? 0 : Long.parseLong(obj[0]+""));
+					}}else{
+						row.appendChild(new Label(0+""));
+					}*/
+				List<Object[]> tierobjArr = null;
+				
+				tierobjArr =ltyPrgmSevice.getTierVisitsAndRevenue(userId, prgmId,startDateStr,endDateStr,tier.getTierId());
+
+				if(tierobjArr != null && tierobjArr.size()>0) {
+					for(Object[] obj : tierobjArr) {
+					
+                        row.appendChild(new Label(obj[0]==null? 0+"" :obj[0]+""));
+						row.appendChild(new Label(obj[1]==null? f.format(0.00):f.format(obj[1])));
+						totVisits = totVisits + (obj[0] == null ? 0 : Long.parseLong(obj[0].toString()));
+						totRevenue = totRevenue + (obj[1] == null ? 0.00 : Double.parseDouble(obj[1].toString()));
+
+					}}else{
+						row.appendChild(new Label(0+""));
+						row.appendChild(new Label(f.format(0.00)+""));
+						
+					}
+				
+					row.setParent(tierRowsId);
+				}
+
+					Footer footer = new Footer();
+					footer.appendChild(new Label("TOTAL"));
+					footer.setParent(tierFooterId);
+					
+					
+					footer = new Footer();
+					footer.appendChild(new Label(totVisits+""));
+					footer.setParent(tierFooterId);
+					
+					footer = new Footer();
+					footer.appendChild(new Label(f.format(totRevenue)));
+					footer.setParent(tierFooterId);
+				}	}
+				catch(Exception e){
+					logger.error("Exception ::",e);
+				}
+				}
+				
+				
+				/*row.appendChild(new Label(enrCount+""));
+				row.appendChild(new Label("--"));
+				row.appendChild(new Label("--"));
+				row.setParent(transRowsId);
+		
+	   
+		
+		
+		
+		
+		/*List<LoyaltyCardSet> list = ltyPrgmSevice.getCardsetList(prgmId);
+		for (LoyaltyCardSet loyaltyCardSet : list) {
+			if(loyaltyCardSet.getLinkedTierLevel() != 0){
+				LoyaltyProgram prgmObj = getProgmObj(prgmId);
+				List<LoyaltyProgramTier> tierList = getTierList(prgmId);
+			}*/
+			
+				
+				
+			
+			
+			
+
+			
+			/*Row row = new Row();
+			row.appendChild(new Label(loyaltyCardSet.getCardSetName()));
+			row.appendChild(new Label(loyaltyCardSet.getQuantity().toString()));
+			row.appendChild(new Label(loyaltyCardSet.getCardSetType().toString()));
+			row.appendChild(new Label(loyaltyCardSet.getGenerationType()));
+	    	
+	    	
+	    }
+		
+	    Row row = null;
+	    
+	    //int enrolledCount = ltyPrgmSevice.getEnrolledCount(prgmId,startDateStr,endDateStr,null,null);
+		row = new Row();
+		row.appendChild(new Label());
+		}*/
+	
+	    
+	
+	private void redrawTransactionsCount(Long prgmId, String startDateStr,
+			String endDateStr) {
+		DecimalFormat f = new DecimalFormat("#0.00");
+		int totCount = 0;
+		double totAmount = 0;
+		Double totPoints = 0.00;
+		
+		Row row = null;
+		
+		int enrCount = ltyPrgmSevice.getEnrollementTrans(prgmId,startDateStr,endDateStr,null,null,null,null);
+		row = new Row();
+		row.appendChild(new Label(OCConstants.LOYALTY_TRANS_TYPE_ENROLLMENT));
+		totCount = totCount + (enrCount);
+		row.appendChild(new Label(enrCount+""));
+		row.appendChild(new Label("--"));
+		row.appendChild(new Label("--"));
+		row.setParent(transRowsId);
+		
+		Object[] issObj = ltyPrgmSevice.getIssuanceTrans(prgmId,startDateStr,endDateStr,null,null,"loyaltyIssuance",null,null);
+		row = new Row();
+		row.appendChild(new Label("Loyalty Issuance"));
+		totCount = totCount + (issObj[0] == null ? 0 : Integer.parseInt(issObj[0]+""));
+		row.appendChild(new Label(issObj[0] == null ? 0+"" : issObj[0]+""));
+		totAmount = totAmount + (issObj[1] == null ? 0.00 : Double.parseDouble(issObj[1]+""));
+		row.appendChild(new Label(issObj[1] == null ? f.format(0.00) : f.format(issObj[1])));
+		totPoints = totPoints + (issObj[2] == null ? 0 : Double.parseDouble(issObj[2]+""));
+		row.appendChild(new Label(issObj[2] == null ? 0+"" : new Double(issObj[2]+"").intValue()+""));
+		row.setParent(transRowsId);
+		
+		if(!prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)) {
+			issObj = ltyPrgmSevice.getIssuanceTrans(prgmId,startDateStr,endDateStr,  null, null, "giftIssuance",null,null);
+			row = new Row();
+			row.appendChild(new Label("Gift Issuance"));
+			totCount = totCount + (issObj[0] == null ? 0 : Integer.parseInt(issObj[0]+""));
+			row.appendChild(new Label(issObj[0] == null ? 0+"" : issObj[0]+""));
+			totAmount = totAmount + (issObj[1] == null ? 0.00 : Double.parseDouble(issObj[1]+""));
+			row.appendChild(new Label(issObj[1] == null ? f.format(0.00) : f.format(issObj[1])));
+//			totPoints = totPoints + (issObj[2] == null ? 0 : Double.parseDouble(issObj[2]+""));
+			row.appendChild(new Label("--"));
+			row.setParent(transRowsId);
+		}
+		
+		Object[] redObjAmt = ltyPrgmSevice.getRedemptionTransAmt(prgmId,startDateStr,endDateStr,  null, null,null,null);
+		Object[] redObjPts = ltyPrgmSevice.getRedemptionTransPts(prgmId,startDateStr,endDateStr,  null, null,null,null);
+		int redCount = (redObjAmt[0] == null ? 0 : Integer.parseInt(redObjAmt[0]+"")) + (redObjPts[0] == null ? 0 : Integer.parseInt(redObjPts[0]+""));
+		row = new Row();
+		row.appendChild(new Label(OCConstants.LOYALTY_TRANS_TYPE_REDEMPTION));
+		totCount = totCount + redCount;
+		row.appendChild(new Label(redCount+""));
+		totAmount = totAmount + (redObjAmt[1] == null ? 0.00 : Double.parseDouble(redObjAmt[1]+""));
+		row.appendChild(new Label(redObjAmt[1] == null ? f.format(0.00) : f.format(redObjAmt[1])));
+		totPoints = totPoints + (redObjPts[1] == null ? 0 : Double.parseDouble(redObjPts[1]+""));
+		row.appendChild(new Label(redObjPts[1] == null ? 0+"" : new Double(redObjPts[1]+"").intValue()+""));
+		row.setParent(transRowsId);
+
+		int inqCount = ltyPrgmSevice.getInquiryTrans(prgmId,startDateStr,endDateStr,null,null,null,null);
+		row = new Row();
+		row.appendChild(new Label(OCConstants.LOYALTY_TRANS_TYPE_INQUIRY));
+		totCount = totCount + (inqCount);
+		row.appendChild(new Label(inqCount+""));
+		row.appendChild(new Label("--"));
+		row.appendChild(new Label("--"));
+		row.setParent(transRowsId);
+		
+		Object[] reversalObj = ltyPrgmSevice.getReversalTrans(prgmId,startDateStr,endDateStr,  null, null,null,null);
+		row = new Row();
+		row.appendChild(new Label("Returns"));
+		totCount = totCount + (reversalObj[0] == null ? 0 : Integer.parseInt(reversalObj[0]+""));
+		row.appendChild(new Label(reversalObj[0] == null ? 0+"" : reversalObj[0]+""));
+		//totAmount = totAmount + (reversalObj[1] == null ? 0.00 : Double.parseDouble(reversalObj[1]+""));
+		//row.appendChild(new Label(reversalObj[1] == null ? f.format(0.00) : f.format(new Double(reversalObj[1]+""))));
+		//totPoints = totPoints + (reversalObj[2] == null ? 0 : Double.parseDouble(reversalObj[2]+""));
+		//row.appendChild(new Label(reversalObj[2] == null ? 0+"" : new Double(reversalObj[2]+"").intValue()+""));
+		row.appendChild(new Label("--"));
+		row.appendChild(new Label("--"));
+		row.setParent(transRowsId);
+		
+		Object[] storeCreditObj = ltyPrgmSevice.getStoreCreditTrans(prgmId,startDateStr,endDateStr,  null, null,null,null);
+		row = new Row();
+		row.appendChild(new Label("Store Credit"));
+		totCount = totCount + (storeCreditObj[0] == null ? 0 : Integer.parseInt(storeCreditObj[0]+""));
+		row.appendChild(new Label(storeCreditObj[0] == null ? 0+"" : storeCreditObj[0]+""));
+		totAmount = totAmount + (storeCreditObj[1] == null ? 0.00 : Double.parseDouble(storeCreditObj[1]+""));
+		row.appendChild(new Label(storeCreditObj[1] == null ? f.format(0.00) : f.format(storeCreditObj[1])));
+		row.appendChild(new Label("--"));
+		row.setParent(transRowsId);
+		
+		int transferCount = ltyPrgmSevice.getTransferTrans(prgmId,startDateStr,endDateStr,null,null,null,null);
+		row = new Row();
+		row.appendChild(new Label("Transfers"));
+		totCount = totCount + (transferCount);
+		row.appendChild(new Label(transferCount+""));
+		row.appendChild(new Label("--"));
+		row.appendChild(new Label("--"));
+		row.setParent(transRowsId);
+		
+		
+		Object[] bonusObj = ltyPrgmSevice.getBonusTrans(prgmId,startDateStr, endDateStr, null, null,null,null);
+		row = new Row();
+		row.appendChild(new Label("Bonus"));
+		totCount = totCount+ (bonusObj[0] == null ? 0 : Integer.parseInt(bonusObj[0] + ""));
+		row.appendChild(new Label(bonusObj[0] == null ? 0 + "" : bonusObj[0]+ ""));
+		totAmount = totAmount+ (bonusObj[1] == null ? 0.00 : Double.parseDouble(bonusObj[1]+ ""));
+		row.appendChild(new Label(bonusObj[1] == null ? f.format(0.00) : f.format(bonusObj[1])));
+		totPoints = totPoints+ (bonusObj[2] == null ? 0 : Double.parseDouble(bonusObj[2]+ ""));
+		row.appendChild(new Label(bonusObj[2] == null ? 0 + "" : new Double(bonusObj[2] + "").intValue() + ""));
+		row.setParent(transRowsId);
+		
+		
+		Object[] adjustObj = ltyPrgmSevice.getAdjustmentTrans(prgmId,startDateStr, endDateStr, null, null,null,null);
+		row = new Row();
+		row.appendChild(new Label("Adjustments"));
+		totCount = totCount+ (adjustObj[0] == null ? 0 : Integer.parseInt(adjustObj[0] + ""));
+		row.appendChild(new Label(adjustObj[0] == null ? 0 + "" : adjustObj[0]+ ""));
+		totAmount = totAmount+ (adjustObj[1] == null ? 0.00 : Double.parseDouble(adjustObj[1]+ ""));
+		row.appendChild(new Label(adjustObj[1] == null ? f.format(0.00) : f.format(adjustObj[1])));
+		totPoints = totPoints+ (adjustObj[2] == null ? 0 : Double.parseDouble(adjustObj[2]+ ""));
+		row.appendChild(new Label(adjustObj[2] == null ? 0 + "" : new Double(adjustObj[2] + "").intValue() + ""));
+		row.setParent(transRowsId);
+		
+		
+		int changeTierCount = ltyPrgmSevice.getChangeTierTrans(prgmId,startDateStr,endDateStr,null,null,null,null);
+		row = new Row();
+		row.appendChild(new Label("Tier Adjustment"));
+		totCount = totCount + (changeTierCount);
+		row.appendChild(new Label(changeTierCount+""));
+		row.appendChild(new Label("--"));
+		row.appendChild(new Label("--"));
+		row.setParent(transRowsId);
+		
+		Footer footer = new Footer();
+		footer.appendChild(new Label("TOTAL"));
+		footer.setParent(transFooterId);
+		
+		footer = new Footer();
+		footer.appendChild(new Label(totCount+""));
+		footer.setParent(transFooterId);
+		
+		footer = new Footer();
+		footer.appendChild(new Label(f.format(totAmount)));
+		footer.setParent(transFooterId);
+		
+		footer = new Footer();
+		footer.appendChild(new Label(totPoints.intValue()+""));
+		footer.setParent(transFooterId);
+		
+	}
+	private void resetStoreGridCols() {
+		
+
+		if(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE.equalsIgnoreCase(prgmObj.getMembershipType())) {
+			giftCardIssId.setVisible(false);
+		}
+
+	}
+
+	private void redrawRegStore() {
+
+		resetStoreGridCols();
+
+		Components.removeAllChildren(storeRowsId);
+		Components.removeAllChildren(storeFooterId);
+		int totReg = 0;
+		int totGift = 0;
+
+		//Mobile Based Program
+
+		if(prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)) {
+			Row row = null;
+
+			List<Object[]> objArr = null;
+			objArr =ltyPrgmSevice.getStoreContactLtyList(userId, prgmId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),true,null);
+			if(objArr != null && objArr.size() > 5) {
+				storeLbId.setHeight("240px");
+			}
+			if(objArr != null) {
+				for(Object[] obj : objArr) {
+					row = new Row();
+                    if(obj[0] != null){
+					String sName = "Store ID "+obj[0].toString() ;
+					for (OrganizationStores org : storeList){
+					if (obj[0].toString().equalsIgnoreCase(org.getHomeStoreId()) && org.getStoreName() != null && !org.getStoreName().isEmpty()) {
+				    	sName = org.getStoreName().toString();
+				    	break;
+					}}
+					row.appendChild(new Label(sName));
+					}else{
+						row.appendChild(new Label(""));
+						}
+					row.appendChild(new Label(obj[1]==null? 0+"" :obj[1]+""));
+					totReg = totReg + (obj[1] == null ? 0 : Integer.parseInt(obj[1].toString()));
+
+					row.setParent(storeRowsId);
+				}
+
+				Footer footer = new Footer();
+				footer.appendChild(new Label("TOTAL"));
+				footer.setParent(storeFooterId);
+
+				footer = new Footer();
+				footer.appendChild(new Label(totReg+""));
+				footer.setParent(storeFooterId);
+			}
+		}else {
+			Row row = null;
+			String storeNo;
+
+			List<Object[]> loyaltyObjArr = ltyPrgmSevice.getStoreContactLtyList(userId, prgmId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),false,"loyalty");
+			List<Object[]> giftObjArr = ltyPrgmSevice.getStoreContactLtyList(userId, prgmId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),false,"gift");
+
+			List <Object[]> objArr = null;
+			if(loyaltyObjArr != null && loyaltyObjArr.size() > 0) {
+				objArr = new ArrayList<Object[]>();
+				for(Object[] obj : loyaltyObjArr) {
+					
+					Object[] storeObj = new Object[3];
+					storeObj[0] = obj[0];
+					storeObj[1] = obj[1] == null ? 0+"" :obj[1]+"";
+					objArr.add(storeObj);
+				}
+
+			}
+			if(giftObjArr != null && giftObjArr.size() > 0) {
+
+				if(objArr == null) {
+					objArr = new ArrayList<Object[]>();
+					for(Object[] gftObj : giftObjArr) {
+						Object[] storeObj = new Object[3];
+						storeObj[0] = gftObj[0];
+						storeObj[2] = gftObj[1] == null ? 0+"" :gftObj[1]+"";
+						objArr.add(storeObj);
+					}
+				}
+				else {
+					for(Object[] gftObj : giftObjArr) {
+						boolean isExists = false;
+						for (Object[] existObj : objArr) {
+							logger.info("existObj[0]"+existObj[0] +"existObj[1]-------------"+existObj[1]+"existObj[2]"+existObj[2]);
+							if(existObj[0].toString().equalsIgnoreCase(gftObj[0].toString())) {
+								existObj[2] = gftObj[1] == null ? 0+"" :gftObj[1]+"";
+								isExists = true;
+								break;
+							}
+						}
+						if(!isExists) {
+							Object[] storeObj = new Object[3];
+							storeObj[0] = gftObj[0];
+							storeObj[2] = gftObj[1] == null ? 0+"" :gftObj[1]+"";
+							objArr.add(storeObj);
+						}
+					}
+				}
+			}
+			if(objArr != null && objArr.size() > 5) {
+				storeLbId.setHeight("240px");
+			}
+			if(objArr != null && objArr.size() > 0) {
+				for(Object[] obj : objArr) {
+					row = new Row();
+					if(obj[0] != null){
+						storeNo = "Store ID "+obj[0].toString() ;
+						for (OrganizationStores org : storeList){
+						if (obj[0].toString().equalsIgnoreCase(org.getHomeStoreId()) && org.getStoreName() != null && !org.getStoreName().isEmpty()) {
+							storeNo = org.getStoreName().toString();
+					    	break;
+						}}
+						}else{
+							storeNo = "";
+							}
+
+					row.appendChild(new Label(""+storeNo));
+					row.appendChild(new Label(obj[1]==null? 0+"" :obj[1]+""));
+					row.appendChild(new Label(obj[2]==null? 0+"" :obj[2]+""));
+					totReg = totReg + (obj[1] == null ? 0 : Integer.parseInt(obj[1].toString()));
+					totGift = totGift + (obj[2] == null ? 0 : Integer.parseInt(obj[2].toString()));
+
+					row.setParent(storeRowsId);
+				}
+
+				Footer footer = new Footer();
+				footer.appendChild(new Label("TOTAL"));
+				footer.setParent(storeFooterId);
+
+				footer = new Footer();
+				footer.appendChild(new Label(totReg+""));
+				footer.setParent(storeFooterId);
+
+				footer = new Footer();
+				footer.appendChild(new Label(totGift+""));
+				footer.setParent(storeFooterId);
+			}
+		}
+	}
+}

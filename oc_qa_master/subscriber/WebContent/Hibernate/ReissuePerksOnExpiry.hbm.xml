@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ReIssuePerksOnExpiry"
+		table="reissue_perks_on_expiry">
+	
+		<id name="reIssuePerkId" type="java.lang.Long">
+			<column name="reissue_perk_id" />
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id" />
+		</property>
+		<property name="loyaltyId" type="java.lang.Long">
+			<column name="loyalty_id" />
+		</property>
+		<property name="tierId" type="java.lang.Long">
+			<column name="tier_id" />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="valueCode" type="string">
+			<column name="value_code" length="20" />
+		</property>
+		<property name="transactionId" type="java.lang.Long">
+			<column name="transaction_id" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="20" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

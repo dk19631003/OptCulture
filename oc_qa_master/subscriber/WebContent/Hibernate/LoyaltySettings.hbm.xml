@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltySettings" table="loyalty_settings">
+		<id name="ltySettingId" type="java.lang.Long" column="lty_setting_id">
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		
+		<property name="userOrgId" type="java.lang.Long">
+			<column name="user_org_id" />
+		</property>
+		
+		<property name="email" type="string">
+			<column name="email" length="60"/>
+		</property>
+		
+		<property name="mobile" type="string">
+			<column name="mobile" length="20" />
+		</property>
+		
+		<property name="urlStr" type="string">
+			<column name="url_str" />
+		</property>
+		
+		<property name="colorCode" type="string">
+			<column name="color_code" />
+		</property>
+		
+		<property name="path" type="string">
+			<column name="path" />
+		</property>
+		<property name="isActive" type="string">
+			<column name="is_active" />
+		</property>
+		
+		<property name="bannerPath" type="string">
+			<column name="banner_image_path" />
+		</property>
+		<property name="homePageImagePath" type="string">
+			<column name="homepage_image_path" />
+		</property>
+		<property name="homePageColorCode" type="string">
+			<column name="homepage_color_code" />
+		</property>
+		<property name="balanceCardColorCode" type="string">
+			<column name="bonus_card_color_code" />
+		</property>
+		<property name="balanceCardTextColorCode" type="string">
+			<column name="bonus_card_text_color_code" />
+		</property>
+		<property name="loyaltyType" type="string">
+			<column name="loyalty_type" />
+		</property>
+		
+		<property name="orgOwner" type="java.lang.Long">
+			<column name="org_owner" />
+		</property>
+		<property name="fontName" type="string">
+			<column name="font_name" />
+		</property>
+		<property name="fontURL" type="string">
+			<column name="font_url" />
+		</property>
+		<property name="bannerName" type="string">
+			<column name="banner_name" />
+		</property>
+		<property name="tabName" type="string">
+			<column name="tab_name" />
+		</property>
+		<property name="tabImagePath" type="string">
+			<column name="tab_image_path" />
+		</property>
+		<property name="smartEreceiptJsonConfig" type="string">
+			<column name="smart_ereceipt_json_config" length="2000"/>
+		</property>
+		<property name="loginType" type="java.lang.Long">
+			<column name="login_type" />
+		</property>
+		<property name="cardSettings" type="java.lang.Long">
+			<column name="card_settings"/>
+		</property>
+		<property name="referralImage" type="string">
+			<column name="referral_image" />
+		</property>
+		<property name="loyaltyImage" type="string">
+			<column name="loyalty_image" />
+		</property>
+    
+		 <property name="includeFirstname" type="boolean" >
+			<column name="include_firstname" default="true" />
+		</property>
+		
+		<property name="includeLastname" type="boolean" >
+			<column name="include_lastname" default="false" />
+		</property>
+		
+		<property name="includeMobilenumber" type="boolean" >
+			<column name="include_mobilenumber" default="true" />
+		</property>
+		
+		<property name="includeEmailaddress" type="boolean" >
+			<column name="include_emailaddress" default="true" />
+		</property>
+		
+    
+    		 <property name="includeStreet" type="boolean" >
+			<column name="include_street" default="false" />
+		</property>
+		
+		<property name="includeCity" type="boolean" >
+			<column name="include_city" default="false" />
+		</property>
+		
+		<property name="includeState" type="boolean" >
+			<column name="include_state" default="false" />
+		</property>
+		
+		<property name="includePostalCode" type="boolean" >
+			<column name="include_postalcode" default="false"/>
+		</property>
+		
+    
+   		 <property name="includeCountry" type="boolean" >
+			<column name="include_country" default="false" />
+		</property>
+		
+		<property name="includeBirthday" type="boolean" >
+			<column name="include_birthday" default="false" />
+		</property>
+		
+		<property name="includeAnniversary" type="boolean" >
+			<column name="include_anniversary" default="false" />
+		</property>
+		
+		<property name="includeGender" type="boolean" >
+			<column name="include_gender" default="false" />
+		</property>
+		
+   
+    
+    </class>
+</hibernate-mapping>

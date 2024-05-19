@@ -1,0 +1,192 @@
+<zk>
+	<window id="notificationCampListWinId" apply="org.mq.marketer.campaign.controller.campaign.NotificationWebList" style="margin:0px;" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native"  xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%">
+<style>
+	.hoverlistheaders > div.z-listheader-cnt{
+		cursor: pointer; 
+	}
+</style>
+
+<h:table cellspacing="0" cellpadding="4" width="99%"  bgcolor="#F4F5F9" style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+		<h:tr>
+			<h:td>
+			    <hlayout>
+			       <div>
+			       	 <label value="Search by:" style="font-weight:bold;" />                              
+				     <listbox id="srchLbId" mold="select"  width="150px" >
+				        <listitem label="Status" value ="Status" selected="true"/>
+            			<listitem label="Campaign Name" value ="Name" />
+            			<listitem label="Created Date" value="Date"/>
+        		     </listbox>
+			       </div>
+			       
+        		   <div id="searchByCmpgnNameDivId" visible="false">
+        		   	 	<textbox id="searchByCmpgnNameTbId" width="200px"/>
+        		   </div>
+			       
+			       <div id="searchByCmpgnCreationDateDivId" visible="false">
+				    	 <label value="Date:" sclass="theme-lbHeading" />
+						 <space />
+						 <label value="From: " />
+						 <datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+						 <space />
+						 <label value="To: " />
+						 <datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			      </div>
+			      <div id="searchByCmpgnStatusDivId" visible="true">                           
+						  <listbox id="notificationCampStatusLb" mold="select"  width="140px" >
+						    <listitem label="All" selected="true"  value="All"/>
+	            			<listitem label="Active"  value="Active" />
+	            			<listitem label="Sent"  value="Sent" />
+	            			<listitem label="Draft"  value="Draft"/>
+	            			<listitem label="Schedule Failure"  value="Schedule Failure"/>
+						  </listbox>
+				  </div>
+				  <div id="filterBtnDivId">
+				      		<button label="Filter" id="filterBtnId" sclass="idle140" style="margin-left:20px;" />
+				  </div>
+				  <div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;" >
+				  	  	<a label="Reset" id="resetAnchId" />
+				  </div>
+			    </hlayout>
+			</h:td> 
+		</h:tr>
+	
+	</h:table>
+	
+	<h:table width="99%" bgcolor="#F9F9F9" cellspacing="0" cellpadding="0">
+			<h:tr>
+				<h:td>
+					<bandbox id="notificationActionsBandBoxId" buttonVisible="false" mold="rounded" disabled="true" readonly="true" width="200px" value="Bulk Actions" 
+						style="font-weight:bold;padding:10px; ">
+									
+						<bandpopup>
+							<h:table width="100%" cellspacing="0" cellpadding="3">
+								<h:tr>
+									<h:td width="150"> <label  value="Delete Selected: " sclass="boldLabel" /> </h:td>
+									<h:td align="right"> <button id="delSelectedId" label="Delete" sclass="idle70 greenbtn"/> </h:td>
+								</h:tr>
+			
+								<h:tr> <h:td colspan="2"><h:hr/> </h:td> </h:tr>
+								
+								<h:tr bgcolor="#f5f8fb">
+									<h:td colspan="2" align="right">
+										<button label="Close" sclass="idle70" onClick="notificationActionsBandBoxId.close();"/>
+									 </h:td>
+								</h:tr>
+							</h:table>
+						</bandpopup>
+					</bandbox>
+				</h:td>
+				<h:td> </h:td>
+				<h:td width="280px"  >
+					<paging id="campListPaging" detailed="true" pageSize="10" width="280px" 
+						class="contactsViewPaging" style="border:none;"/>
+				</h:td>
+			</h:tr>
+		</h:table>
+		<separator/>
+		
+		 <zscript>
+			public void changeVisibility (int col, boolean show) {
+			Listheader c = (Listheader)((Listhead)notificationListlbId.getFirstChild()).getFirstChild();
+			for (int i = 1;i != col;i ++)
+				c = (Listheader)c.getNextSibling();
+			c.setVisible(show);
+		}
+		</zscript>
+		
+		<menupopup id="aMenu">
+			<menuitem label="Campaign Name" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(2, self.checked)" />
+			 <menuitem label="List(s)" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(3, self.checked)" />
+			<menuitem label="Status" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(4, self.checked)" />
+			<menuitem label="Schedule Occurrence" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(5, self.checked)" />
+			<menuitem label="Active Schedule On/Between" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(6, self.checked)" />
+			<menuitem label="Created Date" checked="false" checkmark="true" autocheck="true" onClick="changeVisibility(7, self.checked)" />
+			<menuitem label="Last Modified Date" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(8, self.checked)" />
+			<menuitem label="Actions" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(9, self.checked)" /> 
+		</menupopup>
+		
+		
+		<listbox id="notificationListlbId" width="99%" emptyMessage="No items match for your search" 
+			sclass="contactsView" multiple="true" mold="paging" checkmark="true">
+				<listhead sizable="false" style="background-color:#488eb0;" menupopup="aMenu">
+					<listheader label="" width="60px" align="center" />
+					<listheader label="Campaign Name"  id="sortbyCampaigName" align="left" style="padding-left:10px;" sclass="hoverlistheaders" width="19%"/>
+					<listheader label="List(s)/Segment(s)"   align="center"   width="9%" maxlength="40"/>
+					<listheader label="Status"   align="center"  width="7%"/>
+					<listheader label="Schedule Occurrence"   align="center"/>
+				 	<listheader label="Active Schedule On/Between"   align="center"/> 
+					<listheader label="Created Date"  id="sortbyCreadteDate"  align="center" visible="false" sclass="hoverlistheaders"/>
+					<listheader label="Last Modified Date"  id="sortbyModifiedDate" align="center" sclass="hoverlistheaders"/>
+					<listheader label="Actions" align="center" />
+				</listhead>
+		</listbox>
+		<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+			<h:tr>
+				<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+				   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+							<listitem label="5" />
+							<listitem label="10" selected="true" />
+							<listitem label="15"/>
+						</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="campListPaging1" detailed="true" visible="false" pageSize="10" width="280px" class="contactsViewPaging" style="border:none;"/>
+				</h:td>
+			</h:tr>
+			</h:table>
+			<h:table cellspacing="0" cellpadding="2" align="right"	style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"> <image src="/img/email_page.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;" > <label value="- Test Notification" style="font-size:11px;"/> </h:td>
+						<h:td align="right"><image src="/img/email_go.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Send Again" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/copy.gif"/></h:td>
+						<h:td  align="left" style="padding-right:30px;"><label value="- Copy" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Delete" style="font-size:11px;" /> </h:td>
+					</h:tr>
+			</h:table>
+	
+		<popup id="copyNotificationPopupId" width="400px">
+			Provide Notification Campaign name
+            <textbox id="copyNotificationNameTbId" value=""/> 
+			<button label="Copy" sclass="idle70" id="notificationCampCopyBtnId" />
+		</popup>
+	
+		<window id="testNotificationWinId" visible="false" closable="true" title="Send Test Notification" 
+						height="180px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="1"><label value=" Mobile Number : "/></h:td>
+					<h:td colspan="2"><textbox id="mblNumTxtBoxId" width="180px"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td/>
+					
+					<h:td  colspan="2" valign="center">	
+						<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+						<label value="To Send test Notification to multiple Mobile numbers,give them as comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td>
+					
+					
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td><button label="Send" id="sendTestNotificationBtnId" /></h:td>
+					<h:td><button label="Cancel" id="cancelsendTestNotificationBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+	
+	
+	</window>
+</zk>

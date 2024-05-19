@@ -1,0 +1,61 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="downloadWinId" width="100%" apply="org.mq.marketer.campaign.controller.contacts.DownloadController"  
+xmlns:h="http://www.zkoss.org/2005/zk/native">
+
+<h:table  width="100%" >
+		<h:tr >
+			<h:td width="48%">
+				<div>
+				<label value="Your exported file and its status is shown here. Once a file's status is 'Ready'," /><h:br/>
+				<label value="you can download it by hovering your mouse on the file and clicking on (download icon)" style="margin-right:10px;"/> <image src="/img/icons/download-2.png" />
+				<h:br/>
+				<label value="Note: " style="margin-top:5px;font-weight:bold;"/> <label value="Files are available for download for 7 days. 
+				After 7 days or once downloaded (whichever occurs first), " style="margin-top:5px;"/> <h:br/>
+				<label value="files are automatically deleted from the system. " style="margin-top:5px;"/> 
+				</div>
+			</h:td>
+			<h:td align="right">
+				<toolbarbutton id="clearAllFileDownloadTBId" label="Clear All Downloads"    image="img/icons/Clear-Downloads.png"    />
+			
+			</h:td>
+			
+		</h:tr>
+	</h:table>
+
+
+
+	
+	<groupbox closable="false"  height="350px">
+		<caption label="Downloads" />
+		<div id="fileImagesDivId" width="100%" height="300px" style="overflow:auto;"  />
+	</groupbox>
+	
+	<script>
+		 function onImgMouseOver(thisObj) {
+	      	
+	      	thisObj.setStyle('margin:1px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;border:#E1E1E1 1px solid;');
+			var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+		
+			thisObj.$f(zoomId).setVisible(true);
+			
+	      } 
+      
+	      function onImgMouseOut(thisObj) {
+	      	thisObj.setStyle('margin:2px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;');
+	      	
+	      	var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+			thisObj.$f(zoomId).setVisible(false);
+	     
+	      } 
+    </script>
+	
+	
+</window>
+</zk>

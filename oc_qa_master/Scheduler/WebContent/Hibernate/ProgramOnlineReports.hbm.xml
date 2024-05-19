@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.ProgramOnlineReports" table="program_online_reports">
+    <id name="progRepId" type="java.lang.Long">
+      <column name="prog_rep_id"/>
+      <generator class="native"/>
+    </id>
+	<many-to-one name="compContactsId" class="org.mq.captiway.scheduler.beans.ComponentsAndContacts" foreign-key="progRep_compContacts_Fkey"  fetch="select" lazy="false">
+      <column name="comp_contacts_id" not-null="true"/>
+    </many-to-one>
+	<property name="activityDate" type="timestamp">
+      <column name="activity_date"/>
+    </property>
+    <property name="componentWinId" type="string" column="component_win_id"/>
+    <property name="programId" type="java.lang.Long" column="program_id"/>
+    <property name="componentId" type="java.lang.Long" column="component_id"/>
+	<property name="contactId" type="java.lang.Long" column="contact_id"/>
+ </class>
+</hibernate-mapping>

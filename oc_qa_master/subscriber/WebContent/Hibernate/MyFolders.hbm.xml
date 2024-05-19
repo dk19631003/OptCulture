@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.MyFolders" table="my_folders" >
+		<id name="folderId" type="java.lang.Long" column="folder_id">
+			<generator class="native" />
+		</id>
+		<property name="folderName" type="string" column="folder_name" length="100" />
+	
+		<property name="createdDate" type="calendar" column="created_date" />
+		<property name="createdBy" type="java.lang.Long" column="created_by" />
+		<property name="orgId" type="java.lang.Long" column="org_id" />
+		
+		<property name="modifiedDate" type="calendar" column="modified_date" />
+		<!-- <property name="modifiedBy" type="java.lang.Long" column="modified_by" />
+		 -->
+		
+		<property name="type" type="string" column="type"  />
+		
+	<!-- 	 <many-to-one name="account"
+			class="org.mq.marketer.campaign.beans.Account" foreign-key="folder_account_Fk"
+			fetch="select">
+			<column name="account_id"  />
+		</many-to-one>
+		 -->
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,287 @@
+<zk>
+
+
+<window id="" width="100%" apply="org.mq.marketer.campaign.controller.social.createCampaignController" 
+		xmlns:h="native"  xmlns:w="client">
+
+<script type="text/javascript">
+	<![CDATA[ 
+		
+		function changeStep(inNum, isNext) {
+			
+			var inA = zk.Widget.$('$step'+inNum+'AId');
+			var inClass = inA.getSclass();
+			if(isNext==false && inClass != 'req_step_completed') {
+				return;
+			}
+			
+			for(var i=1; i<=4; i++ ) {
+				var currA = zk.Widget.$('$step'+i+'AId');
+				var currASclass = currA.getSclass();
+				
+				if(currASclass == 'req_step_current') {
+					
+					inA.setSclass('req_step_current');
+					currA.setSclass('req_step_completed');
+					break;
+				}
+			} // for
+			
+			zk.Widget.$('$step1DivId').setVisible(false);
+			zk.Widget.$('$step2DivId').setVisible(false);
+			zk.Widget.$('$step3DivId').setVisible(false);
+			zk.Widget.$('$step4DivId').setVisible(false);
+			
+			zk.Widget.$('$step'+inNum+'DivId').setVisible(true);
+			parent.window.scrollTo(0,0);
+		};
+
+	]]>
+	</script>	
+	
+
+<!-- CREATE Social Campaign -->
+
+	<div id="navDivId" visible="false">
+		<a id="step1AId" sclass="req_step_current"  w:onClick="changeStep(1, false);" >
+			<label value="1" style="color:#222222;padding-right:12px;" />   
+			<label value="Destinations" /> </a>
+
+		<a id="step2AId" sclass="req_step_incomplete"  w:onClick="changeStep(2, false);">
+			<label value="2" style="color:#222222;padding-right:12px;" />   
+			<label value="Campaign Details" /> </a>
+
+		<a id="step3AId" sclass="req_step_incomplete"  w:onClick="changeStep(3, false);">
+			<label value="3" style="color:#222222;padding-right:12px;" />   
+			<label value="Post &amp; Schedule" /> </a>
+
+		<a id="step4AId" sclass="req_step_incomplete"  w:onClick="changeStep(4, false);">
+			<label value="4" style="color:#222222;padding-right:12px;" />   
+			<label value="Review &amp; Submit" /> </a>
+	</div>	
+
+	
+	<div id="createCampaignDivId" >
+		
+	
+<!-- STEP 1 -->
+	<div id="step1DivId" >
+										    
+		<groupbox sclass="req_groupbox" closable="false">
+			<caption label="Select destinations to publish your posts" />
+			
+			<div id="socialProvidersDivId">
+				<div  sclass="req_data_leftdiv" >
+					<checkbox id="facebookChkId" label="Facebook" image="img/arrow_next.gif"  visible="false"/>
+					<div id="fbPagesDivId" style="padding-left:20px" />
+				</div>
+				<div  sclass="req_data_leftdiv">
+					<checkbox id="twitterChkId"  label="Twitter" image="img/arrow_next.gif" visible="false"/>
+				</div>
+				<div  sclass="req_data_leftdiv" visible="false">
+					<checkbox id="linkedinChkId" label="LinkedIn" image="img/arrow_next.gif" visible="false"/>
+				</div>
+			</div>
+			
+		</groupbox>
+	
+		<h:table class="req_nav_table">
+			 <h:tr>
+			 <h:td align="right"> 
+			 <label value="Error msg." sclass="req_data_error" visible="false"/>
+				 	
+			 	<button label="Next" id="step1NxtBtnId" sclass="idle140 greenbtn" />
+			 </h:td>
+			 </h:tr>
+		</h:table>
+	
+	</div>	
+	
+<!-- STEP 2 -->
+	<div id="step2DivId" visible="false">
+										    
+		<groupbox sclass="req_groupbox" closable="false">
+			<caption label="Campaign Name and other details" />
+			
+			<h:table class="req_data_table">
+				<h:tr>
+					<h:td width="150"> <label value="Campaign Name" sclass="req_data_label"/> <label value=" *"  sclass="req_star"/> </h:td>
+					<h:td width="10"> <label value=" : " sclass="req_data_label"/> </h:td>
+					<h:td> <textbox maxlength="50" width="300px"  id="campNameTxtBxId" />	</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td> <label value="Description" sclass="req_data_label"/> </h:td>
+					<h:td > <label value=" : " sclass="req_data_label"/> </h:td>
+					<h:td> <textbox multiline="true" width="300px" height="100px" id="campDescTxtBxId" /> </h:td>
+				</h:tr>
+			</h:table>			
+		</groupbox>
+	
+		<h:table class="req_nav_table">
+			 <h:tr>
+			 <h:td align="right"> 
+			 <label value="Error msg." sclass="req_data_error" visible="false"/>
+				<button label="Back" sclass="idle140 " w:onClick="changeStep(1, true);"  /> 	
+			 	<button label="Next" id="step2NxtBtnId" sclass="idle140 greenbtn"   />
+			 </h:td>
+			 </h:tr>
+		</h:table>
+	
+	</div>	
+	
+			
+			
+<!-- STEP 3 -->
+	<div id="step3DivId" visible="false">
+		<div id="postsDivId" visible="false">
+		<listbox id="postsLbId" emptyMessage="No Posts available, Click 'Add New Post' Button."  >
+			<listhead>
+				<listheader label="Post Type" width="150px" sort="auto" />
+				<listheader label="Post Description" sort="auto" />
+				<listheader label="Schedule Date" width="100px" sort="auto" />
+				<listheader label="Schedule" width="150px" sort="auto" />
+				<listheader label="Options" width="100px" />
+			</listhead>
+		</listbox>
+		
+		<button id="addNewPostBtnId" label="Add New Post" sclass="idle140"  style="margin:10px;" 
+			w:onClick="zk.Widget.$('$addPostGroupboxId').setVisible(true);"/>
+		</div>
+
+										    
+		<groupbox sclass="req_groupbox" closable="false" id="addPostGroupboxId" visible="true" >
+			<caption label="Add New Post" />
+			
+			<hlayout style="background-color:#f9f9ff;" width="828px">
+			<div sclass="req_data_leftdiv">
+				<label value="Select Post type :" sclass="req_data_label"/>
+				<label value=" *"  sclass="req_star"/>
+				<separator  />
+				<listbox mold="select" width="200px" id="postTypeLbId">
+					<listitem label="Link" selected="true"/>
+					<listitem label="Question"/>
+					<listitem label="Status Update"/>
+					<listitem label="Quote"/>
+					<listitem label="Photo"/>
+				</listbox>
+			</div>
+			
+			
+			<div  sclass="req_data_leftdiv">
+			<radiogroup id="schRGId" />
+			
+				<h:table >
+					<h:tr>
+						<h:td colspan="2">
+							<radio label="Post Now" radiogroup="schRGId" selected="true" id="postNowRadioId"
+								w:onCheck="zk.Widget.$('$schDateId').setVisible(false)" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+							<radio label="Schedule" radiogroup="schRGId" id="schRadioId" 
+								w:onCheck="zk.Widget.$('$schDateId').setVisible(true)" />
+						</h:td>
+						<h:td> 
+							<datebox id="schDateId" use="org.mq.marketer.campaign.custom.MyDatebox" visible="false" 
+								constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy HH:mm"/>	
+						</h:td>
+					</h:tr>
+				</h:table>
+			</div>
+			
+		</hlayout>
+		
+			<div  sclass="req_data_leftdiv" >
+				<label value="POST :" sclass="req_data_label"/>
+				<label value=" *"  sclass="req_star"/>
+				<separator  />
+				<textbox id="postTbId" multiline="true" width="800px" height="100px" />
+			</div>
+		
+		<separator height="10px"/>
+		<button label="Cancel" sclass="idle70"  w:onClick="zk.Widget.$('$addPostGroupboxId').setVisible(false);"/>
+		<button id="addMoreBtnId" label="Save" sclass="idle70"  />
+		
+		</groupbox>
+	
+		<h:table class="req_nav_table">
+			 <h:tr>
+			 <h:td align="right"> 
+			 <label value="Error msg." sclass="req_data_error" visible="false"/>
+				<button label="Back" sclass="idle140 " w:onClick="changeStep(2, true);"  /> 	
+			 	<button label="Next" id="step3NxtBtnId" sclass="idle140 greenbtn"   />
+			 </h:td>
+			 </h:tr>
+		</h:table>
+	
+	</div>	
+	
+			
+<!-- STEP 4 -->
+	<div id="step4DivId" visible="false">
+	
+		<div style="padding:5px;background-color: #F5F5FF;" width="800px">
+			<label value="Destinations :" style="font-size:14px;font-weight:bold;display:inline-block;" width="720px"/>
+			<button sclass="idle70" label="Edit" w:onClick="changeStep(1, false);" />
+		</div>
+		
+		<div style="margin-left:50px; padding:3px;" id="selectedSocialProvdrDivId">
+		<!-- 	<checkbox image="/images/facebook_icon.png"  label="Krishna Murthy" checked="true" disabled="true" style="margin-top:10px;"/>
+			<checkbox image="/images/facebook_icon.png" label="Page : Captiway" checked="true" disabled="true" style="margin-left:20px;"/>
+			<checkbox image="/images/facebook_icon.png" label="Page : Telugumovies" checked="true" disabled="true" style="margin-left:20px;"/>
+
+			<checkbox image="/images/twitter_icon.png" label="@akrishnayadav" checked="true" disabled="true" style="margin-top:10px;"/>
+			<checkbox image="/images/linkedin_icon.png" label="Krishna" checked="true" disabled="true" style="margin-top:10px;"/> -->
+		</div>
+
+		<div style="margin-top:20px;padding:5px;background-color: #F5F5FF;" width="800px">
+			<label value="Campaign Details :" style="font-size:14px;font-weight:bold;display:inline-block;" width="720px"/>
+			<button sclass="idle70" label="Edit" w:onClick="changeStep(2, false);" />
+		</div>
+		
+		<div style="margin-left:50px; padding:3px;">
+			<label value="Campaign Name : " style="font-size:13px;"/> <label id="revCampaignNameLblId" />
+			<separator/>
+			<label value="Campaign Desc : " style="font-size:13px;"/> <label id="revCampaignDescLblId" />
+		</div>
+
+
+		<div style="margin-top:20px;padding:5px;background-color: #F5F5FF;" width="800px">
+			<label value="Post &amp; Schedule :" style="font-size:14px;font-weight:bold;display:inline-block;" width="720px"/>
+			<button sclass="idle70" label="Edit" w:onClick="changeStep(3, false);" />
+		</div>
+		
+		<div style="margin-left:50px; padding:3px;">
+		
+			<grid emptyMessage="No Posts" id="revPostsGridId" width="800px">
+				<columns>
+					<column label="Post Type" width="150px"/>
+					<column label="Post Description"/>
+					<column label="Schedule Time" width="200px"/>
+					<column label="Schedule Type" width="200px"/>
+				</columns>
+			</grid>
+			
+		</div>
+
+	
+		<h:table class="req_nav_table">
+			 <h:tr>
+			 <h:td align="right"> 
+			 <label value="Error msg." sclass="req_data_error" visible="false"/>
+				<button label="Back" sclass="idle140 " w:onClick="changeStep(3, true);"  /> 	
+			 	<button id="submitBtnId" label="Submit" sclass="idle140 greenbtn" />
+			 </h:td>
+			 </h:tr>
+		</h:table>
+	
+	</div>	
+	
+		
+		
+		
+		
+	</div>
+	</window>
+</zk>

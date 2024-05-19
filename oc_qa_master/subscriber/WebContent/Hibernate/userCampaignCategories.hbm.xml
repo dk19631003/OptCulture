@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserCampaignCategories"
+		table="user_campaign_categories">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="categoryName" type="string">
+			<column name="category_name" length="50"  />
+		</property>
+		
+		<property name="description" type="string">
+			<column name="description" length="250"  />
+		</property>
+		
+		<property name="parentStr" type="string">
+			<column name="parent_str" length="50"  />
+		</property>
+		
+		<property name="isVisible" type="boolean">
+			<column name="is_visible" length="50"  />
+		</property>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" length="50"  />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date" length="50"  />
+		</property>
+		
+		<property name="type" type="string">
+			<column name="type" length="50"  />
+		</property>
+		<property name="parentPositionId" type="long">
+			<column name="parent_position_id" />
+		</property>
+		
+	
+	</class>
+</hibernate-mapping>

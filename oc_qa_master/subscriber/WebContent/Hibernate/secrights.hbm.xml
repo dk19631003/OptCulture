@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SecRights" table="sec_rights">
+		<id name="right_id" type="java.lang.Long" column="right_id">
+			<!-- <generator class="native" /> -->
+		</id>
+		<property name="type" type="string" length="100" />
+		<property name="name" type="string" length="100" unique="true"/>
+		<property name="description" type="string" length="255"/>
+		<property name="version" type="string"  length="50" />
+		
+			
+	</class>
+</hibernate-mapping>
+

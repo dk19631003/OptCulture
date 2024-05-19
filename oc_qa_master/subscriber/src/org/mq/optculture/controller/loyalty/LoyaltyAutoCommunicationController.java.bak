@@ -1,0 +1,1521 @@
+package org.mq.optculture.controller.loyalty;
+
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.AutoSMS;
+import org.mq.marketer.campaign.beans.CustomTemplates;
+import org.mq.marketer.campaign.beans.LoyaltyAutoComm;
+import org.mq.marketer.campaign.beans.LoyaltyProgram;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageListEnum;
+import org.mq.marketer.campaign.general.PageUtil;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.Redirect;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.business.loyalty.LoyaltyProgramService;
+import org.mq.optculture.utils.OCConstants;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zul.A;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Iframe;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Window;
+
+public class LoyaltyAutoCommunicationController extends GenericForwardComposer {
+	private Listbox selRegAutoEmailsLbId,selTierAutoEmailsLbId,selBonusAutoEmailsLbId,selRewardAutoEmailsLbId,selMemExpiryAutoEmailsLbId,
+	selGftAmtAutoEmailsLbId,selGftCrdAutoEmailsLbId,gftIssAutoEmailsLbId,selRegAutoSmsLbId,gftIssAutoSmsLbId,selTierAutoSmsLbId,selBonusAutoSmsLbId,
+	selRewardAutoSmsLbId,selGftAmtAutoSmsLbId,selMemExpiryAutoSmsLbId,selGftCrdAutoSmsLbId;
+	private Window previewWin;
+	private Iframe previewWin$html;
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	private Users user;
+	private Image previewRegEmailImgId,editRegEmailImgId,addRegEmailImgId,previewTierEmailImgId,editTierEmailImgId,addTierEmailImgId,previewThresholdEmailImgId,editThresholdEmailImgId,addThresholdEmailImgId,
+	previewRewExpEmailImgId, editRewExpEmailImgId,addRewExpEmailImgId,previewMemEmailImgId,editMemEmailImgId,addMemEmailImgId,
+	previewGftAmtExpEmailImgId,editGftAmtExpEmailImgId,addGftAmtExpEmailImgId,previewGftCrdExpEmailImgId,editGftCrdExpEmailImgId,addGftCrdExpEmailImgId,
+	previewGftIssEmailImgId,editGftIssEmailImgId,addGftIssEmailImgId,previewRegSmsImgId,editRegSmsImgId,addRegSmsImgId,previewGftIssSmsImgId,addGftIssSmsImgId,editGftIssSmsImgId,
+	previewTierSmsImgId,addTierSmsImgId,editTierSmsImgId,previewThresholdSmsImgId,editThresholdSmsImgId,addThresholdSmsImgId,editRewExpSmsImgId,addRewExpSmsImgId,previewRewExpSmsImgId,
+	previewMemSmsImgId,editMemSmsImgId,addMemSmsImgId,previewGftCrdExpSmsImgId,editGftCrdExpSmsImgId,addGftCrdExpSmsImgId,editGftAmtExpSmsImgId,addGftAmtExpSmsImgId,previewGftAmtExpSmsImgId;
+	private A regEmailPreviewBtnId,regEmailEditMsgBtnId,regEmailAddBtnId,tierEmailPreviewBtnId,tierEmailEditMsgBtnId,tierEmailAddBtnId,bonusEmailPreviewBtnId,bonusEmailEditMsgBtnId
+	,bonusEmailAddBtnId,rewardEmailPreviewBtnId,rewardEmailEditMsgBtnId,rewardEmailAddMsgBtnId,memEmailPreviewBtnId,memEmailEditMsgBtnId,
+	memEmailAddMsgBtnId,gftAmtEmailPreviewBtnId,gftAmtEmailEditMsgBtnId,gftAmtEmailAddMsgBtnId,gftCrdEmailPreviewBtnId,gftCrdEmailEditMsgBtnId,gftCrdEmailAddMsgBtnId
+	,gftIssEmailEditMsgBtnId,gftIssEmailPreviewBtnId,gftIssEmailAddBtnId,regSmsPreviewBtnId,regSmsEditMsgBtnId,regSmsAddBtnId,
+	gftIssSmsPreviewBtnId,gftIssSmsEditMsgBtnId,gftIssSmsAddBtnId,tierSmsEditMsgBtnId,tierSmsAddBtnId,tierSmsPreviewBtnId,bonusSmsEditMsgBtnId,
+	bonusSmsAddBtnId,bonusSmsPreviewBtnId,rewardSmsPreviewBtnId,rewardSmsEditMsgBtnId,rewardSmsAddMsgBtnId,memSmsPreviewBtnId,memSmsEditMsgBtnId,memSmsAddMsgBtnId,
+	gftCrdSmsPreviewBtnId,gftCrdSmsAddMsgBtnId,gftCrdSmsEditMsgBtnId,gftAmtSmsPreviewBtnId,gftAmtSmsEditMsgBtnId,gftAmtSmsAddMsgBtnId;
+	
+	private Div giftIssDivId, giftAmtDivId, giftExpDivId;
+
+	public LoyaltyAutoCommunicationController() {
+
+		user = GetUser.getUserObj();
+		session = Sessions.getCurrent();
+		Utility.ltyBreadCrumbFrom(5, OCConstants.LOYALTY_SERVICE_TYPE_SBTOOC.equalsIgnoreCase(GetUser.getUserObj().getloyaltyServicetype()));
+	}
+
+	@Override
+	public void doAfterCompose(Component comp) throws Exception {
+		super.doAfterCompose(comp);
+		String style = "font-weight:bold;font-size:15px;color:#313031;font-family:Arial,Helvetica,sans-serif;align:left";
+		PageUtil.setHeader("Create Loyalty Program (Step 5 of 6)","",style,true);
+		Long prgmId=(Long) session.getAttribute("programId");
+
+		//get templates for auto emails
+		getLoyaltyTemplateList(selRegAutoEmailsLbId,"loyaltyOptin");
+		getLoyaltyTemplateList(selTierAutoEmailsLbId,"tierUpgradation");
+		getLoyaltyTemplateList(selBonusAutoEmailsLbId,"earnedBonus");
+		getLoyaltyTemplateList(selRewardAutoEmailsLbId,"earnedRewardExpiration");
+		getLoyaltyTemplateList(selMemExpiryAutoEmailsLbId,"membershipExpiration");
+		getLoyaltyTemplateList(selGftAmtAutoEmailsLbId,"giftAmountExpiration");
+		getLoyaltyTemplateList(selGftCrdAutoEmailsLbId,"giftCardExpiration");
+		getLoyaltyTemplateList(gftIssAutoEmailsLbId,"giftCardIssuance");
+
+		//get templates for auto sms 
+		getLoyaltySmsTemplateList(selRegAutoSmsLbId,"loyaltyRegistration");
+		getLoyaltySmsTemplateList(gftIssAutoSmsLbId,"giftCardIssuance");
+		getLoyaltySmsTemplateList(selTierAutoSmsLbId,"tierUpgradation");
+		getLoyaltySmsTemplateList(selBonusAutoSmsLbId,"earningBonus");
+		getLoyaltySmsTemplateList(selRewardAutoSmsLbId,"earnedRewardExpiration");
+		getLoyaltySmsTemplateList(selGftAmtAutoSmsLbId,"giftAmountExpiration");
+		getLoyaltySmsTemplateList(selMemExpiryAutoSmsLbId,"membershipExpiration");
+		getLoyaltySmsTemplateList(selGftCrdAutoSmsLbId,"giftCardExpiration");
+
+		//edit mode
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		LoyaltyAutoComm loyaltyAutoComm=ltyPrgmSevice.getAutoCommunicationObj(prgmId);
+		if(loyaltyAutoComm != null) {
+			defaultSettings(loyaltyAutoComm);
+			onSelect$selRegAutoEmailsLbId();
+			onSelect$gftIssAutoEmailsLbId();
+			onSelect$selTierAutoEmailsLbId();
+			onSelect$selBonusAutoEmailsLbId();
+			onSelect$selRewardAutoEmailsLbId();
+			onSelect$selMemExpiryAutoEmailsLbId();
+			onSelect$selGftAmtAutoEmailsLbId();
+			onSelect$selGftCrdAutoEmailsLbId();
+
+			onSelect$selRegAutoSmsLbId();;
+			onSelect$gftIssAutoSmsLbId();
+			onSelect$selTierAutoSmsLbId();
+			onSelect$selBonusAutoSmsLbId();
+			onSelect$selRewardAutoSmsLbId();
+			onSelect$selMemExpiryAutoSmsLbId();
+			onSelect$selGftAmtAutoSmsLbId();
+			onSelect$selGftCrdAutoSmsLbId();
+		}
+		
+		LoyaltyProgram prgmObj = ltyPrgmSevice.getProgmObj(prgmId);
+		if(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE.equalsIgnoreCase(prgmObj.getMembershipType())){
+			giftIssDivId.setVisible(false);
+			giftAmtDivId.setVisible(false);
+			giftExpDivId.setVisible(false);
+		}
+		else if(OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD.equalsIgnoreCase(prgmObj.getMembershipType()) ){
+			giftIssDivId.setVisible(true);
+			giftAmtDivId.setVisible(true);
+			giftExpDivId.setVisible(true);
+		}
+	}//doAfterCompose()
+
+	private void defaultSettings(LoyaltyAutoComm loyaltyAutoComm) {
+
+		//auto-emails
+		setRegistrationValues(loyaltyAutoComm);
+		setGiftIssuanceValues(loyaltyAutoComm);
+		setTierUpgrdValues(loyaltyAutoComm);
+		setBonusValues(loyaltyAutoComm);
+		setRewardExpValues(loyaltyAutoComm);
+		setMembershipExpValues(loyaltyAutoComm);
+		setGiftAmountExpValues(loyaltyAutoComm);
+		setGiftCardExpValues(loyaltyAutoComm);
+		
+		//auto-SMS
+		setSMSRegistrationValues(loyaltyAutoComm);
+		setSMSGiftIssuanceValues(loyaltyAutoComm);
+		setSMSTierUpgrdValues(loyaltyAutoComm);
+		setSMSBonusValues(loyaltyAutoComm);
+		setSMSRewardExpValues(loyaltyAutoComm);
+		setSMSMembershipExpValues(loyaltyAutoComm);
+		setSMSGiftAmountExpValues(loyaltyAutoComm);
+		setSMSGiftCardExpValues(loyaltyAutoComm);
+	}//defaultSettings()
+
+	/**
+	 * setting the gift-card expiry SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSGiftCardExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSGiftCardExpValues---");
+		List<Listitem> gftCrdExpSmsList = selGftCrdAutoSmsLbId.getItems();
+		for(Listitem li : gftCrdExpSmsList ) {
+			Long getGiftMembrshpExpirySmsTmpltId=li.getValue();
+			if(getGiftMembrshpExpirySmsTmpltId != null) {
+				if(getGiftMembrshpExpirySmsTmpltId.equals(loyaltyAutoComm.getGiftMembrshpExpirySmsTmpltId())) {
+					selGftCrdAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSGiftCardExpValues---");
+	}//setSMSGiftCardExpValues()
+
+	/**
+	 * setting the gift amount SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSGiftAmountExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSGiftAmountExpValues---");
+		List<Listitem> gftAmtExpSmsList = selGftAmtAutoSmsLbId.getItems();
+		for(Listitem li : gftAmtExpSmsList ) {
+			Long getGiftAmtExpirySmsTmpltId=li.getValue();
+			if(getGiftAmtExpirySmsTmpltId != null) {
+				if(getGiftAmtExpirySmsTmpltId.equals(loyaltyAutoComm.getGiftAmtExpirySmsTmpltId())) {
+					selGftAmtAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSGiftAmountExpValues---");
+	}//setSMSGiftAmountExpValues()
+
+	/**
+	 * setting the membership expiry SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSMembershipExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSMembershipExpValues---");
+		List<Listitem> memExpSmsList = selMemExpiryAutoSmsLbId.getItems();
+		for(Listitem li : memExpSmsList ) {
+			Long mbrshipExpirySmsTmpltId=li.getValue();
+			if(mbrshipExpirySmsTmpltId != null) {
+				if(mbrshipExpirySmsTmpltId.equals(loyaltyAutoComm.getMbrshipExpirySmsTmpltId())) {
+					selMemExpiryAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSMembershipExpValues---");
+	}//setSMSMembershipExpValues()
+
+	/**
+	 * setting the reward expiry SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSRewardExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSRewardExpValues---");
+		List<Listitem> earnedRewardExpSmsList = selRewardAutoSmsLbId.getItems();
+		for(Listitem li : earnedRewardExpSmsList ) {
+			Long rewardExpirySmsTmpltId = li.getValue();
+			if(rewardExpirySmsTmpltId != null) {
+				if(rewardExpirySmsTmpltId.equals(loyaltyAutoComm.getRewardExpirySmsTmpltId())) {
+					selRewardAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSRewardExpValues---");
+	}//setSMSRewardExpValues()
+
+	/**
+	 * setting the earning bonus SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSBonusValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSBonusValues---");
+		List<Listitem> thresholdBonusSmsList = selBonusAutoSmsLbId.getItems();
+
+		for(Listitem li : thresholdBonusSmsList ) {
+			Long threshBonusSmsTmpltId=li.getValue();
+			if(threshBonusSmsTmpltId != null) {
+				if(threshBonusSmsTmpltId.equals(loyaltyAutoComm.getThreshBonusSmsTmpltId())) {
+					selBonusAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSBonusValues---");
+	}//setSMSBonusValues()
+
+	/**
+	 * setting the tier upgrade SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSTierUpgrdValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSTierUpgrdValues---");
+		List<Listitem> tierUpgradeSmsList = selTierAutoSmsLbId.getItems();
+		for(Listitem li : tierUpgradeSmsList ) {
+			Long tierUpgdSmsTmpltId=li.getValue();
+			if(tierUpgdSmsTmpltId != null) {
+				if(tierUpgdSmsTmpltId.equals(loyaltyAutoComm.getTierUpgdSmsTmpltId())) {
+					selTierAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSTierUpgrdValues---");
+	}//setSMSTierUpgrdValues()
+
+	/**
+	 * setting the gift issuance expiry SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSGiftIssuanceValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSGiftIssuanceValues---");
+		List<Listitem> gftCrdIssuanceSmsList = gftIssAutoSmsLbId.getItems();
+		for(Listitem li : gftCrdIssuanceSmsList ) {
+			Long gifCardIssuanceSmsTmpltId=li.getValue();
+			if(gifCardIssuanceSmsTmpltId != null) {
+				if(gifCardIssuanceSmsTmpltId.equals(loyaltyAutoComm.getGiftCardIssuanceSmsTmpltId())) {
+					gftIssAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSGiftIssuanceValues---");
+	}//setSMSGiftIssuanceValues()
+
+	/**
+	 * setting the loyalty enrollment expiry SMS template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setSMSRegistrationValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setSMSRegistrationValues---");
+		List<Listitem> loyaltyRegSmsTempList = selRegAutoSmsLbId.getItems();
+		for(Listitem li : loyaltyRegSmsTempList ) {
+			Long regSmsTmpltId=li.getValue();
+			if(regSmsTmpltId != null) {
+				if(regSmsTmpltId.equals(loyaltyAutoComm.getRegSmsTmpltId())) {
+					selRegAutoSmsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setSMSRegistrationValues---");
+	}//setSMSRegistrationValues()
+
+	/**
+	 * setting the gift-card expiry email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setGiftCardExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setGiftCardExpValues---");
+		List<Listitem> gftCrdExpiryList = selGftCrdAutoEmailsLbId.getItems();
+		for(Listitem li : gftCrdExpiryList ) {
+			Long giftMembrshpExpiryEmailTmpltId=li.getValue();
+			if(giftMembrshpExpiryEmailTmpltId != null) {
+				if(giftMembrshpExpiryEmailTmpltId.equals(loyaltyAutoComm.getGiftMembrshpExpiryEmailTmpltId())) {
+					selGftCrdAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setGiftCardExpValues---");
+	}//setGiftCardExpValues()
+
+
+	/**
+	 * setting the gift amount expiry email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setGiftAmountExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setGiftAmountExpValues---");
+		List<Listitem> gftAmtExpiryList = selGftAmtAutoEmailsLbId.getItems();
+		for(Listitem li :gftAmtExpiryList ) {
+			Long giftAmtExpiryEmailTmpltId=li.getValue();
+			if(giftAmtExpiryEmailTmpltId != null) {
+				if(giftAmtExpiryEmailTmpltId.equals(loyaltyAutoComm.getGiftAmtExpiryEmailTmpltId())) {
+					selGftAmtAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setGiftAmountExpValues---");
+	}//setGiftAmountExpValues()
+
+	/**
+	 * setting the membership expiry email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setMembershipExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setMembershipExpValues---");
+		List<Listitem> memExpiryList = selMemExpiryAutoEmailsLbId.getItems();
+		for(Listitem li :memExpiryList ) {
+			Long mbrshipExpiryEmailTmpltId=li.getValue();
+			if(mbrshipExpiryEmailTmpltId != null) {
+				if(mbrshipExpiryEmailTmpltId.equals(loyaltyAutoComm.getMbrshipExpiryEmailTmpltId())) {
+					selMemExpiryAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setMembershipExpValues---");
+	}//setMembershipExpValues()
+
+	/**
+	 * setting the reward expiry email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setRewardExpValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setRewardExpValues---");
+		List<Listitem> earnedRewardExpList = selRewardAutoEmailsLbId.getItems();
+		for(Listitem li :earnedRewardExpList ) {
+			Long rewardExpiryEmailTmpltId=li.getValue();
+			if(rewardExpiryEmailTmpltId != null) {
+				if(rewardExpiryEmailTmpltId.equals(loyaltyAutoComm.getRewardExpiryEmailTmpltId())) {
+					selRewardAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}			
+		}
+		logger.debug("---Exit setRewardExpValues---");
+	}//setRewardExpValues()
+
+	/**
+	 * setting the earned bonus email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setBonusValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setBonusValues---");
+		List<Listitem> thresholdBonusList = selBonusAutoEmailsLbId.getItems();
+		for(Listitem li :thresholdBonusList ) {
+			Long threshBonusEmailTmpltId=li.getValue();
+			if(threshBonusEmailTmpltId != null) {
+				if(threshBonusEmailTmpltId.equals(loyaltyAutoComm.getThreshBonusEmailTmpltId())) {
+					selBonusAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setBonusValues---");
+	}//setBonusValues()
+
+	/**
+	 * setting the gift issuance email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setGiftIssuanceValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setGiftIssuanceValues---");
+		List<Listitem> gftCrdIssuanceList = gftIssAutoEmailsLbId.getItems();
+		for(Listitem li : gftCrdIssuanceList ) {
+			Long gifCardIssuanceEmailTmpltId=li.getValue();
+			if(gifCardIssuanceEmailTmpltId != null) {
+				if(gifCardIssuanceEmailTmpltId.equals(loyaltyAutoComm.getGiftCardIssuanceEmailTmpltId())) {
+					gftIssAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setGiftIssuanceValues---");
+	}//setGiftIssuanceValues()
+
+	/**
+	 * setting the tier upgrade email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setTierUpgrdValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setTierUpgrdValues---");
+		List<Listitem> tierUpgradeList = selTierAutoEmailsLbId.getItems();
+		for(Listitem li :tierUpgradeList ) {
+			Long tierUpgdEmailTmpltId=li.getValue();
+			if(tierUpgdEmailTmpltId != null) {
+				if(tierUpgdEmailTmpltId.equals(loyaltyAutoComm.getTierUpgdEmailTmpltId())) {
+					selTierAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setTierUpgrdValues---");
+	}//setTierUpgrdValues()
+
+	/**
+	 * setting the loyalty enrollment email template 
+	 * @param loyaltyAutoComm
+	 */
+	private void setRegistrationValues(LoyaltyAutoComm loyaltyAutoComm) {
+		logger.debug("---Entered setRegistrationValues---");
+		List<Listitem> regAutoMailList = selRegAutoEmailsLbId.getItems();
+		for(Listitem li :regAutoMailList ) {
+			Long regEmailTmpltId=li.getValue();
+			logger.info("regEmailTmpltId-"+regEmailTmpltId);
+			if(regEmailTmpltId != null) {
+				if(regEmailTmpltId.equals(loyaltyAutoComm.getRegEmailTmpltId())) {
+					selRegAutoEmailsLbId.setSelectedItem(li);
+					li.setSelected(true);
+					break;
+				}
+			}
+		}
+		logger.debug("---Exit setRegistrationValues---");
+	}//setRegistrationValues()
+
+	public void onSelect$selGftCrdAutoSmsLbId() {
+
+		if(selGftCrdAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewGftCrdExpSmsImgId.setVisible(false);
+			gftCrdSmsPreviewBtnId.setVisible(false);
+			editGftCrdExpSmsImgId.setVisible(false);
+			gftCrdSmsEditMsgBtnId.setVisible(false);
+			addGftCrdExpSmsImgId.setVisible(true);
+			gftCrdSmsAddMsgBtnId.setVisible(true);
+		}else{
+			previewGftCrdExpSmsImgId.setVisible(true);
+			gftCrdSmsPreviewBtnId.setVisible(true);
+			editGftCrdExpSmsImgId.setVisible(true);
+			gftCrdSmsEditMsgBtnId.setVisible(true);
+			addGftCrdExpSmsImgId.setVisible(true);
+			gftCrdSmsAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selGftCrdAutoSmsLbId()
+
+	public void onSelect$selGftAmtAutoSmsLbId() {
+
+		if(selGftAmtAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewGftAmtExpSmsImgId.setVisible(false);
+			gftAmtSmsPreviewBtnId.setVisible(false);
+			editGftAmtExpSmsImgId.setVisible(false);
+			gftAmtSmsEditMsgBtnId.setVisible(false);
+			addGftAmtExpSmsImgId.setVisible(true);
+			gftAmtSmsAddMsgBtnId.setVisible(true);
+		}else{
+			previewGftAmtExpSmsImgId.setVisible(true);
+			gftAmtSmsPreviewBtnId.setVisible(true);
+			editGftAmtExpSmsImgId.setVisible(true);
+			gftAmtSmsEditMsgBtnId.setVisible(true);
+			addGftAmtExpSmsImgId.setVisible(true);
+			gftAmtSmsAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selGftAmtAutoSmsLbId()
+
+	public void onSelect$selMemExpiryAutoSmsLbId() {
+
+		if(selMemExpiryAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewMemSmsImgId.setVisible(false);
+			memSmsPreviewBtnId.setVisible(false);
+			editMemSmsImgId.setVisible(false);
+			memSmsEditMsgBtnId.setVisible(false);
+			addMemSmsImgId.setVisible(true);
+			memSmsAddMsgBtnId.setVisible(true);
+		}else{
+			previewMemSmsImgId.setVisible(true);
+			memSmsPreviewBtnId.setVisible(true);
+			editMemSmsImgId.setVisible(true);
+			memSmsEditMsgBtnId.setVisible(true);
+			addMemSmsImgId.setVisible(true);
+			memSmsAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selMemExpiryAutoSmsLbId()
+
+	public void onSelect$selRewardAutoSmsLbId() {
+
+		if(selRewardAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewRewExpSmsImgId.setVisible(false);
+			rewardSmsPreviewBtnId.setVisible(false);
+			editRewExpSmsImgId.setVisible(false);
+			rewardSmsEditMsgBtnId.setVisible(false);
+			addRewExpSmsImgId.setVisible(true);
+			rewardSmsAddMsgBtnId.setVisible(true);
+		}else{
+			previewRewExpSmsImgId.setVisible(true);
+			rewardSmsPreviewBtnId.setVisible(true);
+			editRewExpSmsImgId.setVisible(true);
+			rewardSmsEditMsgBtnId.setVisible(true);
+			addRewExpSmsImgId.setVisible(true);
+			rewardSmsAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selRewardAutoSmsLbId()
+
+	public void onSelect$selBonusAutoSmsLbId() {
+
+		if(selBonusAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewThresholdSmsImgId.setVisible(false);
+			bonusSmsPreviewBtnId.setVisible(false);
+			editThresholdSmsImgId.setVisible(false);
+			bonusSmsEditMsgBtnId.setVisible(false);
+			addThresholdSmsImgId.setVisible(true);
+			bonusSmsAddBtnId.setVisible(true);
+
+		}else{
+			addThresholdSmsImgId.setVisible(true);
+			bonusSmsAddBtnId.setVisible(true);
+			previewThresholdSmsImgId.setVisible(true);
+			bonusSmsPreviewBtnId.setVisible(true);
+			editThresholdSmsImgId.setVisible(true);
+			bonusSmsEditMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selBonusAutoSmsLbId()
+
+	public void onSelect$selTierAutoSmsLbId() {
+
+		if(selTierAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewTierSmsImgId.setVisible(false);
+			tierSmsPreviewBtnId.setVisible(false);
+			editTierSmsImgId.setVisible(false);
+			tierSmsEditMsgBtnId.setVisible(false);
+			addTierSmsImgId.setVisible(true);
+			tierSmsAddBtnId.setVisible(true);
+
+		}else{
+			addTierSmsImgId.setVisible(true);
+			tierSmsAddBtnId.setVisible(true);
+			previewTierSmsImgId.setVisible(true);
+			tierSmsPreviewBtnId.setVisible(true);
+			editTierSmsImgId.setVisible(true);
+			tierSmsEditMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selTierAutoSmsLbId()
+
+	public void onSelect$gftIssAutoSmsLbId() {
+
+		if(gftIssAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewGftIssSmsImgId.setVisible(false);
+			gftIssSmsPreviewBtnId.setVisible(false);
+			editGftIssSmsImgId.setVisible(false);
+			gftIssSmsEditMsgBtnId.setVisible(false);
+			addGftIssSmsImgId.setVisible(true);
+			gftIssSmsAddBtnId.setVisible(true);
+
+		}else{
+			addGftIssSmsImgId.setVisible(true);
+			gftIssSmsAddBtnId.setVisible(true);
+			previewGftIssSmsImgId.setVisible(true);
+			gftIssSmsPreviewBtnId.setVisible(true);
+			editGftIssSmsImgId.setVisible(true);
+			gftIssSmsEditMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$gftIssAutoSmsLbId()
+
+	public void onSelect$selRegAutoSmsLbId() {
+
+		if(selRegAutoSmsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			previewRegSmsImgId.setVisible(false);
+			regSmsPreviewBtnId.setVisible(false);
+			editRegSmsImgId.setVisible(false);
+			regSmsEditMsgBtnId.setVisible(false);
+			addRegSmsImgId.setVisible(true);
+			regSmsAddBtnId.setVisible(true);
+
+		}else{
+			addRegSmsImgId.setVisible(true);
+			regSmsAddBtnId.setVisible(true);
+			previewRegSmsImgId.setVisible(true);
+			regSmsPreviewBtnId.setVisible(true);
+			editRegSmsImgId.setVisible(true);
+			regSmsEditMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selRegAutoSmsLbId()
+
+	public void onSelect$selRegAutoEmailsLbId() {
+
+		if(selRegAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewRegEmailImgId.setVisible(false);
+			regEmailPreviewBtnId.setVisible(false);
+			editRegEmailImgId.setVisible(false);
+			regEmailEditMsgBtnId.setVisible(false);
+			addRegEmailImgId.setVisible(true);
+			regEmailAddBtnId.setVisible(true);
+
+		}else{
+			addRegEmailImgId.setVisible(true);
+			regEmailAddBtnId.setVisible(true);
+			previewRegEmailImgId.setVisible(true);
+			regEmailPreviewBtnId.setVisible(true);
+			editRegEmailImgId.setVisible(true);
+			regEmailEditMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selRegAutoEmailsLbId()
+
+	public void onSelect$selTierAutoEmailsLbId() {
+
+		if(selTierAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewTierEmailImgId.setVisible(false);
+			tierEmailPreviewBtnId.setVisible(false);
+			editTierEmailImgId.setVisible(false);
+			tierEmailEditMsgBtnId.setVisible(false);
+			addTierEmailImgId.setVisible(true);
+			tierEmailAddBtnId.setVisible(true);
+		}else{
+			previewTierEmailImgId.setVisible(true);
+			tierEmailPreviewBtnId.setVisible(true);
+			editTierEmailImgId.setVisible(true);
+			tierEmailEditMsgBtnId.setVisible(true);
+			addTierEmailImgId.setVisible(true);
+			tierEmailAddBtnId.setVisible(true);
+		}
+	}//onSelect$selTierAutoEmailsLbId()
+
+	public void onSelect$selBonusAutoEmailsLbId() {
+
+		if(selBonusAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewThresholdEmailImgId.setVisible(false);
+			bonusEmailPreviewBtnId.setVisible(false);
+			editThresholdEmailImgId.setVisible(false);
+			bonusEmailEditMsgBtnId.setVisible(false);
+			addThresholdEmailImgId.setVisible(true);
+			bonusEmailAddBtnId.setVisible(true);
+		}else{
+			previewThresholdEmailImgId.setVisible(true);
+			bonusEmailPreviewBtnId.setVisible(true);
+			editThresholdEmailImgId.setVisible(true);
+			bonusEmailEditMsgBtnId.setVisible(true);
+			addThresholdEmailImgId.setVisible(true);
+			bonusEmailAddBtnId.setVisible(true);
+		}
+
+	}//onSelect$selBonusAutoEmailsLbId()
+
+	public void onSelect$selRewardAutoEmailsLbId() {
+
+		if(selRewardAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewRewExpEmailImgId.setVisible(false);
+			rewardEmailPreviewBtnId.setVisible(false);
+			editRewExpEmailImgId.setVisible(false);
+			rewardEmailEditMsgBtnId.setVisible(false);
+			addRewExpEmailImgId.setVisible(true);
+			rewardEmailAddMsgBtnId.setVisible(true);
+		}else{
+			previewRewExpEmailImgId.setVisible(true);
+			rewardEmailPreviewBtnId.setVisible(true);
+			editRewExpEmailImgId.setVisible(true);
+			rewardEmailEditMsgBtnId.setVisible(true);
+			addRewExpEmailImgId.setVisible(true);
+			rewardEmailAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selRewardAutoEmailsLbId()
+
+	public void onSelect$selMemExpiryAutoEmailsLbId() {
+
+		if(selMemExpiryAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewMemEmailImgId.setVisible(false);
+			memEmailPreviewBtnId.setVisible(false);
+			editMemEmailImgId.setVisible(false);
+			memEmailEditMsgBtnId.setVisible(false);
+			addMemEmailImgId.setVisible(true);
+			memEmailAddMsgBtnId.setVisible(true);
+		}else{
+			previewMemEmailImgId.setVisible(true);
+			memEmailPreviewBtnId.setVisible(true);
+			editMemEmailImgId.setVisible(true);
+			memEmailEditMsgBtnId.setVisible(true);
+			addMemEmailImgId.setVisible(true);
+			memEmailAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selMemExpiryAutoEmailsLbId()
+
+	public void onSelect$selGftAmtAutoEmailsLbId() {
+
+		if(selGftAmtAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewGftAmtExpEmailImgId.setVisible(false);
+			gftAmtEmailPreviewBtnId.setVisible(false);
+			editGftAmtExpEmailImgId.setVisible(false);
+			gftAmtEmailEditMsgBtnId.setVisible(false);
+			addGftAmtExpEmailImgId.setVisible(true);
+			gftAmtEmailAddMsgBtnId.setVisible(true);
+		}else{
+			previewGftAmtExpEmailImgId.setVisible(true);
+			gftAmtEmailPreviewBtnId.setVisible(true);
+			editGftAmtExpEmailImgId.setVisible(true);
+			gftAmtEmailEditMsgBtnId.setVisible(true);
+			addGftAmtExpEmailImgId.setVisible(true);
+			gftAmtEmailAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selGftAmtAutoEmailsLbId()
+
+	public void onSelect$selGftCrdAutoEmailsLbId() {
+
+		if(selGftCrdAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewGftCrdExpEmailImgId.setVisible(false);
+			gftCrdEmailPreviewBtnId.setVisible(false);
+			editGftCrdExpEmailImgId.setVisible(false);
+			gftCrdEmailEditMsgBtnId.setVisible(false);
+			addGftCrdExpEmailImgId.setVisible(true);
+			gftCrdEmailAddMsgBtnId.setVisible(true);
+		}else{
+			previewGftCrdExpEmailImgId.setVisible(true);
+			gftCrdEmailPreviewBtnId.setVisible(true);
+			editGftCrdExpEmailImgId.setVisible(true);
+			gftCrdEmailEditMsgBtnId.setVisible(true);
+			addGftCrdExpEmailImgId.setVisible(true);
+			gftCrdEmailAddMsgBtnId.setVisible(true);
+		}
+
+	}//onSelect$selGftCrdAutoEmailsLbId()
+
+
+	public void onSelect$gftIssAutoEmailsLbId() {
+
+		if(gftIssAutoEmailsLbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			previewGftIssEmailImgId.setVisible(false);
+			gftIssEmailPreviewBtnId.setVisible(false);
+			editGftIssEmailImgId.setVisible(false);
+			gftIssEmailEditMsgBtnId.setVisible(false);
+			addGftIssEmailImgId.setVisible(true);
+			gftIssEmailAddBtnId.setVisible(true);
+		}else{
+			previewGftIssEmailImgId.setVisible(true);
+			gftIssEmailPreviewBtnId.setVisible(true);
+			editGftIssEmailImgId.setVisible(true);
+			gftIssEmailEditMsgBtnId.setVisible(true);
+			addGftIssEmailImgId.setVisible(true);
+			gftIssEmailAddBtnId.setVisible(true);
+		}
+
+	}//onSelect$gftIssAutoEmailsLbId()
+
+	/**
+	 * Populates the email templates for all types
+	 * @param emailLbid
+	 * @param type
+	 */
+	public void getLoyaltyTemplateList(Listbox emailLbid, String type) {
+		logger.debug("---Entered getLoyaltyTemplateList---");
+		List<CustomTemplates> templatelist = null;
+		try {
+			LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+			templatelist = ltyPrgmSevice.getTemplateList(user.getUserId(),type);
+			Components.removeAllChildren(emailLbid);
+			Listitem item = null;
+			item = new Listitem("Select Auto Email", null);
+			item.setParent(emailLbid);
+			item = new Listitem("Default Message", new Long(-1));
+			item.setParent(emailLbid);
+
+			if(templatelist != null && templatelist.size() >0) {
+
+				for (CustomTemplates customTemplates : templatelist) {
+
+					item = new Listitem(customTemplates.getTemplateName(), customTemplates.getTemplateId());
+					item.setParent(emailLbid);
+				}
+			}
+			if(emailLbid.getItemCount() > 0 ) emailLbid.setSelectedIndex(0);
+
+		} catch(Exception e) {
+			logger.error(" - ** Exception to get the Loyalty template List - " + e + " **");
+		}
+		logger.debug("---Exit getLoyaltyTemplateList---");
+	}//getLoyaltyTemplateList()
+
+	/**
+	 * Previews the email template auto-emails
+	 * @param lbId
+	 * @param defaultMsgType
+	 */
+	private void previewEmailTemplate(Listbox lbId,String defaultMsgType) {
+		logger.debug("---Entered previewEmailTemplate---");
+		if(lbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			MessageUtil.setMessage("Please select atleast one template", "color:red", "TOP");
+		}
+		else {
+			String templateContent = "";
+			LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+			CustomTemplates customTemplates = ltyPrgmSevice.getCustomTemplate((Long) lbId.getSelectedItem().getValue());
+			if(customTemplates == null) {
+				templateContent = 	PropertyUtil.getPropertyValueFromDB(defaultMsgType);
+			}else {
+				templateContent = customTemplates.getHtmlText();
+			}
+			logger.info("templateContent 8----"+templateContent);
+			Utility.showPreview(previewWin$html, user.getUserName(), templateContent);
+			previewWin.setVisible(true);
+		}
+		logger.debug("---Exit previewEmailTemplate---");
+	}//previewEmailTemplate()
+
+	/**
+	 * Edits the email template auto-emails
+	 * @param lbId
+	 * @param defaultMsgType
+	 */
+	private void editEmailTemplate(Listbox lbId,String tempType) {
+		logger.debug("---Entered editEmailTemplate---");
+		if(lbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto Email")) {
+			MessageUtil.setMessage("Please select atleast one template", "color:red", "TOP");
+		}
+		else {
+			logger.info("in edit mode--------------------");
+			logger.info("custom template value "+lbId.getSelectedItem().getValue());
+			LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+			CustomTemplates customTemplates = ltyPrgmSevice.getCustomTemplate((Long) lbId.getSelectedItem().getValue());
+			session.setAttribute("editCustomTemplate", customTemplates);
+			session.setAttribute("Mode", "edit");
+			session.setAttribute("typeOfEmail",tempType);
+			session.setAttribute("fromAddNewBtn","loyalty/loyaltyAutoCommunication");
+			Redirect.goTo(PageListEnum.CONTACT_MANAGE_AUTO_EMAILS);
+		}
+		logger.debug("---Exit editEmailTemplate---");
+	}//editEmailTemplate()
+
+	/**
+	 * Adds the email template auto-emails
+	 * @param lbId
+	 * @param tempType
+	 */
+	private void addEmailTemplate(Listbox lbId,String tempType) {
+
+		logger.info("--Entered addEmailTemplate----");
+		logger.info("custom template value "+lbId.getSelectedItem().getValue());
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		CustomTemplates customTemplates = ltyPrgmSevice.getCustomTemplate((Long) lbId.getSelectedItem().getValue());
+		session.setAttribute("editCustomTemplate", customTemplates);
+		session.setAttribute("Mode", "add");
+		session.setAttribute("typeOfEmail",tempType);
+		session.setAttribute("fromAddNewBtn","loyalty/loyaltyAutoCommunication");
+		Redirect.goTo(PageListEnum.CONTACT_MANAGE_AUTO_EMAILS);
+		logger.debug("---Exit addEmailTemplate---");
+	}//addEmailTemplate()
+
+	/**
+	 * Preview the template of gift issuance 
+	 */
+	public void onClick$gftIssEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$gftIssEmailPreviewBtnId---");
+		previewEmailTemplate(gftIssAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTISSUE);
+		logger.debug("---Exit onClick$gftIssEmailPreviewBtnId---");
+	}//onClick$gftIssEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of gift issuance 
+	 */
+	public void onClick$gftIssEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$gftIssEmailEditMsgBtnId---");
+		editEmailTemplate(gftIssAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_GIFT_CARD_ISSUANCE);
+		logger.debug("---Exit onClick$gftIssEmailEditMsgBtnId---");
+	}//onClick$gftIssEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for gift issuance 
+	 */
+	public void onClick$gftIssEmailAddBtnId() {
+		logger.debug("---Entered onClick$gftIssEmailAddBtnId---");
+		addEmailTemplate(gftIssAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_GIFT_CARD_ISSUANCE);
+		logger.debug("---Exit onClick$gftIssEmailAddBtnId---");
+	}//onClick$gftIssEmailAddBtnId()
+
+	/**
+	 * Preview the template of gift-card expiry
+	 */
+	public void onClick$gftCrdEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$gftCrdEmailPreviewBtnId---");
+		previewEmailTemplate(selGftCrdAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTMEMBSHIPEXPIRY);
+		logger.debug("---Exit onClick$gftCrdEmailPreviewBtnId---");
+	}//onClick$gftCrdEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of gift-card expiry
+	 */
+	public void onClick$gftCrdEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$gftCrdEmailEditMsgBtnId---");
+		editEmailTemplate(selGftCrdAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_GIFT_CARD_EXPIRATION);
+		logger.debug("---Exit onClick$gftCrdEmailEditMsgBtnId---");
+	}//onClick$gftCrdEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for gift-card expiry
+	 */
+	public void onClick$gftCrdEmailAddMsgBtnId() {
+		logger.debug("---Entered onClick$gftCrdEmailAddMsgBtnId---");
+		addEmailTemplate(selGftCrdAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_GIFT_CARD_EXPIRATION);
+		logger.debug("---Exit onClick$gftCrdEmailAddMsgBtnId---");
+	}//onClick$gftCrdEmailAddMsgBtnId()
+
+	/**
+	 * Preview the template of gift amount expiry
+	 */
+	public void onClick$gftAmtEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$gftAmtEmailPreviewBtnId---");
+		previewEmailTemplate(selGftAmtAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTAMTEXPIRY);
+		logger.debug("---Exit onClick$gftAmtEmailPreviewBtnId---");
+	}//onClick$gftAmtEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of gift amount expiry
+	 */
+	public void onClick$gftAmtEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$gftAmtEmailEditMsgBtnId---");
+		editEmailTemplate(selGftAmtAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_GIFT_AMOUNT_EXPIRATION);
+		logger.debug("---Exit onClick$gftAmtEmailEditMsgBtnId---");
+	}//onClick$gftAmtEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for gift amount expiry
+	 */
+	public void onClick$gftAmtEmailAddMsgBtnId() {
+		logger.debug("---Entered onClick$gftAmtEmailAddMsgBtnId---");
+		addEmailTemplate(selGftAmtAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_GIFT_AMOUNT_EXPIRATION);
+		logger.debug("---Exit onClick$gftAmtEmailAddMsgBtnId---");
+	}//onClick$gftAmtEmailAddMsgBtnId()
+
+	/**
+	 * Preview the template of membership expiry
+	 */
+	public void onClick$memEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$memEmailPreviewBtnId---");
+		previewEmailTemplate(selMemExpiryAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_LOYALTYMEMBSHIPEXPIRY);
+		logger.debug("---Exit onClick$memEmailPreviewBtnId---");
+	}//onClick$memEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of membership expiry
+	 */
+	public void onClick$memEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$memEmailEditMsgBtnId---");
+		editEmailTemplate(selMemExpiryAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_MEMBERSHIP_EXPIRATION);
+		logger.debug("---Exit onClick$memEmailEditMsgBtnId---");
+	}//onClick$memEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for membership expiry
+	 */
+	public void onClick$memEmailAddMsgBtnId() {
+		logger.debug("---Entered onClick$memEmailAddMsgBtnId---");
+		addEmailTemplate(selMemExpiryAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_MEMBERSHIP_EXPIRATION);
+		logger.debug("---Exit onClick$memEmailAddMsgBtnId---");
+	}//onClick$memEmailAddMsgBtnId()
+
+	/**
+	 * Preview the template of reward expiry
+	 */
+	public void onClick$rewardEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$rewardEmailPreviewBtnId---");
+		previewEmailTemplate(selRewardAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_REWARDAMTEXPIRY);
+		logger.debug("---Exit onClick$rewardEmailPreviewBtnId---");
+	}//onClick$rewardEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of reward expiry
+	 */
+	public void onClick$rewardEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$rewardEmailEditMsgBtnId---");
+		editEmailTemplate(selRewardAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_EARNED_REWARD_EXPIRATION);
+		logger.debug("---Exit onClick$rewardEmailEditMsgBtnId---");
+	}//onClick$rewardEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for reward expiry
+	 */
+	public void onClick$rewardEmailAddMsgBtnId() {
+		logger.debug("---Entered onClick$rewardEmailAddMsgBtnId---");
+		addEmailTemplate(selRewardAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_EARNED_REWARD_EXPIRATION);
+		logger.debug("---Exit onClick$rewardEmailAddMsgBtnId---");
+	}//onClick$rewardEmailAddMsgBtnId()
+
+	/**
+	 * Preview the template of earning bonus
+	 */
+	public void onClick$bonusEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$bonusEmailPreviewBtnId---");
+		previewEmailTemplate(selBonusAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_BONUS);
+		logger.debug("---Exit onClick$bonusEmailPreviewBtnId---");
+	}//onClick$bonusEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of earning bonus
+	 */
+	public void onClick$bonusEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$bonusEmailEditMsgBtnId---");
+		editEmailTemplate(selBonusAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_EARNED_BONUS);
+		logger.debug("---Exit onClick$bonusEmailEditMsgBtnId---");
+	}//onClick$bonusEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for earning bonus
+	 */
+	public void onClick$bonusEmailAddBtnId() {
+		logger.debug("---Entered onClick$bonusEmailAddBtnId---");
+		addEmailTemplate(selBonusAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_EARNED_BONUS);
+		logger.debug("---Exit onClick$bonusEmailAddBtnId---");
+	}//onClick$bonusEmailAddBtnId()
+
+	/**
+	 * Preview the template of tier upgrade
+	 */
+	public void onClick$tierEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$tierEmailPreviewBtnId---");
+		previewEmailTemplate(selTierAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_TIERUPGRADE);
+		logger.debug("---Exit onClick$tierEmailPreviewBtnId---");
+	}//onClick$tierEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of tier upgrade
+	 */
+	public void onClick$tierEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$tierEmailEditMsgBtnId---");
+		editEmailTemplate(selTierAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_TIER_UPGRADATION);
+		logger.debug("---Exit onClick$tierEmailEditMsgBtnId---");
+	}//onClick$tierEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for tier upgrade
+	 */
+	public void onClick$tierEmailAddBtnId() {
+		logger.debug("---Entered onClick$tierEmailAddBtnId---");
+		addEmailTemplate(selTierAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_TIER_UPGRADATION);
+		logger.debug("---Exit onClick$tierEmailAddBtnId---");
+	}//onClick$tierEmailAddBtnId()
+
+	/**
+	 * Preview the template of enrollment
+	 */
+	public void onClick$regEmailPreviewBtnId() {
+		logger.debug("---Entered onClick$regEmailPreviewBtnId---");
+		previewEmailTemplate(selRegAutoEmailsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_REGISTRATION);
+		logger.debug("---Exit onClick$regEmailPreviewBtnId---");
+	}//onClick$regEmailPreviewBtnId()
+
+	/**
+	 * Edits the template of enrollment
+	 */
+	public void onClick$regEmailEditMsgBtnId() {
+		logger.debug("---Entered onClick$regEmailEditMsgBtnId---");
+		editEmailTemplate(selRegAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_LOYALTYOPTIN);
+		logger.debug("---Exit onClick$regEmailEditMsgBtnId---");
+	}//onClick$regEmailEditMsgBtnId()
+
+	/**
+	 * To add a new template for enrollment
+	 */
+	public void onClick$regEmailAddBtnId() {
+		logger.debug("---Entered onClick$regEmailAddBtnId---");
+		addEmailTemplate(selRegAutoEmailsLbId,Constants.CUSTOM_TEMPLATE_TYPE_LOYALTYOPTIN);
+		logger.debug("---Exit onClick$regEmailAddBtnId---");
+	}//onClick$regEmailAddBtnId()
+
+	/**
+	 * Populates the templates of SMS for all types
+	 * @param smsLbId
+	 * @param type
+	 */
+	private void getLoyaltySmsTemplateList(Listbox smsLbId, String type) {
+		logger.debug("---Entered getLoyaltySmsTemplateList---");
+		List<AutoSMS> smsTemplateList = null;
+		try {
+			LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+			smsTemplateList = ltyPrgmSevice.getSmsTemplateList(user.getUserId(),type);
+			Components.removeAllChildren(smsLbId);
+			Listitem item = null;
+			item = new Listitem("Select Auto SMS", null);
+			item.setParent(smsLbId);
+			item = new Listitem("Default Message", new Long(-1));
+			item.setParent(smsLbId);
+
+			if(smsTemplateList != null && smsTemplateList.size() >0) {
+				for (AutoSMS autoSMS : smsTemplateList) {
+					item = new Listitem(autoSMS.getTemplateName(), autoSMS.getAutoSmsId());
+					item.setParent(smsLbId);
+				}
+			}
+			if(smsLbId.getItemCount() > 0 ) smsLbId.setSelectedIndex(0);
+
+		} catch(Exception e) {
+			logger.error(" - ** Exception to get the Loyalty template List - " + e + " **");
+		}
+		logger.debug("---Exit getLoyaltySmsTemplateList----");
+	}//getLoyaltySmsTemplateList()
+
+	/**
+	 * Previews the selected template
+	 * @param lbId
+	 * @param tempType
+	 */
+	public void previewSMSTemplate(Listbox lbId,String defaultMsgType) {
+		logger.info("---Entered previewSMSTemplate-----");
+		if(lbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			MessageUtil.setMessage("Please select atleast one template", "color:red", "TOP");
+		}
+		else {
+			String templateContent = "";
+			LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+			AutoSMS autoSMS = ltyPrgmSevice.getAutoSmsTemplateById((Long) lbId.getSelectedItem().getValue());
+			if(autoSMS == null) {
+				templateContent = 	PropertyUtil.getPropertyValueFromDB(defaultMsgType);
+			}else {
+				templateContent = autoSMS.getMessageContent();
+			}
+			logger.info("templateContent 1----"+templateContent);
+			Utility.showPreview(previewWin$html, user.getUserName(), templateContent);
+			previewWin.setVisible(true);
+		}
+		logger.debug("--Exit previewSMSTemplate---");
+	}//previewSMSTemplate()
+
+	/**
+	 * Edits the template in auto-SMS
+	 * @param lbId
+	 * @param tempType
+	 */
+	public void editSMSTemplate(Listbox lbId,String tempType) {
+		logger.info("---Entered editSMSTemplate-----");
+		if(lbId.getSelectedItem().getLabel().equalsIgnoreCase("Select Auto SMS")) {
+			MessageUtil.setMessage("Please select atleast one template", "color:red", "TOP");
+		}
+		else {
+			logger.info("in edit mode--------------------");
+			logger.info("Sms template value "+lbId.getSelectedItem().getValue());
+			LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+			AutoSMS autoSMS = ltyPrgmSevice.getAutoSmsTemplateById((Long) lbId.getSelectedItem().getValue());
+			session.setAttribute("editSmsTemplate", autoSMS);
+			session.setAttribute("SmsMode", "edit");
+			session.setAttribute("typeOfSms",tempType);
+			session.setAttribute("fromAddNewBtn","loyalty/loyaltyAutoCommunication");
+			Redirect.goTo(PageListEnum.CONTACT_MANAGE_AUTO_SMS);
+		}
+		logger.debug("--Exit editSMSTemplate---");
+	}//editSMSTemplate()
+
+	/**
+	 * Adds the email template in auto-SMS
+	 * @param lbId
+	 * @param tempType
+	 */
+	public void addSMSTemplate(Listbox lbId,String tempType) {
+		logger.info("---Entered addSMSTemplate-----");
+		logger.info("Sms template value "+lbId.getSelectedItem().getValue());
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		AutoSMS autoSMS = ltyPrgmSevice.getAutoSmsTemplateById((Long) lbId.getSelectedItem().getValue());
+		session.setAttribute("editSmsTemplate", autoSMS);
+		session.setAttribute("SmsMode", "add");
+		session.setAttribute("typeOfSms",tempType);
+		session.setAttribute("fromAddNewBtn","loyalty/loyaltyAutoCommunication");
+		Redirect.goTo(PageListEnum.CONTACT_MANAGE_AUTO_SMS);
+		logger.debug("--Exit addSMSTemplate---");
+	}//addSMSTemplate()
+
+	/**
+	 * Preview the template of enrollment
+	 */
+	public void onClick$regSmsPreviewBtnId() {
+		logger.debug("---Entered onClick$regSmsPreviewBtnId---");
+		previewSMSTemplate(selRegAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_REGISTRATION);
+		logger.debug("---Exit onClick$regSmsPreviewBtnId---");
+	}//onClick$regSmsPreviewBtnId
+
+	/**
+	 * Edits the template of enrollment
+	 */
+	public void onClick$regSmsEditMsgBtnId() {
+		logger.debug("---Entered onClick$regSmsEditMsgBtnId---");
+		editSMSTemplate(selRegAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_LOYALTY_REGISTRATION);
+		logger.debug("---Exit onClick$regSmsEditMsgBtnId---");
+	}//onClick$regSmsEditMsgBtnId
+
+	/**
+	 * To add a new template for enrollment
+	 */
+	public void onClick$regSmsAddBtnId() {
+		logger.debug("---Entered onClick$regSmsAddBtnId---");
+		addSMSTemplate(selRegAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_LOYALTY_REGISTRATION);
+		logger.debug("---Exit onClick$regSmsAddBtnId---");
+	}//onClick$regSmsAddBtnId
+
+
+	/**
+	 * Preview the template of gift issuance
+	 */
+	public void onClick$gftIssSmsPreviewBtnId() {
+		logger.debug("---Entered onClick$gftIssSmsPreviewBtnId---");
+		previewSMSTemplate(gftIssAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTISSUE);
+		logger.debug("---Exit onClick$gftIssSmsPreviewBtnId---");
+	}//onClick$gftIssSmsPreviewBtnId
+
+	/**
+	 * Edits the template of gift issuance
+	 */
+	public void onClick$gftIssSmsEditMsgBtnId() {
+		logger.debug("---Entered onClick$gftIssSmsEditMsgBtnId---");
+		editSMSTemplate(gftIssAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_GIFT_CARD_ISSUANCE);
+		logger.debug("---Exit onClick$gftIssSmsEditMsgBtnId---");
+	}//onClick$gftIssSmsEditMsgBtnId
+
+	/**
+	 * To add a new template for gift issuance
+	 */
+	public void onClick$gftIssSmsAddBtnId() {
+		logger.debug("---Entered onClick$gftIssSmsAddBtnId---");
+		addSMSTemplate(gftIssAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_GIFT_CARD_ISSUANCE);
+		logger.debug("---Exit onClick$gftIssSmsAddBtnId---");
+	}//onClick$gftIssSmsAddBtnId
+
+
+	/**
+	 * Preview the template of tier upgrade
+	 */
+	public void onClick$tierSmsPreviewBtnId() {
+		logger.debug("---Entered onClick$tierSmsPreviewBtnId---");
+		previewSMSTemplate(selTierAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_TIERUPGRADE);
+		logger.debug("---Exit onClick$tierSmsPreviewBtnId---");
+	}//onClick$tierSmsPreviewBtnId()
+
+	/**
+	 * Edits the template of tier upgrade
+	 */
+	public void onClick$tierSmsEditMsgBtnId() {
+		logger.debug("---Entered onClick$tierSmsEditMsgBtnId---");
+		editSMSTemplate(selTierAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_TIER_UPGRADATION);
+		logger.debug("---Exit onClick$tierSmsEditMsgBtnId---");
+	}//onClick$tierSmsEditMsgBtnId()
+
+	/**
+	 * To add a new template for tier upgrade
+	 */
+	public void onClick$tierSmsAddBtnId() {
+		logger.debug("---Entered onClick$tierSmsAddBtnId---");
+		addSMSTemplate(selTierAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_TIER_UPGRADATION);
+		logger.debug("---Exit onClick$tierSmsAddBtnId---");
+	}//onClick$tierSmsAddBtnId()
+
+	/**
+	 * Preview the template of earning bonus
+	 */
+	public void onClick$bonusSmsPreviewBtnId() {
+		logger.debug("---Entered onClick$bonusSmsPreviewBtnId---");
+		previewSMSTemplate(selBonusAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_BONUS);
+		logger.debug("---Exit onClick$bonusSmsPreviewBtnId---");
+	}//onClick$bonusSmsPreviewBtnId()
+
+	/**
+	 * Edits the template of earning bonus
+	 */
+	public void onClick$bonusSmsEditMsgBtnId() {
+		logger.debug("---Entered onClick$bonusSmsEditMsgBtnId---");
+		editSMSTemplate(selBonusAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_EARNED_BONUS);
+		logger.debug("---Exit onClick$bonusSmsEditMsgBtnId---");
+	}//onClick$bonusSmsEditMsgBtnId()
+
+	/**
+	 * To add a new template for earning bonus
+	 */
+	public void onClick$bonusSmsAddBtnId() {
+		logger.debug("---Entered onClick$bonusSmsAddBtnId---");
+		addSMSTemplate(selBonusAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_EARNED_BONUS);
+		logger.debug("---Exit onClick$bonusSmsAddBtnId---");
+	}//onClick$bonusSmsAddBtnId()
+
+	/**
+	 * Preview the template of reward expiry
+	 */
+	public void onClick$rewardSmsPreviewBtnId() {
+		logger.debug("---Entered onClick$rewardSmsPreviewBtnId---");
+		previewSMSTemplate(selRewardAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_REWARDAMTEXPIRY);
+		logger.debug("---Exit onClick$rewardSmsPreviewBtnId---");
+	}//onClick$rewardSmsPreviewBtnId()
+	
+	/**
+	 * Edits the template of reward expiry
+	 */
+	public void onClick$rewardSmsEditMsgBtnId() {
+		logger.debug("---Entered onClick$rewardSmsEditMsgBtnId---");
+		editSMSTemplate(selRewardAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_EARNED_REWARD_EXPIRATION);
+		logger.debug("---Exit onClick$rewardSmsEditMsgBtnId---");
+	}//onClick$rewardSmsEditMsgBtnId()
+	
+	/**
+	 * To add a new template for reward expiry
+	 */
+	public void onClick$rewardSmsAddMsgBtnId() {
+		logger.debug("---Entered onClick$rewardSmsAddMsgBtnId---");
+		addSMSTemplate(selRewardAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_EARNED_REWARD_EXPIRATION);
+		logger.debug("---Exit onClick$rewardSmsAddMsgBtnId---");
+	}//onClick$rewardSmsAddMsgBtnId()
+
+	/**
+	 * Preview the template of membership expiry
+	 */
+	public void onClick$memSmsPreviewBtnId() {
+		logger.debug("---Entered onClick$memSmsPreviewBtnId---");
+		previewSMSTemplate(selMemExpiryAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_LOYALTYMEMBSHIPEXPIRY);
+		logger.debug("---Exit onClick$memSmsPreviewBtnId---");
+	}//onClick$memSmsPreviewBtnId()
+
+	/**
+	 * Edits the template of membership expiry
+	 */
+	public void onClick$memSmsEditMsgBtnId() {
+		logger.debug("---Entered onClick$memSmsEditMsgBtnId---");
+		editSMSTemplate(selMemExpiryAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_MEMBERSHIP_EXPIRATION);
+		logger.debug("---Exit onClick$memSmsEditMsgBtnId---");
+	}//onClick$memSmsEditMsgBtnId()
+
+	/**
+	 * To add a new template for membership expiry
+	 */
+	public void onClick$memSmsAddMsgBtnId() {
+		logger.debug("---Entered onClick$memSmsAddMsgBtnId---");
+		addSMSTemplate(selMemExpiryAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_MEMBERSHIP_EXPIRATION);
+		logger.debug("---Exit onClick$memSmsAddMsgBtnId---");
+	}//onClick$memSmsAddMsgBtnId()
+
+	/**
+	 * Previews the template of gift amount expiry
+	 */
+	public void onClick$gftAmtSmsPreviewBtnId() {
+		logger.debug("--Entered onClick$gftAmtSmsPreviewBtnId---");
+		previewSMSTemplate(selGftAmtAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTAMTEXPIRY);
+		logger.debug("--Exit onClick$gftAmtSmsPreviewBtnId---");
+	}//onClick$gftAmtSmsPreviewBtnId()
+	
+	/**
+	 * Edits the template of gift amount expiry
+	 */
+	public void onClick$gftAmtSmsEditMsgBtnId() {
+		logger.debug("--Entered onClick$gftAmtSmsEditMsgBtnId---");
+		editSMSTemplate(selGftAmtAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_GIFT_AMOUNT_EXPIRATION);
+		logger.debug("--Exit onClick$gftAmtSmsEditMsgBtnId---");
+	}//onClick$gftAmtSmsEditMsgBtnId() 
+	
+	/**
+	 * To add a new template for gift amount expiry
+	 */
+	public void onClick$gftAmtSmsAddMsgBtnId() {
+		logger.debug("--Entered onClick$gftAmtSmsAddMsgBtnId---");
+		addSMSTemplate(selGftAmtAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_GIFT_AMOUNT_EXPIRATION);
+		logger.debug("--Exit onClick$gftAmtSmsAddMsgBtnId---");
+	}//onClick$gftAmtSmsAddMsgBtnId()
+
+	/**
+	 * Previews the template of gift-card expiry
+	 */
+	public void onClick$gftCrdSmsPreviewBtnId() {
+		logger.debug("--Entered onClick$gftCrdSmsPreviewBtnId---");
+		previewSMSTemplate(selGftCrdAutoSmsLbId,OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTMEMBSHIPEXPIRY);
+		logger.debug("--Exit onClick$gftCrdSmsPreviewBtnId---");
+	}//onClick$gftCrdSmsPreviewBtnId()
+
+	/**
+	 * Edits the template of gift-card expiry
+	 */
+	public void onClick$gftCrdSmsEditMsgBtnId() {
+		logger.debug("--Entered onClick$gftCrdSmsEditMsgBtnId---");
+		editSMSTemplate(selGftCrdAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_GIFT_CARD_EXPIRATION);
+		logger.debug("--Exit onClick$gftCrdSmsEditMsgBtnId---");
+	}//onClick$gftCrdSmsEditMsgBtnId()
+
+	/**
+	 * To add a new template for gift-card expiry
+	 */
+	public void onClick$gftCrdSmsAddMsgBtnId() {
+		logger.debug("--Entered onClick$gftCrdSmsAddMsgBtnId---");
+		addSMSTemplate(selGftCrdAutoSmsLbId,OCConstants.AUTO_SMS_TEMPLATE_TYPE_GIFT_CARD_EXPIRATION);
+		logger.debug("--Exit onClick$gftCrdSmsAddMsgBtnId---");
+	}//onClick$gftCrdSmsAddMsgBtnId()
+
+	/**
+	 * Saves the selected auto communication templates
+	 */
+	public void onClick$saveBtnId() {
+		logger.debug("---Entered onClick$saveBtnId---");
+		Long  prgmId=(Long) session.getAttribute("programId");
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		LoyaltyAutoComm loyaltyAutoComm=ltyPrgmSevice.getAutoCommunicationObj(prgmId);
+		//auto-emails
+		Long regEmailTmpltId = selRegAutoEmailsLbId.getSelectedItem().getValue();
+		Long tierUpgdEmailTmpltId = selTierAutoEmailsLbId.getSelectedItem().getValue();
+		Long threshBonusEmailTmpltId = selBonusAutoEmailsLbId.getSelectedItem().getValue();
+		Long rewardExpiryEmailTmpltId = selRewardAutoEmailsLbId.getSelectedItem().getValue();
+		Long mbrshipExpiryEmailTmpltId = selMemExpiryAutoEmailsLbId.getSelectedItem().getValue();
+		Long giftAmtExpiryEmailTmpltId = selGftAmtAutoEmailsLbId.getSelectedItem().getValue();
+		Long giftMembrshpExpiryEmailTmpltId = selGftCrdAutoEmailsLbId.getSelectedItem().getValue();
+		Long giftCardIssuanceEmailTmpltId = gftIssAutoEmailsLbId.getSelectedItem().getValue();
+		//auto-sms
+		Long regSmsTmpltId = selRegAutoSmsLbId.getSelectedItem().getValue();
+		Long tierUpgdSmsTmpltId = selTierAutoSmsLbId.getSelectedItem().getValue();
+		Long threshBonusSmsTmpltId = selBonusAutoSmsLbId.getSelectedItem().getValue();
+		Long rewardExpirySmsTmpltId = selRewardAutoSmsLbId.getSelectedItem().getValue();
+		Long mbrshipExpirySmsTmpltId = selMemExpiryAutoSmsLbId.getSelectedItem().getValue();
+		Long giftAmtExpirySmsTmpltId = selGftAmtAutoSmsLbId.getSelectedItem().getValue();
+		Long giftMembrshpExpirySmsTmpltId = selGftCrdAutoSmsLbId.getSelectedItem().getValue();
+		Long giftCardIssuanceSmsTmpltId = gftIssAutoSmsLbId.getSelectedItem().getValue();
+
+		ltyPrgmSevice.saveAutoCommunication(prgmId,regEmailTmpltId,tierUpgdEmailTmpltId,threshBonusEmailTmpltId,rewardExpiryEmailTmpltId,mbrshipExpiryEmailTmpltId,user.getUserId(),
+				loyaltyAutoComm,giftAmtExpiryEmailTmpltId,giftMembrshpExpiryEmailTmpltId,giftCardIssuanceEmailTmpltId,
+				regSmsTmpltId,tierUpgdSmsTmpltId,threshBonusSmsTmpltId,rewardExpirySmsTmpltId,mbrshipExpirySmsTmpltId,giftAmtExpirySmsTmpltId,
+				giftMembrshpExpirySmsTmpltId,giftCardIssuanceSmsTmpltId);
+		MessageUtil.setMessage("Auto communications saved successfully.", "color:blue", "TOP");
+		resetFields();
+		Redirect.goTo(PageListEnum.LOYALTY_PROGRAM_OVERVIEW);
+		logger.debug("---Exit onClick$saveBtnId---");
+	}//onClick$saveBtnId()
+
+	/**
+	 * Resets the selected auto communication data
+	 */
+	private void resetFields() {
+		logger.debug("---Entered resetFields----");
+		//auto-emails
+		selRegAutoEmailsLbId.setSelectedIndex(0);
+		selTierAutoEmailsLbId.setSelectedIndex(0);
+		selBonusAutoEmailsLbId.setSelectedIndex(0);
+		selRewardAutoEmailsLbId.setSelectedIndex(0);
+		selMemExpiryAutoEmailsLbId.setSelectedIndex(0);
+		selGftAmtAutoEmailsLbId.setSelectedIndex(0);
+		selGftCrdAutoEmailsLbId.setSelectedIndex(0);
+		gftIssAutoEmailsLbId.setSelectedIndex(0);
+		//auto-sms 
+		selRegAutoSmsLbId.setSelectedIndex(0);
+		selTierAutoSmsLbId.setSelectedIndex(0);
+		selBonusAutoSmsLbId.setSelectedIndex(0);
+		selRewardAutoSmsLbId.setSelectedIndex(0);
+		selMemExpiryAutoSmsLbId.setSelectedIndex(0);
+		selGftAmtAutoSmsLbId.setSelectedIndex(0);
+		selGftCrdAutoSmsLbId.setSelectedIndex(0);
+		gftIssAutoSmsLbId.setSelectedIndex(0);
+		logger.debug("---Exit resetFields----");
+	}//resetFields()
+
+	/**
+	 * Redirects to previous step
+	 */
+	public void onClick$previousBtnId() {
+		logger.debug("---Entered onClick$previousBtnId---");
+		if(OCConstants.LOYALTY_SERVICE_TYPE_SBTOOC.equalsIgnoreCase(user.getloyaltyServicetype())){
+			Redirect.goTo(PageListEnum.LOYALTY_AUTO_COMMUNICATION);
+		}else{
+			Redirect.goTo(PageListEnum.LOYALTY_ADDITIONAL_SETTINGS);
+		}
+		logger.debug("---Exit onClick$previousBtnId---");
+	}//onClick$previousBtnId()
+
+	/**
+	 * Redirects to next step
+	 */
+	public void onClick$nextBtnId() {
+		logger.debug("---Entered onClick$nextBtnId---");
+		Redirect.goTo(PageListEnum.LOYALTY_PROGRAM_OVERVIEW);
+		logger.debug("---Entered onClick$nextBtnId--");
+	}//onClick$nextBtnId()
+}

@@ -1,0 +1,214 @@
+<?page title="Edit contact page" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="editContWinId" width="800px" apply="org.mq.marketer.campaign.controller.contacts.EditcontactController" xmlns:h="http://www.zkoss.org/2005/zk/native">
+		<h:table width="100%" margin-left="100px" cellpadding="0px">
+			<h:tr>
+				<h:td colspan="4">
+					<label value="Edit Contacts" sclass="theme-lbHeading" />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td colspan="4">
+					<h:hr sclass="theme-hrLine" />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Email"/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="emailIdTbId" cols="25" maxlength="50"/>
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%" margin-right="100px">
+					<space width="50px" />
+					<label value="First Name"/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="firstNameTbId" cols="25" maxlength="50" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Last Name "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="lastNameTbId" cols="25" maxlength="50" />
+					<h:br />
+
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<!-- <label value="Address One "/></h:td><h:td width="10px">: -->
+					<label value="Address Line 1 "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="addOneTbId" cols="25" maxlength="100" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<!-- <label value="Address Two "/></h:td><h:td width="10px">: -->
+					<label value="Address Line 2 "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="addTwoTbId" cols="25" maxlength="100" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="City "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="cityTbId" cols="25" maxlength="50" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="State "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="stateTbId" cols="25" maxlength="50" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Country "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="countryTbId" cols="25" maxlength="50" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Zip Code "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="pinIbId" cols="25" maxlength="20" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Phone Number "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="phoneLbId" cols="25" maxlength="20" />
+					<h:br />
+				</h:td>
+			</h:tr>
+			
+			<h:tr style="display:none;">
+				<h:td width="30%" >
+					<space width="50px" />
+					<label value="Customer Id "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="rProTbId" cols="25"  disabled="true"/>
+					<h:br />
+				</h:td>
+			</h:tr>
+			
+			<h:tr  style="display:none;">
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Home Store "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<textbox id="homeStoreTbId" cols="25"  disabled="true"/>
+					<h:br />
+				</h:td>
+			</h:tr>  
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Gender"/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<combobox  id="gendarListBxId" width="100px" >
+						<comboitem label="Select" />
+						<comboitem label="Male" />
+						<comboitem label="Female" />
+					</combobox>
+					<h:br />
+				</h:td>
+			</h:tr> 
+			
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Birthday "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<datebox use="org.mq.marketer.campaign.custom.MyDatebox" id="birthdayDateBxId" />
+					
+					<h:br />
+				</h:td>
+			</h:tr>
+			
+			<h:tr>
+				<h:td width="30%">
+					<space width="50px" />
+					<label value="Anniversary "/></h:td><h:td width="10px">:
+				</h:td>
+				<h:td>
+					<datebox id="anniversaryDateBxId" use="org.mq.marketer.campaign.custom.MyDatebox"/>
+					<h:br />
+				</h:td>
+			</h:tr>
+			
+			
+			
+		</h:table>
+		
+		<div id="custFieldDivId" visible="false">
+			<space/>
+			<h:table width="434px" >
+				<h:tr>
+					<h:td >
+						<label value="Custom Fields" sclass="theme-lbHeading" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td style="padding-left:50px;padding-top:15px;">
+						<div id="cfDivId" width="100%">
+						</div>
+					</h:td>
+				</h:tr>
+			</h:table>
+			<space/>
+		</div>
+		<h:table width="75%" margin-left="100px" cellpadding="0px">
+			<h:tr>
+				<h:td colspan="2">
+				<separator height="15px" />
+					<space width="150px" />
+					<button label="Update" id="updateBtnId" sclass="idle140 greenbtn"/>
+					<space width="50px" />
+					<button label="Edit" id="editBtnId" sclass="idle140 greenbtn" visible="false"/>
+					<space width="50px" />
+					<button label="Back" id="backBtnId" sclass="idle140"/>
+					<h:br />
+				</h:td>
+			</h:tr>
+		</h:table>
+	</window>
+</zk>

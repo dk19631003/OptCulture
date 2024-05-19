@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyThresholdAlerts" 
+		table="loyalty_threshold_alerts" >
+		
+		<id name="alertId" type="java.lang.Long" >
+			<column name="alert_id"/>
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_id" />
+		</property>
+		<property name="ltySecurityPwd" type="string" >
+			<column name="lty_security_pwd" />
+		</property>
+		<property name="enableAlerts" type="char">
+			<column name="enable_alerts" default="'N'"/>
+		</property>
+		<property name="alertEmailId" type="string" >
+			<column name="alert_email_id" />
+		</property>
+		<property name="alertMobilePhn" type="string" >
+			<column name="alert_mobile_phn" />
+		</property>
+		<property name="countType" type="string">
+			<column name="count_type" />
+		</property>
+		<property name="countValue" type="string">
+			<column name="count_value" />
+		</property>
+		<property name="enrollAlertLastSentDate" type="calendar">
+			<column name="enroll_alert_last_sent_date" />
+		</property>
+		<property name="webformAlertLastSentDate" type="calendar">
+			<column name="webform_alert_last_sent_date" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.GiftCards" table="gift_cards">
+	  
+        <id name="giftCardId" type="java.lang.Long" column="gift_card_id">
+            <generator class="native"/>
+        </id>
+        <property name="userId" column="user_id" type="java.lang.Long"/>
+        <property name="giftProgramId" column="gift_program_id" type="java.lang.Long"/>
+        <property name="giftCardNumber" column="gift_card_number" type="string"/>
+        <property name="giftCardPin" column="gift_card_pin" type="string"/>
+        <property name="giftCardStatus" column="gift_card_status" type="string"/>
+        <property name="giftBalance" column="gift_balance" type="java.lang.Double"/>
+        <property name="totalLoaded" column="total_loaded" type="java.lang.Double"/>
+        <property name="totalRedeemed" column="total_redeemed" type="java.lang.Double"/>
+        <property name="totalExpired" column="total_expired" type="java.lang.Double"/>
+        <property name="purchasedMobile" column="purchased_mobile" type="java.lang.Long"/>
+        <property name="purchasedEmail" column="purchased_email" type="string"/>
+        <property name="purchasedDate" column="purchased_date" type="calendar"/>
+        <property name="purchasedItemSid" column="purchased_item_sid" type="string"/>
+        <property name="purchasedStoreId" column="purchased_store_id" type="java.lang.Long"/>
+        <property name="giftedToMobile" column="gifted_to_mobile" type="java.lang.Long"/>
+        <property name="giftedToEmail" column="gifted_to_email" type="string"/>
+        <property name="giftedDate" column="gifted_date" type="calendar"/>
+        <property name="expiryDate" column="expiry_date" type="calendar"/>
+	  
+	  
+ </class>
+</hibernate-mapping>
+
+
+

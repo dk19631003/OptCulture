@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SwitchCondition"
+		table="switch_condition">
+		<id name="switchCondId" type="java.lang.Long">
+			<column name="switch_cond_id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="conditionQuery" type="string">
+			<column name="condition_query" />
+		</property>
+		
+		<property name="componentId" type="java.lang.Long">
+			<column name="component_id"   />
+		</property>
+		
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id"   />
+		</property>
+		
+		<property name="lineMessage" type="string">
+			<column name="msg_line"   />
+		</property>
+		
+		<property name="modeAttribute" type="string">
+			<column name="mode_attribute"   />
+		</property>
+		
+		<property name="condition" type="string">
+			<column name="condition_new"   />
+		</property>
+		
+		<property name="switchCompWinId" type="string">
+			<column name="switch_comp_winid"   />
+		</property>
+		
+		<property name="modeFlag" type="string">
+			<column name="mode_flag"   />
+		</property>
+		
+		<property name="openCampWinIds" type="string">
+			<column name="open_camp_win_ids"   />
+		</property>
+		
+		<property name="clickCampWinIds" type="string">
+			<column name="click_camp_win_ids"   />
+		</property>
+		
+	</class>
+</hibernate-mapping>

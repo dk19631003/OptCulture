@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.AutoSMS" table="auto_sms">
+    <id name="autoSmsId" type="java.lang.Long" column="auto_sms_id">
+      <generator class="native"/>
+    </id>
+    <property name="autoSmsType" type="string" column="auto_sms_type" not-null="true"/>
+    <property name="templateName" type="string" column="template_name" not-null="true"/>
+	<property name="messageContent" type="text" column="message_content" not-null="true"/>
+	<property name="messageType" type="string" column="message_type" not-null="true"/>
+    <property name="userId" type="java.lang.Long" column="user_id" />
+    <property name="orgId" type="java.lang.Long" column="org_id" />
+    <property name="createdBy" type="java.lang.Long" column="created_by" />
+    <property name="modifiedBy" type="java.lang.Long" column="modified_by" />
+    <property name="createdDate" type="calendar" column="created_date" />
+    <property name="modifiedDate" type="calendar" column="modified_date" />
+    <property name="senderId" type="string" column="sender_id" not-null="true"/>
+    <property name="status" type="string" column="status" not-null="true"/>
+    <property name="templateRegisteredId" type="string" column="template_registered_id"/>
+  </class>
+</hibernate-mapping>
+

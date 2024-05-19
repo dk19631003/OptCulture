@@ -1,0 +1,557 @@
+<zk>
+
+<style>
+
+
+.hovergridcolumn > div.z-column-cnt { 
+color: #FFFFFF;
+font-weight: bold;
+cursor: pointer;
+}
+
+</style>
+
+
+	<window id="customWelcomeMsgWindId" apply="org.mq.marketer.campaign.controller.contacts.ParentalConsentMsgController" 
+	 xmlns:h="http://www.w3.org/1999/xhtml" xmlns:w="client" >
+	
+		 <tabbox width="100%" id="typeTabboxId">
+		  <tabs>
+				<tab label="Pending Approvals" />
+		  		<!-- <tab label="Email" visible="false" /> -->
+				
+		  </tabs>
+		  <tabpanels>
+		  <tabpanel>
+		  		<h:table  cellspacing="0" cellpadding="0" width="100%" 
+					border="0" bgcolor="#EEF2F5" >
+					
+					<h:tr height="50">
+					
+						<h:td width="465" style="padding:5px 5px;">
+							<label value="Search By" sclass="theme-lbHeading" />
+							<listbox mold="select" rows="1" id="searchLbId">
+								<listitem label="--All--" selected="true" value="All" />
+								<listitem label="Parent's Email ID contains" value="parent" />
+								<listitem label="Child's First Name contains" value="child" />
+							</listbox>
+							
+							<textbox id="searchTbId" visible="false"  value="Search..." 
+					w:onClick="javascript: if(this.getValue()=='Search...') {  this.setValue(''); }" 
+					w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Search...'); }" focus="true"/>
+							
+						</h:td>
+						<h:td width="200">
+							<label value="Status:" style="font-weight:bold;" />
+							<listbox id="statusLbId" mold="select" >
+							<listitem label="All" selected="true"/>
+								<listitem label="Approved" />
+								<listitem label="Pending Approval" />
+							
+							</listbox> 
+						
+						</h:td>
+						<h:td style="display:none;">
+							<label value="Consent Medium:" style="font-weight:bold;" />
+							<listbox id="mediumLbId" mold="select" >
+								<listitem label="Email" selected="true"/>
+								<listitem label="Fax" />
+								<listitem label="Postal Mail" />
+							
+							</listbox> 
+						</h:td>
+						<h:td>
+							
+								<button id="filterBtnId" label="Filter" sclass="idle140" />
+								<a label = "Reset" id="resetAnchId" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;margin-left:5px;"/>
+								
+								
+							
+						</h:td>
+						
+					</h:tr>
+					
+					
+				</h:table>
+				
+				<grid id="parentApprovalGridId"  emptyMessage="No Records found...."	
+						style="margin-top:20px;margin-bottom:5px;">
+					 	
+				 	<columns menupopup="auto">
+				 	 	<column label="First Name" id="sortbyFirstName"  sclass="hovergridcolumn"  />
+				 	 	 <column label="Date of Birth" id="sortbyDateofBirth"  sclass="hovergridcolumn" />
+				       <column label="Email ID" id="sortbyEmailID"  sclass="hovergridcolumn"  />
+				       <column label="Parent's Email ID" id="sortbyParentEmailID"  sclass="hovergridcolumn" />
+				       <column label="Status" />
+			          
+				       <column label="Action" />
+				     
+				       
+				     </columns>
+				     <rows id="approvalsRowsId" />
+				</grid>
+				<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+					<h:tr>
+						
+						<h:td align="right">
+				   		<label value="Items per page:" style="padding-right:5px;font-weight:bold;"/>
+				   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+							<listitem label="5" />
+							<listitem label="10" selected="true" />
+							<listitem label="15"/>
+						</listbox>
+						</h:td>
+						<h:td width="280px"  >
+							<paging id="approvalListPaging" detailed="true" pageSize="10" width="280px" 
+								class="contactsViewPaging" style="border:none;"/>
+						</h:td>
+					</h:tr>
+			
+				</h:table>
+				<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+					<h:tr>
+						<h:td  valign="center">
+							<label value="Export as a " style="font-weight:bold;"/> 
+							<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+					 	   			<comboitem label=" .csv " value="csv" />    
+							</combobox> 
+							<zscript>
+								<![CDATA[
+									exportCbId.setSelectedIndex(0);
+								]]>
+							</zscript>
+							
+						
+							<button  label="Export" style="margin-left:20px;" sclass="idle140 greenbtn" id="exportBtnId" />
+						</h:td>
+										
+						<h:td  align="right">
+							<image src="/img/icons/approve_icn.png" style="position:absolute;"/>
+							<label value="- Approve" style="margin-left:25px;"/>
+						</h:td>
+					
+					</h:tr>
+				
+				
+				</h:table>
+				
+		  	
+		  	
+		  	</tabpanel>
+		  	
+		 
+		  	<!-- <tabpanel>
+		  	
+		  	
+				<h:table  cellspacing="0" cellpadding="0" width="100%" 
+					border="0" bgcolor="#EEF2F5" >
+					
+					<h:tr height="50">
+					
+						<h:td width="290" style="padding:5px 5px;">
+							<label value="Select Message:" style="font-weight:bold;" />
+							<listbox id="welcomeListLbId" mold="select" width="150px"/>
+							
+						</h:td>
+						<h:td width="200">
+						
+						
+						
+										
+						<image src="/images/Preview_icn.png"  style="margin-left:20px;" />
+							<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+							 id="custTempPreviewBtnId" />
+						</h:td>
+						<h:td>
+							<a label="Send Test Email"  style="color:#2886B9;font-weight:bold;text-decoration: underline;" 
+							id="sendTestMsgBtnId" />
+						</h:td>
+						<h:td>
+						
+								
+								
+								<button id="delBtnId" label="Delete" sclass="idle140" visible="false"/>
+							
+						</h:td>
+						
+					</h:tr>
+					
+					
+				</h:table>
+					
+				<div align="right" style="padding:15px 0px;" >
+					<toolbarbutton id="addNewCustBtnId" image="/img/icons/Add-new-message_icn.png" sclass="tbbLink"
+						 label="Add New Message"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				</div>
+			
+				<div id="welcomeHTMLDivId" style="margin-top:15px;">
+					<ckeditor id="ckEditorId"  visible="true" customConfigurationsPath="/js/ckmin.js" height="250px" width="98%"/>
+					<label value="Note :  Add place holders [url] for Download Form link, and [senderName] for user name, and [Oranization_Name] for user's Org name; [url] is mandatory." /><h:br/>
+					
+				</div>
+				
+				<groupbox style="margin-top:10px;" closable="false" open="true"  >
+					<caption label="Basic Settings" >
+						
+						<toolbarbutton id="basicSettingsTbBtnId" image="/img/icons/icon_minus.png" />
+					</caption>
+					<div id="basicSettingsContentDivId" >
+					<h:table cellspacing="0" cellpadding="5" width="100%" border="0">
+						<h:tr>
+							
+							<h:td width="200" >
+								<label value="Subject :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="cSubTb" width="270px" maxlength="50" cols="30"/>
+							</h:td>	
+						</h:tr>
+						<h:tr>
+							<h:td width="200" >
+								<label value="From Name :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="cFromNameTb" width="270px" maxlength="50" cols="30"/>
+							</h:td>	
+						</h:tr>
+						<h:tr>
+							<h:td width="200" >
+								<label value="From Email Address :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<combobox  id="cFromEmailCb" readonly="true" sclass="cb_250w" /> 
+							</h:td>	
+						</h:tr>
+						
+					
+					</h:table>
+				</div>
+				</groupbox>
+				<groupbox style="margin-top:10px;" closable="false" open="true"  >
+					<caption label="Sender Address" >
+						
+						<toolbarbutton id="addrSettingsTbBtnId" image="/img/icons/icon_minus.png" />
+					</caption>
+					
+					<div id="addrContentDivId" >
+					<h:table cellspacing="0" cellpadding="5" width="100%" border="0">
+					
+					
+					
+					<h:tr>
+						<h:td valign="top" width="200" style="padding-top:5px;">
+						<label value="Address in Footer" />
+						</h:td>
+						<h:td valign="top">
+						<div id="postalAddressDivId">
+							<radiogroup id="addrRgId"  orient="vertical"/>
+						
+							<hlayout>
+								<radio radiogroup="addrRgId" checked="true" id="postalAddressRbId"   />
+								<a label="Modify" onClick="changeAddressDivId.setVisible(true);postalAddressDivId.setVisible(false)" 
+								style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="modifySenderAddrId" />
+							</hlayout>
+							
+						
+							<hlayout>
+							<radio radiogroup="addrRgId" label="Choose a Store"/>
+							<listbox id="storesLbId" width="200px" mold="select"/>
+							<label id="storeAddrLblId" visible="false" />
+							</hlayout>
+						</div>
+						
+						<div visible="false" id="changeAddressDivId">
+									<h:table width="85%" cellspacing="10" cellpadding="0" align="left" style="padding-left:20px;">
+										<h:tr>
+											<h:td width="150">
+												<label value="Address one" />
+												<label value="*"  style="color:red;" />
+											</h:td>
+											
+											<h:td>
+												<textbox id="cAddressOneTbId" cols="25" maxlength="45" value=""/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Address two" />
+											</h:td>
+											
+											<h:td>
+												<textbox id="cAddressTwoTbId" cols="25" maxlength="45"  value=""/>
+											</h:td>
+										</h:tr>
+									 
+										<h:tr>
+											<h:td>
+												<label value="City" />
+												<label value="*" style="color:red;"/>
+											</h:td>
+											
+											<h:td>
+												<textbox id="cCityTbId" cols="25" maxlength="20" value=""/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="State" />
+												<label value="*" style="color:red;"/>
+											</h:td>
+											
+											<h:td>
+												<textbox id="cStateTbId" cols="25" maxlength="20" value=""/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Country" />
+												<label value="*" style="color:red;"/>
+											</h:td>
+											
+											<h:td>
+												<textbox id="cCountryTbId" cols="25" maxlength="20" value=""/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Zip / Pin" />
+												<label value="*" style="color:red;"/>
+											</h:td>
+											
+											<h:td>
+												<textbox id="cPinLbId" cols="25" maxlength="8" />
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Phone" />
+											</h:td>
+											
+											<h:td>
+												<textbox id="cPhoneTbId" 
+												tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+												xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+												
+												cols="25" maxlength="30" />
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td></h:td>
+											<h:td>
+												<button label="Save"  sclass="idle70 greenbtn" id="doneAnchId" /> 
+												<space/>
+												<button label="Cancel" id="cancelAddressId" sclass="idle70" /> 
+												
+											</h:td>
+										</h:tr>
+									</h:table>
+							
+							
+							</div>				
+						
+						
+						
+						</h:td>
+					
+					</h:tr>
+					<h:tr>
+					<h:td></h:td>
+						<h:td >
+							
+						
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td valign="top" width="200" style="padding-top:5px;">
+						<label value="Include Before Address" />
+						</h:td>
+						<h:td>
+							<checkbox id="orgNameChkBoxId" checked="true" label="Organization Name" />
+							<checkbox id="orgUnitChkBoxId" checked="true" label="Organization Unit" />
+							
+						</h:td>
+					
+					</h:tr>
+					
+					</h:table>
+					
+					
+					</div>
+				
+				</groupbox>
+				
+				
+				<groupbox  sclass="gbStyle" style="margin-top:10px;" closable="false" open="true" >
+					<caption>
+						<label value="Optional Settings"/>
+						<toolbarbutton id="optSettingsTbBtnId" image="/img/icons/icon_plus.png" />
+					</caption>
+					<div id="gbContentDivId" visible="false">
+					
+					
+					<h:table  width="100%" align="left"  >
+						<h:tr>
+							<h:td valign="top" width="200">
+								<label value="Webpage Version" />
+							</h:td>
+							
+							<h:td valign="top">
+								<checkbox id="cWebPageCb"
+									label="Include a link to view a webpage version of this email"
+									onCheck="cWebLinkHboxId.visible = !cWebLinkHboxId.visible"
+									checked="true" />
+								</h:td>
+								</h:tr>
+								
+								
+								<h:tr>
+								<h:td></h:td>
+								<h:td>
+								
+								
+								<div id="cWebLinkHboxId" style="text-align:left;" align="left" visible="true">
+								<h:table>
+									<h:tr>
+										<h:td>
+										
+										<label value="Text:" style="padding-right:5px;" />
+										<textbox id="cWebLinkTextTb"
+											width="250px" value=" Having Trouble viewing this email?"
+											maxlength="200" />
+									
+										</h:td>
+										<h:td width="20"></h:td>
+										<h:td>	
+									
+										<label value="Link  Text:" style="padding-right:5px;"/>
+										<textbox id="cWebLinkUrlTextTb"
+											width="150px" value=" Click here" maxlength="200" />
+									
+										
+										</h:td>
+									</h:tr>
+								</h:table>
+								</div>
+								</h:td>
+							</h:tr>
+						
+						<h:tr height="15"/>
+						
+						<h:tr>
+							<h:td valign="top" width="170" style="padding-top:5px;">
+								<label value=" Permission Reminder" />
+							</h:td>
+							
+							<h:td>
+								<radiogroup id="cPermRemRb">
+									<radio label="On" 
+										onCheck="permRemDivId.visible=true;"  />
+									<radio label="Off"
+										onCheck="permRemDivId.visible=false;" checked="true"  />
+								</radiogroup>
+								</h:td>
+								</h:tr>
+								<h:tr>
+								<h:td></h:td>
+								<h:td>
+								
+								<div id="permRemDivId" visible="false">
+									<textbox id="permRemTextId" rows="3" height="50px" cols="50" value="You are receiving this email because you had opted in on our website."
+										maxlength="200" />
+									<h:br />
+									
+								</div>
+								
+								</h:td>
+								
+								</h:tr>
+							<h:tr height="15"/>
+							
+						</h:table>
+							
+					</div>
+							
+				</groupbox>
+				<div align="right" style="padding-top:30px;" > 
+				<button id="newBtnId" label="Save As..." sclass="idle140 greenbtn" />
+					<button id="updateBtnId" label="Save" sclass="idle140 greenbtn" />
+				
+				</div>
+				
+				<window id="createCustTemplateWinId" visible="false" closable="true" title="Create Organization Unit" 
+								height="180px" width="450px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+													onClose="self.setVisible(false);event.stopPropagation();">
+					<h:table style="padding:10px;">
+						<h:tr>
+							<h:td colspan="2">
+								<label value="You can add a new email message for your Double Opt-in subscriptions here."/>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+						</h:tr>
+						<h:tr>
+							<h:td ><label value=" Message Name :" /></h:td>
+							<h:td ><textbox  id="custTempNameTbId" value="Enter Name..." w:onFocus="this.setValue('')" width="160px"/></h:td>
+						</h:tr>
+						
+						<h:tr height="10" />
+						<h:tr>
+							<h:td colspan="2" align="right">
+							<button label="Add" sclass="idle70 greenbtn" id="submitBtnId" /></h:td>
+						</h:tr>
+					</h:table>
+				</window>
+				
+				<window id="testMailWinId" visible="false" closable="true" title="Send Test Email" 
+								height="180px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+													onClose="self.setVisible(false);event.stopPropagation();">
+					<h:table style="padding:10px;">
+						<h:tr>
+							<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+						</h:tr>
+						<h:tr>
+							<h:td colspan="1"><label value=" Email Id :" /></h:td>
+							<h:td colspan="2"><textbox  id="emailIdTbId" width="160px"/></h:td>
+						</h:tr>
+						<h:tr>
+							<h:td/>
+							
+							<h:td  colspan="2" valign="center">	
+								<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+								<label value="To Send Test Email to multiple Email Ids,give them as comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+							</h:td>
+							
+							
+						</h:tr>
+						<h:tr height="10" />
+						<h:tr>
+							<h:td><button label="Send" id="sendTestMailBtnId" /></h:td>
+							<h:td><button label="Cancel" id="cancelSendTestMailBtnId" /></h:td>
+						</h:tr>
+					</h:table>
+				</window>
+				
+				<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+					</caption>
+					<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+						<html id="html" />
+					</div>
+				</window>
+			
+		  	</tabpanel> -->
+		  	</tabpanels>
+		  	
+		</tabbox>
+	
+		
+	</window>
+</zk>

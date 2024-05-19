@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SupportTicket"
+		table="support_ticket">
+		<id name="ticketId" type="java.lang.Long">
+			<column name="ticket_id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		<property name="clientName" type="java.lang.String">
+			<column name="client_name" />
+		</property>
+		<property name="contactName" type="java.lang.String">
+			<column name="contact_name" />
+		</property>
+		<property name="contactEmail" type="java.lang.String">
+			<column name="contact_email" length="255" />
+		</property>
+		<property name="contactPhone" type="java.lang.String">
+			<column name="contact_phone" length="255" />
+		</property>
+		<property name="productArea" type="java.lang.String">
+			<column name="product_area" length="255" />
+		</property>
+		<property name="description" type="java.lang.String">
+			<column name="description" length="1000" />
+		</property>
+		<property name="captcha" type="java.lang.String">
+			<column name="captcha" length="255" />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		
+		<property name="type" type="java.lang.Byte">
+			<column name="type"  />
+		</property>
+		
+		<property name="userOrgName" type="java.lang.String">
+			<column name="userOrg_name" />
+		</property>
+		<property name="userName" type="java.lang.String">
+			<column name="user_name" />
+		</property>
+		
+		<property name="productAreaType" type="java.lang.Byte">
+			<column name="product_area_type"  />
+		</property>
+		
+		<property name="fileName" type="java.lang.String">
+			<column name="file_name" />
+		</property>
+		
+		<property name="filePath" type="java.lang.String">
+			<column name="file_path"  />
+		</property>
+		
+		<property name="status" type="java.lang.String">
+			<column name="status"  />
+		</property>
+		
+	</class>
+</hibernate-mapping>

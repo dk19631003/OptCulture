@@ -1,0 +1,434 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<style>
+ .custCheck {
+  width:140px;
+ }
+ 
+ 
+</style>
+		<window id="autoEmailReportsWinId" border="normal" apply="org.mq.marketer.campaign.controller.report.DetailedAutoEmailReportController" 
+					 xmlns:w="client" xmlns:h="native" width="100%">
+			<space height="40"/>	 
+		<h:table width="100%"  bgcolor="#F2F6F9" cellspacing="0" cellpadding="4" style="padding:8px;border-radius:5px;">
+                 <h:tr >
+                         <h:td width="4500" >
+                         <label value="Message Name :"  style="font-weight:bold;"/>
+                                             
+                         <label id="msgNameLblId" value="" />
+                         <!--  </h:td>    
+                         
+                         <h:td  width="200" > -->
+                         <a label="View Current Template" style="font-weight:bold;color:#43A0BA;margin-left:50px;" id="viewEmailBtnId" />
+                         </h:td>
+                          <h:td  width="4500" style="display:none;">
+                         <label value="Configured To :"  style="font-weight:bold;"/>
+                                             
+                         <label id="configuredToLblId" value="" />
+                          </h:td>  
+                              
+                            <h:td  width="4500">
+                         <label value="Auto-Email Category :" style="font-weight:bold;"/>
+                          
+                          <label id="categoryLblId" value="" />
+                          </h:td>    
+                          
+                                  
+                            
+                 </h:tr>
+                 </h:table>
+                <space height="40"/>
+			<h:table  cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:8px;border-radius:5px;">
+				<h:tr bgcolor="#F4F5F9">
+					<h:td width="36%">
+						<label value="Sent Date:" sclass="theme-lbHeading" />
+							<space />
+						<label value="From" />
+						<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							format="dd-MMM-yyyy" constraint="no future" />
+						<space />
+						<label value="To " />
+						<datebox id="toDateboxId"  use="org.mq.marketer.campaign.custom.MyDatebox"  readonly="true"
+							format="dd-MMM-yyyy" />
+							<space />
+							
+					</h:td>
+					<h:td width="31%">
+						<label value="View Recipients: "
+							style="display:inline-block;font-weight:bold;" />
+						<bandbox id="storeBandBoxId" mold="rounded"
+							style="width:90px;font-size:13px;font-weight:bold;margin-top:2px;margin-right:4px;"
+							readonly="true" value="All">
+
+							<bandpopup id="emailSmsControlsBandpopupId"
+								width="120px">
+
+								<listbox checkmark="true"
+									id="emailSmsControlsLbId" multiple="true" width="120px"
+									style="position:relative;">
+									
+									<listhead>
+										<listheader label="All" />
+
+
+									</listhead>
+
+								</listbox>
+							</bandpopup>
+						</bandbox>
+					</h:td>
+					<h:td width="10%">
+						<button label="Filter"
+							sclass="idle140 " id="datesFilterBtnId" />
+						
+				  </h:td>
+				  <h:td width="10%">
+						<button label="Reset"
+							sclass="idle140 " id="datesResetBtnId" />
+						
+				  </h:td>
+					 <h:td/>
+				</h:tr>
+				
+			</h:table>
+			
+
+			
+			
+			<h:div style="padding:15px 0 5px 5px;"><label value="Consolidated Metrics" style="font-weight:bold;"/><label value="" id="consolidatedDateLbId" style="font-weight:bold;"/></h:div> 
+			
+			<h:table  width="100%" border="0"  cellspacing="4" cellpadding="4" style ="background-color:#F4F5F9;border: 1px solid #DADBDF;border-radius: 5px 5px 5px 5px;">
+				 <h:tr >
+					 <h:td width="100"> <label value ="Sent" style="font-weight:bold;"/>  </h:td>
+					
+					 <h:td width="100"> <label id="sentLblId" value=""  />  </h:td>
+					
+					 <h:td width="30" align="center"> <separator bar="true" orient="vertical"  />  </h:td>
+					
+					 <h:td width="100"> <label value=" Delivered" style="font-weight:bold;"/>  </h:td>
+					
+					 <h:td width="150"> <label id="deliveredLblId" value=""/>  </h:td>
+					
+					 <h:td width="30" align="center"> <separator bar="true" orient="vertical"  />  </h:td>
+					
+					 <h:td width="150"> <label value="Bounced" style="font-weight:bold;" /> </h:td>
+					 <h:td width="150"> <label id="bouncedLblId"  value=""/>  </h:td>
+					 
+					 <h:td width="100"> <label value ="Delivery Status Pending" style="font-weight:bold;" id="notSentId" visible="false"/>  </h:td>
+					
+					 <h:td width="100"> <label id="notSentLblId" value="" visible="false" />  </h:td>					 
+					 <h:td/>
+					 
+				 </h:tr>
+				 
+				 <h:tr >
+				 	<h:td colspan="9">
+				 	<!-- <h:hr style="color: white;"/> --> 
+				 	<div style=" border-bottom: 1px solid white; border-top: 1px solid #DADBDF;height: 0;"></div>
+				 	</h:td>
+				 </h:tr>
+				 
+				 <h:tr >
+					  <h:td >
+					  	<label value ="Unique Opens" style="font-weight:bold;"/>
+					  	
+					  </h:td>
+					<h:td >
+					  	<label id="opensLblId" value=""  />
+					  </h:td>
+					  <h:td align="center">
+						<separator bar="true" orient="vertical"   />
+					  </h:td>
+					 <h:td >
+					 	<label value=" Unique Clicks" style="font-weight:bold;"/>
+					  	
+					 </h:td>
+					 <h:td >
+					  	<label id="clicksLblId" value=""/>
+					 </h:td>
+					 <h:td align="center">
+					 	
+					  	<separator bar="true" orient="vertical"  />
+					 </h:td>
+					
+					 <h:td>
+					 	<label value="Marked as Spam" style="font-weight:bold;" />
+					 </h:td>
+					 <h:td>
+					  	<label id="spamLblId"  value=""/>
+					 </h:td>
+					 
+					 <h:td/>
+				 </h:tr>
+				 
+				 
+			
+			</h:table>
+			
+			<h:div style="padding:20px 5px 10px 5px;">
+				<label value="Delivery Over Time" style="font-weight:bold;"/><label value="" id="deliveryTimeLbId" style="font-weight:bold;"/>
+				
+			<h:table cellspacing="0" cellpadding="2" align="right" >
+				<h:tr>
+					<h:td >
+						<checkbox id ="sentChkId" checked="true" label="Sent" visible="false"/>
+					</h:td>
+					<h:td>
+						<checkbox id ="deleveredChkId"  checked="true" label="Delivered" visible="false"/>
+					</h:td>
+					
+					<h:td>
+						<checkbox id ="bouncedChkId"  label="Bounced"  visible="false"/>
+					</h:td>
+					<h:td>
+						<checkbox id ="statusPendingChkId" label="Status Pending" visible="false"/>
+					</h:td>
+					<h:td >
+						<checkbox id ="uniqOpensChkId" label="Unique Opens" visible="false"/>
+					</h:td>
+					
+					<h:td>
+						<checkbox id ="clicksChkId" label="Unique Clicks" visible="false"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+			</h:div>
+			
+				<space height="40"/>
+			<div height="340px">
+			<chart id="autoEmailReportsChartId" width="880"  showTooltiptext="true" 
+			showLegend="true" height="320" orient="vertical" paneColor="#FFFFFF" 
+			type="line" threeD="false" fgAlpha="255" xAxis="Days" yAxis="No. of Emails" />
+			
+        
+	</div>	
+			<div style="padding:20px 5px 10px 5px;">
+			<label  value="Delivery Report" style="font-weight:bold;"/><label value="" id="deliveryReportLbId" style="font-weight:bold;"/></div>
+			
+		
+		
+		<menupopup id="autoEmailReportsMpId" />
+		<listbox id="autoEmailReportsLbId" emptyMessage="No reports  exist.." width="80%"   >
+			<listhead sizable="false" >
+				
+			<listheader label="Email Sent Date" width="150px"/>
+			<listheader label="Email Address" ><space/><textbox id="searchBoxId" placeholder="Search Email Address"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }"  width="305px" /> </listheader>
+			<listheader label="Delivery Status"  width="150px"/>
+			<listheader label="Opens" width="100px"/>
+			<listheader label="Clicks"  width="100px"/>
+			<listheader label="Actions" width="100px" />
+			</listhead>
+		             		 
+		</listbox>	
+		
+		 <h:table width="80%">
+		 
+		 <!-- creating an export button to export the details of digital receipts -->
+		 
+			    <h:tr>
+			<h:td  valign="center">
+			<div id="exportDivId"> <!-- visible="false" -->
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value="  file" style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId" />
+				</div>
+			</h:td>
+							
+					<h:td align="right">
+				   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+				   		<listbox rows="1" mold="select" id="reportsPerPageLBId" style="margin-right:30px;">
+							<listitem label="5" value="5" />
+							<listitem label="10" value="10"  selected="true"  />
+							<listitem label="15" value="15" />
+						</listbox>
+					</h:td>
+					<h:td width="360px"  >
+						<paging id="reportsLocationsPagingId" detailed="true" pageSize="10" width="360px" 
+							class="contactsViewPaging" style="border:none;"  />
+							
+					</h:td>
+			   </h:tr>
+		  </h:table>
+		  
+		   <h:table width="30%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						
+						<h:td align="right"><image src="/img/digi_receipt_Icons/View-receipt_icn.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- View Sent Email" style="font-size:11px;" /> </h:td>
+						
+						</h:tr>
+			</h:table>	
+		 
+		<div style="padding:20px 5px 10px 5px;">
+			<label  value="URLs Clicked Report(Till Date)" style="font-weight:bold;"/></div>
+			
+		<listbox id="urlsClickedReportsLbId" emptyMessage="No reports  exist.." width="70%"   >
+			<listhead sizable="false" >
+				
+			
+			<listheader label="URL Clicked" > <space/><textbox id="recipientsSearchBoxId" style="display:none;" placeholder="Search Email Address"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }"  width="45%"/>  </listheader>
+			<listheader label="Unique Clicks for URL"  width="15%"/>
+			<listheader label="Total Clicks for URL"  width="15%"/>
+			</listhead>
+			<listfoot id="totalRecipientsDivID"  >
+                <listfooter><label value="Total"/></listfooter>
+                 <listfooter><label id="totalUniqueClicksLbID"/></listfooter>
+                  <listfooter><label id="totalClicksLbID"/></listfooter>
+            </listfoot>
+			</listbox>
+		<h:table width="70%">
+		
+			    <h:tr>
+			<h:td  valign="center">
+			<div id="recipientsExportDivId" visible="false" >
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="recipientsExportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						recipientsExportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value="  file" style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="recipientsExportBtnId" />
+				</div>
+			</h:td>
+							
+					<h:td align="right">
+				   		<label value="Items per page:"  style="font-size:11px;"/>
+				   		<listbox rows="1" mold="select" id="recipientsReportsPerPageLBId" >
+							<listitem label="5" />
+							<listitem label="10"  selected="true"  />
+							<listitem label="15"/>
+						</listbox>
+					</h:td>
+					<h:td width="360px"  >
+						<paging id="recipientsReportsLocationsPagingId" detailed="true" pageSize="10" width="360px" 
+							class="contactsViewPaging" style="border:none;"  />
+							
+					</h:td>
+			   </h:tr>
+		  </h:table>
+		<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+					</caption>
+					<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+						<html id="html" />
+					</div>
+				</window>
+				
+				<window id="viewAllDrWinId"  title="View Reports" visible="false" width="600px"  border="normal"  closable="true"  onClose="self.setVisible(false); event.stopPropagation();" >
+			<grid id="viewDrGridId" height="250px" emptyMessage="No Reports Found" >
+				<columns>
+					<column label="Email" width="330px"></column>
+					<column label="Sent Date" width="170px"></column>
+					<column label="Status" ></column>	
+				</columns>
+				<rows id="viewAllDrRowsId"></rows>
+			</grid>
+		</window>
+		
+		
+	<window id="custExport" title="Select Fields to Export" border="normal"  width="400px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="400px" style="margin:15px;" />
+					<!-- <checkbox label="Email Name" sclass="custCheck"/> 
+				</div>  -->
+								
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td ><a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />   <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+	</window>
+	<div id="pendingReportsDivId" visible="false" >
+		<div style="padding:20px 5px 10px 5px;">
+			<label  value="Delivery Status Pending Reports" style="font-weight:bold;"/></div>
+				<listbox id="statusPendingReportsLbId" emptyMessage="No reports  exist.." width="70%"   >
+			<listhead sizable="false" >
+				
+			
+			<listheader label="Email Address" ><space/><textbox id="statusPendingSearchBoxId" placeholder="Search Email Address"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }"  width="45%"/> </listheader>
+			<listheader label="Sent Date"  width="40%"/>
+			</listhead>
+			<listfoot id="totalStatusPendingDivID" >
+                <!-- <listfooter><label value="Total"/></listfooter> -->
+                 <listfooter><label id="totalStatusPendingLbID"/></listfooter>
+            </listfoot>
+			</listbox>
+		<h:table width="70%">
+		
+			    <h:tr>
+			<h:td  valign="center">
+			<div id="statusPendingExportDivId"> 
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="statusPendingExportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						statusPendingExportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value="  file" style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="statusPendingExportBtnId" />
+				</div>
+			</h:td>
+							
+					<h:td align="right">
+				   		<label value="Items per page:"  style="font-size:11px;"/>
+				   		<listbox rows="1" mold="select" id="statusPendingReportsPerPageLBId" >
+							<listitem label="5" value="5"/>
+							<listitem label="10"  value="10" selected="true"  />
+							<listitem label="15" value="15"/>
+						</listbox>
+					</h:td>
+					<h:td width="360px"  >
+						<paging id="statusPendingReportsLocationsPagingId" detailed="true" pageSize="10" width="360px" 
+							class="contactsViewPaging" style="border:none;"  />
+							
+					</h:td>
+			   </h:tr>
+		  </h:table>
+</div>
+<h:table align="right">
+				<h:tr>
+					<h:td >
+						<button label="Back" id="backBtnId" sclass="idle140"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+
+		</window>
+		
+</zk>

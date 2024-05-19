@@ -1,0 +1,501 @@
+<zk>
+	<window id="BeeWinId" apply="org.mq.marketer.campaign.controller.layout.BeeController" width="100%" xmlns:h="http://www.w3.org/1999/xhtml"  xmlns:w="http://www.zkoss.org/2005/zk/client">
+	  <zscript>
+		String sourceStr = Executions.getCurrent().getNativeRequest().getParameter("source");
+		byte source = (sourceStr == null) ? (byte)0 : (byte)1;
+	</zscript>
+	
+	
+	
+	
+	<style src="/css/editor.css"/>
+	
+	<div id="toolhide" visible="true">
+	<h:table cellspacing="0" cellpadding="2" width="100%">
+		<h:tr height="50" >
+		<h:td width="410" valign="bottom" align="left">
+
+			<!-- <label value="Create a new email from scratch for this campaign."/> -->
+			<label value="Email Content Name" id="emlContentLblId" visible="${source == 1}"/>
+				<textbox id="contentNameTBId" visible="${source == 1}"/>
+				<!-- <toolbarbutton id="reloadTblId" label="Reload"  width="70px" sclass="alink"  
+					 image="/img/icons/icon_reload_big_bee.png"   style="font-weight: bold;" /> -->
+				<toolbarbutton id="plainPreviewImgId" label="Preview" width="80px" sclass="alink"   
+					image="/img/icons/icon_preview_big_bee.png"  style="font-weight: bold;" />	
+				<toolbarbutton id="promoId" tooltip="help2" image="/img/icons/rsz_info-icon_bee.png" sclass="alink"  width="250px" label="Merge Tags/Discount codes/Barcodes" style="font-weight: bold;" />		
+
+				<popup id="help2"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="To insert merge tags within text blocks, type'@' and select from list." class="labelPos" />
+										</h:td>
+									</h:tr>
+									
+									<h:tr>
+										<h:td>
+											<label  value="To insert discount codes within text blocks, select “special links” from the text formatting options, click on “DiscountCodes”, and select from list. " sclass="labelPos" />
+										</h:td>
+									</h:tr>	
+									
+									<h:tr>
+										<h:td>
+											<label  value="To insert barcodes, select the “Dynamic Content” block and select from list." class="labelPos" />
+										</h:td>
+									</h:tr>							
+								</h:table>								
+							
+							</popup>
+				<toolbarbutton id="promoId2" tooltip="help3" image="/img/icons/rsz_info-icon_bee.png" sclass="alink"  width="80px" label="Images" style="font-weight: bold;" />		
+
+				<popup id="help3"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="Image names should be alpha-numeric. Special characters allowed are A-Z, a-z, 0-9, &amp;, +, -, =, @,  _ and space,
+											  If any other characters are used, images may not be rendered." class="labelPos" />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<label  value="Folder names should be alpha-numeric. Special characters allowed are A-Z, a-z, 0-9, _ and space,
+											  If any other characters are used, images may not be rendered." class="labelPos" />
+										</h:td>
+									</h:tr>
+								
+									<h:tr>
+										<h:td>
+											<label  value="Please ensure that images are below 10 megabytes in file size before uploading to OptCulture. Images can be resized using the free tool at https://www.aviary.com/." class="labelPos" />
+										</h:td>
+									</h:tr>
+									
+									<h:tr>
+										<h:td>
+											<label  value="Hint: Images under 1000px on both sides will be well below 10MB." sclass="labelPos" />
+										</h:td>
+									</h:tr>								
+								</h:table>								
+							
+							</popup>
+						
+		</h:td>
+		<h:td align="center" valign="bottom" width="270" style="padding-bottom:8px;">
+					<label value="" id="autoSaveLbId" style = "color:#0063A1;font-weight: bold;" />		
+		</h:td>
+		
+		<h:td width="340" valign="bottom" align="right">
+			<div>
+				<toolbarbutton id="saveInMyTemplateTB" image="/img/icons/icon_save_mytemplates_bee.png" sclass="alink"  width="160px" label="Save in My Templates"  style="font-weight: bold;"/>
+				<toolbarbutton id="saveBtnId" image="/img/icons/icon_save_big_bee.png" sclass="alink"  width="60px" label="Save" style="font-weight: bold;" />
+				<toolbarbutton id="sendTestBtnId" image="/img/icons/Send-test-DR-Icon_2_bee.png" sclass="alink"  width="120px" label="Send Test Mail" style="font-weight: bold;"/>
+			</div>
+		
+		</h:td>
+		</h:tr>
+	</h:table>
+	
+	</div>
+	<window id="testWinId" visible="false" closable="true" title="Send Test Mail" 
+						height="200px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+						<h:table style="padding:10px;">
+							<h:tr>
+								<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td colspan="1"><label value="Email address:" /></h:td>
+								<h:td colspan="2"><textbox  id="testTbId"  width="160px"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td/>
+								
+								<h:td  colspan="2" valign="center">	
+									<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+									<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+								</h:td>
+								
+								
+							</h:tr>
+							<h:tr height="10" />
+							<h:tr>
+								<h:td><button label="Send" id="sendTestMailBtnId" /></h:td>
+								<h:td><button label="Cancel" id="cancelSendTestMailBtnId" /></h:td>
+							</h:tr>
+						</h:table>
+					</window>
+	
+	<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false);event.stopPropagation();" />
+		</caption>
+		<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+		<iframe id="iframeId" width="100%" height="100%"/>
+		</div>
+	</window>
+	
+		<h:table cellspacing="0" cellpadding="2" width="100%" >
+				
+				<h:tr>
+					
+				
+				<h:td>
+					<groupbox closable="false">
+						<caption  label="Editor"/>
+							 <textbox id="htmlTextBoxId" visible="false" value="EMPTY_HTML"/>
+   							 <textbox id="jsonTextBoxId" visible="false" value="EMPTY_JSON"/>
+    						 <textbox id="caretPosSE" visible="false" value="EMPTY_HTML"/>
+    						 <textbox id="jsonAutoSaveTextBoxId" visible="false" value="EMPTY_JSON"/>
+    						 <textbox id="nextButtonHtmlTextBoxId" visible="false" value="EMPTY_HTML"/>
+   							 <textbox id="nextButtonJsonTextBoxId" visible="false" value="EMPTY_JSON"/>
+   							 <textbox id="errormsg" visible="false"/>
+   							 
+   							 <textbox id="sendMethodHtmlTextBoxId" visible="false" value="EMPTY_HTML"/>
+   							 <textbox id="autoSaveJsonTextBoxId" visible="false" value="EMPTY_JSON"/>
+<html>
+
+<![CDATA[
+  <head>
+  <title>BEE Plugin - Integration Example</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content_area_width="width:600px, initial-scale=1" />
+ <script>
+ 	var namevalue = '${userName}';
+ 	var mytemplate;
+	var beekey;
+	var mergeTags97;
+	var barCodes79;
+	var specialLinks79;
+	var externalUrl;
+	var savejsonhtmlcontent = null;
+	var saveRowPopupcall = null;
+	var autosave = null;
+	var send = null;
+	var onErrorCall = null;
+	var showButtonsAfterLoad = null;
+	var containerId = 'bee-plugin-container';
+	var requestFrom = '';
+	var autosaveTimer = 30;
+	zk.afterMount(function () {
+		$.getScript("js/beeCommonFile.js", function() {
+			
+				saveRowPopupcall = function(args){
+					var myJSON = JSON.stringify(args);
+					zAu.send(new zk.Event(zk.Widget.$('$jsonDataSaveRow'),'onClickSaveRowCampaign',myJSON));
+				}
+				
+				savejsonhtmlcontent = function(jsonFile, htmlFile) {
+					updateHtmlJsonContents(jsonFile, htmlFile,"save");
+				}
+				
+				var autosaveJson;
+				var autosaveHtml;
+				autosave = function(jsonFile,htmlFile){
+					updateHtmlJsonContents(jsonFile,null,"autoSave");
+					autosaveJson = jsonFile;
+				}
+				
+				send = function(jsonFile,htmlFile){
+					updateHtmlJsonContents(autosaveJson,htmlFile,"send");
+				}
+			
+				function updateHtmlJsonContents(jsonFile, htmlFile,saveType){
+					 if(saveType != "autoSave"){
+						 var jsonString = JSON.stringify({html:htmlFile, json:jsonFile});
+						 zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onCustomEvent', jsonString));
+					 }else if(saveType == "autoSave"){
+						 if(jsonFile!=null){
+							 autosaveJson = jsonFile;
+						 }
+						 zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onCustomEventAutoSave', null));
+					 }else if(saveType == "send"){
+						 if(htmlFile!=null){
+							 autosaveHtml = htmlFile;
+						  }
+						 var jsonString = JSON.stringify({html:autosaveHtml, json:autosaveJson});
+						 zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onCustomEvent', jsonString));
+						 autosaveJson = null;
+						 autosaveHtml = null;
+					 }
+				};
+				
+			onErrorCall = function(){
+				   errorMessage();
+				}
+			
+			function errorMessage(){
+				   zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onError', null));
+			}
+				
+			showButtonsAfterLoad = function(){
+					//jq('$autoEmailSaveButtonId').attr('style','display:block'); 
+					//jq('$sendTestBtnId').attr('style','display:block');
+				}
+	});
+});
+</script>
+</head>
+  <body>
+  	<div id="superdiv" style="height:650px;">
+    	<div id="bee-plugin-container" style="height:650px;">  </div>    
+	</div>
+  </body>
+]]>
+</html>
+
+					</groupbox>
+				</h:td>
+			
+			</h:tr>
+		</h:table>	`
+		<div style="display: none">
+			<textbox id="jsonDataSaveRow" ></textbox>
+			<textbox id="jsonData" ></textbox>
+			<textbox id="editTemplateIdTextBox"></textbox>
+		</div>
+		<div align="right">
+			<button id="backBtnId" label="Back" visible="${source == 0}"   sclass="idle140"/>
+			<button  id="saveAsDraftBtnId" label="Save as Draft" visible="${source == 0}"  sclass="idle140" />
+			<button id="nextBtnId" label="Next" visible="${source == 0}" sclass="idle140 greenbtn" />
+		</div>
+	
+	
+		<textbox id="unameTbId" visible="false" value="${uname}" />
+		<script>
+			<![CDATA[
+				gUser = "${unameTbId.value}";
+			]]>
+		</script>
+	
+	<!-- SubWindow -->	
+	<window id="zipImport" title="Fetch HTML from URL" border="normal"  width="550px" visible="false"   height="200px"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true">    
+        	
+        	<!-- Save In My Template Div -->
+        	<div id="saveMyTemplateDivId" visible="false">
+        		<!-- <h:table width="100%">
+        		<h:tr height="30px;"><h:td ></h:td><h:td ></h:td><h:td ></h:td></h:tr>
+        		
+        			<h:tr height="20px;">
+        				<h:td colspan="3" align="center"  >
+				        	<h:div><label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/></h:div>
+        				
+        				</h:td>
+        			</h:tr>
+        			<h:tr>
+        			
+        				<h:td width="50px;"><label value="Name :"/> </h:td>
+        				<h:td width="150px;"><textbox id="nameTbId" /></h:td>
+        				<h:td>
+			       					<button id="myTemplatesSubmtBtnId" label="Submit" />					        	
+        				</h:td>
+        			</h:tr>
+        			<h:tr height="30px;"><h:td colspan="3" ></h:td></h:tr>
+        		</h:table> -->
+        		<h:table>
+					<h:tr>
+						<h:td colspan="3">
+						
+						<textbox id="htmlStuffId3" value="test"  visible="false"/>
+						
+			        	<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+			        	
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+		        		<label value="Name :"/> <textbox id="templatNameTbId"  maxlength="25"/>
+						</h:td>
+						<h:td>
+			        	<label value="Select folder:"/>
+					     <listbox id="myTemplatesListId" width="150px" sclass="templateList" rows="1" mold="select"/>
+						</h:td>
+						<h:td>
+		        		<button label="Submit" sclass="idle70" id="myTemplatesSubmtBtnId" />
+						</h:td>
+						</h:tr>
+				</h:table>
+        		
+        		<!-- <textbox id="htmlStuffId3" value="test"  visible="false"/>
+				
+	        	<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+	        	
+									
+	        	<hbox>
+	        	<label value="Select folder:"/>
+			     <listbox id="myTemplatesListId" width="150px" sclass="templateList" rows="1" mold="select"/>
+        		<label value="Name :"/> <textbox id="templatNameTbId" />
+        		<button label="Submit" id="myTemplatesSubmtBtnId" />
+	        	</hbox> -->
+        		
+        		
+			</div>	
+			
+			<!-- FetchURL  Div -->	
+			<div id="fetchUrlDivId" visible="false">
+			
+				<h:table width="100%" height="100px;">
+				<h:tr ><h:td ></h:td></h:tr>
+					<h:tr><h:td  ><label value="Provide URL to fetch HTML" style="font-weight:bold;" /></h:td></h:tr>
+					<h:tr ><h:td  ></h:td></h:tr>
+					
+					<h:tr><h:td  align="center" valign="top">
+						<div align="center" style="padding-top:8px;">
+							<textbox id="urlTbId"  cols="18" maxlength="60" tooltiptext="Provide URL to fetch HTML" />
+							<button label="Go" id="fetchURLGoBtnId" sclass="idle"  style="margin-left:2px;"/>
+							<button label="cancel" sclass="idle" onClick="zipImport.setVisible(false);"/>
+						</div>
+					</h:td></h:tr>
+					<h:tr height="10px;"><h:td align="center" ><label id="fetchUrlErrMsgLblId" style="color:red;"/></h:td></h:tr>
+				</h:table>
+			</div>
+			
+			<!-- Upload html zip file  Div -->		
+			<div id="importZipFileDivId" visible="false">
+	        	<h:table xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%" style="margin:10px" height="150px;">
+	        	<h:tr height="20px;"><h:td ></h:td></h:tr>
+	        		<h:tr>
+	        			<h:td width="100px;" align="right"><label value="Browse file" sclass="theme-lbHeading"/></h:td>
+	        			<h:td width="200px;" ><textbox id="selectedFileTbId"/></h:td>
+	        			<h:td><button label="Browse..." id="uploadBtnId" upload="true,maxsize=-1" /> </h:td>
+	        		</h:tr>
+	        		<h:tr ><h:td colspan="3"></h:td></h:tr>
+	        		<h:tr>
+	        			<h:td colspan="3" align="right" style="padding-right:10px;">
+	        				<h:div>
+	        					<button label="Upload" id="zipUploadBtnId" ></button>
+	        					<button label="Cancel" id="cancelBtnId"  />
+	        					<toolbarbutton label="Whats Allowed?" popup="popup" />
+	        					<popup id="popup" width="400px">
+									<html>
+										<![CDATA[
+										  <div>
+										  	Zip file can contain the following files <br/>
+										   	<ul style="padding-left:15px;">
+										   		<li> One .html/.htm file is allowed.</li>
+										   		<li> All your images should be in web formats (png,gif,jpg,bmp).</li>
+										   		<li> Required inline CSS.</li>
+										   		<li> HTML file size should be less than 1MB.</li>
+										   	</ul>
+										   
+										   </div>
+										]]>
+									</html>
+								</popup>
+	        				</h:div>
+	        			</h:td>
+	        		</h:tr>
+	        		
+	        		<h:tr>
+						<h:td colspan="3" align="center" height="20px;">
+							<h:div style="margin-top:5px;"><label id="resultLblId" value="" style="color:red;" />
+							</h:div>
+							<h:br/>
+						</h:td>
+					</h:tr>
+	        	</h:table>	
+								
+	        </div> 
+	    </window>
+	    
+	   <window id="customRowId" title="Save Rows" border="normal" visible="false" width="350px" height="190px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<h:table style="padding:10px;">
+			<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+				<h:tr>
+					<h:td colspan="2">
+						<label value="You can add a new name for your customized row here."/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td><label value="Category :"/></h:td>
+					<h:td ><combobox  id="comboCategoryRowId" width="230px" autodrop="true">
+						   </combobox>
+				</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Row Name :" /></h:td>
+					<h:td ><textbox  id="rowTextId" width="200px" maxlength="50"/></h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="save" sclass="idle70 greenbtn" id="onsaveRowTemplate" /></h:td>
+				</h:tr>
+			</h:table>
+		 </window>
+		
+		
+		
+		
+	<!-- Check and remove below div -->
+	<div visible="false">
+		<grid style="border:none;">
+					<columns>
+						<column align="center" />
+					</columns>
+					<rows>
+						<row visible="false">Save repeatedly to avoid loss of work</row>
+						
+						
+						<row visible="false" style="padding-top:8px;"><cell align="left">
+							<label value="Body background color" style="font-size:11px;" /><h:br/>
+							<div align="center" style="padding:8px 0;">
+							<colorbox id="cboxId" width="40px" height="20px" color="#029BCB" >
+							<attribute name="onChange">
+								<![CDATA[ 
+								          Clients.evalJavaScript("parent.changeBgColor('"+self.getColor()+"');"); 
+								     ]]>
+							</attribute>
+							</colorbox>
+							
+							<toolbarbutton tooltiptext="Undo" image="/img/theme/undo.png" disabled="false"  style="font-weight: bold;margin-left:15px;"/>
+							<toolbarbutton tooltiptext="Redo" image="/img/theme/redo.png" disabled="true" style="font-weight: bold;"/>
+							</div>
+						
+						</cell></row>
+						
+						<row visible="false"><cell>
+							<toolbarbutton id="addBlockBtnId" class="toolbarBtn" label="Add block" image="/img/icons/add_icon.png" popup="editPopup"/>
+							<menupopup id="editPopup"/>
+							<toolbarbutton id="deleteBlock" class="toolbarBtn" label="Delete" image="/img/icons/delete_icon.png" w:onClick="deleteBlock()"/>					
+						</cell></row>
+						
+						
+						<row visible="false"><cell align="left">
+						
+							<label value="Insert Place holder" style="font-size:11px;" /><h:br/>
+							<div align="center" style="padding:8px 0;">
+							<listbox id="phLbId" mold="select" width="140px" onSelect="phTbId.setValue((String)phLbId.getSelectedItem().getValue())" style="font-size:11px;"/>
+						    
+							<button label="Insert" w:onClick="insertPh(this.$f('phTbId').getValue(),this.$f('fckEditorId'))" width="50px" />					
+							<textbox value="select" id="phTbId" w:onChange="alert(this.getValue());" visible="false"/>
+	 						
+							</div>
+						</cell></row>
+						
+						
+						
+						<row style="padding-top:10px;" visible="true" ><cell align="left" >
+						
+							<label value="Choose Email Content" style="font-size:11px;" /><h:br/>
+							<div align="center" style="padding-top:8px;">
+								<listbox mold="select" id="emailContentsLBId" width="135px" style="font-size:10px;" visible="true"/>
+								<button id="useEmailContentBtnId" label="Use" style="margin-left:2px;" visible="true" onClick="plainEditorWinId.loadEmailContent()"/>
+							</div>
+						</cell></row>
+						
+					</rows>
+				</grid>
+			</div>
+			
+	  <!-- <timer id="autoSaveTimerId" delay="60000" repeats="true" >
+				
+		</timer>	 -->	
+	
+		
+    </window>	
+    	
+</zk>

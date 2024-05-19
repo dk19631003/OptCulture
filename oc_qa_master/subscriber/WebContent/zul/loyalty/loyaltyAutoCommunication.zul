@@ -1,0 +1,849 @@
+<zk>
+	<window border="0" width="100%" apply="org.mq.optculture.controller.loyalty.LoyaltyAutoCommunicationController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<div>
+			<label
+				value="Configure automated email / SMS communication to be sent out on various stages of membership in your loyalty or gift program." />
+		</div>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;"
+			closable="false">
+			<caption>
+				<label value="Send Automated Communication" />
+			</caption>
+			<h:table cellspacing="0" cellpadding="0" width="85%"
+				align="left" style="padding-left:20px;">
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+						<label value="Loyalty Enrollment :" />
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+							<hbox>
+								<listbox id="selRegAutoEmailsLbId"
+									width="150px" mold="select" style="position:relative;">
+									<listitem label="Select Auto Email"
+										selected="true" />
+									<!-- <listitem label="Default Message"/> -->	
+								</listbox>
+								<image src="/images/Preview_icn.png" id="previewRegEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="regEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRegEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="regEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRegEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="regEmailAddBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+								<listbox id="selRegAutoSmsLbId"
+									width="150px" mold="select" style="position:relative;">
+									<listitem label="Select Auto Sms"
+										selected="true" />
+								</listbox>
+								<image src="/images/Preview_icn.png" id="previewRegSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="regSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRegSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="regSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRegSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message" 
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="regSmsAddBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				<div visible="false" id="giftIssDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+						<label value="Gift-Card Issuance :" />
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+							<hbox>
+								<listbox id="gftIssAutoEmailsLbId"
+									width="150px" mold="select" style="position:relative;">
+									<listitem label="Select Auto Email"
+										selected="true" />
+									<!-- <listitem label="Default Message"/>	 -->
+								</listbox>
+								<image src="/images/Preview_icn.png" id="previewGftIssEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftIssEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editGftIssEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftIssEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addGftIssEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftIssEmailAddBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+								<listbox id="gftIssAutoSmsLbId"
+									width="150px" mold="select" style="position:relative;">
+									<listitem label="Select Auto Sms"
+										selected="true" />
+								</listbox>
+								<image src="/images/Preview_icn.png" id="previewGftIssSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftIssSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editGftIssSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftIssSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addGftIssSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftIssSmsAddBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+						<label value="Tier Upgradation :" />
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+							<hbox>
+								<listbox id="selTierAutoEmailsLbId"
+									width="150px" mold="select" style="position:relative;">
+									<listitem label="Select Auto Email"
+										selected="true" />
+									<!-- <listitem label="Default Message"/> -->
+								</listbox>
+								<image src="/images/Preview_icn.png" id="previewTierEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="tierEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editTierEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="tierEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addTierEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="tierEmailAddBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+								<listbox id="selTierAutoSmsLbId"
+									width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+										selected="true" />
+								</listbox>
+								<image src="/images/Preview_icn.png" id="previewTierSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="tierSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editTierSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="tierSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addTierSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="tierSmsAddBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+						<label value="Earning Bonus :" />
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selBonusAutoEmailsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+									<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewThresholdEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editThresholdEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addThresholdEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusEmailAddBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selBonusAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewThresholdSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editThresholdSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addThresholdSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusSmsAddBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					<vbox>
+						<label value="Reward Expiration :" />
+						<label value="(Reminder sent once at the starting of the month of expiry)"/></vbox>
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selRewardAutoEmailsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewRewExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRewExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRewExpEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selRewardAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewRewExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRewExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRewExpSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				<div visible="false" id="giftAmtDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					<vbox>
+						<label value="Gift Amount Expiration :" />
+						<label value="(Reminder sent once at the starting of the month of expiry)"/></vbox>
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selGftAmtAutoEmailsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+							<!-- 	<listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewGftAmtExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftAmtEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editGftAmtExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftAmtEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addGftAmtExpEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftAmtEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selGftAmtAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewGftAmtExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftAmtSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editGftAmtExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftAmtSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addGftAmtExpSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftAmtSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					<vbox><label value="Membership Expiration :" />
+					<label value="(Reminder sent once at the starting of the month of expiry)"/></vbox>
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selMemExpiryAutoEmailsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+							<!-- 	<listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewMemEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="memEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editMemEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="memEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addMemEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="memEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							
+							<hbox style="margin-top:5px">
+							<listbox id="selMemExpiryAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewMemSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="memSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editMemSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="memSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addMemSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="memSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				<div visible="false" id="giftExpDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					<vbox>
+						<label value="Gift-Card Expiration :" />
+						<label value="(Reminder sent once at the starting of the month of expiry)"/></vbox>
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selGftCrdAutoEmailsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewGftCrdExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftCrdEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editGftCrdExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftCrdEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addGftCrdExpEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftCrdEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selGftCrdAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewGftCrdExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftCrdSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editGftCrdExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftCrdSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addGftCrdExpSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="gftCrdSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+				<div visible="true" id="adjustmentDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					
+						<label value="Loyalty Adjustment :" />
+						
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selAdjustmentEmailLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewAdjustmentEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="adjustmentPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editAdjustmentEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="AdjustmentEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addAdjustmentEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="adjustmentEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selAdjustmentAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewAdjustmentSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="adjustmentSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editAdjustmentExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="adjustmentSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addAdjustmentSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="adjustmentSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+				<div visible="true" id="issuanceDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					
+						<label value="Loyalty Issuance :" />
+						
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selIssuanceEmailLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewIssuanceEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="issuancePreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editIssuanceEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="issuanceEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addIssuanceEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="issuanceEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selIssuanceAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewIssuanceSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="issuanceSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editIssuanceSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="issuanceSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addIssuanceSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="issuanceSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+				
+				<div visible="true" id="redemptionDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					
+						<label value="Loyalty Redemption :" />
+						
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selRedemptionEmailLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewRedemptionEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="redemptionPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRedemptionEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="redemptionEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRedemptionEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="redemptionEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selRedemptionAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewRedemptionSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="redemptionSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRedemptionSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="redemptionSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRedemptionSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="redemptionSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+				
+				
+				<div visible="true" id="OtpmessagesDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					
+						<label value="OTP Message :" />
+						
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selOtpmessageEmailLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewOtpmessageEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="OtpmessagePreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editOtpmessageEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="OtpmessageEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addOtpmessageEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:1px;"
+									id="OtpmessageEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selOtpmessageAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+						</listbox>
+							<image src="/images/Preview_icn.png" id="previewOtpmessageSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="OtpmessageSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editOtpmessageSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="OtpmessageSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addOtpmessageSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="OtpmessageSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					<div visible="true" id="OtpmessagesRedDivId">
+				<h:tr height="20"></h:tr>
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					
+						<label value="Redemption OTP :" />
+						
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selRedemptionOtpEmailLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewRedemptionOtpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="RedemptionOtpPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRedemptionOtpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="RedemptionOtpEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRedemptionOtpEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:1px;"
+									id="RedemptionOtpEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selRedemptionOtpAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+						</listbox>
+							<image src="/images/Preview_icn.png" id="previewRedemptionOtpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="RedemptionOtpSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRedemptionOtpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="RedemptionOtpSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRedemptionOtpSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="RedemptionOtpSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</div>
+						
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<h:tr height="20"></h:tr>
+			</h:table>
+		</groupbox>
+		<h:table cellspacing="2" cellpadding="1" align="right"
+			style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			<h:tr height="20"></h:tr>
+			<h:tr>
+				<h:td colspan="6" style="padding-right:30px;">
+					<button label="Previous" sclass="idle140"
+						id="previousBtnId" />
+					<button label="Next" id="nextBtnId"
+						sclass="idle140" />
+					<button label="Save &amp; Continue" id="saveBtnId"
+						sclass="idle140 greenbtn" />
+				</h:td>
+			</h:tr>
+		</h:table>	
+			
+			 <window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+			<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+	</window>
+</zk>

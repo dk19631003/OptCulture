@@ -1,0 +1,154 @@
+<zk>
+	<window id="autoEmailplainEditorWinId" apply="org.mq.marketer.campaign.controller.gallery.AutoEmailPlainEditorController" width="100%" xmlns:h="http://www.w3.org/1999/xhtml"  xmlns:w="http://www.zkoss.org/2005/zk/client">
+	  
+	<script>
+			function insertPh(val, ckeditor){
+				if(val == 'select') {
+					alert('Select a Place Holder');
+					return;
+				}
+				var ckuuid = ckeditor.uuid
+				CKEDITOR.instances[ckuuid+'-cnt'].insertText(val);
+			} 
+	</script>
+	
+	<script src="/js/ckplugins/placeholders/ckplugin.js"></script>
+	<style src="/css/editor.css"/>
+	<script src="/js/editor.js"/> 
+	
+	<textbox id="htmlStuffId" value="test" visible="false"/>
+		
+	<h:table cellspacing="0" cellpadding="2" width="100%" >
+		<h:tr height="50">
+		<h:td valign="top">
+		</h:td>
+		
+		<h:td align="left" valign="bottom" width="400">
+			<label value="" id="autoSaveLbId" style = "color:#0063A1;font-weight: bold;" />
+		</h:td>
+		
+		<h:td width="310" valign="bottom" align="right">
+			<div >
+				<toolbarbutton id="plainPreviewImgId" label="Preview" width="80px" sclass="alink"   
+					image="/images/icon_preview_big.png"  style="font-weight: bold;" />			
+				<!-- <toolbarbutton id="saveBtnId" image="/img/icons/icon_save_big.png" sclass="alink"  width="80px" label="Save"  /> -->
+			
+			</div>
+		
+		</h:td>
+		</h:tr>
+	</h:table>
+	
+	<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)"/>
+		</caption>
+		<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+		<iframe id="iframeId" width="100%" height="100%"/>
+		</div>
+	</window>
+	
+		<h:table cellspacing="0" cellpadding="2" width="100%" >
+				<h:tr>
+					<h:td width="230px" valign="top">
+					
+						<vlayout style="margin-right:10px;">
+								<groupbox closable="false">
+									<caption  label="Send a Test Email"/>
+									
+										<textbox id="testEmailTbId" value="Email Address..." cols="18" width="200px"   ></textbox>
+										
+										<div>
+											<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+											<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+										</div>
+										
+										<div align="right" style="padding-top:8px;">
+											<button label="Send" id="testEmailGoBtnId" sclass="idle70"  style="margin-right:2px;"/>
+										</div>
+								</groupbox>
+						</vlayout>
+				</h:td>
+				
+				<h:td>
+					<groupbox closable="false">
+						<caption  label="Editor"/>
+						<ckeditor id="fckEditorId"  visible="true" customConfigurationsPath="/js/ckConfig.js" height="450px" width="98%"/>	
+					</groupbox>
+				</h:td>
+			
+			</h:tr>
+		</h:table>
+		
+		<div align="right">
+			<button id="backBtnId" label="Back"    sclass="idle140"/>
+			<button id="saveBtnId" label="Save"   sclass="idle140 greenbtn"  />
+		</div>
+	
+	
+		<textbox id="unameTbId" visible="false" value="${uname}" />
+		
+	<!-- Check and remove below div -->
+	<div visible="false">
+		<grid style="border:none;">
+					<columns>
+						<column align="center" />
+					</columns>
+					<rows>
+						<row visible="false">Save repeatedly to avoid loss of work</row>
+						
+						
+						<row visible="false" style="padding-top:8px;"><cell align="left">
+							<label value="Body background color" style="font-size:11px;" /><h:br/>
+							<div align="center" style="padding:8px 0;">
+							<colorbox id="cboxId" width="40px" height="20px" color="#029BCB" >
+							<attribute name="onChange">
+								<![CDATA[ 
+								          Clients.evalJavaScript("parent.changeBgColor('"+self.getColor()+"');"); 
+								     ]]>
+							</attribute>
+							</colorbox>
+							
+							<toolbarbutton tooltiptext="Undo" image="/img/theme/undo.png" disabled="false"  style="font-weight: bold;margin-left:15px;"/>
+							<toolbarbutton tooltiptext="Redo" image="/img/theme/redo.png" disabled="true" style="font-weight: bold;"/>
+							</div>
+						
+						</cell></row>
+						
+						<row visible="false"><cell>
+							<toolbarbutton id="addBlockBtnId" class="toolbarBtn" label="Add block" image="/img/icons/add_icon.png" popup="editPopup"/>
+							<menupopup id="editPopup"/>
+							<toolbarbutton id="deleteBlock" class="toolbarBtn" label="Delete" image="/img/icons/delete_icon.png" w:onClick="deleteBlock()"/>					
+						</cell></row>
+						
+						
+						<row visible="false"><cell align="left">
+						
+							<label value="Insert Place holder" style="font-size:11px;" /><h:br/>
+							<div align="center" style="padding:8px 0;">
+							<listbox id="phLbId" mold="select" width="140px" onSelect="phTbId.setValue((String)phLbId.getSelectedItem().getValue())" style="font-size:11px;"/>
+						    
+							<button label="Insert" w:onClick="insertPh(this.$f('phTbId').getValue(),this.$f('fckEditorId'))" width="50px" />					
+							<textbox value="select" id="phTbId" w:onChange="alert(this.getValue());" visible="false"/>
+	 						
+							</div>
+						</cell></row>
+						
+						
+						
+						<row style="padding-top:10px;" visible="true" ><cell align="left" >
+						
+							<label value="Choose Email Content" style="font-size:11px;" /><h:br/>
+							<div align="center" style="padding-top:8px;">
+								<listbox mold="select" id="emailContentsLBId" width="135px" style="font-size:10px;" visible="true"/>
+								<button id="useEmailContentBtnId" label="Use" style="margin-left:2px;" visible="true" onClick="plainEditorWinId.loadEmailContent()"/>
+							</div>
+						</cell></row>
+						
+					</rows>
+				</grid>
+			</div>
+		 
+    </window>
+    	
+</zk>

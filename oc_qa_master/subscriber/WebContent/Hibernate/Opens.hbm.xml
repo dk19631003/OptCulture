@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.Opens" table="opens">
+		<id name="openId" type="java.lang.Long">
+			<column name="open_id" />
+			<generator class="native" />
+		</id>
+		<!-- <many-to-one name="sentId"
+			class="org.mq.marketer.campaign.beans.CampaignSent"
+			foreign-key="open_sentFkey" fetch="select" lazy="false">
+			<column name="sent_id" not-null="true" />
+		</many-to-one> -->
+		<property name="sentId" type="java.lang.Long">
+			<column name="sent_id" />
+		</property>
+		<property name="openDate" type="calendar">
+			<column name="open_date" />
+		</property>
+		<!-- <many-to-one name="emailClient"
+			class="org.mq.marketer.campaign.beans.EmailClient" foreign-key="FK_opens_emailclient">
+			<column name="email_client" />
+		</many-to-one>
+         <many-to-one name="osFamily" class="org.mq.marketer.campaign.beans.EmailClient" foreign-key="FK_opens_osfamily" >
+			<column name="os_Family" />
+		</many-to-one>
+		<many-to-one name="uaFamily"
+			class="org.mq.marketer.campaign.beans.EmailClient" foreign-key="FK_opens_uafamily" >
+			<column name="ua_Family" />
+		</many-to-one> -->
+		<property name="emailClient" type="java.lang.Long">
+			<column name="email_client" />
+		</property>
+		<property name="osFamily" type="java.lang.Long">
+			<column name="os_Family" />
+		</property>
+		<property name="uaFamily" type="java.lang.Long">
+			<column name="ua_Family" />
+		</property>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,110 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style src="/css/reports.css" />
+	<window id="clickWinId" width="100%" border="0" apply="org.mq.marketer.campaign.controller.report.SMSClickURLController" xmlns:h="native">
+		<groupbox sclass="gbStyle" closable="false"  >
+				<caption label="URLs Clicked Report"  />
+		<h:table width="100%" cellpadding="2" cellspacing="2"  style="margin:3px">
+			<h:tr valign="bottom">
+		    	<h:td align="left">
+		    		<!--  <listbox id="timeOptionLbId" mold="select" onSelect="selectOption((String)self.getSelectedItem().getValue())">-->
+		    		<listbox id="timeOptionLbId" emptyMessage="No Records Found..." mold="select">	
+		    			<listitem label="Consolidated" value="0" selected="true"/>
+		    			<listitem label="Selected Date" value="1"/>
+		    			<listitem label="Between Dates" value="2"/>
+		    		</listbox>
+		    	</h:td>
+		    	<h:td class="subpagehead"   align="left">
+		    		<hbox align="center" >
+			    		<div id="startDivId" class="lefttext" visible="false">
+				    		<label id="date1LblId" value="Selected Date" />
+				    		<datebox id="startDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+			    		</div>
+			    		<div id="endDivId" class="lefttext" visible="false">
+				    		<label id="date2LblId" value="To: " style="padding-left:10px;"/>
+				    		<datebox id="endDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+			    		</div>
+		    		</hbox>
+		    	</h:td>
+		    	<h:td align="right" width="160">
+		    		<button label="Apply" sclass="idle140" id="refreshBtnId"/>
+		    	</h:td>
+		    	
+		    	
+			</h:tr>
+			</h:table>
+			
+			<h:table cellspacing="0" cellpadding="2" align="right" >
+				<h:tr>
+				<h:td>
+				<div style="height:10px;width:8px;background-color:#FF6347;"/></h:td>
+				<h:td>
+				<label value="Clicks" /></h:td>
+				</h:tr>
+			</h:table>
+			<chart id="clicksChartId" width="650"  showTooltiptext="true" showLegend="false" height="300" orient="vertical" paneColor="#FFFFFF" type="line"
+									 threeD="false" fgAlpha="255" xAxis="Hours" yAxis="No. of Clicks" />
+									 
+								 
+				
+		
+	
+		<h:br/>
+		
+		<h:br/>
+		
+		 <listbox id="clicksRateLbId" emptyMessage="No Records Found..." sclass="contactsView" width="99%"  >
+			<listhead style="background-color:#488eb0;">
+				<listheader label="Hour (range)"  align="center"/>
+			
+				<listheader label="Unique Clicks for hour"  align="center"/>
+				<listheader label="Total Clicks for hour" align="center"/>
+			</listhead>
+		 </listbox>
+ 			
+ 			<h:table style="padding-top:20px;">
+ 				<h:tr>
+ 				 	<h:td>
+ 				 	<label value="Export as a" /> 
+				<combobox  id="exportCbId" readonly="true" sclass="cb_100w">
+			 	  		<comboitem label=" .csv file" value="csv" />    
+				</combobox> 
+				
+				<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId" />
+ 				 	</h:td>
+ 				</h:tr>
+			</h:table>
+			
+			<h:br/>
+		
+		<h:br/>
+			
+			
+			
+			<grid id="viewClickUrlsGridId" mold="paging" pageSize="10" width="100%" height="250px" emptyMessage="No Records Found..." >
+				<columns sizable="true">
+					<column  label="URL" align="left" width="30%" sort = "auto" />
+					<column  label="Shortened URL " align="left" width="30%" sort = "auto" tooltiptext="As seen in SMS text" />
+					<column  label="Unique Clicks for URL" align="center" width="20%" sort = "auto" />
+					<column  label="Total Clicks for URL" align="center" width="20%" sort = "auto" />
+					
+				</columns>
+				<rows id="viewClicksRowsId" />
+					
+				<foot>
+		        <footer label="TOTAL CLICKS" style="text-align:left;font-weight:bold;"/>
+		        <footer />
+		         <footer />
+		        
+		        <footer id="totClicksLBFId" label="" style="text-align:center"/>
+		        </foot>
+		        
+		        
+				
+		</grid>	
+		<h:br/>
+		
+		
+		</groupbox>			
+</window>
+</zk>

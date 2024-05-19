@@ -1,0 +1,486 @@
+<zk>
+
+	<style>
+		.lbl, .z-checkbox, .z-radio { 
+		display: -moz-inline-box; 
+		}
+		.z-overflow-hidden {
+ 		overflow: visible;
+		}
+		div.z-listcell-cnt {
+    	line-height: 10px;
+		}
+		</style>
+	<window border="0" width="100%"
+		apply="org.mq.optculture.controller.loyalty.LoyaltyAdditionalSettingsController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+
+		<div>
+			<label
+				value="Set-up various expirations for your loyalty or gift program. You can also add special exclusion rules for your loyalty program." />
+		</div>
+
+		<div id="fstDivId">
+			<groupbox width="95%" sclass="gbStyle"
+				style="margin-top:10px;" closable="false">
+				<caption>
+					<label value="Validity Settings" />
+				</caption>
+
+				<h:table cellspacing="0" cellpadding="0" width="85%"
+					align="left" style="padding-left:20px;">
+					<!-- <h:tr>
+						<h:td>
+							<label value="Reward Expiration:" />
+						</h:td>
+						<h:td colspan="2">
+							<checkbox id="earnedRwrdExpiryCbId"
+								checked="false" style="padding-right:0px;" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td></h:td>
+
+						<h:td colspan="2">
+							<div id="rewardTierDivId" visible="false">
+								<h:table>
+									<h:tr>
+										<h:td width="600">
+											<listbox id="tierLbId"
+												width="99%">
+
+												<listhead
+													sizable="false">
+
+													<listheader label=""
+														align="left" width="50" />
+													<listheader label=""
+														align="left" width="50" />
+													<listheader label=""
+														align="left" width="100"/>
+
+												</listhead>
+											</listbox>
+										</h:td>
+										<h:td>
+											<label
+												value="of earning, at the end of the month"
+												style="display:inline-block;margin-top:5px;" />
+										</h:td>
+									</h:tr>
+								</h:table>
+							</div>
+						</h:td>
+
+					</h:tr> -->
+					<div visible="false" id="giftAmtDivId">
+					<h:tr>
+						<h:td>
+							<label value="Gift Amount Expiration:" />
+						</h:td>
+						<h:td>
+						  <hbox>
+							<checkbox id="giftAmtExpCbId"	checked="false" style="padding-right:0px;" />
+							<div id="giftAmtExpDivId" visible="false">
+							<label value="After" />
+							<listbox id="giftAmtExpTypeLbId" mold="select"	style="padding-left:5px;position:relative;">
+								<listitem label="Year(s)" value="Year"	selected="true" />
+								<listitem label="Month(s)" value="Month"/>
+							</listbox>
+							<listbox id="giftAmtExpValueLbId" mold="select" style="position:relative;">
+							</listbox>
+							<label value=" of top-up, at the end of month" />
+							</div>
+						 </hbox>
+						</h:td>
+					</h:tr>
+					</div>
+					<h:tr height="20"></h:tr>
+					<h:tr>
+						<h:td width="200">
+							<label
+								value="Membership Validity Duration:" />
+						</h:td>
+						<h:td colspan="2">
+							<checkbox id="memValidityCbId"
+								checked="false" style="padding-right:0px;" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td></h:td>
+
+						<h:td colspan="2">
+							<div id="memTierDivId" visible="false">
+								<h:table>
+									<h:tr>
+										<h:td width="600">
+											<listbox id="memTierLbId"
+												width="99%">
+												<listhead
+													sizable="false">
+
+													<listheader label=""
+														align="left" width="50px" />
+													<listheader label=""
+														align="left" width="50px" />
+													<listheader label="" 
+														align="left"  width="100"/>
+
+												</listhead>
+											</listbox>
+										</h:td>
+										<h:td>
+											<label
+												value="of enrollment, at the end of the month"
+												style="display:inline-block;margin-top:5px;" />
+										</h:td>
+									</h:tr>
+								</h:table>
+							</div>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td></h:td>
+						<h:td valign ="top" colspan="2">
+							<div id="resetDivId" visible="false">
+								<label value="Reset validity On Level Upgrade:" />
+								<checkbox id="resetValidCbId" checked="false" style="margin-top :12px;" />
+							</div>
+						</h:td>
+					</h:tr>
+					<h:tr height="20"></h:tr>
+					<div visible="false" id="giftValidityDivId">
+					<h:tr>
+					<h:td>
+						<label value="Gift-Card Validity Duration:" />
+					</h:td>
+					<h:td>
+					<hbox>
+						<checkbox id="giftmemExpCbId"	checked="false" style="padding-right:0px;" />
+						<div id="giftMemExpDivId" visible="false">
+						<label value="After" />
+						<listbox id="giftmemExpTypeLbId" mold="select"	style="padding-left:5px;position:relative;">
+							<listitem label="Year(s)" value="Year"	selected="true" />
+							<listitem label="Month(s)" value="Month"/>
+						</listbox>
+						<listbox id="giftMemExpValueLbId" mold="select" style="position:relative;">
+						</listbox>
+						<label value=" of card activation, at the end of month" />
+						</div>
+					 </hbox>
+					</h:td>
+					</h:tr>
+					</div>
+				</h:table>
+			</groupbox>
+		</div>
+
+		<div id="secndDivId" visible="false">
+			<groupbox width="95%" sclass="gbStyle"
+				style="margin-top:10px;" closable="false">
+				<caption>
+					<label value="Loyalty Program Exclusions" />
+				</caption>
+				
+				<div id="disallowIssuRempDivId" visible="false">
+				<h:table cellspacing="0" cellpadding="0" width="85%"
+					align="left" style="padding-left:20px;">
+					<h:tr  style="margin-top:20px;" >
+						<h:td  width="300px" valign="top">
+							<label style="display:block;margin-top:5px;"
+								value="Disallow Issuance With OptCulture Promotions:" />
+						</h:td>
+						<h:td width="50px" valign="top">
+							
+								<checkbox id="disallowCbId"
+									checked="false" style="padding-right:0px;" />
+						</h:td>
+						<h:td > 
+							<div id="selIssuePromoDivId"
+								visible="false" style="display:inline;">
+								<listbox id="selIssuePromotionsLbId" width="150px"
+									multiple="true" height="100px" sclass="contactsView"
+									checkmark="true" >
+								</listbox>
+							</div>
+						</h:td>
+					</h:tr>
+					<h:tr height="10px;"></h:tr>
+					<h:tr >
+						<h:td width="300px" valign="top">
+							<label style="display:block;margin-top:5px;"
+								value="Disallow Redemption With OptCulture Promotions:" />
+						</h:td>
+						<h:td width="50px" valign="top">
+								<checkbox id="disallowRedeemCbId"
+									checked="false" style="padding-right:0px;" />
+						</h:td>
+						<h:td >
+								<div id="selRedeemPromoDivId"
+									visible="false">
+									<listbox
+										id="selRedeemPromotionsLbId" multiple="true" height="100px"
+										sclass="contactsView" checkmark="true" width="150px" />
+								</div>
+						</h:td>
+					</h:tr>
+			</h:table>
+			</div>
+			
+			<div id="redemRempDivId" visible="true">
+				<h:table cellspacing="0" cellpadding="0" width="auto"
+					align="left" style="padding-left:20px;">
+					
+					 <h:tr height="10px;"></h:tr>
+					<h:tr >
+					<div id="storeSelectDivId">
+					<h:td width="300px" valign="top">
+							<label style="display:block;margin-top:5px;"
+								value="Exclude Redemptions at Stores:" />
+					</h:td>
+					 <h:td width="50px" valign="top">
+								<checkbox id="excludeRedeemCbId"
+									checked="false" style="padding-right:0px;" /> 
+					</h:td>
+					<h:td width="250px" valign="top" style="display:inline;margin-top:5px;">
+					<div id="redemEnableChkbDivId" visible="false">
+		  						<radiogroup  id="StoresID" />
+		  						<radio label=" All Stores" id="allStoresChkBxId"  radiogroup="StoresID" value="All Stores"/>
+		  					   	<radio label=" Selected Stores" id="selectedStoresId"  radiogroup="StoresID"  value="Selected" style="margin-left:0px;" />
+		  			</div>
+		  			</h:td>	
+		  			<h:td width="300px" valign="top" style="display:inline;margin-top:5px;">		
+		  			<div id="selectedStoreDivId" visible="false">
+						 	
+							 	<h:tr>
+							 		<h:td width="140px" />
+							 		<h:td>
+							 			<label value="" />
+							 		</h:td>
+							 		<h:td>
+							 			<combobox id="redemstoreNumbCmboBxId" style="margin-bottom:10px;" width="220px"/>
+							 		</h:td>
+							 		<h:td style="align:right" >
+							 			<image src="/images/action_add.gif" id= "redemaddStoreImgId" tooltiptext="Add Store" style="cursor:pointer;margin-left:10px;" />
+							 		</h:td>
+							 	</h:tr>
+							 	<h:tr>
+							 		<h:td />
+							 		<h:td />
+							 		<h:td>
+							 			<listbox id="redemselectedStoreLbId" multiple="true" width="150px" height="100px"  sclass="contactsView" >
+							 				<listhead>
+							 					<listheader width="110px" />
+							 					<listheader />
+							 					
+							 				</listhead>
+							 				
+							 			</listbox>
+							 		</h:td>
+							 	</h:tr>
+				 		</div>
+				 		</h:td>
+				   </div>
+				   </h:tr> 
+				
+			</h:table>
+			</div>
+			
+			<div id="additionSettingtoSBtoOc" visible="false">
+			<h:table cellspacing="0" cellpadding="0" width="85%"
+					align="left" style="padding-left:20px;">
+					
+					<h:tr height="50">
+						<h:td width="300px">
+							<label
+								value="Exclude Store Numbers From This Loyalty Program:" />
+						</h:td>
+						<h:td>
+							<combobox id="storeNumbCmboBxId"
+								width="220px" />
+							<image src="/images/action_add.gif"
+								id="addStoreImgId" tooltiptext="Add Store"
+								style="cursor:pointer;margin-left:10px;" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td />
+						<h:td>
+							<listbox id="selectedStoreLbId"
+								multiple="true" width="150px" height="100px"
+								sclass="contactsView">
+								<listhead>
+									<listheader width="100px"/>
+									<listheader />
+								</listhead>
+							</listbox>
+						</h:td>
+					</h:tr>
+					<h:tr height="20" />
+					<h:tr height="40">
+						<h:td valign="top">
+							<label
+								value="Exclude Products From Issuance:"
+								style="margin-top:10px;" />
+						</h:td>
+						<h:td colspan="2" valign="top">
+							
+								<listbox id="itemCategoryLbId"
+									mold="select"  style="margin-top:5px;position:relative;">
+									<listitem label="Item Category"
+										selected="true" value="itemCategory" />
+										<listitem label="Department Code" value = "departmentCode"/>
+										<listitem label="Class" value = "classCode"/>
+										<listitem label="Subclass" value = "subClassCode"/>
+										<listitem label="DCS" value="DCS" />
+										<listitem label="Vendor Code" value="vendorCode"/>
+										<listitem label="SKU Number" value="sku"/>
+								</listbox>
+								<textbox id="addCodeValueTbId" value=""
+									name="addCodeValueTb" width="100px" maxlength="50"
+									style="margin-right:10px;" />
+								<space />
+								<image src="/images/action_add.gif"
+									id="addCodeImgId" tooltiptext="Add Product Code"
+									style="cursor:pointer;" />
+							
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td />
+						<h:td>
+							<listbox id="productCodeLbId" width="300px"
+								multiple="true" height="100px" sclass="contactsView"
+								style="margin-top:5px;position:relative;">
+								<listhead>
+									<listheader width="120px" />
+									<listheader  width="100px" />
+									<listheader />
+								</listhead>
+							</listbox>
+						</h:td>
+					</h:tr>
+					<h:tr height="20" />
+					<h:tr height="40" style="margin-top:10px;">
+						<h:td valign="top" style="margin-top:10px;">
+							<label
+								value="Exclude Special Day(s) From Issuance:"
+								style="margin-top:10px;" />
+						</h:td>
+						<h:td valign="top" style="margin-top:10px;" colspan="2">
+							<!-- <datebox id="dateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+							format="dd-MMM-yyyy" />
+								<space />
+								<image src="/images/action_add.gif"
+									id="addDateImgId" tooltiptext="Add Product Code"
+									style="cursor:pointer;margin-left:10px;" /> -->
+									<listbox  id="excYearLbId"  rows="1" mold="select" style="position:relative;" width="100px" />
+									
+									<listbox  id="excMonthLbId"  rows="1" mold="select" style="position:relative;" width="80px">
+										<listitem label="Jan" value="Jan" selected="true" />
+										<listitem label="Feb" value="Feb"/>
+										<listitem label="Mar" value="Mar"/>
+										<listitem label="Apr" value="Apr"/>
+										<listitem label="May" value="May"/>
+										<listitem label="Jun" value="Jun"/>
+										<listitem label="Jul" value="Jul"/>
+										<listitem label="Aug" value="Aug"/>
+										<listitem label="Sep" value="Sep"/>
+										<listitem label="Oct" value="Oct"/>
+										<listitem label="Nov" value="Nov"/>
+										<listitem label="Dec" value="Dec"/>
+									</listbox>
+
+									<listbox  id="excDateLbId"  rows="1" mold="select" style="position:relative;" width="80px" />
+							<space />
+								<image src="/images/action_add.gif"
+									id="addDateImgId" tooltiptext="Add Date"
+									style="cursor:pointer;margin-left:10px;" /> 
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td />
+						<h:td valign="top">
+							<listbox id="dateLbId" multiple="true"
+								height="90px" sclass="contactsView" 
+								width="150px" >
+								<listhead>
+									<listheader width="100px" />
+									<listheader />
+								</listhead>
+								</listbox>
+						</h:td>
+					</h:tr>
+					
+					<h:tr height="20" />
+					<h:tr height="40" style="margin-top:10px;">
+						<h:td valign="top" style="margin-top:10px;">
+							<label
+								value="Exclude Redemption on Day(s):"
+								style="margin-top:10px;" />
+						</h:td>
+						<h:td valign="top" style="margin-top:10px;" colspan="2">
+									<listbox  id="excRedemptionYearLbId"  rows="1" mold="select" style="position:relative;" width="100px" />
+									
+									<listbox  id="excRedemptionMonthLbId"  rows="1" mold="select" style="position:relative;" width="80px">
+									    <listitem label="Month" value="Month" selected="true" />
+										<listitem label="Jan" value="Jan"/>
+										<listitem label="Feb" value="Feb"/>
+										<listitem label="Mar" value="Mar"/>
+										<listitem label="Apr" value="Apr"/>
+										<listitem label="May" value="May"/>
+										<listitem label="Jun" value="Jun"/>
+										<listitem label="Jul" value="Jul"/>
+										<listitem label="Aug" value="Aug"/>
+										<listitem label="Sep" value="Sep"/>
+										<listitem label="Oct" value="Oct"/>
+										<listitem label="Nov" value="Nov"/>
+										<listitem label="Dec" value="Dec"/>
+									</listbox>
+
+									<listbox  id="excRedemptionDateLbId"  rows="1" mold="select" style="position:relative;" width="80px" >
+									       <listitem label="Day" value="Day" selected="true" />
+									</listbox>       
+							<space />
+								<image src="/images/action_add.gif"
+									id="addRedemptionDateImgId" tooltiptext="Add Date"
+									style="cursor:pointer;margin-left:10px;" /> 
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td />
+						<h:td valign="top">
+							<listbox id="redemptionDateLbId" multiple="true"
+								height="90px" sclass="contactsView" 
+								width="320px" >
+								<listhead>
+									<listheader width="230px" />
+									<listheader />
+								</listhead>
+								</listbox>
+						</h:td>
+					</h:tr>
+				</h:table>
+				</div>
+
+			</groupbox>
+		</div>
+		<h:table cellspacing="2" cellpadding="1" align="right"
+			style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			<h:tr height="20"></h:tr>
+			<h:tr>
+				<h:td colspan="6" style="padding-right:30px;">
+					<button label="Previous" sclass="idle140"
+						id="previousBtnId" />
+					<button label="Next" id="nextBtnId"
+						sclass="idle140" />
+					<button label="Save &amp; Continue" id="saveBtnId"
+						sclass="idle140 greenbtn" />
+				</h:td>
+			</h:tr>
+		</h:table>
+	</window>
+
+
+</zk>

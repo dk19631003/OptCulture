@@ -1,0 +1,46 @@
+package org.mq.optculture.model.loyalty;
+
+public class InquiryInfo {
+	private String EMPID;
+	private String STORELOCATIONID;
+	private String CUSTOMERID;
+	private String CARDNUMBER;
+	private String CARDPIN;
+	private String CARDTYPE;
+	public String getEMPID() {
+		return EMPID;
+	}
+	public void setEMPID(String eMPID) {
+		EMPID = eMPID;
+	}
+	public String getSTORELOCATIONID() {
+		return STORELOCATIONID;
+	}
+	public void setSTORELOCATIONID(String sTORELOCATIONID) {
+		STORELOCATIONID = sTORELOCATIONID;
+	}
+	public String getCUSTOMERID() {
+		return CUSTOMERID;
+	}
+	public void setCUSTOMERID(String cUSTOMERID) {
+		CUSTOMERID = cUSTOMERID;
+	}
+	public String getCARDNUMBER() {
+		return CARDNUMBER;
+	}
+	public void setCARDNUMBER(String cARDNUMBER) {
+		CARDNUMBER = cARDNUMBER;
+	}
+	public String getCARDPIN() {
+		return CARDPIN;
+	}
+	public void setCARDPIN(String cARDPIN) {
+		CARDPIN = cARDPIN;
+	}
+	public String getCARDTYPE() {
+		return CARDTYPE;
+	}
+	public void setCARDTYPE(String cARDTYPE) {
+		CARDTYPE = cARDTYPE;
+	}
+}

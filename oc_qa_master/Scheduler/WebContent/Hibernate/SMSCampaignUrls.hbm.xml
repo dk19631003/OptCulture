@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.SMSCampaignUrls" table="sms_campaign_urls">
+    <id name="id" type="java.lang.Long" column="id">
+      <generator class="native"/>
+    </id>
+	<property name="typeOfUrl" type="string" column="type" length="10"/>
+    <property name="crId" type="java.lang.Long" column="cr_id" />
+    <property name="originalUrl" type="string" column="original_url" length="1000"/>
+    <property name="shortUrl" type="string" column="short_url" length="500" />
+
+  </class>
+</hibernate-mapping>

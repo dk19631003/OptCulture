@@ -1,0 +1,75 @@
+<?page title="Change Password" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="mySharingWinId"  border="0"  xmlns:w="client" xmlns:h="native" 
+	apply="org.mq.marketer.campaign.controller.MySharingsController">
+	
+	
+		<tabbox id="shareTabBoxId">
+			<tabs>
+				<tab label="Mailing List Sharing" />
+				<tab label="Segment Sharing" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<groupbox closable="false"  sclass="gbStyle">
+     					<caption label="Select List(s) To be Shared" />
+     					<h:table>
+     					<h:tr>
+     					<h:td>
+     					
+     					<listbox  width="300px" height="200px"  id="shareMlLbId"  checkmark="true" multiple="true">
+     					
+     					</listbox>
+     					</h:td>
+     					
+     						<h:td style="vertical-align: top;">
+							<div style="padding:10px;" id="selectListDivId" visible="false">
+								<label style="color:#09719F;" value="Shared List(s): " />
+								<label value="" id="selectedListsLbId" style="color:#2886B9;font-weight:" sclass="listsLb" multiline="true"  />
+							</div>
+							</h:td>
+     					
+     					</h:tr>
+						</h:table>
+						<div align="right" style="margin-top:10px;">
+							<button id="mlShareBtnId" sclass="idle180 greenbtn" label="Share Mailing List(s)" />
+						</div>
+					</groupbox>
+					
+				</tabpanel>
+				
+				<tabpanel>
+					<groupbox closable="false"  sclass="gbStyle">
+     					<caption label="Select Segment(s) To be Shared" />
+     					<h:table>
+     						<h:tr>
+     							<h:td>
+     							
+			     					<listbox width="300px" height="200px"  id="shareSegmentsLbId" checkmark="true" multiple="true">
+			     					
+			     					</listbox>
+     							</h:td>
+     							<h:td style="vertical-align: top;">
+									<div style="padding:10px;" id="selectSegmentDivId" visible="false">
+										<label style="color:#09719F;" value="Shared segment(s): " />
+										<label value="" id="selectedSegmentsLbId" style="color:#2886B9;" sclass="listsLb" multiline="true"  />
+									</div>
+							</h:td>
+     						</h:tr>
+     					</h:table>
+     					
+     					
+     					<div align="right" style="margin-top:10px;">
+							<button id="segmentShareBtnId" sclass="idle180 greenbtn" label="Share Segment(s)" />
+						</div>
+     					
+					</groupbox>
+				
+				</tabpanel>
+			</tabpanels>		
+		</tabbox>
+			
+		
+	
+</window>
+</zk>

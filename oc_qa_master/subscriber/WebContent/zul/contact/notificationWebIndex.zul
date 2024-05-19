@@ -1,0 +1,5 @@
+<?page title="Create Campaign" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="notificationIndexWinId" apply="org.mq.marketer.campaign.controller.contacts.NotificationWebIndex">
+	</window>
+</zk>

@@ -1,0 +1,655 @@
+package org.mq.optculture.timer;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimerTask;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.EmailQueue;
+import org.mq.marketer.campaign.beans.LoyaltyTransaction;
+import org.mq.marketer.campaign.beans.LoyaltyTransactionParent;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.EmailQueueDao;
+import org.mq.marketer.campaign.dao.LoyaltyTransactionDao;
+import org.mq.marketer.campaign.dao.LoyaltyTransactionDaoForDML;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.business.loyalty.LoyaltyEnrollmentService;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.model.loyalty.LoyaltyEnrollRequestObject;
+import org.mq.optculture.model.loyalty.LoyaltyEnrollResponseObject;
+import org.mq.optculture.model.loyalty.XMLEnrolments;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+import org.mq.optculture.utils.XMLUtil;
+
+import com.google.gson.Gson;
+
+public class LoyaltyEnrolmentByXML extends TimerTask {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	private final String owner = PropertyUtil.getPropertyValueFromDB("owner");
+	private final String group = PropertyUtil.getPropertyValueFromDB("group");
+	private final String SftpUserPath = PropertyUtil.getPropertyValueFromDB("SftpUserPath");
+	
+	public void run() {
+		
+		
+		logger.info("Started LoyaltyEnrollByXML timer...");
+		String inboxEnrollPath = PropertyUtil.getPropertyValue("inboxloyaltyenroll");
+		String donePath = PropertyUtil.getPropertyValue("doneloyaltyenroll");
+		String outboxLoyaltyPath = PropertyUtil.getPropertyValue("outboxloyaltyenroll");
+		try {
+			boolean filesexists =false;
+			if(inboxFileExist(inboxEnrollPath)){
+				filesexists =true;
+				logger.info("inbox enroll files exist...");
+				File file = new File(inboxEnrollPath);
+				File[] xmlFiles  = file.listFiles();
+				
+				logger.info("List out the inbox enroll files...");
+				for(File file2 : xmlFiles){
+					logger.info(file2.getName().toString());
+				}
+				
+				for(File xmlFile1 : xmlFiles){
+					
+					//TODO changes
+					File xmlFile  = null;
+					if(xmlFile1.getName().endsWith(".zip")) {
+						
+						xmlFile = XMLUtil.unzip(xmlFile1.getAbsolutePath(), inboxEnrollPath);
+						
+						if(xmlFile == null) {
+							logger.info("Unzip falied for this file name  "+xmlFile1.getAbsolutePath());
+							
+							//TODO write a txt file and put them in to outbox as txt
+							writeStatusFile("Temporary", xmlFile1.getName());
+							
+							//Zip Move to done folder
+							if(!donePath.endsWith(File.separator) ){
+								donePath = donePath+File.separator;
+							}
+							xmlFile1.renameTo(new File(donePath+xmlFile1.getName()));
+							 
+							continue;
+							
+						}
+						
+						if(!donePath.endsWith(File.separator) ){
+							donePath = donePath+File.separator;
+						}
+						//Zip Move to done folder
+						xmlFile1.renameTo(new File(donePath+xmlFile1.getName()));
+					
+					}else {
+						xmlFile = xmlFile1;
+					}
+				//
+					
+					
+					boolean validXmlFile = validateXmlWithXsd(xmlFile.toString());
+					if(!validXmlFile){
+						logger.info("Invalid xml file..."+xmlFile);
+						renameAndMove(xmlFile.toString());
+						writeFailedMessage("Permanent", "Invalid xml file", xmlFile.getName(),".xml");
+						continue;
+					}
+					
+					boolean isXmlFile = checkFileWithXmlExtension(xmlFile.getName());
+					if(isXmlFile){
+						processXmlFile(xmlFile, outboxLoyaltyPath, owner, group, false,donePath);
+						renameAndMove(xmlFile.toString());
+					}
+					else{
+						writeFailedMessage("Permanent", "Invalid xml file", xmlFile.getName(),".xml");
+					}
+				}
+			}
+			List<Users> specificDirExists = SpecificDirExists();
+			if(specificDirExists != null && specificDirExists.size()>0) {
+				filesexists = true;
+				//String genericUsername = "ocftpuser";
+				for (Users users : specificDirExists) {
+					String username = Utility.getOnlyOrgId(users.getUserName());
+					inboxEnrollPath = SftpUserPath+"/"+username+"/opt_sync/inbox/loyalty/enroll";
+					donePath = SftpUserPath+"/"+username+"/opt_sync/done/loyalty/enroll";
+					outboxLoyaltyPath = SftpUserPath+"/"+username+"/opt_sync/outbox/loyalty/enroll";
+					if(inboxFileExist(inboxEnrollPath)){
+						
+
+						logger.info("inbox enroll files exist...");
+						File file = new File(inboxEnrollPath);
+						File[] xmlFiles  = file.listFiles();
+						
+						logger.info("List out the inbox enroll files...");
+						for(File file2 : xmlFiles){
+							logger.info(file2.getName().toString());
+						}
+						
+						for(File xmlFile1 : xmlFiles){
+							
+							//TODO changes
+							File xmlFile  = null;
+							if(xmlFile1.getName().endsWith(".zip")) {
+								
+								xmlFile = XMLUtil.unzip(xmlFile1.getAbsolutePath(), inboxEnrollPath);
+								
+								if(xmlFile == null) {
+									logger.info("Unzip falied for this file name  "+xmlFile1.getAbsolutePath());
+									
+									//TODO write a txt file and put them in to outbox as txt
+									writeStatusFile("Temporary", xmlFile1.getName(), outboxLoyaltyPath, username);
+									
+									//Zip Move to done folder
+									if(!donePath.endsWith(File.separator) ){
+										donePath = donePath+File.separator;
+									}
+									xmlFile1.renameTo(new File(donePath+xmlFile1.getName()));
+									 
+									continue;
+									
+								}
+								
+								if(!donePath.endsWith(File.separator) ){
+									donePath = donePath+File.separator;
+								}
+								//Zip Move to done folder
+								xmlFile1.renameTo(new File(donePath+xmlFile1.getName()));
+							
+							}else {
+								xmlFile = xmlFile1;
+							}
+						//
+							
+							
+							boolean validXmlFile = validateXmlWithXsd(xmlFile.toString());
+							if(!validXmlFile){
+								logger.info("Invalid xml file..."+xmlFile);
+								renameAndMoveForSpecific(xmlFile.toString(),donePath);
+								writeFailedMessage("Permanent", "Invalid xml file", xmlFile.getName(),".xml", outboxLoyaltyPath, username );
+								continue;
+							}
+							
+							boolean isXmlFile = checkFileWithXmlExtension(xmlFile.getName());
+							if(isXmlFile){
+								processXmlFile(xmlFile, outboxLoyaltyPath, username, username, true,donePath);
+								renameAndMoveForSpecific(xmlFile.toString(), donePath);
+							}
+							else{
+								writeFailedMessage("Permanent", "Invalid xml file", xmlFile.getName(),".xml",outboxLoyaltyPath, username);
+							}
+						}
+					
+						
+					}
+					
+					
+				}
+			}
+			if(filesexists){
+				logger.info("loyalty inbox enroll files not exist.");
+			}
+		} catch (Exception e) {
+			logger.error("Exception in xml enrolment file test", e);
+			return;
+		} finally {
+			logger.info("Completed LoyaltyEnrollByXML timer...");
+		}
+		return;
+	}
+	public void writeFailedMessage(String reasonType, String errorMsg, String xmlfileName, String extension){
+		logger.info("Started writing failed message of file :"+xmlfileName);		
+		String outboxLoyaltyPath = PropertyUtil.getPropertyValue("outboxloyaltyenroll");
+		FileWriter writer;
+		String fileName = xmlfileName.substring(0, xmlfileName.indexOf(extension))+".txt";
+		try {
+			File file = new File(outboxLoyaltyPath+"/"+fileName);
+			writer = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(writer);
+			StringBuffer str = new StringBuffer();
+			str.append("Status : Not Processed");
+			str.append("\r\n");
+			str.append("Reason Type: "+reasonType);
+			str.append("\r\n");
+			str.append("Error Message: ");
+			str.append(errorMsg);
+			bw.write(str.toString());
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			logger.error("Exception in while writing failed message.", e);
+		}
+		
+		//change the user/group and  the permissions to the file
+		try {
+			String chOwnCmd = "chown "+owner+":"+group+" "+outboxLoyaltyPath+"/"+fileName;
+			logger.debug("chaging the file permissions =="+ chOwnCmd);
+			Runtime.getRuntime().exec(chOwnCmd);
+			
+			String chmodCmd = "chmod 777 "+outboxLoyaltyPath+"/"+fileName;
+			Runtime.getRuntime().exec(chmodCmd);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception in while writing failed message.", e);
+		}
+		
+		logger.info("Completed writing failed message of file :"+xmlfileName);
+	}
+	public void writeFailedMessage(String reasonType, String errorMsg, String xmlfileName, String extension,String outboxLoyaltyPath, String owner){
+		logger.info("Started writing failed message of file :"+xmlfileName);		
+		//String outboxLoyaltyPath = PropertyUtil.getPropertyValue("outboxloyaltyenroll");
+		FileWriter writer;
+		String fileName = xmlfileName.substring(0, xmlfileName.indexOf(extension))+".txt";
+		try {
+			File file = new File(outboxLoyaltyPath+"/"+fileName);
+			writer = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(writer);
+			StringBuffer str = new StringBuffer();
+			str.append("Status : Not Processed");
+			str.append("\r\n");
+			str.append("Reason Type: "+reasonType);
+			str.append("\r\n");
+			str.append("Error Message: ");
+			str.append(errorMsg);
+			bw.write(str.toString());
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			logger.error("Exception in while writing failed message.", e);
+		}
+		
+		//change the user/group and  the permissions to the file
+		try {
+			String chOwnCmd = "chown "+owner+":"+owner+" "+outboxLoyaltyPath+"/"+fileName;
+			logger.debug("chaging the file permissions =="+ chOwnCmd);
+			Runtime.getRuntime().exec(chOwnCmd);
+			
+			String chmodCmd = "chmod 777 "+outboxLoyaltyPath+"/"+fileName;
+			Runtime.getRuntime().exec(chmodCmd);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception in while writing failed message.", e);
+		}
+		
+		logger.info("Completed writing failed message of file :"+xmlfileName);
+	}
+	
+	public void writeSuccessMessage(String xmlfileName, int totalCount, int successCount, int failureCount, String outboxLoyaltyPath, String owner, String group){
+		logger.info("Started writing success message of file :"+xmlfileName);
+		FileWriter writer;
+		String fileName = xmlfileName.substring(0, xmlfileName.indexOf(".xml"))+".txt";
+		try {
+			File file = new File(outboxLoyaltyPath+"/"+fileName);
+			writer = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(writer);
+			StringBuffer str = new StringBuffer();
+			str.append("Status : Processed");
+			str.append("\r\n");
+			str.append("Total Requests Count : ");
+			str.append(totalCount);
+			str.append("\r\n");
+			str.append("Success Count : ");
+			str.append(successCount);
+			str.append("\r\n");
+			str.append("Failure Count : ");
+			str.append(failureCount);
+			bw.write(str.toString());
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			logger.error("Exception in while writing failed message.", e);
+		}
+		
+		try {
+			String chOwnCmd = "chown "+owner+":"+group+" "+outboxLoyaltyPath+"/"+fileName;
+			logger.debug("chaging the file permissions =="+ chOwnCmd);
+			Runtime.getRuntime().exec(chOwnCmd);
+			
+			String chmodCmd = "chmod 777 "+outboxLoyaltyPath+"/"+fileName;
+			Runtime.getRuntime().exec(chmodCmd);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception in while writing failed message.", e);
+		}
+		logger.info("Completed writing success message of file :"+xmlfileName);
+	}
+	public boolean renameAndMoveForSpecific(String xmlFile, String donepAth){
+		logger.info("Started renaming and moving a file : "+xmlFile);
+		try{
+			//String renameCmd = "mv "+xmlFile+" "+xmlFile+".txt";
+			//Runtime.getRuntime().exec(renameCmd);
+			
+			//String moveCmd = "mv "+xmlFile+".txt"+" "+donePath;
+			String moveCmd = "mv "+xmlFile+" "+donepAth;
+			Runtime.getRuntime().exec(moveCmd);
+		}catch(Exception e){
+			logger.error("Exception in renameandmove enroll xml file" ,e);
+			return false;
+		}
+		logger.info("Completed renaming and moving a file : "+xmlFile);
+		return true;
+	}
+	public boolean renameAndMove(String xmlFile){
+		logger.info("Started renaming and moving a file : "+xmlFile);
+		try{
+			String donePath = PropertyUtil.getPropertyValue("doneloyaltyenroll");
+			//String renameCmd = "mv "+xmlFile+" "+xmlFile+".txt";
+			//Runtime.getRuntime().exec(renameCmd);
+			
+			//String moveCmd = "mv "+xmlFile+".txt"+" "+donePath;
+			String moveCmd = "mv "+xmlFile+" "+donePath;
+			Runtime.getRuntime().exec(moveCmd);
+		}catch(Exception e){
+			logger.error("Exception in renameandmove enroll xml file" ,e);
+			return false;
+		}
+		logger.info("Completed renaming and moving a file : "+xmlFile);
+		return true;
+	}
+	
+	public boolean validateXmlWithXsd(String xmlfile) {
+		logger.info("Started schema validation with file : "+xmlfile);
+		try {
+			String enrollxsd = PropertyUtil.getPropertyValue("loyaltyenrollschema");
+			return XMLUtil.validateXMLwithSchema(xmlfile, enrollxsd);
+		} catch (BaseServiceException e) {
+			e.printStackTrace();
+			return false;
+		}
+		finally{
+			logger.info("Completed schema validation with file : "+xmlfile);
+		}
+	}
+	
+	public boolean checkFileWithXmlExtension(String xmlfile) {
+		logger.info("Started checking xml extension of file : "+xmlfile);
+		boolean status = false;
+		if(xmlfile != null && xmlfile.trim().endsWith(".xml")){
+			status = true;
+		}
+		logger.info("Completed checking xml extension of file : "+xmlfile);
+		return status;
+	}
+	
+	public boolean inboxFileExist(String inboxPath) throws Exception {
+		logger.info("Started checking files in inbox folder : "+inboxPath);
+		boolean status = false;
+		File file = new File(inboxPath);
+		if(file.exists() && file.isDirectory() && file.list().length > 0){
+			status = true;
+		}
+		logger.info("Completed checking files in inbox folder : "+inboxPath);
+		return status;
+	}
+	
+	public List<Users> SpecificDirExists() throws Exception {
+		UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+		
+		List<Users> specificDirUsers = usersDao.findAnySpeciDirBasedUsersExists();
+		return specificDirUsers;
+		
+	}
+	
+	public void processXmlFile(File xmlfile, String outboxLoyaltyEnrollPath, String owner, String group, boolean isSpecific, String donePath){
+		logger.info("Started processing XML file :"+xmlfile.getName());
+		int successCount = 0;
+		int failureCount = 0;
+		
+		try{
+			Object object =  XMLUtil.unMarshal(xmlfile.toString(), XMLEnrolments.class);
+			XMLEnrolments enrollList = (XMLEnrolments)object;
+			List<LoyaltyEnrollRequestObject> enrollRequestList = enrollList.getEnrollRequest();
+			
+			logger.info("Total requests in the file : "+enrollRequestList.size());
+			
+			outboxLoyaltyEnrollPath += outboxLoyaltyEnrollPath.endsWith(File.separator) ? "" : File.separator;
+			String loyEnrollCSVFilePath = outboxLoyaltyEnrollPath+xmlfile.getName().replace(FilenameUtils.getExtension(xmlfile.getName()), "csv");
+			
+			File inboxLoyEnrollCSVFile = new File(loyEnrollCSVFilePath);
+			//BufferedWriter bw = new BufferedWriter(new FileWriter(loyEnrollCSVFilePath));
+			//bw.write("\"Request ID\",\"Card Number\",\"Customer Id\",\"Email Id\",\"Mobile\",\"Status\",\"Error Code\",\"Error Message\",\"User_Org\" \r\n");
+			StringBuffer sb =  new StringBuffer();
+			
+			
+			for(LoyaltyEnrollRequestObject enrollRequest : enrollRequestList) {
+				String requestJson = new Gson().toJson(enrollRequest, LoyaltyEnrollRequestObject.class);
+				
+				String pcFlag = enrollRequest.getHEADERINFO().getPCFLAG();
+				String requestId = enrollRequest.getHEADERINFO().getREQUESTID();
+				LoyaltyTransaction transaction = null;
+				//transaction = findTransactionByRequestId(requestId);
+				
+				// pc flag removed using request id for unique identifier
+				/*if(pcFlag != null && pcFlag.equalsIgnoreCase("true")){
+					transaction = findTransactionByRequestId(requestId);
+					if(transaction != null && transaction.getStatus().equals(OCConstants.LOYALTY_TRANSACTION_STATUS_PROCESSED)){
+						successCount += 1;
+						continue;
+					}
+				}	*/
+				/*else if (transaction != null){//request with requestid was already processed. 
+					failureCount += 1;
+					continue;
+				}*/
+				
+				// pcflag removed
+				transaction = findTransactionByRequestId(requestId);
+				
+				if(transaction != null && transaction.getStatus().equals(OCConstants.LOYALTY_TRANSACTION_STATUS_PROCESSED)) {
+					
+						successCount += 1;
+						continue;
+				}
+				
+				//log transaction
+				if(transaction == null){
+					transaction = logTransactionRequest(enrollRequest, requestJson, OCConstants.LOYALTY_OFFLINE_MODE);
+				}
+				//BaseService baseService = ServiceLocator.getInstance().getServiceByName(OCConstants.LOYALTY_ENROLMENT_BUSINESS_SERVICE);
+				
+				Date date = transaction.getRequestDate().getTime();
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+				String transDate = df.format(date);
+				
+				LoyaltyEnrollmentService enrollService = (LoyaltyEnrollmentService)ServiceLocator.getInstance().getServiceById(OCConstants.LOYALTY_ENROLMENT_BUSINESS_SERVICE);
+				//BaseResponseObject baseResponseObject = baseService.processRequest(requestObject);
+				LoyaltyEnrollResponseObject responseObject = enrollService.processEnrollmentRequest(enrollRequest, OCConstants.LOYALTY_OFFLINE_MODE, transaction.getId()+"",transDate );
+				String responseJson = new Gson().toJson(responseObject, LoyaltyEnrollResponseObject.class);	
+				logger.info("Response = "+responseJson);
+				
+				/*//to pause this enrollmnet,so that enrollment through DR happens.
+				UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName("usersDao");
+				Users userObj=usersDao.findUserByUserNameAndToken(enrollRequest.getUSERDETAILS().getUSERNAME(),enrollRequest.getUSERDETAILS().getTOKEN());
+				if(transaction.getMode().equals(OCConstants.LOYALTY_OFFLINE_MODE) && userObj.isEnableLoyaltyExtraction()){
+					updateTransactionStatus(transaction, responseJson, responseObject,OCConstants.LOYALTY_TRANSACTION_STATUS_PAUSED);
+				}*/
+				updateTransactionStatus(transaction, responseJson, responseObject,OCConstants.LOYALTY_TRANSACTION_STATUS_PROCESSED);
+					
+				//RequestId
+				sb.append("\"");sb.append(enrollRequest.getHEADERINFO().getREQUESTID()); sb.append("\""); sb.append(",");
+//				bw.write("\"Request ID\",\"Card Number\",\"Customer Id\",\"Email Id\",\"Mobile\",\"status\",\"Error Code\",\"Error Message\",\"User_Org\" \r\n");
+				//Card Number
+				String cardNumber = responseObject.getENROLLMENTINFO().getCARDNUMBER();
+				sb.append("\"");sb.append(cardNumber == null ? "" : cardNumber ); sb.append("\""); sb.append(",");
+				
+				//Customer Id
+				String custmerId = responseObject.getCUSTOMERINFO().getCUSTOMERID();
+				sb.append("\"");sb.append(custmerId == null ? "" : custmerId ); sb.append("\""); sb.append(",");
+				
+				//Email Id
+				String emailId = responseObject.getCUSTOMERINFO().getEMAIL();
+				sb.append("\"");sb.append(emailId == null ? "" : emailId ); sb.append("\""); sb.append(",");
+				
+				//Mobile
+				String phoneStr = responseObject.getCUSTOMERINFO().getPHONE();
+				sb.append("\"");sb.append(phoneStr == null ? "" : phoneStr ); sb.append("\""); sb.append(",");
+				
+				//status
+				sb.append("\"");sb.append(responseObject.getSTATUS().getSTATUS()); sb.append("\""); sb.append(",");
+				//Error Code
+				sb.append("\"");sb.append(responseObject.getSTATUS().getERRORCODE()); sb.append("\""); sb.append(",");
+				//Error Mesage
+				sb.append("\"");sb.append(responseObject.getSTATUS().getMESSAGE()); sb.append("\""); sb.append(",");
+				//User_Org
+				sb.append("\"");sb.append(responseObject.getUSERDETAILS().getUSERNAME()+"_"+responseObject.getUSERDETAILS().getORGANISATION()); sb.append("\"");sb.append("\r\n"); 
+				logger.info("sb buffer = "+sb);
+				
+				if(responseObject.getSTATUS().getERRORCODE().equals("0")){
+					successCount += 1;
+				}
+				else{
+					failureCount += 1;
+				}
+				//bw.write(sb.toString());
+				//bw.flush();
+				
+			}//for
+			if(failureCount > 0){
+				BufferedWriter bw = new BufferedWriter(new FileWriter(loyEnrollCSVFilePath));
+				bw.write("\"Request ID\",\"Card Number\",\"Customer Id\",\"Email Id\",\"Mobile\",\"Status\",\"Error Code\",\"Error Message\",\"User_Org\" \r\n");
+				bw.write(sb.toString());
+				bw.flush();
+				bw.close();
+			}
+			
+			sb = null;
+			//System.gc();
+			try {
+				String chOwnCmd = "chown "+owner+":"+group+" "+loyEnrollCSVFilePath;
+				logger.debug("chaging the file permissions =="+ chOwnCmd);
+				Runtime.getRuntime().exec(chOwnCmd);
+				
+				String chmodCmd = "chmod 777 "+loyEnrollCSVFilePath;
+				Runtime.getRuntime().exec(chmodCmd);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				logger.error("Exception in while writing failed message.", e);
+			}
+			if(!isSpecific)renameAndMove(xmlfile.toString());
+			else renameAndMoveForSpecific(xmlfile.toString(), donePath);
+			writeSuccessMessage(xmlfile.getName(), enrollRequestList.size(), successCount, failureCount,outboxLoyaltyEnrollPath, owner, group);
+			
+			//prepare emailqueue Object for Support team
+			/*if(failureCount > 0) {
+				
+				//(String subject,String message, String type, String status,String toEmailId,Calendar sentDate,Users user)
+				String supportEmail = PropertyUtil.getPropertyValueFromDB("SupportEmailId");
+				if(supportEmail == null || supportEmail.trim().isEmpty()) {
+					logger.info("Support email id not found "+supportEmail);
+					return;
+				}
+				UsersDao usersdao = null ;
+				EmailQueueDao emailQueueDao = null;
+				try {
+					usersdao =(UsersDao)ServiceLocator.getInstance().getDAOByName("usersDao");
+					emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName("emailQueueDao");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(usersdao == null) {
+					logger.info("usersdao not found retruning ...");
+					return;
+				}
+				Users user = usersdao.find(1l);//inbox promos redemtion email queue userid hard coded
+				if(user == null) {
+					logger.info("users  not found retruning ...");
+					return;
+				}
+				StringBuffer messageStrBuff = new StringBuffer("<html><head></head><body>"
+						+ "<br />Loyalty Enrollment failed count is :"+failureCount+""
+								+ "<br /> Please refer  "+inboxLoyEnrollCSVFile.getName()+" in FTP loyalty outbox("+outboxLoyaltyEnrollPath+") folder. </body></html>");
+				EmailQueue emailQueue = new EmailQueue("OptSync Loyalty Enrollment failed",messageStrBuff.toString(),Constants.OPT_SYN_LOYALTY_ENROLMENT,"Active",supportEmail,MyCalendar.getNewCalendar(),user);
+				
+				emailQueueDao.saveOrUpdate(emailQueue);
+				
+			} */// Preparing email queue Object
+			
+			
+			
+		}catch(Exception e){
+			logger.error("Exception while processing xml file..", e);
+			renameAndMove(xmlfile.toString());
+			writeFailedMessage("Permanent", "Server error", xmlfile.getName(),".xml");
+		}
+		logger.info("Completed processing XML file :"+xmlfile.getName());
+	}//End of method
+
+	
+	public LoyaltyTransaction findTransactionByRequestId(String requestId){
+		LoyaltyTransaction transaction = null;
+		LoyaltyTransactionDao loyaltyTransactionDao = null;
+		try {
+			loyaltyTransactionDao = (LoyaltyTransactionDao)ServiceLocator.getInstance().getDAOByName("loyaltyTransactionDao");
+			transaction = loyaltyTransactionDao.findByRequestIdAndType(requestId, OCConstants.LOYALTY_TRANSACTION_ENROLMENT);
+		}catch(Exception e){
+			logger.error("Exception in find transaction by requestid", e);
+		}
+		return transaction;
+	}
+	
+	public LoyaltyTransaction logTransactionRequest(LoyaltyEnrollRequestObject requestObject, String jsonRequest, String mode){
+		LoyaltyTransactionDao loyaltyTransactionDao = null;
+		LoyaltyTransactionDaoForDML loyaltyTransactionDaoForDML = null;
+		LoyaltyTransaction transaction = null;
+		try {
+			loyaltyTransactionDao = (LoyaltyTransactionDao)ServiceLocator.getInstance().getDAOByName("loyaltyTransactionDao");
+			loyaltyTransactionDaoForDML = (LoyaltyTransactionDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName("loyaltyTransactionDaoForDML");
+			
+			transaction = new LoyaltyTransaction();
+			transaction.setJsonRequest(jsonRequest);
+			transaction.setRequestId(requestObject.getHEADERINFO().getREQUESTID());
+			transaction.setPcFlag(Boolean.valueOf(requestObject.getHEADERINFO().getPCFLAG()));
+			transaction.setMode(mode);//online or offline
+			transaction.setRequestDate(Calendar.getInstance());
+			transaction.setStatus(OCConstants.LOYALTY_TRANSACTION_STATUS_NEW);
+			transaction.setType(OCConstants.LOYALTY_TRANSACTION_ENROLMENT);
+			transaction.setUserDetail(requestObject.getUSERDETAILS().getUSERNAME()+"__"+requestObject.getUSERDETAILS().getORGANISATION());
+			//loyaltyTransactionDao.saveOrUpdate(transaction);
+			loyaltyTransactionDaoForDML.saveOrUpdate(transaction);
+			
+		} catch (Exception e) {
+			logger.error("Exception in logging transaction", e);
+		}
+		return transaction;
+	}
+	
+	public void updateTransactionStatus(LoyaltyTransaction transaction, String responseJson, LoyaltyEnrollResponseObject response,String status){
+		LoyaltyTransactionDao loyaltyTransactionDao = null;
+		LoyaltyTransactionDaoForDML loyaltyTransactionDaoForDML = null;
+		try {
+			loyaltyTransactionDao = (LoyaltyTransactionDao)ServiceLocator.getInstance().getDAOByName("loyaltyTransactionDao");
+			loyaltyTransactionDaoForDML = (LoyaltyTransactionDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName("loyaltyTransactionDaoForDML");
+			transaction.setStatus(status);
+			transaction.setJsonResponse(responseJson);
+			transaction.setCardNumber(response.getENROLLMENTINFO().getCARDNUMBER());
+			transaction.setStatus(status);
+			//loyaltyTransactionDao.saveOrUpdate(transaction);
+			loyaltyTransactionDaoForDML.saveOrUpdate(transaction);
+		}catch(Exception e){
+			logger.error("Exception in updating transaction", e);
+		}
+	}
+	private void writeStatusFile(String reasonType, String filename, String path, String owner) {
+		writeFailedMessage(reasonType, "Invalid zip file", filename, ".zip", path, owner);
+		
+	}
+	
+	private void writeStatusFile(String reasonType, String filename) {
+		writeFailedMessage(reasonType, "Invalid zip file", filename, ".zip");
+		
+	}
+}

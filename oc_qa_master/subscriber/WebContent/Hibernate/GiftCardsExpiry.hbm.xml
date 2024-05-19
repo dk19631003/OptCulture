@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.GiftCardsExpiry" table="gift_cards_expiry">
+	  
+        <id name="expiryId" type="java.lang.Long" column="expiry_id">
+            <generator class="native"/>
+        </id>
+        <property name="historyId" column="history_id" type="java.lang.Long"/>
+        <property name="giftCardId" column="gift_card_id" type="java.lang.Long"/>
+        <property name="giftProgramId" column="gift_program_id" type="java.lang.Long"/>
+        <property name="giftCardNumber" column="gift_card_number" type="string"/>
+        <property name="userId" column="user_id" type="java.lang.Long"/>
+        <property name="createdDate" column="created_date" type="calendar"/>
+        <property name="expiryAmount" column="expiry_amount" type="java.lang.Double"/>
+        <property name="expiryDate" column="expiry_date" type="calendar"/>
+	  
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyAutoComm"
+		table="loyalty_auto_comm">
+		<id name="autoCommId" type="java.lang.Long" column="auto_comm_id">
+			<generator class="native" />
+		</id>
+		<property name="programId" type="java.lang.Long">
+	      <column name="program_id" not-null="true" unique="true"/>
+	    </property>
+	    <property name="regEmailTmpltId" type="java.lang.Long">
+	      <column name="reg_email_tmplt_id" />
+	    </property>
+	    <property name="regSmsTmpltId" type="java.lang.Long">
+	      <column name="reg_sms_tmplt_id" />
+	    </property>
+	    <property name="tierUpgdEmailTmpltId" type="java.lang.Long">
+	      <column name="tier_upgd_email_tmplt_id" />
+	    </property>
+	    <property name="tierUpgdSmsTmpltId" type="java.lang.Long">
+	      <column name="tier_upgd_sms_tmplt_id" />
+	    </property>
+	    <property name="threshBonusEmailTmpltId" type="java.lang.Long">
+	      <column name="thresh_bonus_email_tmplt_id" />
+	    </property>
+	    <property name="threshBonusSmsTmpltId" type="java.lang.Long">
+	      <column name="thresh_bonus_sms_tmplt_id" />
+	    </property>
+	    <property name="rewardExpiryEmailTmpltId" type="java.lang.Long">
+	      <column name="reward_expiry_email_tmplt_id" />
+	    </property>
+	    <property name="rewardExpirySmsTmpltId" type="java.lang.Long">
+	      <column name="reward_expiry_sms_tmplt_id" />
+	    </property>
+	    <property name="mbrshipExpiryEmailTmpltId" type="java.lang.Long">
+	      <column name="mbrship_expiry_email_tmplt_id" />
+	    </property>
+	    <property name="mbrshipExpirySmsTmpltId" type="java.lang.Long">
+	      <column name="mbrship_expiry_sms_tmplt_id" />
+	    </property>
+	    <property name="createdDate" type="calendar">
+			<column name="created_date" not-null="true"/>
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="60" not-null="true"/>
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="modifiedBy" type="string">
+			<column name="modified_by" length="60"/>
+		</property>
+		 <property name="giftAmtExpiryEmailTmpltId" type="java.lang.Long">
+	      <column name="gift_amt_expiry_email_tmplt_id" />
+	    </property>
+	     <property name="giftAmtExpirySmsTmpltId" type="java.lang.Long">
+	      <column name="gift_amt_expiry_sms_tmplt_id" />
+	    </property>
+	     <property name="giftMembrshpExpiryEmailTmpltId" type="java.lang.Long">
+	      <column name="gift_membrshp_expiry_email_tmplt_id" />
+	    </property>
+	     <property name="giftMembrshpExpirySmsTmpltId" type="java.lang.Long">
+	      <column name="gift_membrshp_expiry_sms_tmplt_id" />
+	    </property>
+	     <property name="giftCardIssuanceEmailTmpltId" type="java.lang.Long">
+	      <column name="gift_card_issuance_email_tmplt_id" />
+	    </property>
+	     <property name="giftCardIssuanceSmsTmpltId" type="java.lang.Long">
+	      <column name="gift_card_issuance_sms_tmplt_id" />
+	    </property>
+	    <property name="adjustmentAutoEmailTmplId" type="java.lang.Long">
+	      <column name="adjustment_auto_email_tmplt_id" />
+	    </property>
+	    <property name="adjustmentAutoSmsTmplId" type="java.lang.Long">
+	      <column name="adjustment_auto_sms_tmplt_id" />
+	    </property>
+	    <property name="issuanceAutoEmailTmplId" type="java.lang.Long">
+	      <column name="issuance_auto_email_tmplt_id" />
+	    </property>
+	    <property name="issuanceAutoSmsTmplId" type="java.lang.Long">
+	      <column name="issuance_auto_sms_tmplt_id" />
+	    </property>
+	    <property name="redemptionAutoEmailTmplId" type="java.lang.Long">
+	      <column name="redemption_auto_email_tmplt_id" />
+	    </property>
+	    <property name="redemptionAutoSmsTmplId" type="java.lang.Long">
+	      <column name="redemption_auto_sms_tmplt_id" />
+	    </property>
+	    
+	     <property name="otpMessageAutoEmailTmplId" type="java.lang.Long">
+	      <column name="otpmessage_auto_email_tmplt_id" />
+	    </property>
+	    <property name="otpMessageAutoSmsTmpltId" type="java.lang.Long">
+	      <column name="otpmessage_auto_sms_tmplt_id" />
+	    </property>
+	      
+	      
+	      <property name="redemptionOtpAutoEmailTmplId" type="java.lang.Long">
+	      <column name="redemptionotp_auto_email_tmplt_id" />
+	    </property>
+	      
+	      <property name="redemptionOtpAutoSmsTmpltId" type="java.lang.Long">
+	      <column name="redemptionotp_auto_sms_tmplt_id" />
+	    </property>
+	    
+	    
+	    
+	    
+	</class>
+</hibernate-mapping>

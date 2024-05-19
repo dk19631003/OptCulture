@@ -1,0 +1,1512 @@
+package org.mq.optculture.business.loyalty;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.ContactsLoyalty;
+import org.mq.marketer.campaign.beans.LoyaltyAutoComm;
+import org.mq.marketer.campaign.beans.LoyaltyCardSet;
+import org.mq.marketer.campaign.beans.LoyaltyCards;
+import org.mq.marketer.campaign.beans.LoyaltyProgram;
+import org.mq.marketer.campaign.beans.LoyaltyProgramExclusion;
+import org.mq.marketer.campaign.beans.LoyaltyProgramTier;
+import org.mq.marketer.campaign.beans.LoyaltySettings;
+import org.mq.marketer.campaign.beans.LoyaltyTransactionChild;
+import org.mq.marketer.campaign.beans.MailingList;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.ContactsDao;
+import org.mq.marketer.campaign.dao.ContactsLoyaltyDao;
+import org.mq.marketer.campaign.dao.ContactsLoyaltyDaoForDML;
+import org.mq.marketer.campaign.dao.MailingListDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.business.helper.LoyaltyProgramHelper;
+import org.mq.optculture.data.dao.LoyaltyCardSetDao;
+import org.mq.optculture.data.dao.LoyaltyCardsDao;
+import org.mq.optculture.data.dao.LoyaltyProgramDao;
+import org.mq.optculture.data.dao.LoyaltyProgramExclusionDao;
+import org.mq.optculture.data.dao.LoyaltyProgramTierDao;
+import org.mq.optculture.data.dao.LoyaltySettingsDao;
+import org.mq.optculture.data.dao.LoyaltyTransactionChildDao;
+import org.mq.optculture.data.dao.LoyaltyTransactionExpiryDao;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.model.BaseRequestObject;
+import org.mq.optculture.model.BaseResponseObject;
+import org.mq.optculture.model.ocloyalty.Balance;
+import org.mq.optculture.model.ocloyalty.HoldBalance;
+import org.mq.optculture.model.ocloyalty.LoyaltyEnrollRequest;
+import org.mq.optculture.model.ocloyalty.LoyaltyTransferMembershipJsonRequest;
+import org.mq.optculture.model.ocloyalty.LoyaltyTransferMembershipJsonResponse;
+import org.mq.optculture.model.ocloyalty.MatchedCustomer;
+import org.mq.optculture.model.ocloyalty.MembershipResponse;
+import org.mq.optculture.model.ocloyalty.ResponseHeader;
+import org.mq.optculture.model.ocloyalty.Status;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.OptCultureUtils;
+import org.mq.optculture.utils.ServiceLocator;
+
+import com.google.gson.Gson;
+/**
+ * loyalty transfer request processes here
+ * @author proumyaa
+ *
+ */
+public class LoyaltyTransferMembershipServiceImpl implements LoyaltyTransferMembershipService{
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	@Override
+	public BaseResponseObject processRequest(BaseRequestObject baseRequestObject)
+			throws BaseServiceException {
+
+		logger.info("Started processRequest...");
+		
+		BaseResponseObject responseObject = null;
+		String serviceRequest = baseRequestObject.getAction();
+		String requestJson = baseRequestObject.getJsonValue();
+		String responseJson = null;
+		Gson gson = new Gson();
+		LoyaltyTransferMembershipJsonResponse transferResponse = null;
+		LoyaltyTransferMembershipJsonRequest transferRequest = null;
+		
+		if(serviceRequest == null || !serviceRequest.equals(OCConstants.LOYALTY_SERVICE_ACTION_TRANSFER)){
+			logger.info("servicerequest is null...");
+			
+			Status status = new Status("101001", ""+PropertyUtil.getErrorMessage(101001, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			
+			transferResponse = new LoyaltyTransferMembershipJsonResponse();
+			transferResponse.setStatus(status);
+			responseJson = gson.toJson(transferResponse);
+			
+			responseObject = new BaseResponseObject();
+			responseObject.setAction(serviceRequest);
+			responseObject.setJsonValue(responseJson);
+			logger.info("Exited baserequest due to invalid service");
+			return responseObject;
+		}
+		
+		try{
+			transferRequest = gson.fromJson(requestJson, LoyaltyTransferMembershipJsonRequest.class);
+		}catch(Exception e){
+			
+			Status status = new Status("101001", ""+PropertyUtil.getErrorMessage(101001, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			
+			transferResponse = new LoyaltyTransferMembershipJsonResponse();
+			transferResponse.setStatus(status);
+			responseJson = gson.toJson(transferResponse);
+			
+			responseObject = new BaseResponseObject();
+			responseObject.setAction(serviceRequest);
+			responseObject.setJsonValue(responseJson);
+			logger.info("Exited baserequest due to invalid JSON ", e);
+			return responseObject;
+		}
+		
+		try{
+			LoyaltyTransferMembershipService loyaltyTransferService = (LoyaltyTransferMembershipService) ServiceLocator.getInstance().getServiceByName(OCConstants.LOYALTY_TRANSFER_MEMBERSHIP_BUSINESS_SERVICE);
+			transferResponse = loyaltyTransferService.processTransferRequest(transferRequest, OCConstants.LOYALTY_ONLINE_MODE, baseRequestObject.getTransactionId(), baseRequestObject.getTransactionDate());
+			responseJson = gson.toJson(transferResponse);
+			
+			responseObject = new BaseResponseObject();
+			responseObject.setAction(serviceRequest);
+			responseObject.setJsonValue(responseJson);
+		}catch(Exception e){
+			logger.error("Exception in loyalty enroll base service.",e);
+			throw new BaseServiceException("Server Error.");
+		}
+		logger.info("Completed processing baserequest... ");
+		return responseObject;
+
+	
+	}
+	
+	
+	@Override
+	public LoyaltyTransferMembershipJsonResponse processTransferRequest(
+			LoyaltyTransferMembershipJsonRequest loyaltyTransferRequest,
+			String mode, String transactionId, String transactionDate)
+			throws BaseServiceException {
+		
+		try {
+			logger.info("===started processing transfer request===");
+			LoyaltyTransferMembershipJsonResponse transferResponse = null;
+			Status status = null;
+			Users user = null;
+			
+			ResponseHeader responseHeader = new ResponseHeader();
+			responseHeader.setRequestDate(loyaltyTransferRequest.getHeader().getRequestDate());
+			responseHeader.setRequestId(loyaltyTransferRequest.getHeader().getRequestId());
+			responseHeader.setTransactionDate(transactionDate);
+			responseHeader.setTransactionId(transactionId);
+			status = validateTransferJsonData(loyaltyTransferRequest);
+			if(status != null && OCConstants.JSON_RESPONSE_FAILURE_MESSAGE.equals(status.getStatus())){
+				transferResponse = prepareTransferResponse(responseHeader, null, null,null, null, status);
+				return transferResponse;
+			}
+			user = getUser(loyaltyTransferRequest.getUser().getUserName(), loyaltyTransferRequest.getUser().getOrganizationId(),
+					loyaltyTransferRequest.getUser().getToken());
+			if(user == null){
+				status = new Status("101013", PropertyUtil.getErrorMessage(101013, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			if(!user.isEnabled()){
+				status = new Status("111558", PropertyUtil.getErrorMessage(111558, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			if(user.getPackageExpiryDate().before(Calendar.getInstance())){
+				status = new Status("111559", PropertyUtil.getErrorMessage(111559, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			} 
+			
+			
+			String sourceCard = loyaltyTransferRequest.getTransferSource().getCardNumber().trim();
+			String destCard = loyaltyTransferRequest.getMembership().getCardNumber();
+			
+			//parse the card
+			String sourceCardLong = null;
+			String destCardLong = null;
+			String sourceCardNumber = Constants.STRING_NILL;
+			String destCardNumber = Constants.STRING_NILL;
+			
+			sourceCardLong = OptCultureUtils.validateOCLtyCardNumber(sourceCard);
+			if(sourceCardLong == null){
+				String msg = PropertyUtil.getErrorMessage(100107, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceCard+".";
+				status = new Status("100107", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			sourceCardNumber = ""+sourceCardLong;
+			logger.info("CARD NUMBER After parsing :"+sourceCardNumber);
+			loyaltyTransferRequest.getTransferSource().setCardNumber(sourceCardNumber);
+			
+			destCardLong = OptCultureUtils.validateOCLtyCardNumber(destCard);
+			if(destCardLong == null){
+				String msg = PropertyUtil.getErrorMessage(100107, OCConstants.ERROR_LOYALTY_FLAG)+" "+destCard+".";
+				status = new Status("100107", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			destCardNumber = ""+destCardLong;
+			logger.info("CARD NUMBER After parsing :"+destCardNumber);
+			loyaltyTransferRequest.getMembership().setCardNumber(destCardNumber);
+			
+			
+			LoyaltyCards sourceLtyCard = findCard(sourceCardNumber, user); 
+			if(sourceLtyCard == null){
+				String msg = PropertyUtil.getErrorMessage(111505, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceCardNumber+".";
+				status = new Status("111505", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+		
+			}
+			LoyaltyCards destLtyCard = findCard(destCardNumber, user);
+			String cardstatus = destLtyCard.getStatus();
+			if(destLtyCard == null){
+				String msg = PropertyUtil.getErrorMessage(111505, OCConstants.ERROR_LOYALTY_FLAG)+" "+destCardNumber+".";
+				status = new Status("111505", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+		
+			}
+			//need to think
+			if(destLtyCard.getStatus().equals(OCConstants.LOYALTY_CARD_STATUS_ACTIVATED)) {
+				
+				String msg = PropertyUtil.getErrorMessage(111575, OCConstants.ERROR_LOYALTY_FLAG)+" "+destCardNumber+".";
+				status = new Status("111575", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+				
+			}
+			if(!sourceLtyCard.getStatus().equals(OCConstants.LOYALTY_CARD_STATUS_ENROLLED)){
+				
+				String msg = PropertyUtil.getErrorMessage(111576, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceCardNumber+".";
+				status = new Status("111576", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			
+			}
+			if(sourceLtyCard.getProgramId().longValue() != destLtyCard.getProgramId().longValue()) {
+				
+				String msg = PropertyUtil.getErrorMessage(111573, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceCardNumber+".";
+				status = new Status("111573", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+				
+			}
+			
+			LoyaltyCardSet sourceCardSet = findCardSet(sourceLtyCard.getCardSetId());
+			if(!sourceCardSet.getStatus().equals(OCConstants.LOYALTY_CARDSET_STATUS_ACTIVE)){
+				
+				String msg = PropertyUtil.getErrorMessage(111574, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceCardNumber+".";
+				status = new Status("111574", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+				
+				
+			}
+			
+			//find the program & cardset is it active or not????
+			LoyaltyCardSet destCardSet = findCardSet(destLtyCard.getCardSetId());
+			if(!destCardSet.getStatus().equals(OCConstants.LOYALTY_CARDSET_STATUS_ACTIVE)){
+				
+				String msg = PropertyUtil.getErrorMessage(111574, OCConstants.ERROR_LOYALTY_FLAG)+" "+destCardNumber+".";
+				status = new Status("111574", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+				
+				
+			}
+			
+			LoyaltyProgram loyaltyProgram = findProgram(destLtyCard.getProgramId());
+			
+			//check for store exclusion
+			LoyaltyProgramExclusion loyaltyExclusion = getLoyaltyExclusion(loyaltyProgram.getProgramId());
+			if(loyaltyExclusion != null){
+				status = validateStoreNumberExclusion(loyaltyTransferRequest, loyaltyProgram, loyaltyExclusion);
+				if(status != null){
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+					
+				}
+			}
+			
+			if(!loyaltyProgram.getStatus().equals(OCConstants.LOYALTY_PROGRAM_STATUS_ACTIVE)){
+				String msg = PropertyUtil.getErrorMessage(111573, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceCardNumber+".";
+				status = new Status("111573", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			LoyaltyProgramTier dummyHighestTier = null;
+			//find source & dest membership
+			ContactsLoyalty sourceMembership = findMembershpByCard(sourceCardLong, loyaltyProgram.getProgramId(), user.getUserId());
+			if(sourceMembership == null){
+				status = new Status("1000", PropertyUtil.getErrorMessage(1000, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			if(sourceMembership != null && sourceMembership.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)){
+				status = new Status("111579", PropertyUtil.getErrorMessage(111579, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceCardNumber+".", OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			if(sourceMembership.getMembershipStatus().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_STATUS_EXPIRED)){
+				String message = PropertyUtil.getErrorMessage(111517, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceMembership.getCardNumber()+".";
+				status = new Status("111517", message, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+		
+			}
+			else if(sourceMembership.getMembershipStatus().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_STATUS_SUSPENDED)){
+				String message = PropertyUtil.getErrorMessage(111539, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceMembership.getCardNumber()+".";
+				status = new Status("111539", message, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			else if(sourceMembership.getMembershipStatus().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_STATUS_CLOSED)){
+				ContactsLoyalty destLoyalty = getDestMembershipIfAny(sourceMembership);
+				String maskedNum = Constants.STRING_NILL;
+				if(destLoyalty != null) {
+					maskedNum = Utility.maskNumber(destLoyalty.getCardNumber()+Constants.STRING_NILL);
+				}
+				String message = PropertyUtil.getErrorMessage(111578, OCConstants.ERROR_LOYALTY_FLAG)+maskedNum+".";
+				status = new Status("111578", message, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			else if(sourceMembership.getRewardFlag().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_REWARD_FLAG_G)) {
+				
+				String msg = PropertyUtil.getErrorMessage(111576, OCConstants.ERROR_LOYALTY_FLAG)+" "+sourceMembership.getCardNumber()+".";
+				status = new Status("111576", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+				
+			}
+			
+			ContactsLoyalty destMembership = findMembershpByCard(destCardLong, loyaltyProgram.getProgramId(), user.getUserId());
+			if(!destLtyCard.getStatus().equals(OCConstants.LOYALTY_CARD_STATUS_INVENTORY) && !destLtyCard.getStatus().equals(OCConstants.LOYALTY_CARD_STATUS_INVENTORY_TRANSFERED) && destMembership == null){
+				status = new Status("1000", PropertyUtil.getErrorMessage(1000, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+				return transferResponse;
+			}
+			if(destMembership != null) {
+				if(destMembership.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)){
+					status = new Status("111579", PropertyUtil.getErrorMessage(111579, OCConstants.ERROR_LOYALTY_FLAG)+" "+destCardNumber+".", OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+				}
+				if(destMembership.getRewardFlag().equals(OCConstants.LOYALTY_MEMBERSHIP_REWARD_FLAG_G)) {
+					String msg = PropertyUtil.getErrorMessage(111575, OCConstants.ERROR_LOYALTY_FLAG)+" "+destCardNumber+".";
+					status = new Status("111575", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+					
+				}
+				else if(destMembership.getMembershipStatus().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_STATUS_EXPIRED)){
+					String message = PropertyUtil.getErrorMessage(111517, OCConstants.ERROR_LOYALTY_FLAG)+" "+destMembership.getCardNumber()+".";
+					status = new Status("111517", message, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+			
+				}
+				else if(destMembership.getMembershipStatus().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_STATUS_SUSPENDED)){
+					String message = PropertyUtil.getErrorMessage(111539, OCConstants.ERROR_LOYALTY_FLAG)+" "+destMembership.getCardNumber()+".";
+					status = new Status("111539", message, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+				}else if(destMembership.getMembershipStatus().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_STATUS_CLOSED)){
+					ContactsLoyalty destLoyalty = getDestMembershipIfAny(destMembership);
+					String maskedNum = Constants.STRING_NILL;
+					if(destLoyalty != null) {
+						maskedNum = Utility.maskNumber(destLoyalty.getCardNumber()+Constants.STRING_NILL);
+					}
+					String message = PropertyUtil.getErrorMessage(111578, OCConstants.ERROR_LOYALTY_FLAG)+maskedNum+".";
+					status = new Status("111578", message, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+				}
+				boolean isDifferentContacts = checkLinkedContacts(sourceMembership, destMembership);
+				logger.debug("isDifferentContacts ::"+isDifferentContacts);
+				if(isDifferentContacts) {
+					
+					String msg = PropertyUtil.getErrorMessage(111577, OCConstants.ERROR_LOYALTY_FLAG)+" "+destCardNumber+".";
+					status = new Status("111577", msg, OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+				}
+				if(sourceMembership.getContact().getMlBits() == 0l){
+					MailingListDao mailingListDao = (MailingListDao) ServiceLocator.getInstance().getDAOByName(OCConstants.MAILINGLIST_DAO);
+					MailingList mlList = mailingListDao.findPOSMailingList(user);
+					
+					if(mlList == null){
+						status = new Status("101007", PropertyUtil.getErrorMessage(101007, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+						transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+						return transferResponse;
+					}
+					//we can only check POS list validation but contact cannot be added TODO need to think
+					
+				}
+				//create or update membership
+				destMembership = transferMembership(sourceMembership , destMembership, 
+						destLtyCard.getCardNumber(), destLtyCard.getCardPin(), destCardSet.getCardSetId(), 
+						loyaltyTransferRequest.getHeader().getStoreNumber(), true,loyaltyTransferRequest.getHeader().getEmployeeId(),loyaltyTransferRequest.getHeader().getTerminalId());
+				
+				
+				//set final reward flag
+				String rewardFlag = getDestRewardFlag(sourceMembership, destMembership);
+				if(rewardFlag == null) {
+					status = new Status("100104", PropertyUtil.getErrorMessage(100104, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+					
+				}
+				destMembership.setRewardFlag(rewardFlag);
+				
+				//tier determination
+				Long tierForDestID = null;
+				
+				LoyaltyProgramTier tierForDest = findTierForDest(loyaltyTransferRequest, sourceMembership, destMembership, 
+						sourceCardSet, destCardSet, loyaltyProgram, user, false);
+				if(tierForDest == null){
+					status = new Status("111555", PropertyUtil.getErrorMessage(111555, OCConstants.ERROR_LOYALTY_FLAG), 
+							OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+				}
+				if(tierForDest != null){
+					tierForDestID = tierForDest.getTierId();
+					dummyHighestTier = tierForDest;
+				}
+				
+				destMembership.setProgramTierId(tierForDestID);
+				
+				//balances
+				destMembership = adjustBalances(sourceMembership, destMembership);
+				Calendar transferedOn = Calendar.getInstance();
+				linkSourceTrxToDest(sourceMembership, destMembership, transferedOn);
+				linkSourceExpiryToDest(sourceMembership, destMembership, transferedOn);
+				linkSourceMembershipToDest(sourceMembership, destMembership, transferedOn);
+							
+				
+				saveContactsLoyalty(destMembership);
+			}
+			else if(destMembership == null && destLtyCard.getStatus().equals(OCConstants.LOYALTY_CARD_STATUS_INVENTORY_TRANSFERED)) {
+				
+				if(sourceMembership.getContact().getMlBits() == 0l){
+					MailingListDao mailingListDao = (MailingListDao) ServiceLocator.getInstance().getDAOByName(OCConstants.MAILINGLIST_DAO);
+					MailingList mlList = mailingListDao.findPOSMailingList(user);
+					
+					if(mlList == null){
+						status = new Status("101007", PropertyUtil.getErrorMessage(101007, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+						transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+						return transferResponse;
+					}
+					
+					//we can only check POS list validation but contact cannot be added TODO need to think
+				}
+				
+				destMembership = transferMembership(sourceMembership , destMembership, 
+						destLtyCard.getCardNumber(), destLtyCard.getCardPin(), destCardSet.getCardSetId(), 
+						loyaltyTransferRequest.getHeader().getStoreNumber(), false,loyaltyTransferRequest.getHeader().getEmployeeId(),loyaltyTransferRequest.getHeader().getTerminalId());
+			
+				
+				String rewardFlag = getDestRewardFlag(sourceMembership, destMembership);
+				if(rewardFlag == null) {
+					status = new Status("100104", PropertyUtil.getErrorMessage(100104, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+					return transferResponse;
+					
+				}
+				destMembership.setRewardFlag(rewardFlag);
+				logger.debug("rewardFlag is ::"+rewardFlag);
+					
+				//todo need to think about the tier 
+				if(destCardSet.getLinkedTierLevel() > 0){
+					logger.debug("destCardSet.getLinkedTierLevel() is ::"+destCardSet.getLinkedTierLevel());
+					String type = "Tier "+destCardSet.getLinkedTierLevel();
+					LoyaltyProgramTierDao loyaltyProgramTierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+					LoyaltyProgramTier linkedTierObj = loyaltyProgramTierDao.getTierByPrgmAndType(loyaltyProgram.getProgramId(), type);
+					
+					if(linkedTierObj == null){
+						logger.debug("linkedTierObj is ::"+linkedTierObj);
+						//active incomplete status response...
+						status = new Status("111555", PropertyUtil.getErrorMessage(111555, OCConstants.ERROR_LOYALTY_FLAG),
+								OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+						transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+						return transferResponse;
+					}else{
+						logger.debug("linkedTierObj is ::"+linkedTierObj);
+						//need to find out the highest tier
+						LoyaltyProgramTier tierForSource = findTierForDest(loyaltyTransferRequest,sourceMembership, destMembership, 
+								sourceCardSet, destCardSet, loyaltyProgram, user, true);
+						if(tierForSource == null){
+							status = new Status("111555", PropertyUtil.getErrorMessage(111555, OCConstants.ERROR_LOYALTY_FLAG), 
+									OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+							transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+							return transferResponse;
+						}
+						if(tierForSource != null && tierForSource.getTierType() != null && !tierForSource.getTierType().equalsIgnoreCase(OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING)) {
+							LoyaltyProgramTier tierForDest = findHighestTier(tierForSource, linkedTierObj);
+							 dummyHighestTier = tierForDest;
+							destMembership.setProgramTierId(tierForDest.getTierId());
+						}
+						
+						destMembership = adjustBalances(sourceMembership, destMembership);
+						
+						Calendar transferedOn =  Calendar.getInstance();
+						linkSourceMembershipToDest(sourceMembership, destMembership, transferedOn);
+						linkSourceTrxToDest(sourceMembership, destMembership, transferedOn);
+						linkSourceExpiryToDest(sourceMembership, destMembership, transferedOn);
+					
+					
+						saveContactsLoyalty(destMembership);
+						destLtyCard.setStatus(OCConstants.LOYALTY_CARD_STATUS_ENROLLED);
+						destLtyCard.setMembershipId(destMembership.getLoyaltyId());
+						destLtyCard.setActivationDate(Calendar.getInstance());
+						//updateCardStatus(OCConstants.LOYALTY_CARD_STATUS_ENROLLED, card);
+						saveLoyaltyCard(destLtyCard);
+						
+						
+					}
+									
+				}else if(destCardSet.getLinkedTierLevel() == 0){ 
+					
+					//need to find out the highest tier
+					Long sourceTierID = null; 
+					if(sourceMembership.getProgramTierId() != null) {
+						sourceTierID = sourceMembership.getProgramTierId();
+						dummyHighestTier = getLoyaltyTier(sourceTierID);
+					}else{
+						
+						LoyaltyProgramTier tierForSource = findTierForDest(loyaltyTransferRequest,sourceMembership, destMembership, 
+								sourceCardSet, destCardSet, loyaltyProgram, user, true);
+						if(tierForSource == null){
+							status = new Status("111555", PropertyUtil.getErrorMessage(111555, OCConstants.ERROR_LOYALTY_FLAG), 
+									OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+							transferResponse = prepareTransferResponse(responseHeader, null, null, null, null,  status);
+							return transferResponse;
+						}
+						if(tierForSource != null && tierForSource.getTierType() != null && !tierForSource.getTierType().equalsIgnoreCase(OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING)) {
+							dummyHighestTier = tierForSource;
+							sourceTierID = tierForSource.getTierId();
+						}
+					}
+					destMembership.setProgramTierId(sourceTierID);
+					
+					//balances
+					destMembership = adjustBalances(sourceMembership, destMembership);
+					
+					Calendar transferedOn =  Calendar.getInstance();
+					linkSourceMembershipToDest(sourceMembership, destMembership, transferedOn);
+					linkSourceTrxToDest(sourceMembership, destMembership, transferedOn);
+					linkSourceExpiryToDest(sourceMembership, destMembership, transferedOn);
+				
+					saveContactsLoyalty(destMembership);
+					destLtyCard.setStatus(OCConstants.LOYALTY_CARD_STATUS_ENROLLED);
+					destLtyCard.setMembershipId(destMembership.getLoyaltyId());
+					destLtyCard.setActivationDate(Calendar.getInstance());
+					//updateCardStatus(OCConstants.LOYALTY_CARD_STATUS_ENROLLED, card);
+					saveLoyaltyCard(destLtyCard);
+				}
+				
+			}
+			List<ContactsLoyalty> contactLoyaltyList = new ArrayList<ContactsLoyalty>();
+			contactLoyaltyList.add(sourceMembership);
+			contactLoyaltyList.add(destMembership);
+			List<MatchedCustomer> matchedCustomers = prepareMatchedCustomers(contactLoyaltyList);
+			
+			MembershipResponse response = prepareAccountTransferResponse(destMembership, dummyHighestTier, loyaltyProgram);
+			
+			List<Balance> balances = null;
+			HoldBalance holdBalance = null;
+			
+			balances = prepareBalancesObject(destMembership, "", "", "");
+			
+			String expiryPeriod = "";
+			if(dummyHighestTier != null && !dummyHighestTier.getTierType().equalsIgnoreCase(OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING) 
+					&& dummyHighestTier.getActivationFlag() == OCConstants.FLAG_YES					
+				&& ((destMembership.getHoldAmountBalance() != null && destMembership.getHoldAmountBalance() > 0) ||
+					(destMembership.getHoldPointsBalance() != null && destMembership.getHoldPointsBalance() > 0))){
+				
+				expiryPeriod = dummyHighestTier.getPtsActiveDateValue()+" "+dummyHighestTier.getPtsActiveDateType();
+			}
+			
+			holdBalance = prepareHoldBalances(destMembership, expiryPeriod);
+			
+			//TODO check if balances need to be added
+			status = new Status("0", "Transfer will be done shortly.", OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE);
+			transferResponse = prepareTransferResponse(responseHeader, response, balances, holdBalance, matchedCustomers,  status);
+			String transHoldBals = Constants.STRING_NILL;
+			if(sourceMembership.getHoldPointsBalance() != null || sourceMembership.getHoldAmountBalance() != null){
+				transHoldBals += sourceMembership.getHoldPointsBalance() != null ? "Hold Points:"+sourceMembership.getHoldPointsBalance():"Hold Points: ";
+				transHoldBals += transHoldBals.length() > 0 ? OCConstants.FORM_MAPPING_SPLIT_DELIMETER:"";
+				transHoldBals += sourceMembership.getHoldAmountBalance() != null  ? "Hold Amount:"+sourceMembership.getHoldAmountBalance():"Hold Amount: ";
+				transHoldBals =  "Transfered-"+transHoldBals;
+			}
+			LoyaltyTransactionChild transChild = createSuccessfulTransaction(sourceMembership, destMembership, responseHeader, user.getUserId(), user.getUserOrganization().getUserOrgId()
+					, loyaltyProgram.getProgramId(), OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD, 
+					"source:"+sourceMembership.getCardNumber()+"-dest:"+destMembership.getCardNumber(), loyaltyTransferRequest.getHeader().getStoreNumber().trim(),transHoldBals.trim().isEmpty()?null:transHoldBals.trim(),loyaltyTransferRequest.getHeader().getEmployeeId(),loyaltyTransferRequest.getHeader().getTerminalId());
+			LoyaltyAutoCommGenerator autoCommGen = new LoyaltyAutoCommGenerator();
+			//LoyaltyCardsDao loyaltyCardsDao = (LoyaltyCardsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+			//LoyaltyCards destCardStatus = loyaltyCardsDao.findByCardNoAndprgmId(destCardLong.toString(), loyaltyProgram.getProgramId(), user.getUserId());
+			LoyaltySettingsDao loyaltySettingsDao = (LoyaltySettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_SETTINGS_DAO);
+			LoyaltySettings orgId = loyaltySettingsDao.findByOrgId(destLtyCard.getOrgId());
+			//Send Loyalty transfer Email(todo check only send when status is active????)
+			if(status.getErrorCode().equals("0") && (cardstatus.equalsIgnoreCase("Inventory") || cardstatus.equalsIgnoreCase("Inventory/Transfered")) && orgId != null){
+				logger.debug("in Inventory Auto email ");
+				autoCommGen.sendTransferEmailforInventory(sourceMembership, destMembership, user);
+				if(user.isEnableSMS()) {
+					autoCommGen.sendTransferSMS(sourceMembership, destMembership, user);
+					
+				}
+			}else{
+				logger.debug("in Enrolled Auto email ");
+				autoCommGen.sendTransferEmail(sourceMembership, destMembership, user);
+				if(user.isEnableSMS()) {
+					autoCommGen.sendTransferSMS(sourceMembership, destMembership, user);
+					
+				}
+				
+			}
+			
+			
+			return transferResponse;
+			
+		} catch (Exception e) {
+			logger.error("Exception in processing transfer", e);
+			throw new BaseServiceException("Server Error.");
+		}
+		//return null;
+	}
+	
+	
+	
+	private boolean checkLinkedContacts(ContactsLoyalty sourceMembership, ContactsLoyalty destMembership) {
+		logger.debug("in checkLinkedContacts ");
+		Contacts sourceContacts = sourceMembership.getContact();
+		Contacts destContacts = destMembership.getContact();
+		
+		String sourceMobile = sourceContacts.getMobilePhone();
+		String destMobile = destContacts.getMobilePhone();
+		boolean isSameConatact = false;
+		if(sourceContacts.getContactId().longValue() == destContacts.getContactId().longValue()) return false;
+		
+		if(sourceContacts.getContactId().longValue() != destContacts.getContactId().longValue()) {
+			/*if(sourceMobile != null && destMobile != null && 
+					( (sourceMobile.length()>=destMobile.length() && sourceMobile.endsWith(destMobile) ) ||
+							(destMobile.length()>=sourceMobile.length() && destMobile.endsWith(sourceMobile)) )) {
+				
+				isSameMobile = true;
+			}*/
+			
+			if((sourceContacts.getExternalId() != null && destContacts.getExternalId() != null && sourceContacts.getExternalId().equals(destContacts.getExternalId())) ||
+					(sourceContacts.getEmailId() != null && destContacts.getEmailId() != null && sourceContacts.getEmailId().equalsIgnoreCase(destContacts.getEmailId())) || (sourceMobile != null && destMobile != null && 
+							( (sourceMobile.length()>=destMobile.length() && sourceMobile.endsWith(destMobile) ) ||
+									(destMobile.length()>=sourceMobile.length() && destMobile.endsWith(sourceMobile)) )) ) {
+				logger.debug("in checkLinkedContacts case 1");
+				return false;
+				
+			}
+			if((sourceContacts.getExternalId() == null || destContacts.getExternalId() == null) && 
+					(sourceContacts.getEmailId() == null || destContacts.getEmailId() == null ) && 
+					(sourceContacts.getMobilePhone() == null || destContacts.getMobilePhone() == null)){
+				logger.debug("in checkLinkedContacts case 2");
+				return true;
+			}
+			logger.debug("in checkLinkedContacts case 3");
+			 return true;
+		}
+		
+		return true;
+	}
+	private HoldBalance prepareHoldBalances(ContactsLoyalty contactsLoyalty, String activationPeriod){
+		logger.debug("in prepareHoldBalances ");
+		HoldBalance holdBalance = new HoldBalance();
+		holdBalance.setActivationPeriod(activationPeriod);
+		//holdBalance.setCurrency(contactsLoyalty.getHoldAmountBalance() == null ? "" : ""+contactsLoyalty.getHoldAmountBalance());
+		if(contactsLoyalty.getHoldAmountBalance() == null){
+			holdBalance.setCurrency("");
+		}
+		else{
+			double value = new BigDecimal(contactsLoyalty.getHoldAmountBalance()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			holdBalance.setCurrency(""+value);
+		}
+		
+		holdBalance.setPoints(contactsLoyalty.getHoldPointsBalance() == null ? "" : ""+contactsLoyalty.getHoldPointsBalance().intValue());
+		return holdBalance;
+		
+	}
+	private List<Balance> prepareBalancesObject(ContactsLoyalty loyalty, String pointsDiff, 
+			String amountDiff, String giftDiff) throws Exception{
+		logger.debug("in prepareBalancesObject ");
+		List<Balance> balancesList = null;
+		Balance pointBalances = null;
+		Balance amountBalances = null;
+		Balance giftBalances = null;
+		balancesList = new ArrayList<Balance>();
+		
+		pointBalances = new Balance();
+		pointBalances.setType(OCConstants.LOYALTY_TYPE_REWARD);
+		pointBalances.setValueCode(OCConstants.LOYALTY_TYPE_POINTS);
+		pointBalances.setAmount(loyalty.getLoyaltyBalance() == null ? "" : ""+loyalty.getLoyaltyBalance().intValue());
+		pointBalances.setDifference(pointsDiff);
+			
+		
+		amountBalances = new Balance();
+		amountBalances.setType(OCConstants.LOYALTY_TYPE_REWARD);
+		amountBalances.setValueCode(OCConstants.LOYALTY_TYPE_CURRENCY);
+		if(loyalty.getGiftcardBalance() == null){
+			amountBalances.setAmount("");
+		}
+		else{
+			double value = new BigDecimal(loyalty.getGiftcardBalance()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			amountBalances.setAmount(""+value);
+		}
+		if(amountDiff == null || amountDiff == ""){
+			amountBalances.setDifference("");
+		}
+		else{
+			double value = new BigDecimal(Double.valueOf(amountDiff)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			amountBalances.setDifference(""+value);
+		}
+		
+		giftBalances = new Balance();
+		giftBalances.setType(OCConstants.LOYALTY_TYPE_GIFT);
+		giftBalances.setValueCode(OCConstants.LOYALTY_TYPE_CURRENCY);
+		if(loyalty.getGiftBalance() == null){
+			giftBalances.setAmount("");
+		}
+		else{
+			double value = new BigDecimal(loyalty.getGiftBalance()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			giftBalances.setAmount(""+value);
+		}
+		if(giftDiff == null || giftDiff == ""){
+			giftBalances.setDifference("");
+		}
+		else{
+			double value = new BigDecimal(Double.valueOf(giftDiff)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			giftBalances.setDifference(""+value);
+		}
+		
+		balancesList.add(pointBalances);
+		balancesList.add(amountBalances);
+		balancesList.add(giftBalances);
+		
+		return balancesList;
+	}
+	
+	
+	private MembershipResponse prepareAccountTransferResponse(ContactsLoyalty destMembership, LoyaltyProgramTier tier, LoyaltyProgram program) throws Exception {
+		logger.debug("in prepareAccountTransferResponse ");
+		MembershipResponse accountResponse = new MembershipResponse();
+		if(destMembership.getMembershipType().equals(OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD)){
+			accountResponse.setCardNumber(""+destMembership.getCardNumber());
+			accountResponse.setCardPin(destMembership.getCardPin());
+		}
+		
+		if( tier != null && !"Pending".equalsIgnoreCase(tier.getTierType())){
+			
+			if(program.getTierEnableFlag() == OCConstants.FLAG_YES) {
+				accountResponse.setTierLevel(tier.getTierType());
+				accountResponse.setTierName(tier.getTierName());
+			}
+			else {
+				accountResponse.setTierLevel("");
+				accountResponse.setTierName("");
+			}
+			
+			if(program.getMembershipExpiryFlag() == 'Y' && tier.getMembershipExpiryDateType() != null 
+					&& tier.getMembershipExpiryDateValue() != null){
+				accountResponse.setExpiry(LoyaltyProgramHelper.getMbrshipExpiryDate(destMembership.getCreatedDate(), destMembership.getTierUpgradedDate(), 
+						false, tier.getMembershipExpiryDateType(), tier.getMembershipExpiryDateValue()));
+			}
+			else{
+				accountResponse.setExpiry("");
+			}
+			
+		}
+		else{
+			accountResponse.setTierLevel("");
+			accountResponse.setTierName("");
+			accountResponse.setExpiry("");
+		}
+		
+		return accountResponse;
+		
+	}
+	
+	private List<MatchedCustomer> prepareMatchedCustomers(List<ContactsLoyalty> enrollList) throws Exception {
+		logger.debug("in prepareMatchedCustomers ");
+		Contacts contact = null;
+		ContactsDao contactsDao = (ContactsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_DAO);
+		List<MatchedCustomer> matchedCustList = new ArrayList<MatchedCustomer>();
+		MatchedCustomer matchedCustomer = null;
+		
+		for(ContactsLoyalty loyalty : enrollList){
+			if(loyalty.getContact() != null && loyalty.getContact().getContactId() != null){
+				contact = loyalty.getContact();
+				if(contact != null){
+					matchedCustomer = new MatchedCustomer();
+					matchedCustomer.setMembershipNumber(""+loyalty.getCardNumber());
+					matchedCustomer.setFirstName(contact.getFirstName() == null ? "" : contact.getFirstName().trim());
+					matchedCustomer.setLastName(contact.getLastName() == null ? "" : contact.getLastName().trim());
+					matchedCustomer.setCustomerId(contact.getExternalId() == null ? "" : contact.getExternalId());
+					matchedCustomer.setEmailAddress(contact.getEmailId() == null ? "" : contact.getEmailId());
+					matchedCustomer.setPhone(contact.getMobilePhone() == null ? "" : contact.getMobilePhone());
+					matchedCustList.add(matchedCustomer);
+				}
+			}
+		}
+		
+		return matchedCustList;
+		
+	}
+	
+	private Status validateStoreNumberExclusion(LoyaltyTransferMembershipJsonRequest loyaltyTransferRequest, LoyaltyProgram program, 
+			LoyaltyProgramExclusion loyaltyExclusion) throws Exception {
+		logger.debug("in validateStoreNumberExclusion ");
+		Status status = null;
+		if(loyaltyExclusion.getStoreNumberStr() != null && !loyaltyExclusion.getStoreNumberStr().trim().isEmpty()){
+			String[] storeNumberArr = loyaltyExclusion.getStoreNumberStr().split(";=;");
+			for(String storeNo : storeNumberArr){
+				if(loyaltyTransferRequest.getHeader().getStoreNumber().trim().equals(storeNo.trim())){
+					status = new Status("111532", PropertyUtil.getErrorMessage(111532, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					return status;
+				}
+			}
+		}
+		
+		return status;
+	}
+	
+	private LoyaltyProgramExclusion getLoyaltyExclusion(Long programId) throws Exception {
+		logger.debug("in getLoyaltyExclusion ");
+		try{
+		LoyaltyProgramExclusionDao exclusionDao = (LoyaltyProgramExclusionDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_EXCLUSION_DAO);
+		return exclusionDao.getExlusionByProgId(programId);
+		}catch(Exception e){
+			logger.error("Exception in getting loyalty exclusion ..", e);
+		}
+		return null;
+	}
+	private LoyaltyProgramTier findTierForDest(LoyaltyTransferMembershipJsonRequest transferRequest, ContactsLoyalty sourceMembership, ContactsLoyalty destMembership,
+			LoyaltyCardSet sourceCardSet, LoyaltyCardSet destCardSet, LoyaltyProgram loyaltyProgram, Users user, boolean isDestNew) throws Exception{
+		logger.debug("in findTierForDest ");
+		//check source tier and dest tier and then (determine if one of them is null) check for highest tier
+		LoyaltyProgramTier sourceTier = null;
+		LoyaltyProgramTier destTier = null;
+		int caseNo = 0;
+		if(sourceMembership.getProgramTierId() != null ){
+			caseNo += 1;
+			try {
+				sourceTier = getLoyaltyTier(sourceMembership.getProgramTierId());
+				if(!isDestNew) {
+					caseNo += 1;
+					if(destMembership.getProgramTierId() == null){
+						caseNo += 1;
+						destTier = determineTier(sourceMembership, destMembership, user, loyaltyProgram, transferRequest, false, isDestNew);
+						
+						if(destTier != null && !OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING.equalsIgnoreCase(destTier.getTierType())){
+								
+							destMembership.setProgramTierId(destTier.getTierId());
+							caseNo += 1;
+							destTier = findHighestTier(sourceTier, destTier);
+							return destTier;
+						}
+						caseNo += 1;
+						return destTier;
+					}else {
+						caseNo += 1;
+						destTier = getLoyaltyTier(destMembership.getProgramTierId());
+						destTier = findHighestTier(sourceTier, destTier);
+						return destTier;
+					}
+				}else{
+					caseNo += 1;
+					return sourceTier;
+					
+				}
+			} catch (Exception e1) {
+				logger.error("Eception in finding  tier ", e1);
+				return null;
+			}
+		}
+		else{
+			caseNo += 1;
+			try {
+				sourceTier = determineTier(sourceMembership, destMembership, user, loyaltyProgram, transferRequest, true, isDestNew);
+				
+				if(sourceTier != null && !OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING.equalsIgnoreCase(sourceTier.getTierType())){
+					caseNo += 1;
+					sourceMembership.setProgramTierId(sourceTier.getTierId());
+					if(!isDestNew) {
+						caseNo += 1;
+						if(destMembership.getProgramTierId() == null){
+							caseNo += 1;
+							destTier = determineTier(sourceMembership, destMembership, user, loyaltyProgram, transferRequest, false, isDestNew);
+							
+							if(destTier != null && !OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING.equalsIgnoreCase(destTier.getTierType())){
+								caseNo += 1;
+								destMembership.setProgramTierId(destTier.getTierId());
+								destTier = findHighestTier(sourceTier, destTier);
+								return destTier;
+							}
+							caseNo += 1;
+							return destTier;
+						}else {
+							caseNo += 1;
+							destTier = getLoyaltyTier(destMembership.getProgramTierId());
+							destTier = findHighestTier(sourceTier, destTier);
+							return destTier;
+						}
+					}else{
+						caseNo += 1;
+						return sourceTier;
+						
+					}
+				}
+				return sourceTier;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				logger.error("Eception in finding  tier ", e);
+				return null;
+			}
+			
+		
+		}
+		
+	}
+	
+	private LoyaltyProgramTier findHighestTier(LoyaltyProgramTier sourceTier, LoyaltyProgramTier destTier) throws Exception {
+		List<LoyaltyProgramTier> TierList = new ArrayList<LoyaltyProgramTier>();
+		TierList.add(sourceTier);
+		TierList.add(destTier);
+		logger.debug("in findHighestTier "+ sourceTier + " "+destTier);
+		
+		Collections.sort(TierList, new Comparator<LoyaltyProgramTier>() {
+			@Override
+			public int compare(LoyaltyProgramTier o1, LoyaltyProgramTier o2) {
+				//try {
+					int num1 = Integer.valueOf(o1.getTierType().substring(5)).intValue();
+					int num2 = Integer.valueOf(o2.getTierType().substring(5)).intValue();
+					logger.debug("in findHighestTier "+ num1 + " "+num2);
+					if(num1 < num2){
+						return -1;
+					}
+					else if(num1 == num2){
+						return 0;
+					}
+					else{
+						return 1;
+					}
+				/*} catch (Exception e) {
+					// TODO Auto-generated catch block
+					logger.error("Exception,", e);
+					return 
+				}*/
+			}
+		});
+		
+		return TierList.get(TierList.size()-1);
+	}
+	
+	private void saveContactsLoyalty(ContactsLoyalty loyalty) throws Exception{
+		logger.debug("in saveContactsLoyalty ");
+		ContactsLoyaltyDaoForDML loyaltyDao = (ContactsLoyaltyDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.CONTACTS_LOYALTY_DAO_FOR_DML);
+		loyaltyDao.saveOrUpdate(loyalty);
+		
+		
+	}
+	
+	private void saveLoyaltyCard(LoyaltyCards loyaltyCard) throws Exception{
+		logger.debug("in saveContactsLoyalty card ");
+		LoyaltyCardsDao loyaltyCardsDao = (LoyaltyCardsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_CARDS_DAO);
+		loyaltyCardsDao.saveOrUpdate(loyaltyCard);
+		
+		
+	}
+	
+	
+	private LoyaltyProgramTier findTier(Long contactId, Long userId, ContactsLoyalty contactsLoyalty,
+			List<LoyaltyProgramTier> tiersList, Map<LoyaltyProgramTier, LoyaltyProgramTier> eligibleMap) throws Exception {
+		logger.debug("in findTier ");
+		if(OCConstants.LOYALTY_LIFETIME_POINTS.equals(tiersList.get(0).getTierUpgdConstraint())){
+			logger.info("tier condition on :"+OCConstants.LOYALTY_LIFETIME_POINTS);
+			if(contactsLoyalty == null) {
+				return tiersList.get(0);
+			}
+			else {
+				Double totLoyaltyPointsValue = contactsLoyalty.getTotalLoyaltyEarned() == null ? 0.00 : contactsLoyalty.getTotalLoyaltyEarned();
+				logger.info("totLoyaltyPointsValue value = "+totLoyaltyPointsValue);
+
+				if(totLoyaltyPointsValue == null || totLoyaltyPointsValue <= 0){
+					logger.info("totLoyaltyPointsValue value is empty...");
+					return tiersList.get(0);
+				}
+				else{
+					Iterator<LoyaltyProgramTier> it = eligibleMap.keySet().iterator();
+					LoyaltyProgramTier prevKeyTier = null;
+					LoyaltyProgramTier nextKeyTier = null;
+					while(it.hasNext()){
+						nextKeyTier = it.next();
+						logger.info("------------nextKeyTier::"+nextKeyTier.getTierType());
+						logger.info("-------------currTier::"+tiersList.get(0).getTierType());
+						if(OCConstants.LOYALTY_PROGRAM_TIER1.equalsIgnoreCase(nextKeyTier.getTierType())){
+							prevKeyTier = nextKeyTier;
+							continue;
+						}
+						if(totLoyaltyPointsValue > 0 && totLoyaltyPointsValue < eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue()){
+							if(prevKeyTier == null){
+								logger.info("selected tier is currTier..."+tiersList.get(0).getTierType());
+								return tiersList.get(0);
+							}
+							logger.info("selected tier..."+prevKeyTier.getTierType());
+							return prevKeyTier;
+						}
+						else if (totLoyaltyPointsValue > 0 && totLoyaltyPointsValue >= eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue() && !it.hasNext()) {
+							logger.info("selected tier..."+nextKeyTier.getTierType());
+							return nextKeyTier;
+						}
+						prevKeyTier = nextKeyTier;
+					}
+					return tiersList.get(0);
+				}//else
+			}
+		}
+		else if(contactId == null){
+			logger.info("contactId is null and selected tier..."+tiersList.get(0).getTierType());
+			return tiersList.get(0);
+		}
+		else if(OCConstants.LOYALTY_LIFETIME_PURCHASE_VALUE.equals(tiersList.get(0).getTierUpgdConstraint())){
+			logger.info("tier condition on :"+OCConstants.LOYALTY_LIFETIME_PURCHASE_VALUE);
+
+			ContactsDao contactsDao = (ContactsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_DAO);				
+
+			List<Map<String, Object>> contactPurcahseList = contactsDao.findContactPurchaseDetails(userId, contactId);
+			Double totPurchaseValue = null;
+			if(contactPurcahseList != null && contactPurcahseList.size() == 1) {
+				for (Map<String, Object> eachMap : contactPurcahseList) {
+					if(eachMap.containsKey("tot_purchase_amt")){
+						totPurchaseValue = Double.valueOf(eachMap.get("tot_purchase_amt") != null ? eachMap.get("tot_purchase_amt").toString() : "0.00");
+						logger.info("purchase value = "+totPurchaseValue);
+					}
+				}
+			}
+
+			if(contactPurcahseList == null || totPurchaseValue == null || totPurchaseValue <= 0){
+				logger.info("purchase value is empty...");
+				return tiersList.get(0);
+			}
+			else{
+
+				Iterator<LoyaltyProgramTier> it = eligibleMap.keySet().iterator();
+				LoyaltyProgramTier prevKeyTier = null;
+				LoyaltyProgramTier nextKeyTier = null;
+				while(it.hasNext()){
+					nextKeyTier = it.next();
+					logger.info("------------nextKeyTier::"+nextKeyTier.getTierType());
+					logger.info("-------------tiersList.get(0)::"+tiersList.get(0).getTierType());
+					if(OCConstants.LOYALTY_PROGRAM_TIER1.equalsIgnoreCase(nextKeyTier.getTierType())){
+						prevKeyTier = nextKeyTier;
+						continue;
+					}
+					if(totPurchaseValue > 0 && totPurchaseValue < eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue()){
+						if(prevKeyTier == null){
+							logger.info("selected tier is currTier..."+tiersList.get(0).getTierType());
+							return tiersList.get(0);
+						}
+						logger.info("selected tier..."+prevKeyTier.getTierType());
+						return prevKeyTier;
+					}
+					else if (totPurchaseValue > 0 && totPurchaseValue >= eligibleMap.get(nextKeyTier).getTierUpgdConstraintValue() && !it.hasNext()) {
+						logger.info("selected tier..."+nextKeyTier.getTierType());
+						return nextKeyTier;
+					}
+					prevKeyTier = nextKeyTier;
+				}
+				return tiersList.get(0);
+			}//else
+		}
+		else if(OCConstants.LOYALTY_CUMULATIVE_PURCHASE_VALUE.equals(tiersList.get(0).getTierUpgdConstraint())){
+			
+			//create a temp object and return it to caller. caller should handle this temp object.
+			
+			LoyaltyProgramTier tempTier = new LoyaltyProgramTier();
+			tempTier.setTierType(OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING);
+			return tempTier;			
+		}
+		else{
+			return null;
+		}
+
+	}
+	
+	
+	
+	private List<LoyaltyProgramTier> getSortedTierList(Long programId, Long contactId) throws Exception {
+		try{
+			logger.debug("in getSortedTierList ");
+			LoyaltyProgramTierDao loyaltyProgramTierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+
+			List<LoyaltyProgramTier> tiersList = loyaltyProgramTierDao.fetchTiersByProgramId(programId);
+			if (tiersList == null || tiersList.size() <= 0) {
+				logger.info("Tiers list is empty...");
+				return null;
+			}
+			else if (tiersList.size() >= 1) {//sort tiers by tiertype i.e Tier 1, Tier 2, and so on.
+				Collections.sort(tiersList, new Comparator<LoyaltyProgramTier>() {
+					@Override
+					public int compare(LoyaltyProgramTier o1, LoyaltyProgramTier o2) {
+
+						int num1 = Integer.valueOf(o1.getTierType().substring(5)).intValue();
+						int num2 = Integer.valueOf(o2.getTierType().substring(5)).intValue();
+						if(num1 < num2){
+							return -1;
+						}
+						else if(num1 == num2){
+							return 0;
+						}
+						else{
+							return 1;
+						}
+					}
+				});
+			}
+
+			for(LoyaltyProgramTier tier : tiersList) {//testing purpose
+				logger.info("tier level : "+tier.getTierType());
+			}
+			return tiersList;
+		}catch(Exception e){
+			logger.error("Exception in validating tiersList::", e);
+			return null;
+		}
+
+	}
+	
+	private LoyaltyProgramTier getLoyaltyTier(Long tierId) throws Exception{
+		logger.debug("in getLoyaltyTier ");
+		LoyaltyProgramTierDao tierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+		return tierDao.getTierById(tierId);
+		
+	}
+	
+	private String getDestRewardFlag(ContactsLoyalty sourceMembership, ContactsLoyalty destMembership) throws Exception{
+		//check if one of them is hibrid loyalty
+		String rewardFlag = sourceMembership.getRewardFlag();
+		String destRewardFlag = destMembership.getRewardFlag();
+		logger.debug("in getDestRewardFlag "+destRewardFlag);
+		
+		if(destRewardFlag == null || rewardFlag.equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_REWARD_FLAG_GL)) return rewardFlag;
+		//else if(destRewardFlag.equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_REWARD_FLAG_GL)) return destRewardFlag;
+		else return destRewardFlag;
+		
+		
+	}
+	
+	private LoyaltyProgramTier determineTier(ContactsLoyalty sourceMembership, ContactsLoyalty destMembership, Users user, 
+			LoyaltyProgram loyaltyProgram, LoyaltyTransferMembershipJsonRequest transferRequest, boolean isForSource, boolean isDestNew) throws Exception{
+		logger.debug("in determineTier ");
+		ContactsLoyalty membership = (isForSource ? sourceMembership : destMembership);
+		Long contactId = membership.getContact().getContactId();
+		Long userID = user.getUserId();
+		List<LoyaltyProgramTier> tierList = getSortedTierList(loyaltyProgram.getProgramId(), userID);
+		if(tierList == null || tierList.size() == 0 || !OCConstants.LOYALTY_PROGRAM_TIER1.equals(tierList.get(0).getTierType())){
+			return null;//TODO need to verify
+		}
+		
+		//Prepare eligible tiers map
+		Iterator<LoyaltyProgramTier> iterTier = tierList.iterator();
+		Map<LoyaltyProgramTier, LoyaltyProgramTier> eligibleMap = new LinkedHashMap<LoyaltyProgramTier, LoyaltyProgramTier>();
+		LoyaltyProgramTier prevtier = null;
+		LoyaltyProgramTier nexttier = null;
+
+		while(iterTier.hasNext()){
+			nexttier = iterTier.next();
+			if(OCConstants.LOYALTY_PROGRAM_TIER1.equals(nexttier.getTierType())){
+				eligibleMap.put(nexttier, null);
+			}
+			else{
+				if((Integer.valueOf(prevtier.getTierType().substring(5))+1) 
+						== Integer.valueOf(nexttier.getTierType().substring(5)) && prevtier.getTierUpgdConstraintValue() != null){
+					eligibleMap.put(nexttier, prevtier);
+					logger.info("eligible tier ="+nexttier.getTierType()+" upgdconstrant value = "+prevtier.getTierUpgdConstraintValue());
+				}
+			}
+			prevtier = nexttier;
+		}
+		
+		LoyaltyProgramTier tier = findTier(contactId, userID, membership, tierList, eligibleMap);
+		if(tier != null && OCConstants.LOYALTY_PROGRAM_TIER_TYPE_PENDING.equalsIgnoreCase(tier.getTierType())){
+			LoyaltyTransferMembershipCPVThread cpvThread = new LoyaltyTransferMembershipCPVThread(eligibleMap, user, 
+					sourceMembership, destMembership, isForSource, isDestNew, tierList, loyaltyProgram, transferRequest);
+			Thread th = new Thread(cpvThread);
+			th.start();
+		
+		}
+		return tier;
+	}
+	
+	private ContactsLoyalty adjustBalances(ContactsLoyalty sourceMembership, ContactsLoyalty destMembership) throws Exception{
+		logger.debug("in adjustBalances ");
+		//transfer 
+		double expiredGiftAmount = (destMembership.getExpiredGiftAmount() != null ? destMembership.getExpiredGiftAmount() : 0.0) 
+				+ (sourceMembership.getExpiredGiftAmount() != null ? sourceMembership.getExpiredGiftAmount() : 0.0);
+		
+		destMembership.setExpiredGiftAmount(expiredGiftAmount);
+		
+		
+		long expiredPoints = (destMembership.getExpiredPoints() != null ? destMembership.getExpiredPoints() : 0) 
+				+ (sourceMembership.getExpiredPoints() != null ? sourceMembership.getExpiredPoints() : 0);
+		destMembership.setExpiredPoints(expiredPoints);
+		
+		double expiredRewardAmount = (destMembership.getExpiredRewardAmount() != null ? destMembership.getExpiredRewardAmount() : 0) 
+				+ (sourceMembership.getExpiredRewardAmount() != null ? sourceMembership.getExpiredRewardAmount() : 0);
+		destMembership.setExpiredRewardAmount(expiredRewardAmount);
+		
+		double giftBalance = (destMembership.getGiftBalance() != null ? destMembership.getGiftBalance() : 0) 
+				+ (sourceMembership.getGiftBalance() != null ? sourceMembership.getGiftBalance() : 0);
+		destMembership.setGiftBalance(giftBalance);
+		
+		double giftcardBalance = (destMembership.getGiftcardBalance() != null ? destMembership.getGiftcardBalance() : 0) 
+				+ (sourceMembership.getGiftcardBalance() != null ? sourceMembership.getGiftcardBalance() : 0);
+		destMembership.setGiftcardBalance(giftcardBalance);
+		
+		double holdAmountBalance = (destMembership.getHoldAmountBalance() != null ? destMembership.getHoldAmountBalance() : 0) 
+				+ (sourceMembership.getHoldAmountBalance() != null ? sourceMembership.getHoldAmountBalance() : 0);
+		destMembership.setHoldAmountBalance(holdAmountBalance);
+		
+		double holdPointsBalance = (destMembership.getHoldPointsBalance() != null ? destMembership.getHoldPointsBalance() : 0) 
+				+ (sourceMembership.getHoldPointsBalance() != null ? sourceMembership.getHoldPointsBalance() : 0);
+		destMembership.setHoldPointsBalance(holdPointsBalance);
+		
+		double loyaltyBalance = (destMembership.getLoyaltyBalance() != null ? destMembership.getLoyaltyBalance() : 0) 
+				+ (sourceMembership.getLoyaltyBalance() != null ? sourceMembership.getLoyaltyBalance() : 0);
+		destMembership.setLoyaltyBalance(loyaltyBalance);
+		
+		double totalGiftAmount = (destMembership.getTotalGiftAmount() != null ? destMembership.getTotalGiftAmount() : 0) 
+				+ (sourceMembership.getTotalGiftAmount() != null ? sourceMembership.getTotalGiftAmount() : 0);
+		destMembership.setTotalGiftAmount(totalGiftAmount);
+		
+		double totalGiftcardAmount = (destMembership.getTotalGiftcardAmount() != null ? destMembership.getTotalGiftcardAmount() : 0) 
+				+ (sourceMembership.getTotalGiftcardAmount() != null ? sourceMembership.getTotalGiftcardAmount() : 0);
+		destMembership.setTotalGiftcardAmount(totalGiftcardAmount);
+		
+		double totalGiftcardRedemption = (destMembership.getTotalGiftcardRedemption() != null ? destMembership.getTotalGiftcardRedemption() : 0) 
+				+ (sourceMembership.getTotalGiftcardRedemption() != null ? sourceMembership.getTotalGiftcardRedemption() : 0);
+		destMembership.setTotalGiftcardRedemption(totalGiftcardRedemption);
+		
+		double totalGiftRedemption = (destMembership.getTotalGiftRedemption() != null ? destMembership.getTotalGiftRedemption() : 0) 
+				+ (sourceMembership.getTotalGiftRedemption() != null ? sourceMembership.getTotalGiftRedemption() : 0);
+		destMembership.setTotalGiftRedemption(totalGiftRedemption);
+		
+		double totalLoyaltyEarned = (destMembership.getTotalLoyaltyEarned() != null ? destMembership.getTotalLoyaltyEarned() : 0) 
+				+ (sourceMembership.getTotalLoyaltyEarned() != null ? sourceMembership.getTotalLoyaltyEarned() : 0);
+		destMembership.setTotalLoyaltyEarned(totalLoyaltyEarned);
+		
+		double totalLoyaltyRedemption = (destMembership.getTotalLoyaltyRedemption() != null ? destMembership.getTotalLoyaltyRedemption() : 0) 
+				+ (sourceMembership.getTotalLoyaltyRedemption() != null ? sourceMembership.getTotalLoyaltyRedemption() : 0);
+		destMembership.setTotalLoyaltyRedemption(totalLoyaltyRedemption);
+		
+		return destMembership;
+		
+	}
+	
+	private void linkSourceMembershipToDest(ContactsLoyalty sourceMembership, ContactsLoyalty destMembership, Calendar transferedOn) throws Exception{
+		logger.debug("in linkSourceMembershipToDest ");
+		saveContactsLoyalty(destMembership);
+		sourceMembership.setTransferedTo(destMembership.getLoyaltyId());
+		sourceMembership.setTransferedOn(transferedOn);
+		sourceMembership.setMembershipStatus(OCConstants.LOYALTY_MEMBERSHIP_STATUS_CLOSED);
+		saveContactsLoyalty(sourceMembership);
+		ContactsLoyaltyDaoForDML loyaltyDao = (ContactsLoyaltyDaoForDML)ServiceLocator.getInstance().getBeanByName(OCConstants.CONTACTS_LOYALTY_DAO);
+		loyaltyDao.updateAllChildMembership(sourceMembership.getLoyaltyId(), destMembership.getLoyaltyId(),
+				sourceMembership.getUserId(), sourceMembership.getProgramId(), MyCalendar.calendarToString(transferedOn, MyCalendar.FORMAT_DATETIME_STYEAR));
+		
+	}
+	
+	private void linkSourceTrxToDest(ContactsLoyalty sourceMembership, ContactsLoyalty destMembership, Calendar transferedOn) throws Exception{
+		logger.debug("in linkSourceTrxToDest ");
+		LoyaltyTransactionChildDao loyaltyTransactionChildDao = (LoyaltyTransactionChildDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_TRANSACTION_CHILD_DAO);
+		
+		loyaltyTransactionChildDao.transferSourceTrxnsToDestMembership(sourceMembership.getLoyaltyId(), destMembership.getLoyaltyId(), MyCalendar.calendarToString(transferedOn, MyCalendar.FORMAT_DATETIME_STYEAR));
+		loyaltyTransactionChildDao.updateAllChildTrxnsToDestMembership(sourceMembership.getLoyaltyId(), destMembership.getLoyaltyId(), MyCalendar.calendarToString(transferedOn, MyCalendar.FORMAT_DATETIME_STYEAR));
+		
+	}
+	
+	private void linkSourceExpiryToDest(ContactsLoyalty sourceMembership, ContactsLoyalty destMembership, Calendar transferedOn) throws Exception{
+		logger.debug("in linkSourceExpiryToDest ");
+		LoyaltyTransactionExpiryDao loyaltyTransactionExpiryDao = (LoyaltyTransactionExpiryDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_TRANSACTION_EXPIRY_DAO);
+		
+		loyaltyTransactionExpiryDao.transferSourceExpiryTrxnsToDestMembership(sourceMembership.getLoyaltyId(), destMembership.getLoyaltyId(), MyCalendar.calendarToString(transferedOn, MyCalendar.FORMAT_DATETIME_STYEAR));
+		loyaltyTransactionExpiryDao.updateAllChildTrxnsToDestMembership(sourceMembership.getLoyaltyId(), destMembership.getLoyaltyId(), MyCalendar.calendarToString(transferedOn, MyCalendar.FORMAT_DATETIME_STYEAR));
+		
+	}
+	
+	
+	private LoyaltyCards findCard(String cardNumber, Users user) throws Exception {
+		logger.debug("in find Card ");
+		LoyaltyCardsDao loyaltyCardDao = (LoyaltyCardsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_CARDS_DAO);
+		return loyaltyCardDao.findByCardNoAnduserId(cardNumber, user.getUserId());
+	}
+	private LoyaltyProgram findProgram(Long programId) throws Exception {
+		logger.debug("in find program ");
+		LoyaltyProgramDao loyaltyProgramDao = (LoyaltyProgramDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_DAO);
+		return loyaltyProgramDao.findById(programId);
+	}
+	
+	private LoyaltyCardSet findCardSet(Long cardSetID) throws Exception {
+		logger.debug("in find Card set");
+		LoyaltyCardSetDao loyaltyCardSetDao = (LoyaltyCardSetDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_CARD_SET_DAO);
+		return loyaltyCardSetDao.findByCardSetId(cardSetID);
+	}
+	private ContactsLoyalty findMembershpByCard(String cardNumber, Long programId, Long userId) throws Exception{
+		logger.debug("in find findMembershpByCard ");
+		ContactsLoyalty loyalty = null;
+		ContactsLoyaltyDao contactLoyaltyDao = (ContactsLoyaltyDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_LOYALTY_DAO);
+		loyalty = contactLoyaltyDao.findByProgram(cardNumber, programId, userId);
+		return loyalty;
+	}
+	
+	
+	private Users getUser(String userName, String orgId, String userToken) throws Exception{
+		logger.debug("in getUser ");
+		String completeUserName = userName+Constants.USER_AND_ORG_SEPARATOR+orgId;
+		UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+		Users user = usersDao.findUserByToken(completeUserName, userToken);
+		return user;
+	}
+	private Status validateTransferJsonData(LoyaltyTransferMembershipJsonRequest loyaltyTransferRequest) throws Exception{
+		logger.info("Entered validateTransferJsonData method >>>>");
+		
+		Status status = null;
+		if(loyaltyTransferRequest == null ){
+			status = new Status(
+					"101002", PropertyUtil.getErrorMessage(101002, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(loyaltyTransferRequest.getUser() == null){
+			status = new Status(
+					"101011", PropertyUtil.getErrorMessage(101011, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(loyaltyTransferRequest.getMembership() == null){
+			status = new Status(
+					"101004", PropertyUtil.getErrorMessage(101004, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(loyaltyTransferRequest.getTransferSource() == null){
+			status = new Status(
+					"101004", PropertyUtil.getErrorMessage(101004, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(loyaltyTransferRequest.getUser().getUserName() == null || loyaltyTransferRequest.getUser().getUserName().trim().length() <=0 || 
+				loyaltyTransferRequest.getUser().getOrganizationId() == null || loyaltyTransferRequest.getUser().getOrganizationId().trim().length() <=0 || 
+						loyaltyTransferRequest.getUser().getToken() == null || loyaltyTransferRequest.getUser().getToken().trim().length() <=0) {
+			status = new Status("1012", PropertyUtil.getErrorMessage(1012, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(loyaltyTransferRequest.getHeader().getStoreNumber() == null || loyaltyTransferRequest.getHeader().getStoreNumber().length() <= 0){
+			status = new Status("111501", PropertyUtil.getErrorMessage(111501, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(loyaltyTransferRequest.getMembership().getCardNumber() != null && loyaltyTransferRequest.getMembership().getCardNumber().trim().isEmpty() ){
+			status = new Status(
+					"111571", PropertyUtil.getErrorMessage(111571, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}	
+		if(loyaltyTransferRequest.getTransferSource().getCardNumber() != null && loyaltyTransferRequest.getTransferSource().getCardNumber().trim().isEmpty() ){
+			status = new Status(
+					"111572", PropertyUtil.getErrorMessage(111572, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}	
+		return status;
+	}
+	
+	private ContactsLoyalty transferMembership(ContactsLoyalty sourceMembership, 
+			ContactsLoyalty destMembership, String mbershipNumber, String cardPin, Long cardsetID, String storeNumber, boolean merge,String empId,String termId) throws Exception {
+		//logger.info("Entered prepareContactsLoyaltyObject >>>>>");
+		if(destMembership == null) destMembership = new ContactsLoyalty();
+		if(!merge) {
+			
+			destMembership.setCardNumber(mbershipNumber);
+			destMembership.setMembershipType(OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD);
+			destMembership.setMobilePhone(sourceMembership.getMobilePhone());
+			destMembership.setCardPin(cardPin);
+			destMembership.setCreatedDate(Calendar.getInstance());//check
+			destMembership.setContactLoyaltyType(Constants.CONTACT_LOYALTY_TYPE_POS);
+			destMembership.setPosStoreLocationId(storeNumber);
+			destMembership.setEmpId(empId!=null && !empId.trim().isEmpty() ? empId.trim():null);
+			destMembership.setTerminalId(termId!=null && !termId.trim().isEmpty() ? termId.trim():null);
+			destMembership.setMembershipStatus(OCConstants.LOYALTY_MEMBERSHIP_STATUS_ACTIVE);
+			destMembership.setMode(OCConstants.LOYALTY_ONLINE_MODE);//check
+			destMembership.setOptinDate(Calendar.getInstance());//check
+			destMembership.setProgramId(sourceMembership.getProgramId());
+			destMembership.setCardSetId(cardsetID);
+			destMembership.setServiceType(OCConstants.LOYALTY_SERVICE_TYPE_OC);
+			destMembership.setContact(sourceMembership.getContact());
+			destMembership.setUserId(sourceMembership.getUserId());
+			destMembership.setCustomerId(sourceMembership.getCustomerId());
+			destMembership.setIsRegistered(sourceMembership.getIsRegistered());
+			destMembership.setLastLoggedInTime(sourceMembership.getLastLoggedInTime());
+			destMembership.setLastRedumptionDate(sourceMembership.getLastRedumptionDate());
+			destMembership.setMembershipPwd(sourceMembership.getMembershipPwd());
+			destMembership.setOrgId(sourceMembership.getOrgId());
+			destMembership.setTierUpgradedDate(sourceMembership.getTierUpgradedDate());//not required i guess
+			destMembership.setTierUpgradeReason(sourceMembership.getTierUpgradeReason());//not required i guess
+			
+		}
+		else {
+			
+			destMembership.setMobilePhone(destMembership.getMobilePhone() == null ? sourceMembership.getMobilePhone() : destMembership.getMobilePhone());
+			
+		}
+//		destMembership.setOptinMedium(optInMedium);
+		
+		return destMembership;
+	}
+	
+	
+	private LoyaltyTransferMembershipJsonResponse prepareTransferResponse(ResponseHeader header, MembershipResponse membershipResponse,
+			List<Balance> balances, HoldBalance holdBalance, List<MatchedCustomer> matchedCustomers, Status status) throws BaseServiceException {
+		LoyaltyTransferMembershipJsonResponse transferResponse = new LoyaltyTransferMembershipJsonResponse();
+		transferResponse.setHeader(header);
+		
+		if(membershipResponse == null){
+			membershipResponse = new MembershipResponse();
+			membershipResponse.setCardNumber("");
+			membershipResponse.setCardPin("");
+			membershipResponse.setExpiry("");
+			membershipResponse.setPhoneNumber("");
+			membershipResponse.setTierLevel("");
+			membershipResponse.setTierName("");
+		}
+		if(balances == null){
+			balances = new ArrayList<Balance>();
+		}
+		if(holdBalance == null){
+			holdBalance = new HoldBalance();
+			holdBalance.setActivationPeriod("");
+			holdBalance.setCurrency("");
+			holdBalance.setPoints("");
+		}
+		if(matchedCustomers == null){
+			matchedCustomers = new ArrayList<MatchedCustomer>();
+		}
+		transferResponse.setMembership(membershipResponse);
+		transferResponse.setBalances(balances);
+		transferResponse.setHoldBalance(holdBalance);
+		transferResponse.setMatchedCustomers(matchedCustomers);
+		transferResponse.setStatus(status);
+		return transferResponse;
+	}
+	
+	
+	private LoyaltyTransactionChild createSuccessfulTransaction(ContactsLoyalty contactLoyalty, ContactsLoyalty destContactLoyalty, ResponseHeader responseHeader, Long userId, Long orgId, 
+			Long programId, String membershipType,  String desc, String storeNumber, String desc2,String empId, String termId) throws Exception{
+		
+		LoyaltyTransactionChild transaction = null;
+		try{
+		
+			transaction = new LoyaltyTransactionChild();
+			transaction.setTransactionId(Long.valueOf(responseHeader.getTransactionId()));
+			transaction.setMembershipNumber(""+contactLoyalty.getCardNumber());
+			transaction.setMembershipType(membershipType);
+			transaction.setCreatedDate(Calendar.getInstance());
+			transaction.setOrgId(orgId);
+			transaction.setAmountBalance(destContactLoyalty.getGiftcardBalance());
+			transaction.setPointsBalance(destContactLoyalty.getLoyaltyBalance());
+			transaction.setGiftBalance(destContactLoyalty.getGiftBalance());
+			transaction.setAmountDifference(contactLoyalty.getGiftcardBalance() != null ? contactLoyalty.getGiftcardBalance()+Constants.STRING_NILL : null);
+			transaction.setPointsDifference(contactLoyalty.getLoyaltyBalance() != null ? contactLoyalty.getLoyaltyBalance()+Constants.STRING_NILL : null);
+			transaction.setGiftDifference(contactLoyalty.getGiftBalance() != null ? contactLoyalty.getGiftBalance()+Constants.STRING_NILL : null);
+			transaction.setHoldAmount(destContactLoyalty.getHoldAmountBalance());
+			transaction.setHoldPoints(destContactLoyalty.getHoldPointsBalance());
+			transaction.setProgramId(programId);
+			transaction.setTierId(contactLoyalty.getProgramTierId());
+			transaction.setUserId(userId);
+			transaction.setOrgId(contactLoyalty.getOrgId());
+			transaction.setTransactionType(OCConstants.LOYALTY_TRANS_TYPE_TRANSFER);
+			transaction.setStoreNumber(storeNumber);
+			transaction.setEmployeeId(empId!=null && !empId.trim().isEmpty() ? empId.trim():null);
+			transaction.setTerminalId(termId!=null && !termId.trim().isEmpty() ? termId.trim():null);
+			transaction.setCardSetId(contactLoyalty.getCardSetId());
+			transaction.setSourceType(OCConstants.LOYALTY_TRANSACTION_SOURCE_TYPE_STORE);
+			transaction.setDescription(desc);
+			transaction.setDescription2(desc2);
+			transaction.setLoyaltyId(contactLoyalty.getLoyaltyId());
+			
+			LoyaltyTransactionChildDao childDao = (LoyaltyTransactionChildDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_TRANSACTION_CHILD_DAO);
+			childDao.saveOrUpdate(transaction);
+		
+		}catch(Exception e){
+			logger.error("Exception while creating transaction in child table...", e);
+		}
+		
+		return transaction;
+	}
+	
+	private ContactsLoyalty getDestMembershipIfAny(ContactsLoyalty contactLoyalty) throws Exception{
+		ContactsLoyaltyDao loyaltyDao = (ContactsLoyaltyDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_LOYALTY_DAO);
+		if(contactLoyalty.getMembershipStatus().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_STATUS_CLOSED) && contactLoyalty.getTransferedTo() != null) {
+			return loyaltyDao.findAllByLoyaltyId(contactLoyalty.getTransferedTo());
+			
+		}
+		
+		return null;
+	}
+}

@@ -1,0 +1,63 @@
+<zk>
+<window id="manageContactsWinId"  border="0" apply="org.mq.marketer.campaign.controller.contacts.ManageContactsController"  xmlns:h="http://www.w3.org/1999/xhtml" width="910px">
+	<h:table cellspacing="2" cellpadding="0" width="100%" >
+		<h:tr>
+			<h:td align="left" valign="bottom">
+			    <label value="Suppress Contacts" sclass="theme-lbHeading"/>
+			    <div id="suppressDivId">
+			    <h:br/>
+				<hbox style="padding-right:10px;width:100%" >
+					<label value="Browse file" sclass="theme-lbHeading"/> <h:br/>
+					<!--<fileupload id="suppFileUploadId" onUpload="upload(event.getMedia())" height="70px"/>-->
+				
+				<fileupload id="suppFileUploadId"  height="70px"/>
+				</hbox>
+				</div>
+				<div id="suppressResDivId" visible="false" width="100%" height="200px" style="padding-left" >
+				  <h:table cellspacing="2" cellpadding="0" width="100%" ><h:tr><h:td align="center" valign="middle" height="200px"> 
+				 <label value="Suppressed contacts list will be uploaded in a moment. " style="color:#49A5FF;font-family:verdana;font-size:16px;font-weight:bold;" />
+				 </h:td></h:tr></h:table>
+				</div> 
+				
+			</h:td>
+		</h:tr>
+		<h:tr>
+			<h:td>
+				<button label="Back" id="backBtnId" />
+			</h:td>
+		</h:tr>
+	</h:table>
+	<!--<zscript>
+			<![CDATA[
+				import org.mq.marketer.campaign.general.MessageUtil;
+				import org.mq.marketer.campaign.general.PropertyUtil;
+				import org.mq.marketer.campaign.general.PageUtil;
+				import org.zkoss.util.media.Media;
+				import org.clapper.util.io.FileUtil;
+    			        
+				
+				void upload(Object media){
+					MessageUtil.clearMessage();
+					if(media == null) {
+						MessageUtil.setMessage("Please select a file", "color:red", "TOP");
+						return;
+					}
+					String path = PropertyUtil.getPropertyValue("usersParentDirectory").trim() + "/" + sessionScope.get("userName") + "/List/" +((Media)media).getName();
+					String ext = FileUtil.getFileNameExtension(path);
+					if(ext == null){
+						MessageUtil.setMessage("Upload CSV file Only","color:red","TOP");
+						return;
+					}
+					if(!ext.equalsIgnoreCase("csv")){
+						MessageUtil.setMessage("Upload CSV file Only","color:red","TOP");
+						return;
+					}
+					manageContactsWinId.uploadSuppressCSVFile(media,suppressDivId,suppressResDivId);
+				}
+				void back(){
+					PageUtil.goToPreviousPage();
+				}
+			]]>
+		</zscript>		
+--></window>
+</zk>

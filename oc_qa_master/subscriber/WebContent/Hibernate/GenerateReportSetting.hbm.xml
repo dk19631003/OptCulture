@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.GenerateReportSetting" table="generate_report_setting" >
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+
+
+		<property name="fileFormat" type="string" column="file_format"  />
+		<property name="orgId" type="java.lang.Long" column="org_id"/>
+		<property name="accountId" type="java.lang.Long" column="account_id"/>
+		<property name="userId" type="java.lang.Long" column="user_id" />
+		<property name="type" type="string" column="type"/>	
+		<property name="enable" type="boolean" column="enable"/>
+		<property name="generateAt" type="time" column="generate_at"/>
+		<property name="createdOn" type="calendar" column="created_on"/>
+		<property name="createdBy" type="java.lang.Long" column="created_by" />
+		<property name="freequency" type="string" column="freequency" />
+		<property name="modifiedOn" type="calendar" column="modified_on"/>
+  		<property name="modifiedBy" type="java.lang.Long" column="modified_by" />
+  		<property name="lastGeneratedOn" type="calendar" column="last_generated_on"/>  
+		
+		<property name="lastGeneratedFile" type="string" column="last_generated_file"/>
+  		<property name="host" type="string" column="host" /> 
+  		<property name="port" type="java.lang.Integer" column="port" /> 
+  		<property name="username" type="string" column="username" />
+  		<property name="password" type="string" column="password" /> 
+  		<property name="targetDir" type="string" column="targetDir" />
+  		<property name="selectedTimeZone" type="string" column="selected_timezone" />
+  	    <property name="timeZoneName" type="string" column="timezone_name" />
+  		 
+  		
+		</class>
+</hibernate-mapping>

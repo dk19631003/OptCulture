@@ -1,0 +1,348 @@
+<zk>
+	<window id="campListWinId" width="100%"
+		apply="org.mq.optculture.controller.loyalty.LoyaltyProgramController"
+		style="margin:0px;" xmlns:h="native" xmlns:w="client">
+
+		<separator />
+		<style>
+		
+		
+		.hoverlistheader > div.z-listheader-cnt{ 
+
+         cursor: pointer;
+        }
+		
+		</style>
+		<h:table cellspacing="0" cellpadding="4" width="99%"
+			bgcolor="#F4F5F9"
+			style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+			<h:tr>
+				<h:td>
+					<label value="Programs by Status"
+						style="font-weight:bold;margin-left:10px;" />
+					<listbox id="progStatusLb" mold="select"
+						width="100px">
+						<listitem label="All" selected="true" value="All" />
+						<listitem label="Active" value="Active" />
+						<listitem label="Draft" value="Draft" />
+						<listitem label="Suspended" value="Suspended" />
+					</listbox>
+					<button label="Filter" id="filterBtnId"
+						sclass="idle140" style="margin-left:20px;" />
+					<a label="Reset" id="resetAnchId"
+						style="margin-left:20px;" />
+				</h:td>
+			</h:tr>
+		</h:table>
+		<div style="margin-top:20px">
+		
+			<listbox id="progListlbId" width="99%"
+				emptyMessage="No items match for your search"
+				sclass="contactsView">
+
+				<listhead sizable="false" 
+					style="background-color:#488eb0;">
+
+					<listheader label="Program Name"  align="left" id="sortbyProgramName" sclass="hoverlistheader"
+						maxlength="40" width="220px"/>
+					<listheader label="Description" align="left" id="sortbyDescription" sclass="hoverlistheader"
+						maxlength="40" />
+					<listheader label="Created On " align="left" id="sortbyCreatedOn" sclass="hoverlistheader"
+						width="100px" />
+					<listheader label="Membership Type" align="left" id="sortbyMembershipType" sclass="hoverlistheader"
+						width="150px" />
+					<listheader label="Status" align="left" 
+						width="150px" />
+					<listheader label="No. of Cards Available" id="sortbyCardsAvailable" 
+						align="left" width="150px" />
+					<listheader label="Privilege Tiers" id="sortbyPrivilegeTiers" sclass="hoverlistheader"
+						align="left" width="100px" />
+					<listheader label="Actions" align="left"
+						width="200px" />
+				</listhead>
+
+
+			</listbox>
+			<div>
+						<popup id="ltyPwdPopupId" width="200px" >
+							Enter Loyalty Password
+				            <textbox id="ltyPwdTbId" maxlength="25" type="password" value ="" /> 
+				            <div align="right" style="margin-top:5px;"><button label="Submit" id="submitPwdBtnId" /></div>
+							
+						</popup>
+					</div>
+			<separator/>
+			<label value="Note :" style="font-weight:bold;" />
+			<label value="Program(s) in Active (Incomplete) status require your immediate attention as they are missing one or more mandatory inputs needed for them to function properly." />
+		</div>
+		
+		<h:table width="100%" cellspacing="0" cellpadding="0"
+			style="padding-top:10px;">
+			
+			<h:tr>
+
+				<h:td align="right">
+					<label value="Items per page:"
+						style="padding-right:5px;font-size:11px;" />
+					<listbox rows="1" mold="select" id="pageSizeLbId"
+						style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15" />
+					</listbox>
+				</h:td>
+				<h:td width="280px">
+					<paging id="programListPagingId" detailed="true"
+						pageSize="10" width="280px" class="contactsViewPaging"
+						style="border:none;" />
+				</h:td>
+			</h:tr>
+
+		</h:table>
+
+		<h:table cellspacing="0" cellpadding="2" align="right"
+			style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			<h:tr>
+			
+				<h:td align="right">
+					<image src="/images/Preview_icn.png" />
+				</h:td>
+				<h:td align="left" style="padding-right:30px;">
+					<label value="- View Program"
+						style="font-size:11px;" />
+				</h:td>
+				
+				<h:td align="right">
+					<image src="/img/email_edit.gif" />
+				</h:td>
+				<h:td align="left" style="padding-right:30px;">
+					<label value="- Edit Program"
+						style="font-size:11px;" />
+				</h:td>
+				
+				
+				<!-- <h:td align="right">
+					<image src="/images/loyalty/View-Edit.png" />
+				</h:td>
+				<h:td align="left" style="padding-right:30px;">
+					<label value="- View/Edit Program"
+						style="font-size:11px;" />
+				</h:td> -->
+				
+				<h:td align="right">
+					<image src="/img/icons/add_icon.png" />
+				</h:td>
+				<h:td align="left" style="padding-right:30px;">
+					<label value="- Add Cards" style="font-size:11px;" />
+				</h:td>
+				<h:td align="right">
+					<image
+						src="/images/loyalty/export.png" />
+				</h:td>
+				<h:td align="left" style="padding-right:10px;">
+					<label value="- Export Cards" style="font-size:11px;" />
+				</h:td>
+				<h:td align="right">
+					<image src="/img/play_icn.png" />
+				</h:td>
+				<h:td align="left" style="padding-right:30px;">
+					<label value="- Activate" style="font-size:11px;" />
+				</h:td>
+				<h:td align="right">
+					<image src="/images/loyalty/suspend.png" />
+				</h:td>
+				<h:td align="left" style="padding-right:30px;">
+					<label value="- Suspend" style="font-size:11px;" />
+				</h:td>
+				<h:td align="right">
+					<image src="/img/action_delete.gif" />
+				</h:td>
+				<h:td align="left" style="padding-right:30px;">
+					<label value="- Delete Program" style="font-size:11px;" />
+				</h:td>
+				
+				<h:td align="right">
+					<image src="/img/theme/home/reports_icon.png" />
+				</h:td>
+				<h:td align="left" style="padding-right:10px;">
+					<label value="- Reports" style="font-size:11px;" />
+				</h:td>
+			</h:tr>
+		</h:table>
+
+		<separator />
+		
+		<window id="addWinId" title="Add Cards" border="normal" visible="false" width="600px" height="400px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<h:table cellspacing="0" cellpadding="0" width="95%"
+				align="left" style="padding-left:20px;">
+
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Card-set Name:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td colspan="2">
+						<textbox id="cardSetNameTbId" value=""
+							name="cardSetNameTbId" width="250px" maxlength="100" />
+					</h:td>
+				</h:tr>
+
+				<h:tr height="50">
+					<h:td width="150">
+						<label value="Card-Set Type:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td colspan="2">
+						<radiogroup id="ltyCardTypeRadioGrId" />
+						<radio label="Physical Cards" id="physicalRadioId" radiogroup="ltyCardTypeRadioGrId"
+							selected="true" value="Physical" />
+						<radio label="Virtual Cards" id="virtualRadioId" radiogroup="ltyCardTypeRadioGrId"
+							 value="Virtual" />
+						<!-- <listbox id="cardsetTypeLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Virtual" value="Virtual" selected="true" />
+							<listitem label="Physical" value="Physical" />
+						</listbox> -->
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td width="150">
+						<label value="Quantity:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td colspan="2">
+						<textbox id="quantityNameTbId" value=""
+							name="quantityNameTbId" width="150px" maxlength="100" />
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td width="150">
+						<label value="Card No. Generation Type:" />
+					</h:td>
+
+					<h:td colspan="2">
+						<listbox id="genTypeLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Sequential" value="Sequential" selected="true" />
+							<listitem label="Random" value="Random"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td width="150">
+						<label value="Status:" />
+					</h:td>
+
+					<h:td colspan="2">
+						<listbox id="statusLbId" rows="1" mold="select"	style="position:relative;" width="200px">
+							<listitem label="Active" value="Active" selected="true"/>
+							<listitem label="Suspended" value="Suspended"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Tier Assignment:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td  colspan="2">
+						<radiogroup id="tierAssignmentRadioGrId" />
+						<radio label="Automatic" id="autoAssignRadioId" radiogroup="tierAssignmentRadioGrId"
+							selected="true" value="auto"/>
+						<radio label="Link tier to card-set" id="linkTierRadioId" radiogroup="tierAssignmentRadioGrId"
+							 value="link"/>
+						<listbox id="selTierLbId" width="100px" mold="select" style="position:relative;"  disabled="true" >
+							<listitem label="Select Tier" value="0" selected="true"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+			</h:table>
+			<h:table cellspacing="2" cellpadding="1" align="right" >
+		    <h:tr height="10"></h:tr>
+					<h:tr >
+						<h:td colspan="6" style="padding-right:30px;">
+							<button id="addBtnId" sclass="idle140 greenbtn"	label="Add" />
+							<button id="cancelBtnId" label="Cancel" sclass="idle140" />
+						</h:td>
+					</h:tr>
+			</h:table>	
+									
+		 </window>		
+		 <window id="exportWinId" title="Export Card-Set" border="normal" visible="false" width="600px" height="300px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<h:table cellspacing="0" cellpadding="0" width="85%"
+				align="left" style="padding-left:30px;margin-top:10px;">
+
+				<h:tr height="30">
+					<h:td valign="top" width="150" style="margin-top:20px;">
+						<label value="Choose the cards you would like to export:" />
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="40">
+				<h:td valign="top" width="150" style="margin-top:20px;">
+						<label value="Filter by Status:" style="font-weight:bold;"/>
+						<listbox id="statusLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Inventory" value="Inventory" selected="true"/>
+							<listitem label="Active" value="Activated"/>
+							<listitem label="Enrolled" value="Enrolled"/>
+							<listitem label="Registered" value="Registered" />
+							<listitem label="All" value="All" />
+						</listbox>
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="30">
+
+					<h:td valign="top" colspan="2" style="margin-left:50px;">
+					<hbox>
+					
+						<listbox id="cardSetLbId" multiple="true" height="100px" rows="5" sclass="contactsView"
+										checkmark="true" width="200px">
+										<listhead>
+										<!-- <listheader label="" width="40px" /> -->
+										<listheader label="Select Card-set(s)"  />
+							</listhead>
+						</listbox>
+					
+						<!-- <separator></separator>
+						<listbox id="statusLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Inventory" selected="true"/>
+							<listitem label="Active" />
+							<listitem label="Suspended" />
+						</listbox> -->
+						
+						<span>
+						<label value="Card-sets selected :" style = "color:#0063A1;margin-left:10px;"/>
+						<separator/>
+						<label value="" id="selctedCardSetId" style="color:#2886B9;font-weight:bold;margin-left:5px;"/>
+						</span>
+						</hbox>
+					</h:td>
+				</h:tr>
+				<!-- <h:tr height="10"></h:tr> -->
+				<!-- <h:tr >
+					<h:td valign="top" width="150" style="margin-top:20px;">
+						<label value="Card-sets selected:" style = "color:#0063A1;"/>
+						<label value="" id="selctedCardSetId" style = "color:#0063A1;"/>
+					</h:td>
+				</h:tr> -->
+			</h:table>
+			<h:table cellspacing="2" cellpadding="1" align="right" >
+		    <h:tr height="10"></h:tr>
+					<h:tr >
+						<h:td colspan="6" style="padding-right:30px;">
+								<button label="Export as csv" sclass="idle140 greenbtn"  id="exportBtnId" />
+								<button label="Cancel" id="cancelBtnId" sclass="idle140 " />
+						</h:td>
+					</h:tr>
+					<!-- <h:tr height="10"></h:tr> -->
+			</h:table>	
+									
+		 </window>		
+
+	</window>
+</zk>

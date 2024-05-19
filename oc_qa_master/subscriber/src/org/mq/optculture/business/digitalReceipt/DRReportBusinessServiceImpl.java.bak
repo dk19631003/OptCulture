@@ -1,0 +1,61 @@
+package org.mq.optculture.business.digitalReceipt;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.DRSent;
+import org.mq.marketer.campaign.dao.DRSentDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.model.BaseRequestObject;
+import org.mq.optculture.model.BaseResponseObject;
+import org.mq.optculture.model.digitalReceipt.DRReportRequest;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+
+public class DRReportBusinessServiceImpl implements DRReportBusinessService {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	@Override
+	public BaseResponseObject processRequest(BaseRequestObject baseRequestObject)
+			throws BaseServiceException {
+		try {
+			DRReportRequest drReportRequest = (DRReportRequest) baseRequestObject;
+			DRReportBusinessService drReportBusinessService = (DRReportBusinessService) ServiceLocator.getInstance().getServiceByName(OCConstants.DR_REPORT_BUSINESS_SERVICE);
+			drReportBusinessService.processDRReportRequest(drReportRequest);
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+			throw new BaseServiceException("Exception occured while processing processRequest::::: ", e);
+		}
+		return null;
+	}
+
+	@Override
+	public BaseResponseObject processDRReportRequest(
+			DRReportRequest drReportRequest) throws BaseServiceException {
+		try {
+			DRSentDao drSentDao = (DRSentDao) ServiceLocator.getInstance().getDAOByName(OCConstants.DR_SENT_DAO);
+			//		DRSent drSent = drSentDao.findById(sentId);
+			if (OCConstants.DR_REPORT_ACTION_TYPE_OPEN.equals(drReportRequest.getRequestedAction())) {
+				drSentDao.updateOpenCount(drReportRequest.getSentId());
+			}
+			else if(OCConstants.DR_REPORT_ACTION_TYPE_CLICK.equals(drReportRequest.getRequestedAction())) {
+				DRSent drSent = drSentDao.findById(drReportRequest.getSentId());
+				if(drSent != null && drSent.getOpens() == 0) {
+					drSentDao.updateOpenCount(drReportRequest.getSentId());
+					//					drSentDao.updateClickCount(drReportRequest.getSentId());
+				}
+				drSentDao.updateClickCount(drReportRequest.getSentId());
+				if(drReportRequest.getUrl().indexOf("http://") == -1 && (drReportRequest.getUrl().indexOf("https://") == -1 )) {
+					drReportRequest.setUrl("http://" + drReportRequest.getUrl().trim());
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+			throw new BaseServiceException("Exception occured while processing processDRReportRequest::::: ", e);
+		}
+
+		return null;
+	}
+
+}

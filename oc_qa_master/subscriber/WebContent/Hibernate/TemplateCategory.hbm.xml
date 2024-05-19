@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.TemplateCategory"
+		table="template_category">
+		<id name="id" type="java.lang.Long">
+			<column name="category_id" />
+			<generator class="native" />
+		</id>
+		<property name="categoryName" type="string">
+			<column name="category_name" length="50" not-null="true" />
+		</property>
+		<property name="cratedDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="dirName" type="string">
+			<column name="dir_name" length="50" not-null="true" />
+		</property>
+		<!--
+			<property name="empty" type="java.lang.Boolean" column="empty"/>
+			<set name="templates" table="categories_templates" lazy="false">
+			<key column="category_id"/>
+			<many-to-many class="org.mq.marketer.campaign.beans.SystemTemplates" column="template_id"/>
+			</set>
+		-->
+	</class>
+</hibernate-mapping>

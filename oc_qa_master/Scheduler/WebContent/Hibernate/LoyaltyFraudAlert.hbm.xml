@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="org.mq.captiway.scheduler.beans.LoyaltyFraudAlert"
+		table="loyalty_fraud_alert">
+		<id name="fraudAlertId" type="java.lang.Long" column="fraud_alert_id">
+			<generator class="native" />
+		</id>
+		<property name="ruleName" type="string">
+			<column name="rule_name" not-null="true"/>
+		</property>
+		<property name="createdByUserId" type="java.lang.Long">
+			<column name="created__by_userId" not-null="true" />
+		</property>
+		<property name="modifiedByUserId" type="java.lang.Long">
+			<column name="modified_by_userId" not-null="true"/>
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date"  not-null="true"/>
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" not-null="true"/>
+		</property>
+		<property name="trxRule" type="string">
+	      <column name="trx_rule" not-null="true"/>
+	    </property>
+	    <property name="dateRule" type="string">
+			<column name="date_rule" not-null="true"/>
+		</property>
+			<property name="emailId" type="string" column="email_id"
+			length="500" />
+			
+		<property name="frequency" type="string" column="frequency"
+			length="60" />
+			
+		<property name="lastSentOn" type="calendar"
+			column="last_sent_on" />
+			
+		<property name="triggerAt" type="string" column="trigger_at"
+			length="60" />
+			
+		<property name="enabled" type="java.lang.Boolean" column="send_email_enabled" />
+		 
+		</class>
+	
+</hibernate-mapping>

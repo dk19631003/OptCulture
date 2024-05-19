@@ -1,0 +1,52 @@
+<zk>
+	<style>
+		.sideHdLb{
+			font-family:verdena,arial,sans-serif;
+			font-size:12px;
+			font-weight:bold;
+			color:#0755cd;
+			margin-left:30px
+		}
+	</style>
+	<window id="feedbackWinId" apply="org.mq.marketer.campaign.controller.FeedbackController" width="850px" xmlns:h="http://www.w3.org/1999/xhtml">
+		<h:table cellpadding="2" cellspacing="2" width="100%">
+			<h:tr>
+				<h:td colspan="2" align="left">
+					<label  id="EmailTeam" sclass="theme-lbHeading"/>
+				</h:td>
+			</h:tr>
+				<h:td colspan="2">
+					<h:hr sclass="theme-hrLine"/>
+				</h:td>
+			<h:tr>
+				<h:td align="left" width="5%" > 
+					<label value="Subject" sclass="sideHdLb" />
+				</h:td>
+				<h:td width="75%">
+					<textbox id="subTbId" cols="30"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td colspan="2" align="left">
+					<label value="Message" sclass="sideHdLb"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td colspan="2" align="left">
+					<textbox id="messageTbId" rows="15" height="200px" cols="90" style="margin-left:30px;" maxlength="255"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td colspan="2">
+					<hbox style="margin-left:30px;">
+						<!--<button label="Send" onClick="feedbackWinId.sendFeedback(subTbId.value,messageTbId.value)"/>
+						<button label="Cancel" onClick="feedbackWinId.cancel()"/>-->
+						
+						<button label="Send" id="sendBtnId" />
+						<button label="Cancel" id="cancelBtnId" />
+					</hbox>
+				</h:td>
+			</h:tr>
+		</h:table>
+	</window>
+</zk>

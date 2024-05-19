@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.OTPGeneratedCodes"
+		table="otp_generated_codes">
+		<id name="otpCodeId" type="java.lang.Long" column="otp_code_id">
+			<generator class="native" />
+		</id>
+		<property name="phoneNumber" type="string" column="phone_number"
+			length="20" />
+		<property name="otpCode" type="string" column="otpcode"
+			length="20" />	
+		<property name="createdDate" type="calendar"
+			column="created_date" />
+		<property name="status" type="string" column="status"
+			length="20" />	
+		<property name="userId" type="java.lang.Long" column="user_id" />
+		<property name="sentCount" type="java.lang.Long" column="sent_count" />	
+		<property name="docsid" type="string" column="docsid" />
+		<property name="receiptAmount" type="double">
+			<column name="receipt_amount" />
+		</property>
+		<property name="transactionType" type="string">
+			<column name="transaction_type" />
+		</property>
+		<property name="email" type="string" column="email" />
+	</class>
+</hibernate-mapping>

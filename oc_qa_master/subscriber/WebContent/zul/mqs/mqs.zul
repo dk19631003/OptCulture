@@ -1,0 +1,29 @@
+<zk>
+<window id="mqAccPageWinId"  border="0"  xmlns:h="http://www.zkoss.org/2005/zk/native" apply="org.mq.marketer.campaign.controller.mqs.MQSController">
+	<h:table cellspacing="0" cellpadding="0"  width="100%"  xmlns:h="http://www.zkoss.org/2005/zk/native">
+		<!-- 
+		<h:tr>
+			<h:td>
+				<label value="My Accounts" style="font-size:12px;color:#333;font-weight:bold;font-style:verdana,Arial;"/>
+			</h:td>
+			<h:td>
+				<hbox spacing="10px" align="center">
+					<toolbarbutton label="My Profile" onClick="mqAccPageWinId.loadMQSPage(&quot;myProfile&quot;,mqsIframeId)"/>
+					<toolbarbutton label="Change Password" onClick="mqAccPageWinId.loadMQSPage(&quot;ChangePassword&quot;,mqsIframeId)"/>
+				</hbox>
+			</h:td>
+		</h:tr>
+		 -->
+		<h:tr>
+			<h:td >
+				<iframe id="mqsIframeId" name="NeoMQS" src=""/>
+			</h:td>
+		</h:tr>
+	</h:table>
+	<!--<zscript>
+		<![CDATA[
+			mqAccPageWinId.loadMQSPage(mqsIframeId)
+		]]>
+	</zscript>-->
+</window>
+</zk>

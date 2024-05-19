@@ -1,0 +1,29 @@
+<zk>
+<div xmlns:h="native" height="60" style="margin-top:-60px;" 
+	apply="org.mq.marketer.campaign.controller.FooterController">
+	
+<h:table width="100%">
+	<h:tr>
+	<h:td>
+		<div class="footerDiv">
+			<a visible="false" >Documentation</a>
+			<a visible="false" >FAQs</a>
+			<a id="supportAId" visible="false" >Support</a>
+			<a visible="false" >Terms of Service</a>
+			<a visible="false" >Privacy Policy</a>  
+		</div>
+	</h:td>
+	<h:td align="center" style="padding-right:25px;color: #6D6E71; font: 11px verdana;" >
+		<label value="&#169;"/>
+		<label id="versionLblId" value="OptCulture. All rights reserved. Version 2.8.2222_QCAPP"/>   
+	</h:td>
+	</h:tr>
+	</h:table>
+</div>
+
+<script type="text/javascript">
+	var rumMOKey='22e0890d0f6aaf5e329bc42ea3e538e1';(function(){if(window.performance &amp;&amp;  window.performance.timing &amp;&amp; window.performance.navigation) 
+{var site24x7_rum_beacon=document.createElement('script');
+site24x7_rum_beacon.async=true;site24x7_rum_beacon.setAttribute('src','//static.site24x7rum.com/beacon/site24x7rum-min.js?appKey='+rumMOKey);document.getElementsByTagName('head')[0].appendChild(site24x7_rum_beacon);}})(window)
+</script>
+</zk>

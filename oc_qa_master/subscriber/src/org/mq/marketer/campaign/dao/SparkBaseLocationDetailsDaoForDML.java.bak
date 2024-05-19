@@ -1,0 +1,16 @@
+package org.mq.marketer.campaign.dao;
+
+import org.mq.marketer.campaign.beans.SparkBaseLocationDetails;
+
+public class SparkBaseLocationDetailsDaoForDML extends AbstractSpringDaoForDML{
+	 public void saveOrUpdate(SparkBaseLocationDetails sparkBaseLocationDetails) {
+	        super.saveOrUpdate(sparkBaseLocationDetails);
+	    }
+	    
+
+	    public void delete(SparkBaseLocationDetails sparkBaseLocationDetails) {
+	    	logger.info("delete the objet");
+	        super.delete(sparkBaseLocationDetails);
+	    }
+
+}

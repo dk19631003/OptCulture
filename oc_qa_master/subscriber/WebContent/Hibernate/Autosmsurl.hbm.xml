@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+	<class name="org.mq.marketer.campaign.beans.AutosmsUrls"
+		table="Autosms_url">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="autoSmsQueueSentId" type="java.lang.Long">
+			<column name="auto_SmsQueue_SentId" />
+		</property>
+		<property name="originalUrl" type="java.lang.String">
+			<column name="originalUrl" length="1000"/>
+		</property>
+		<property name="shortUrl" type="java.lang.String">
+			<column name="shortUrl" length="500" />
+		</property>
+		<property name="typeOfUrl" type="java.lang.String">
+			<column name="typeOfUrl" length="10" />
+		</property>
+		<property name="shortCode" type="java.lang.String">
+			<column name="shortCode" length="20" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

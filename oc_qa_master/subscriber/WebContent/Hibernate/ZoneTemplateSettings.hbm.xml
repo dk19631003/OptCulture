@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 3:15:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ZoneTemplateSettings"
+		table="zone_template_settings">
+		<id name="id" type="java.lang.Long">
+			<column name="Id" />
+			<generator class="native" />
+		</id>
+		<property name="zoneId" type="java.lang.Long">
+			<column name="zone_id" />
+		</property>
+		<property name="channel" type="string">
+			<column name="channel" />
+		</property>
+		<property name="senderORfrom" type="string">
+			<column name="sender_or_from" />
+		</property>
+		<property name="autoCommType" type="string">
+			<column name="auto_comm_type" length="30" />
+		</property>
+		<property name="templateId" type="string">
+			<column name="template_id" />
+		</property>
+
+		<many-to-one name="userId"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"
+			fetch="select">
+			<column name="user_id" />
+		</many-to-one>
+		<many-to-one name="orgId"
+			class="org.mq.marketer.campaign.beans.UserOrganization"
+			foreign-key="orgId" fetch="select" lazy="false">
+			<column name="org_id" />
+		</many-to-one>
+
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+
+	</class>
+</hibernate-mapping>

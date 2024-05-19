@@ -1,0 +1,16 @@
+<window width="80%" title="Session Timeout" border="normal">
+	<script>
+		//<![CDATA[
+		(function() {var s=document.createElement('script');
+		s.type='text/javascript';s.async=true;
+		s.src=('https:'==document.location.protocol?'https':'http') +
+		'://oc.groovehq.com/widgets/b5be14c1-0def-4057-ad4c-2dd7efce268d/ticket.js'; var q = document.getElementsByTagName('script')[0];q.parentNode.insertBefore(s, q);})();
+		//]]>
+	</script>
+	
+	<vbox>
+The page or component you request is no longer available.
+This is normally caused by timeout, opening too many Web pages, or rebooting
+the server.
+	</vbox>
+</window>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	- Application context containing authentication, channel
+	- security and web URI beans.
+	-
+	- Only used by "filter" artifact.
+	-
+	- $Id: applicationContext-acegi-security.xml 1425 2006-04-28 06:43:50Z benalex $
+-->
+
+ 
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<http auto-config="true" realm="Retail Marketer Realm" use-expressions="true" authentication-manager-ref="authenticationManager">
+		<intercept-url pattern="/login.jsp"  access="permitAll"  />
+		<intercept-url pattern="/myMailingListBox.mqrm" access="permitAll" /> 
+		<intercept-url pattern="/sendGridEventHandler.mqrm" access="permitAll" />
+		<intercept-url pattern="/getToken.mqrm" access="permitAll" />
+		<intercept-url pattern="/JSBuilder.mqrm" access="permitAll" /> 
+		<intercept-url pattern="/LoyaltyEnrollment.mqrm" access="permitAll" />
+		<intercept-url pattern="/LoyaltyEnrollmentOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/loyaltyEnrollmentHistoryService.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCLoyaltyEnrollment.mqrm" access="permitAll" />
+		<intercept-url pattern="/LoyaltyInquiry.mqrm" access="permitAll" />
+		<intercept-url pattern="/LoyaltyInquiryOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCLoyaltyInquiry.mqrm" access="permitAll" />
+		<intercept-url pattern="/LoyaltyIssuance.mqrm" access="permitAll" />
+		<intercept-url pattern="/LoyaltyIssuanceOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCLoyaltyIssuance.mqrm" access="permitAll" />
+		<intercept-url pattern="/LoyaltyRedemption.mqrm" access="permitAll" />
+		<intercept-url pattern="/LoyaltyRedemptionOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCLoyaltyRedemption.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCOTPService.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCLoyaltyReturn.mqrm" access="permitAll" />
+		<intercept-url pattern="/sendDigitalReceipt.mqrm" access="permitAll" />
+		<intercept-url pattern="/sendDigitalReceiptOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/sendPosDigitalReceipt.mqrm" access="permitAll" /> 
+		<intercept-url pattern="/updateReport.mqrm" access="permitAll" /> 
+		<intercept-url pattern="/view/PintoRanch_Unsubscribe.jsp" access="permitAll" /> 
+		<intercept-url pattern="/updateDigitalReport.mqrm" access="permitAll" /> 
+		<intercept-url pattern="/updateAutoEmailReport.mqrm" access="permitAll" /> 
+		<intercept-url pattern="/CouponCodeRedeemRequest.mqrm" access="permitAll" />
+		<intercept-url pattern="/CouponCodeRedeemRequestOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/CouponCodeEnquiryRequestOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/fetchLoyaltyDataService.mqrm" access="permitAll" />
+		<intercept-url pattern="/fetchLoyaltyDataServiceOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCfetchLoyaltyDataService.mqrm" access="permitAll" />
+		<intercept-url pattern="/CouponCodeEnquiryRequest.mqrm" access="permitAll" />
+		<intercept-url pattern="/OCLoyaltyTransfer.mqrm" access="permitAll" />
+		<intercept-url pattern="/PromoEnquiryRequest.mqrm" access="permitAll" />
+		<intercept-url pattern="/GeneralMailSenderOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/updateContactsOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/IssueCoupon.mqrm" access="permitAll" />
+		<intercept-url pattern="/importContact.mqrm" access="permitAll" />
+               <intercept-url pattern="/faqAndTerms.mqrm" access="permitAll"/>
+               <intercept-url pattern="/nexonMonthlyStoreEnquiry.mqrm" access="permitAll"/><!-- APP-4908 -->
+               <intercept-url pattern="/reIssuePerks.mqrm" access="permitAll"/>
+               <!--<intercept-url pattern="/termsAndConditions.mqrm" access="permitAll"/>-->		
+               <intercept-url pattern="/events.mqrm" access="permitAll" /> <!-- changes 2.5.3.0 -->
+		<intercept-url pattern="/updateSkuOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/resetPassword.mqrm" access="permitAll" />
+		<intercept-url pattern="/updateOptSyncDataOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/ReferralCodeEnquiryRequestOPT.mqrm" access="permitAll" />
+		<intercept-url pattern="/forgotPassword.jsp" access="permitAll" />
+		<intercept-url pattern="/userValidation.jsp" access="permitAll"/>		
+		<intercept-url pattern="/changePassword.jsp" access="permitAll" />
+		<!-- <intercept-url pattern="/zul/gallery/imageLibrary.zul" access="permitAll" /> -->
+		<!-- <intercept-url pattern="/zul/gallery/fileBrowser.zul" access="permitAll" /> -->
+		<intercept-url pattern="/SystemData/Templates/**" access="permitAll" />
+		<intercept-url pattern="/SystemData/digital-templates/**" access="permitAll" />
+		<intercept-url pattern="/UserData/**" access="permitAll" />
+		<intercept-url pattern="/zkau/**" access="permitAll" />
+		<intercept-url pattern="/img/**" access="permitAll" />
+		<intercept-url pattern="/images/**" access="permitAll" />
+		<intercept-url pattern="/js/*" access="permitAll" />
+		<intercept-url pattern="/css/*" access="permitAll" />
+		<intercept-url pattern="/*/tinymce/**" access="permitAll" />
+		<intercept-url pattern="/sessionTimeout.jsp" access="permitAll" />
+		<intercept-url pattern="/zul/test/**" access="permitAll" />
+		<intercept-url pattern="/SystemData/test_request.html" access="permitAll" />
+		<intercept-url pattern="/SystemData/request.html" access="permitAll" />
+		<intercept-url pattern="/SystemData/**" access="permitAll" />
+		<intercept-url pattern="/view/**" access="permitAll" />
+		<intercept-url pattern="/zul/testUnsubscribe.zul" access="permitAll" />
+		
+		<intercept-url pattern="/equenceDLR.mqrm" access="permitAll" />
+		<intercept-url pattern="/synapseDLR.mqrm" access="permitAll" />
+		<intercept-url pattern="/drToLtyExtraction.mqrm" access="permitAll" />
+		
+		<!--For Bee Editor Image Server request  -->
+		<intercept-url pattern="/Gallery/**" access="permitAll" />
+		
+		<intercept-url pattern="/purchaseHistory.mqrm" access="permitAll" />
+		<intercept-url pattern="/loyaltyTransactionHistory.mqrm" access="permitAll" />
+		<intercept-url pattern="/couponsHistory.mqrm" access="permitAll" />
+		<intercept-url pattern="/storeInquiry.mqrm" access="permitAll" />
+		<intercept-url pattern="/webPortalBranding.mqrm" access="permitAll" />
+		<intercept-url pattern="/loyaltyMemberLogin.mqrm" access="permitAll" />
+		<intercept-url pattern="/userLogin.mqrm" access="permitAll" />
+		<intercept-url pattern="/loyaltyMemberLogout.mqrm" access="permitAll" />
+		<intercept-url pattern="/GetPageURL.mqrm" access="permitAll" />
+		
+
+		<!--For Bee Editor SavedRows request  -->
+		<intercept-url pattern="/savedRows.mqrm" access="permitAll" />
+		<intercept-url pattern="/userDesignedSavedRows.mqrm" access="permitAll" />
+		<intercept-url pattern="/processReceipt.mqrm" access="permitAll" />
+		<intercept-url pattern="/processLanguage.mqrm" access="permitAll" />
+		<intercept-url pattern="/optSyncUpdate.mqrm" access="permitAll" />
+		<intercept-url pattern="/promotionBarCode.mqrm" access="permitAll" />
+		<intercept-url pattern="/pushNotification.mqrm" access="permitAll" />
+
+		
+		<intercept-url pattern="/zul/useradmin/**" access="hasRole('ROLE_USER_ADMIN')" />
+		<intercept-url pattern="/**" access="isAuthenticated()" />
+		
+		
+		<intercept-url pattern="/zul/updateSubscrptions.zul" access="permitAll" />
+		
+		<intercept-url pattern="/zul/admin/**" access="hasRole('ROLE_ADMIN')" />
+
+		<form-login login-page="/login.jsp"
+			authentication-failure-url="/login.jsp?login_error=1"
+			default-target-url="/index.zul" always-use-default-target="true" />
+		<!-- <remember-me user-service-ref="" /> -->
+		<!--
+			uncomment session-management, if u want single session login 
+			then uncomment the HttpSessionEventPublisher listener in web.xml
+		-->
+		
+		<!-- 
+		<session-management>
+        	<concurrency-control max-sessions="1" error-if-maximum-exceeded="true"  />
+  	 	</session-management>
+		 -->
+		<!-- <logout  logout-success-url="/subscriber"
+			delete-cookies="JSESSIONID" invalidate-session="true" /> -->
+		<logout  logout-success-url="/subscriber" invalidate-session="true" />	
+	</http>
+
+
+	  <authentication-manager id="authenticationManager">
+	  <authentication-provider >
+	        <jdbc-user-service data-source-ref="dataSource" 
+	       authorities-by-username-query="SELECT distinct usr.username, rit.name
+	       FROM users usr, users_roles uro, sec_roles_groups urog, sec_groups_rights grrt, sec_rights rit
+	       WHERE usr.user_id = uro.user_id AND uro.role_id = urog.role_id AND urog.group_id = grrt.group_id AND
+	       grrt.right_id = rit.right_id AND usr.username = ?" 
+	       />  
+	       <password-encoder hash="bcrypt" >
+	       </password-encoder>
+	    </authentication-provider>
+	    <authentication-provider>
+	      <!-- <jdbc-user-service data-source-ref="dataSource"/> -->
+	      
+	      
+	       <jdbc-user-service data-source-ref="dataSource" 
+	       authorities-by-username-query="SELECT distinct usr.username, rit.name
+	       FROM users usr, users_roles uro, sec_roles_groups urog, sec_groups_rights grrt, sec_rights rit
+	       WHERE usr.user_id = uro.user_id AND uro.role_id = urog.role_id AND urog.group_id = grrt.group_id AND
+	       grrt.right_id = rit.right_id AND usr.username = ?" 
+	       />  
+	       <password-encoder hash="md5" >
+	      	  <salt-source user-property="username"/> 
+	       </password-encoder>
+	    </authentication-provider>
+	    <authentication-provider>
+	     <!--  <jdbc-user-service data-source-ref="dataSource"/> -->
+	      
+	      
+	       <jdbc-user-service data-source-ref="dataSource" 
+	       authorities-by-username-query="SELECT distinct usr.username, rit.name
+	       FROM users usr, users_roles uro, sec_roles_groups urog, sec_groups_rights grrt, sec_rights rit
+	       WHERE usr.user_id = uro.user_id AND uro.role_id = urog.role_id AND urog.group_id = grrt.group_id AND
+	       grrt.right_id = rit.right_id AND usr.username = ?" 
+	       />  
+	       
+	    </authentication-provider>
+	  </authentication-manager>
+	  
+	  <!-- <authentication-manager id="switchUserAuthMgr">
+	    <authentication-provider>
+	      <jdbc-user-service data-source-ref="dataSource"/>
+	      
+	      
+	       <jdbc-user-service data-source-ref="dataSource" 
+	       authorities-by-username-query="SELECT distinct usr.username, rit.name
+	       FROM users usr, users_roles uro, sec_roles_groups urog, sec_groups_rights grrt, sec_rights rit
+	       WHERE usr.user_id = uro.user_id AND uro.role_id = urog.role_id AND urog.group_id = grrt.group_id AND
+	       grrt.right_id = rit.right_id AND usr.username = ?" 
+	       />  
+	       
+	    </authentication-provider>
+	  </authentication-manager> -->
+
+	<!-- Automatically receives AuthenticationEvent messages -->
+	<beans:bean id="loggerListener"
+		class="org.springframework.security.authentication.event.LoggerListener" />
+		
+</beans:beans>

@@ -1,0 +1,723 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style src="/css/campaign.css"  />
+<style>
+.removePadding{
+	display: inline-flex;
+    padding: 15px 30px 0px 10px;
+}
+.removePadding a{
+	padding: 1px 6px 0px 6px;
+	 text-decoration: none;
+}
+.dropDownStyle{
+    border-radius: 3px;
+    background: transparent;
+    width: 92%;
+    border-color: #cccccc;
+ }
+ .widthClass{
+ 	width:36%;
+ }
+ 
+
+</style>
+<!-- main window -->
+<window id="customAutoEmailBee"	apply="org.mq.marketer.campaign.controller.contacts.ManageAutoEmailsControllerBee"
+		xmlns:h="http://www.w3.org/1999/xhtml" xmlns:w="client">
+
+	<div id="welcomeHTMLDivId" style="margin-top:15px;">
+		<tabbox >
+		 <tabs>
+	  		<tab id="autoEmailListId" label="Auto Emails"/>
+			<tab id="createAutoEmailTabPanelId" label="Create New Message"/>
+		</tabs>
+		<tabpanels>
+		<!-- Auto Email Tab start-->
+		<tabpanel>
+		<h:table cellspacing="0" cellpadding="4" width="100%"  bgcolor="#F4F5F9" style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+			<h:tr>		
+			<h:td>
+			    <hlayout>
+			       <div>
+			       	 <label value="Search by:" style="font-weight:bold;" /> 
+			       	 
+			       	  <listbox id="selectSearchItemId" mold="select" width="150px" >
+			       	  	<listitem id="autoEmailTypeSearchId" label="Auto-Email Category"></listitem>
+			       	  	<listitem id="createdDateSearchId" label="Created On"></listitem>
+        		     </listbox>
+			       	 
+			       	                              
+				     <listbox id="srchLbId" mold="select"  width="150px">
+        		     </listbox>
+			       </div>
+            		
+            		<div id="createdDateId" visible="false">
+			    	 <label value="Date:" sclass="theme-lbHeading" />
+					 <space />
+					 <label value="From: " />
+					 <datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+					 <space />
+					 <label value="To: " />
+					 <datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			       </div>
+            		
+            		
+				  <div id="filterBtnDivId">
+				      <button label="Filter" id="filterBtnId" sclass="idle140" style="margin-left:20px;" />
+				  </div>
+				  <div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;" >
+				  	  <a label="Reset" id="resetAnchId" />
+				  </div>
+			    </hlayout>
+			</h:td>
+			</h:tr>			
+		</h:table>
+		<grid  width="100%" id="autoEmailGridId"  emptyMessage="No users found..." style="padding-bottom:1px; margin-bottom: 10px;">
+			 	<columns menupopup="auto">
+			       <column label="Auto Email-Name"/>
+			       <column label="Category"/>
+			       <column label="Created On" id="sortbyTemplateCreatedDate"/>
+			       <column label="Subject"/>
+			       <column label="From Name"/>
+			       <column label="From Email Address"/>
+			       <column label="Last Modified Date" id="sortbyTemplateDate"/>
+			       <column label="Actions"/>
+			     </columns>
+			</grid>
+			<h:table  width="100%" cellspacing="0" cellpadding="0">
+			<h:tr>
+				
+				<h:td align="right">
+		   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+		   		<listbox rows="1" mold="select" id="autoEmailPageSizeLbId"  style="margin-right:30px;">
+					<listitem label="10" selected="true"/>
+					<listitem label="20" />
+				</listbox>
+				</h:td>
+				<h:td width="280px"  >
+								<paging id="autoEmailBEEListPaging" detailed="true" pageSize="10" width="280px" 
+									class="contactsViewPaging" style="border:none;"  />
+							</h:td>
+			</h:tr>
+			
+			</h:table>
+			<h:table cellspacing="0" cellpadding="2" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"><image src="/img/theme/preview_icon.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Preview" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"> <image src="/img/email_page.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;" > <label value="- Send mail" style="font-size:11px;"/> </h:td>
+						<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Delete" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/theme/home/reports_icon.png"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Report" style="font-size:11px;" /> </h:td>
+						
+					</h:tr>
+			</h:table>
+		</tabpanel>
+		<!-- Auto Email Tab End-->
+		<!-- Create New Message Tab Start -->
+		<tabpanel>
+				<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+					<caption label="Basic Settings" style="font-weight:bold;font-size:12px;" ></caption>
+					<h:table cellspacing="0" cellpadding="10">
+						<h:tr class="evenrow">
+							<h:td width="170"><label value="Auto-Email Category :" />
+							</h:td>
+							<h:td style="width: 1px">
+								<listbox id="typeOfAutoEmailListLbId" mold="select" class="dropDownStyle"></listbox>
+						</h:td>
+						</h:tr>	
+						
+						
+						<h:tr class="evenrow">
+							<h:td width="170"><label value="Auto-Email Name :" />
+							</h:td>
+							<h:td style="width: 1px">
+								<textbox  id="custTempNameTbId" width="241px"/>
+							</h:td>
+						</h:tr>
+						
+						<h:tr class="oddrow">
+							<h:td><label value="Choose Template" />
+							</h:td>
+							<h:td>
+									<listbox id="chooseTemplateFolderId" mold="select" class="dropDownStyle">
+										<listitem label="Select Folder" checkable="false"  selected="true"/>
+									</listbox>
+							</h:td>
+							<h:td id="tableDataWidth" class="widthClass">
+									<listbox id="chooseTemplateId" mold="select" class="dropDownStyle">
+									</listbox>
+							</h:td>
+								<h:td id="previewTdId" class="removePadding" >
+										<image src="/images/Preview_icn.png"/>
+										<a><label id="previewTemplateId" value="Preview"/></a> 
+								</h:td>
+								<h:td id="editTemplateTdId" class="removePadding" >	
+										<image src="/img/email_edit.gif"/>
+										<a><label id="editAutoEmailTemplateId" value="Edit Template"/></a>
+								</h:td>
+								<h:td id="sendMailTdId" class="removePadding" > 
+										<image src="/img/email_go.gif"/>
+										<a><label id="sendTestMailId" value="Send Test Mail"/></a>
+								</h:td> 
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td></h:td>	
+							<h:td style="padding-left: 9%;">
+								<label value="(OR)" style="font-size:11px;" />
+							</h:td> 
+						</h:tr>
+						<h:tr  class="oddrow">
+							<h:td></h:td>
+							<h:td style="padding-left: 1%;">
+							<toolbarbutton id=""    image="/images/create_new_template_icon.png"/>
+								<a><label id="createNewTemplateId" value="Create New Template" style="font-size:12px;" /></a>
+							</h:td>	 
+						</h:tr>
+						<h:tr class="evenrow">
+							<h:td width="170"><label value="Subject :" />
+							</h:td>
+							<h:td>
+							
+								<textbox id="cSubTb" width="240px" value="" w:onClick="updateCaretPosition()"  w:onChanging="updateCaretPosition()"
+							         w:onFocus="updateCaretPosition() " name="cSubTb" maxlength="200" />
+					             <textbox id="caretPosTB" visible="false" />
+
+			
+							</h:td>
+						</h:tr>
+						<h:tr class="oddrow">
+							<h:td width="170"><label value="From Name:" />
+							</h:td>
+							<h:td>
+								<textbox id="cFromNameTb" width="240px" />
+							</h:td>
+						</h:tr>
+						<h:tr class="evenrow">
+							<h:td width="170"><label value="From Email Address :" />
+							</h:td>
+							<h:td>
+							<combobox id="cFromEmailCb" readonly="true" width="272px" />
+							<h:td class="removePadding" >
+							<label value="or" style="font-weight: bold;" />
+							<a label="Register" id="regFrmEmlAnchId" style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;" popup="regEmailPopupId" /> 
+							<label value="new Email Address" />	
+							<popup id="regEmailPopupId" width="289px">
+								   <h:table >
+								    <h:tr>
+								     	<h:td>
+								   			Enter Email Address :
+								   		</h:td>
+								   	</h:tr>
+								   	<h:tr>
+								   		<h:td>
+								   	 		<textbox id="cFromEmailTb" width="250px"  value="" name="cFromEmailTb" maxlength="60" />
+								   		</h:td>
+								   	</h:tr>
+								   	<h:tr height="20" />
+								   	<h:tr>	
+								   		<h:td align="right">	 
+								   	 		<button label="Cancel" sclass="idle70" id="cancelBtnId" /> 
+											<button label="Submit" sclass="idle140 greenbtn" id="registerSubmitBtnId" />
+									 	</h:td>
+									 </h:tr>
+									 </h:table> 
+								
+							</popup>
+						</h:td>
+						    
+							</h:td>
+						</h:tr>
+						<h:tr class="oddrow">
+							<h:td width="170"><label value="Reply To Email Address :" />
+							</h:td>
+							<h:td>
+								<combobox id="creplyToEmailCb" readonly="true" width="272px" />
+								<h:td class="removePadding" >
+									<label value="or" style="font-weight: bold;" />
+									<a label="Register" id="regRepToEmlAnchId"  style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;" popup="regEmailPopupId" />
+									<label value="new Email Address" />
+								</h:td>
+							</h:td>
+							<h:tr height="21">
+							<h:td>	</h:td>
+								<h:td valign="top" colspan="2" style="padding-left:275px;"> 	
+									<image src="/img/icons/icon_i.png"  style="padding-right: 5px"/>	
+									<label	value="Confirmation email will be sent for verification."	sclass="labelPos" />
+								</h:td>
+						</h:tr>	
+						</h:tr>
+					</h:table >
+			</groupbox>
+		<groupbox style="margin-top:10px;" closable="false" open="true"  >
+			<caption label="Sender Address" ></caption>
+			<div id="addrContentDivId" >
+			<h:table cellspacing="0" cellpadding="5" width="100%" border="0">
+			
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+					<label value="Use Custom Footer" />
+				</h:td>
+				<h:td valign="top">
+					<checkbox id="customFooterId" checked="false" />
+				</h:td>
+			</h:tr>
+			
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+					<div id="defaultAddressFooterDiv">
+						<label value="Address in Footer" />
+					</div>
+				</h:td>
+				<h:td valign="top">
+				<div id="postalAddressDivId">
+					<radiogroup id="addrRgId"  orient="vertical"/>
+				
+					<hlayout>
+						<radio radiogroup="addrRgId" checked="true" id="postalAddressRbId"   />
+						<a label="Modify" onClick="changeAddressDivId.setVisible(true);postalAddressDivId.setVisible(false)" 
+						style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="modifySenderAddrId" />
+					</hlayout>
+					
+					<hlayout>
+						<radio radiogroup="addrRgId" checked="true" id="homeStoreAddressDetailsId" label="Auto-fill with contact's homestore address"  />
+					</hlayout>
+					
+					<hlayout>
+						<radio radiogroup="addrRgId" checked="true" id="lastPurchaseStoreId" label=" Auto-fill with contact's last purchase store address"  />
+					</hlayout>
+					
+				
+					<hlayout>
+					<radio radiogroup="addrRgId" label="Use store address" id="storeAddressId"/>
+					<listbox id="storesLbId" width="200px" mold="select"/>
+					<label id="storeAddrLblId" visible="false" />
+					</hlayout>
+				</div>
+				
+				<div visible="false" id="changeAddressDivId">
+							<h:table width="85%" cellspacing="10" cellpadding="0" align="left" style="padding-left:20px;">
+								<h:tr>
+									<h:td width="150">
+										<label value="Address one" />
+										<label value="*"  style="color:red;" />
+									</h:td>
+									
+									<h:td>
+										<textbox id="cAddressOneTbId" cols="25" maxlength="45" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Address two" />
+									</h:td>
+									
+									<h:td>
+										<textbox id="cAddressTwoTbId" cols="25" maxlength="45"  value=""/>
+									</h:td>
+								</h:tr>
+							 
+								<h:tr>
+									<h:td>
+										<label value="City" />
+										<label value="*" style="color:red;"/>
+									</h:td>
+									
+									<h:td>
+										<textbox id="cCityTbId" cols="25" maxlength="20" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="State" />
+										<label value="*" style="color:red;"/>
+									</h:td>
+									
+									<h:td>
+										<textbox id="cStateTbId" cols="25" maxlength="20" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Country" />
+										<label value="*" style="color:red;"/>
+									</h:td>
+									
+									<h:td>
+										<textbox id="cCountryTbId" cols="25" maxlength="20" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Zip / Pin" />
+									</h:td>
+									
+									<h:td>
+										<textbox id="cPinLbId" cols="25" maxlength="20" />
+										
+										<image
+											src="/img/icons/icon_q.png" tooltip="help4"
+											style="padding-left:40px;" />
+											<popup id="help4" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Required for countries where postal/ZIP codes are used."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+										
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Phone" />
+									</h:td>
+									
+									<h:td>
+										<textbox id="cPhoneTbId" 
+										tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+										xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+										
+										cols="25" maxlength="30" />
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td></h:td>
+									<h:td>
+										<button label="Save"  sclass="idle70 greenbtn" id="doneAnchId" /> 
+										<space/>
+										<button label="Cancel" id="cancelAddressId" sclass="idle70" /> 
+										
+									</h:td>
+								</h:tr>
+							</h:table>
+					
+					
+					</div>				
+				
+				
+				
+				</h:td>
+			
+			</h:tr>
+			<h:tr>
+			<h:td></h:td>
+				<h:td >
+					
+				
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+					<div id="includeBeforeLabelDiv">
+						<label value="Include Before Address" />
+					</div>
+				</h:td>
+				<h:td>
+					<div id="includeBeforeValueDiv">
+						<checkbox id="orgNameChkBoxId" checked="true" label="Organization Name" />
+						<checkbox id="orgUnitChkBoxId" label="Organization Unit" />
+					</div>
+				</h:td>
+			
+			</h:tr>
+			
+			</h:table>
+			
+			
+			</div>
+		</groupbox>
+		<groupbox  sclass="gbStyle" style="margin-top:10px;" closable="false" open="true" >
+			<caption>
+				<label value="Optional Settings"/>
+				<toolbarbutton id="optSettingsTbBtnId" image="/img/icons/icon_plus.png" />
+			</caption>
+			<div id="gbContentDivId" visible="false">
+			
+			
+			<h:table  width="100%" align="left"  >
+			<div id="permRemindDivId">
+				<h:tr height="15"/>
+				
+				<h:tr>
+					<h:td valign="top" width="170" style="padding-top:5px;">
+						<label value=" Permission Reminder" />
+					</h:td>
+					
+					<h:td>
+						<radiogroup id="cPermRemRb">
+							<radio label="On" 
+								onCheck="permRemDivId.visible=true;"  />
+							<radio label="Off"
+								onCheck="permRemDivId.visible=false;" checked="true"  />
+						</radiogroup>
+						</h:td>
+						</h:tr>
+						<h:tr>
+						<h:td></h:td>
+						<h:td>
+						
+						<div id="permRemDivId" visible="false">
+							<textbox id="permRemTextId" rows="3" height="50px" cols="50" value="You are receiving this email because you had opted in on our website."
+								maxlength="200" />
+							<h:br />
+							
+						</div>
+						
+						</h:td>
+						
+						</h:tr>
+						</div>
+					<h:tr height="15"/>
+				
+							
+							
+					<h:tr >
+					<h:td colspan="2">
+						<div id="personalizeToDivId">
+							<h:table width="100%" align="left"  >
+							<h:tr>
+					
+						<h:td  valign="top" width="200">
+							<label value="Personalize the &quot;To:&quot; Field:" id="persLbId" />
+						</h:td>
+						<h:td  valign="top" >
+							<checkbox id="toNameChkId"  sclass="theme-lbHeading" checked="false" onCheck="persToDivId.visible=!persToDivId.visible" />
+						</h:td>
+						</h:tr>
+						
+						<h:tr>
+						<h:td></h:td>
+						<h:td>
+							<div id="persToDivId" visible="false">
+								<label value="Select tag for recipient name:"  sclass="theme-lbHeading"/>
+								<listbox  id="phLbId" mold="select" rows="1" >
+								<listitem label="First Name" value="firstName" selected="true"/>
+								<listitem label="Last Name" value="lastName"/>
+								<listitem label="First Name Last Name" value="fullName"/>
+								</listbox>
+							</div>
+						</h:td>
+					</h:tr>
+							
+							</h:table>
+													
+						</div>
+						</h:td>
+					</h:tr>
+					<h:tr height="15"/>
+				<h:tr>
+					<h:td valign="top" width="203px">
+						<label value="Allow Template To Download as PDF" />
+					</h:td>
+					
+					<h:td valign="top">
+						<checkbox id="downloadPdf"	checked="false"/>
+					</h:td>
+				</h:tr>
+				</h:table>
+					
+			</div>
+					
+		</groupbox>
+		<div>
+			<textbox id="updateIdValue" visible="false"/>
+		</div>
+		<div align="right" style="padding-top:30px;" >
+			<button id="backButtonId" label="Back" sclass="idle140" visible="false"/>
+			<button id="submitBtnId" label="Save" sclass="idle140 greenbtn" />
+		</div>
+		</tabpanel>
+		<!-- Create New Message Tab End -->
+	</tabpanels>
+	</tabbox>
+</div>
+
+<!-- subject line part for handling emojis and different text-start-->
+ <zscript>
+	  <![CDATA[
+            void insertText(A a){
+                
+                String value = a.getTooltiptext().trim();
+                
+                if(value==null || value.trim().isEmpty()) {
+                 	value = a.getLabel().trim();
+                }
+				
+				Map mergTagsMap = (Map)personalizationTagsWinId.getAttribute("mergeTagMap");
+				value = mergTagsMap.containsKey(a.getTooltiptext()) ? (mergTagsMap.get(a.getTooltiptext())).toString() : value; 
+
+                String cp = caretPosTB.getValue();
+                if (cp == null || cp.length() == 0) {
+                    cp = "0";
+                }
+                try{
+                int caretPos = Integer.parseInt(cp);
+                if (caretPos != -1) {
+                    String currentValue = cSubTb.getValue();
+                    String newValue = currentValue.substring(0, caretPos) + value + currentValue.substring(caretPos);
+                    cSubTb.setValue(newValue);
+                }
+                
+                cSubTb.focus();
+                }catch(Exception e) {
+                e.printStackTrace();
+                }
+            }
+            ]]>
+        </zscript>
+        <script >
+		$.getScript("js/emoji_dict.js");
+		<![CDATA[
+			
+				function updateCaretPosition() {		   
+                    // get the zk widgets
+                    var scriptTB = zk.Widget.$(jq('$cSubTb'))
+                    var caretPosTB = zk.Widget.$(jq('$caretPosTB'))                   
+                    // get the js elements
+                    var jsScriptTB = document.getElementById(scriptTB.uuid)
+                    
+           //subject-line changes to convert the emojis to SYM_emojiName_ which present in emoji_dict.js files-suraj
+           
+                 //take value from jsScriptTB textbox
+                 var jsScriptTBValue = jsScriptTB.value;
+                console.log("jsScriptTBValue "+jsScriptTBValue);
+                 //subject-line text
+                 var subText="";
+                 
+               for(const charCodePoint of jsScriptTBValue) {
+                 
+                    //getting encoded value of each characters
+                    var encodedChar =charCodePoint.codePointAt(0).toString(16);
+                                 
+                    if(encodedChar.length == 5 ||encodedChar.length == 4 ){
+                    
+                       let decodedChar =  String.fromCodePoint("0x"+encodedChar); 
+                       
+                       //getting emoji-name from emojiDictionary(emoji_dict.js)
+                        
+                    	var nameOfEmoji =emojiDictionary[decodedChar];
+                    	if(nameOfEmoji == undefined|| nameOfEmoji == null){
+                    		//Emoji is not present in emojiDictionary(or emoji_dict.js file) 
+                    		continue;
+                    	}
+                    	var SYMNameOfEmoji ="|^SYM_"+ nameOfEmoji +"^|";
+                    	subText += SYMNameOfEmoji;
+                    }else{
+                     subText += charCodePoint;
+                   }
+                  }
+                   //set the value of jsScriptTB
+               jsScriptTB.value = subText;   
+               
+                            
+          //end- subject-line changes-suraj
+       
+                    var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+					
+                    // get the caret position
+                    var pos = getCaret(jsScriptTB);
+
+                    // set the caret position in the hidden text field
+                    jsCaretPosTB.value = pos;
+                    
+                    // trigger an event to send the caret position to the server
+                    if (document.createEvent) {
+                     var evt = document.createEvent('HTMLEvents');
+                     evt.initEvent( 'blur', false, false);
+                     
+                     jsCaretPosTB.dispatchEvent(evt);
+
+                     var evt2 = document.createEvent('HTMLEvents');
+                     evt2.initEvent( 'change', false, false);
+                     
+                     jsCaretPosTB.dispatchEvent(evt2);
+                    } else if (document.createEventObject) {
+                     jsCaretPosTB.fireEvent('onblur');
+                     jsCaretPosTB.fireEvent('onchange');
+                    }
+                }
+
+                function getCaret(el) {
+                	
+                	if (el.selectionStart) {
+                        return el.selectionStart;
+                    } else if (document.selection) {
+                        el.focus();
+                        var r = document.selection.createRange();
+                        if (r == null) {
+                        	
+                            return 0;
+                        }
+
+                        var re = el.createTextRange();
+                        	
+                                rc = re.duplicate();
+                        re.moveToBookmark(r.getBookmark());
+                        rc.setEndPoint('EndToStart', re);
+                        return rc.text.length;
+                    }else{
+                    	
+                    	if(el.value.length > 0) {
+                    		
+                    		el.selectionStart = el.value.length;
+                    		 return el.selectionStart;
+                    		
+                    	}
+                    	
+                    }
+                    return 0;                  
+                }
+                ]]>
+                </script>
+<!--end of subject line part for handling emojis and different text-->
+
+			<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+				<caption>
+					<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)" />
+				</caption>
+				<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+				<iframe id="iframeId" width="100%" height="100%"/>
+				</div>
+			</window>
+			<window id="testWinId" visible="false" closable="true" title="Send Test Mail" 
+						height="180px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+						<h:table style="padding:10px;">
+							<h:tr>
+								<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td colspan="1"><label value="Email address" /></h:td>
+								<h:td colspan="2"><textbox  id="testTbId"  width="250px"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td/>
+								
+								<h:td  colspan="2" valign="center">	
+									<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+									<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+									
+									<div style=" margin: 20px;">
+										<button label="Send" id="sendTestMailBtnId" width="80px"/>
+										<button label="Cancel" id="cancelSendTestMailBtnId" width="80px"/>
+									</div>	
+								</h:td>
+							</h:tr>
+						</h:table>
+					</window>
+</window>
+</zk>

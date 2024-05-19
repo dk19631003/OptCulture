@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.AsyncLoyaltyTrx"
+		table="async_loyalty_trx">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<many-to-one name="loyaltyTransaction" class="org.mq.marketer.campaign.beans.LoyaltyTransaction"
+			foreign-key="id" fetch="select" lazy="false" >
+			<column name="trx_id"  />
+	</many-to-one>
+		<property name="trxType" type="string">
+			<column name="trx_type" length="30"/>
+		</property>
+		<property name="createdTime" type="calendar">
+			<column name="created_time" />
+		</property>
+		<property name="processedTime" type="calendar">
+			<column name="processed_time" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="10" />
+		</property>
+		<property name="statusCode" type="string">
+		<column name="status_code" length="500" />
+		</property>
+	</class>
+</hibernate-mapping>

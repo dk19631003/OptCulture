@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:53:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ProductsUsed"
+		table="products_used">
+		<id name="productId" type="java.lang.Long" column="product_id">
+			<generator class="native" />
+		</id>
+		<property name="numberOfContractedEmails" type="java.lang.Long" column="number_of_contracted_emails"/>
+		<property name="numberOfContractedSMS" type="java.lang.Long" column="number_of_contracted_sms"/>
+		<property name="POSSystemVersion" type="string" column="pos_system_version"/>
+		<property name="optDigitalRecieptVersion" type="string" column="opt_digital_reciept_version"/>
+		<property name="optLoyaltyVersion" type="string" column="opt_loyalty_version"/>
+		<property name="optPromoVersion" type="string" column="opt_promo_version"/>
+		<property name="optIntelVersion" type="string" column="opt_intel_version"/>
+		<property name="optSyncVersion" type="string" column="opt_sync_version"/>
+		<property name="userId" type="java.lang.Long" column="user_id" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,97 @@
+<zk>
+	<window id="undeliveredWinId" width="100%" apply="org.mq.marketer.campaign.controller.report.SMSUndeliveredReportController">
+	 <style src="/css/reports.css" />
+		<h:table width="100%" xmlns:h="http://www.zkoss.org/2005/zk/native" >
+			<h:tr>
+				<h:td>
+			    	<h:table>
+			      		<h:tr>
+			        		<h:td style="padding:10px;" colspan="9">
+			  		  			<label>
+			         					The following subscribers did not receive this SMS campaign. 
+			         					
+			         					 We recommend remove all your DND from your list.
+			  		 			</label>
+			  	 			</h:td>
+			  	  		</h:tr>
+			  	  		<h:tr>
+			  	  			<h:td>
+			  	  				<hbox align="center">
+			  	  				<label value="Select Undelivered Reason :"/>
+			  	  				<listbox id="undeliveredCategoryLbId" sclass="contactsView" width="200px" mold="select">
+			  	  				</listbox>
+			  	  				<button  id="undeliveredReasonBtnId" image="/img/icons/go_btn.gif" sclass="plainBtn" mold="trendy" />
+			  	  				</hbox>	
+			  	  			</h:td>
+			  	  		</h:tr>
+			  	  		<h:tr>
+			  	  			<h:td>
+			  	  				<listbox id="undeliveredRepLbId" sclass="contactsView" width="100%"  mold="paging" pageSize="10"  >
+			  	  					<listhead>
+			  	  						<listheader label="Mobile Number" width="200px"/>
+			  	  						<listheader label="UndeliveredReason"/>
+			  	  						
+			  	  					</listhead>
+			  	  				</listbox>
+			  	  				
+			  	  			</h:td>
+			  	  		</h:tr>
+			  	  		
+			  	  	</h:table>
+			  	  	</h:td>
+			  	  	</h:tr>
+			  	  	</h:table>
+			  	  	<!-- <h:table>
+			  	 		<h:tr style="line-height:10px;">	 
+		    				<h:td id="tabId1" class="tabmenu tabmenusel" onclick="changeRepTabMenu('tabId',1,5)"><toolbarbutton label="Undeliverable" onClick="bounceWinId.setBouncePageSubContent(self.getLabel())" /></h:td>
+			    			<h:td style="padding:5px 15px;">|</h:td>
+			    			<h:td id="tabId2" class="tabmenu" onclick="changeRepTabMenu('tabId',2,5)"><toolbarbutton label="Blocked" onClick="bounceWinId.setBouncePageSubContent(self.getLabel())"/></h:td>
+			    			<h:td style="padding:5px 15px;">|</h:td>
+			    			<h:td id="tabId3" class="tabmenu" onclick="changeRepTabMenu('tabId',3,5)"><toolbarbutton label="Non-Existent address" onClick="bounceWinId.setBouncePageSubContent(self.getLabel())" /></h:td>
+			    			<h:td style="padding:5px 15px;">|</h:td>
+			    			<h:td id="tabId4" class="tabmenu" onclick="changeRepTabMenu('tabId',4,5)"><toolbarbutton label="Mailbox Full" onClick="bounceWinId.setBouncePageSubContent(self.getLabel())" /></h:td>
+			    			<h:td style="padding:5px 15px;">|</h:td>
+			    			<h:td id="tabId5" class="tabmenu" onclick="changeRepTabMenu('tabId',5,5)"><toolbarbutton label="Others" onClick="bounceWinId.setBouncePageSubContent(self.getLabel())" /></h:td>
+		        		</h:tr>
+		       		</h:table> 
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+				   <listbox id="bounceGenericLbId" sclass="contactsView" width="100%" mold="paging" paginal="${bouncePagingId}">
+						<listhead id="bounceLbHeaderId" sizable="true" >
+							<listheader label="Email Address"></listheader>
+						</listhead>
+					</listbox>
+					<div align="right" width="99%">
+						<paging id="bouncePagingId" pageSize="10" width="250px" sclass="contactsViewPaging"/>
+					</div>
+				  </h:td>
+			  	</h:tr>
+			  	<h:tr>
+			  			<h:table style="padding-top:20px;">
+			  				<h:tr>
+			  				 	<h:td>
+									<label value="Export as a" /> 
+									<combobox width="50px" id="exportCbId" readonly="true">
+		  				 	   			<comboitem label=" .csv " value="csv" />    
+									</combobox> 
+									<zscript>
+										<![CDATA[
+											exportCbId.setSelectedIndex(0);
+										]]>
+									</zscript>
+									<label value=" file."/> <h:br /> 
+									<button label="Export" width="60px"  onClick="bounceWinId.export(exportCbId)"/>
+			  				 	</h:td>
+			  				</h:tr>
+			  			</h:table>
+			  	</h:tr>
+		</h:table>
+		<zscript>
+			<![CDATA[
+				bounceWinId.init(bounceGenericLbId,bouncePagingId);
+			]]>
+		</zscript> -->
+	</window>
+</zk>

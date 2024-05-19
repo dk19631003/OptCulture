@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.AutoProgram"
+		table="auto_program">
+		<id name="programId" type="java.lang.Long">
+			<column name="program_id" />
+			<generator class="native" />
+		</id>
+		<property name="programName" type="string">
+			<column name="program_name"  not-null="true" unique-key="unique_program"/>
+		</property>
+		
+		<property name="description" type="string">
+			<column name="description"   />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="status" type="string">
+			<column name="status"  />
+		</property>
+		<property name="category" type="string">
+			<column name="category"  />
+		</property>
+
+		<many-to-one name="user"
+			class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false">
+			<column name="user_id"  />
+		</many-to-one>
+		<set name="mailingLists" table="mlists_programs"
+			lazy="false">
+			<key column="program_id" />
+			<many-to-many
+				class="org.mq.captiway.scheduler.beans.MailingList" column="list_id" />
+		</set>
+	</class>
+</hibernate-mapping>

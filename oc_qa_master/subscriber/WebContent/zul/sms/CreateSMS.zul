@@ -1,0 +1,169 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+    
+	<window id="createSmsWinId" border="0" width="100%" apply="org.mq.marketer.campaign.controller.sms.CreateSmsController" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native" xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<div>
+		<label value="Set your preferences for the new SMS campaign." />
+	</div>
+	<groupbox  width="99%" sclass="gbStyle" style="margin-top:10px;" closable="false" >
+		<caption label="Configure Campaign" />
+		
+		<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;" >
+			
+	
+			<h:tr>
+				<h:td valign="bottom" width="150">
+						<label value="SMS Type:"/>
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					
+					<h:td valign="bottom" colspan="2">
+						<textbox  id="smsTypeTbId" value="" name="smsNameTb"  width="250px"  constraint="no empty: Please specify an email name" maxlength="100"/>
+					</h:td>
+			
+			</h:tr>
+			<h:tr height="50">
+				<h:td valign="bottom" width="150">
+					<label value="Campaign Name:"/>
+					<label value="*" sclass="redStar"/>
+				</h:td>
+				
+				<h:td valign="bottom" colspan="2">
+					<textbox  id="smsNameTbId" value="" name="smsNameTb"  width="250px"  constraint="no empty: Please specify an email name" maxlength="100"/>
+					<label value="" id="nameStatusLblId"/>
+				</h:td>
+			
+			</h:tr>
+			<h:tr height="18">
+				<h:td>	</h:td>
+	
+				<h:td colspan="2" valign="center" style="padding-top:2px;">	
+					<image src="/img/icons/icon_i.png" style="vertical-align:bottom;" />	
+					<label value="Campaign name is only for your reference and will not appear in the sent SMS. " style="vertical-align:bottom;" sclass="labelPos" />
+				</h:td>
+				
+				
+				
+			</h:tr>
+			<h:tr height="50">
+				<h:td valign="bottom" width="150">
+					<label value="Sender Id"/>
+					<label value="*" sclass="redStar"/>
+				</h:td>
+				
+				<h:td valign="bottom" colspan="2">
+					<listbox id="smsCampsenderIdLbId" mold="select" width="250px" >
+						<listitem label="Select" selected="true"/>
+						<listitem  forEach="${createSmsWinId$CreateSmsController.senderIds}" label="${each.senderId}" value="${each}" style="line-height:22px;">
+						</listitem>
+						
+						<listitem label="DEMOCAPT" selected="true"/>
+						 <listitem label="78East"/>
+						<listitem label="CAPTIWAY"/>
+						<listitem label="CHOC HUT"/> 
+					</listbox>
+					<label value="or" style="font-weight:bold;padding : 0px 3px 0px 3px;" />
+					<a label="Add" style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;" /><label value="new Sender ID" style="padding : 0px 3px 0px 5px;" />
+				</h:td>
+			</h:tr>	
+		
+		</h:table>	
+		
+	</groupbox>
+	<groupbox  width="99%" sclass="gbStyle" style="margin-top:10px;" closable="false" >
+		<caption label="Select Template" />
+		<radiogroup  >
+			<radio label="Outbound Message" style="padding-bottom:5px;"/>
+			<radio label="2-Way Messaging" style="padding-bottom:5px;"/>
+			<radio label="Vote &amp; Survey" style="padding-bottom:5px;"/>
+			<radio label="Offers &amp; Promo-codes" />
+			<hlayout>
+			<radio label="Text-to-Subscribe" /> <image src="/img/icons/icon_q.png"  tooltip="help1"  style="padding-left:15px;padding-top:8px;" />
+			</hlayout>
+			<radio label="alerts" style="padding-bottom:5px;"/>
+			<radio label="Language SMS" />
+		
+		</radiogroup>
+		
+		<popup id="help1"   width="400px" style="bgcolor:#CCCCCC" >
+			<h:table >
+				<h:tr>
+					<h:td>
+						<label  value="Name displayed as 'From' in the email" sclass="labelPos" />
+					</h:td>
+				</h:tr>
+				
+			</h:table>								
+		
+		</popup>
+	
+	</groupbox>
+	<div id="outBoundMsgDivId" >
+		<groupbox width="99%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption label="Create SMS" />
+			<h:table cellspacing="0" cellpadding="0" border="0" width="100%">
+				<h:tr>
+					<h:td valign="top">
+						<label value="Message: " />
+					
+					</h:td>
+					<h:td valign="top" >
+					
+					<textbox id="SMSMsgTbId" width="350px" rows="12" height="140px" 
+						maxlength="600" style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 	14px;line-height: 1.5em;" name="SMSMsgTbId" context="editPopup" />
+						<a label="Insert Merge Tag" style="font-weight:bold;font-size:13px;margin:0px 3px 0px 3px;vertical-align:top;color:#43A0BA;" />
+						<a label="Insert URL" style="font-weight:bold;font-size:13px;vertical-align:top;color:#43A0BA;" />
+				 	
+					</h:td>
+					
+				</h:tr>
+				<h:tr>
+					<h:td />
+					<h:td valign="top" style="padding-left:140px;">
+						<label value="Character Count :" style="font-weight:bold;"/>
+						<textbox id="charCountTbId" readonly="true" value="0" width="70px"/>
+						<label value="/ 160" />		
+					</h:td>
+				</h:tr>
+				<h:tr height="20" />
+				<h:tr>
+					<h:td valign="top">
+						<label value="Send a Test SMS:" />
+					</h:td>
+					<h:td valign="top">
+					
+					<textbox value="Enter Mobile Number(s)" /><button sclass="idle70" label="Send" />
+					</h:td>
+					
+				</h:tr>
+				<h:tr height="18">
+					<h:td>	</h:td>
+
+					<h:td valign="center" style="padding-top:2px;">	
+						<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+						<label value="To Send test SMS to multiple Mobile Numbers,give them as comma seperated values." style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td>
+					
+				</h:tr>
+				<h:tr height="20" />
+			
+			
+			</h:table>
+		
+		</groupbox>
+	
+	</div>
+	<separator />
+	<h:table align="right" cellspacing="0" cellpadding="0">
+		<h:tr>
+			<h:td  >
+				<button label="Back" sclass="idle140" /><space />
+				<button label="Save As Draft" sclass="idle140" /><space />
+				<button label="Next" sclass="idle140 greenbtn" style="margin-right:10px;" />
+			</h:td>
+		</h:tr>
+	</h:table>
+</window>
+</zk>

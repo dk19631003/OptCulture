@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.GiftCardSkus" table="gift_card_skus">
+	  
+        <id name="skuId" type="java.lang.Long" column="sku_id">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="giftProgram" class="org.mq.marketer.campaign.beans.GiftPrograms" column="gift_program_id"
+        insert="false" update="false"/>
+        <property name="skuCode" column="sku_code" type="string"/>
+        <property name="skuName" column="sku_name" type="string"/>
+        <property name="giftProgramId" column="gift_program_id" type="java.lang.Long"/>
+        <property name="category" column="category" type="string"/>
+        <property name="fixedAmount" column="fixed_amount" type="java.lang.Double"/>
+        <property name="userId" column="user_id" type="java.lang.Long"/>
+        <property name="createdDate" column="created_date" type="calendar"/>
+	  
+ </class>
+</hibernate-mapping>

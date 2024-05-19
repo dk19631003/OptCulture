@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.MQSRequest"
+		table="mqs_request">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="refNumber" type="string">
+			<column name="ref_number" not-null="true" />
+		</property>
+		<property name="service" type="string">
+			<column name="service" length="100" not-null="true" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="30" />
+		</property>
+		<property name="date" type="calendar">
+			<column name="date" />
+		</property>
+		<property name="reqestXML" type="text">
+			<column name="reqestXML" />
+		</property>
+		<property name="responseXML" type="text">
+			<column name="responseXML" />
+		</property>
+	</class>
+</hibernate-mapping>

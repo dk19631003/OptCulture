@@ -1,0 +1,179 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="autoProgramSettingsWinId" apply="org.mq.marketer.campaign.controller.program.AutoProgramSettingsController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+		
+		<tabbox>
+			<tabs>
+				<tab id="userProgramsTabId" label="Programs"/>
+				<tab id="programTemplatesTabId" label="Templates"/>
+				
+			</tabs>
+			<tabpanels>
+				<tabpanel >
+					
+								<borderlayout width="100%" height="450px">
+								
+									<center   title=""  onCtrlKey="descEastId.setVisible(true);">
+										<vbox>
+											
+											<h:table>
+												<h:tr>
+													<h:td align="left">
+														
+													</h:td>
+													<h:td align="right">
+														<button id="createProgramBtnId" label="Create" style="padding-right:5px;"/>
+													</h:td>
+												</h:tr>
+												
+												<h:tr>
+											
+													<h:td colspan="2">
+												
+												
+														<listbox id="userProgramsLbId" sclass="contactsView" 
+															emptyMessage="No Programs Found...." mold="paging" pageSize="10" >
+														<!-- onSelect="descEastId.setVisible(true);
+																programNameLblId.setValue(dummyListCellId.getLabel());" --> 
+															<listhead sizable="false" style="background-color:#488eb0;">
+																
+																<listheader label="Channel" width="70px"/>
+																<listheader label="Program Name" />
+																<listheader label="Status" width="100px"/>
+																<listheader label="Last Modified Date" width="260px"/>
+																<listheader label="Created By" align="center" width="160px"/>
+															</listhead>
+															
+														</listbox>
+													</h:td>
+												</h:tr>
+										</h:table>
+									</vbox>
+									</center>
+									<east id="descEastId" width="20%" visible="false" title="Details" >
+									<h:div style="text-align:left;">
+									<h:div style="height:50px;">
+										<label value="" id="programNameLblId" style="font-weight:bold;font-size:13px;"/>
+									</h:div>
+									<h:div style="height:270px;">
+										<label value="Description: "  style="font-weight:bold;font-size:13px;"/>
+													<label value="" multiline="true" id="programDescLblId" />
+									</h:div>
+									
+											<h:table width="100%">
+												<h:tr >
+													<h:td align="center">
+														<button id="ProgViewAnalisysBtnId" label="View Analisys"/>
+													</h:td>
+												</h:tr>
+											
+												<h:tr height="40px" align="center">
+													<h:td >
+														<button sclass="idle56" id="progEditBtnId" label="Edit"/>
+														<button sclass="idle56" id="progDeleteBtnId" label="Delete"/>
+														<button sclass="idle56" id="progPublishBtnId" label="InActive" />
+													</h:td>
+												</h:tr>
+											</h:table>
+									</h:div>
+									
+									</east>
+									
+								</borderlayout>
+							
+				</tabpanel>
+				<tabpanel>
+					<!--<div align="left" id="noTempDivId" visible ="false">
+						<label value="No templates to be displayed..."/>
+					</div>
+					
+				
+					--><borderlayout id="tempBorderLayoutId" width="100%" height="450px" visible="true">
+						<center title=""  onCtrlKey="tempDescEastId.setVisible(true);">
+							<vbox>
+								<h:table>
+									<h:tr>
+										<h:td >
+											
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<listbox fixedLayout="true" emptyMessage="No Templates Found..." id="programTemplatesLbId" sclass="contactsView"  mold="paging" pageSize="10" >
+												
+													<listhead popup="auto" sizable="false" style="background-color:#488eb0;">
+														
+														<listheader label="Channel" width="70px"/>
+														<listheader label="Program Name" sort="auto" />
+														<listheader label="Status" width="100px"/>
+														<listheader label="Modified Date" width="260px"/>
+														<listheader label="Created By" align="center" width="160px"/>
+													</listhead>
+											</listbox>
+										</h:td>
+									</h:tr>
+								</h:table>
+							</vbox>
+						
+						</center>
+						<east id="tempDescEastId" width="20%" visible="false" title="Details">
+							<h:div style="text-align:left;">
+								<label value="" id="tempProgramNameLblId" style="font-weight:bold;font-size:13px;"/>
+								<h:br/><h:br/>
+								<label value="Description:"  style="font-weight:bold;font-size:13px;"/>
+								<h:br/>
+								<vbox height="320px"> 
+									<label value="" multiline="true" id="tempProgramDescLblId" />
+								</vbox>
+								
+								<h:table width="100%">
+									<h:tr>
+										<h:td align="center" >
+											<button label="Use Template" id="useProgTemplateBtnId" style="padding-right:5px;"/>
+										</h:td>
+									</h:tr>
+								</h:table>
+								
+								<!--<h:table width="100%">
+								
+									<h:tr height="40px" align="center">
+										<h:td >
+											<button id="progEditBtnId" label="Edit"/>
+											<button id="progDeleteBtnId" label="Delete"/>
+											<button id="progPublishBtnId" label="InActive" />
+										</h:td>
+									</h:tr>
+									<h:tr align="center">
+										<h:td >
+											<button id="ProgViewAnalisysBtnId" label="View Analisys" width="178px"/>
+										</h:td>
+									</h:tr>
+								</h:table>
+							--></h:div>
+							
+						
+						
+						
+						</east>
+						
+					</borderlayout>
+				
+				
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+		
+			<!--<include id="programDesignerIncId" src=""  />
+			--><!--<window id= "programDesignerIncId"/>
+--> <!--<window id="programDesignerOneWinId" border="normal" mode="overlapped" closable="true" title="New Program" visible="false" 
+	position="center" width="100%" height="100%" onClose="self.setVisible(false); event.stopPropagation();">
+		
+			
+	</window>	 
+ 			
+		
+	--></window>
+	
+</zk>

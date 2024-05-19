@@ -1,0 +1,15 @@
+<?page title="Create Campaign" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="campCreateIndexWinId" apply="org.mq.marketer.campaign.controller.campaign.CampCreateIndexController">
+	<!--<zscript>
+		<![CDATA[
+			sessionScope.remove("campaign");
+			sessionScope.remove("editCampaign");
+			sessionScope.remove("editorType");
+			sessionScope.remove("selectedTemplate");
+			sessionScope.remove("isBack");
+		]]>
+	</zscript>
+	--><!--<include id="campSettingsIncId" src="/zul/campaign/CampSettings.zul"/>
+	--></window>
+</zk>

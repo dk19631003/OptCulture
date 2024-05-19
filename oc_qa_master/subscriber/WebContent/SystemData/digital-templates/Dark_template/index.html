@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Dark_template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"  align="center"  bgcolor="#161616">
+  <tr>
+    <td valign="top" >
+	 <table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="font-size:14px; font-family: Helvetica, Arial, sans-serif; color: #767572; line-height: 100%;">
+      <tr>
+        <td valign="top" height="204"><table width="600" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td  height="63"><table width="100%" border="0" cellspacing="0" cellpadding="10">
+              <tr>
+                <td style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #808080; padding-top: 15px;">Digital Receipt from: #Store.Name#
+#Store.Street#
+#Store.City#, #Store.State# #Store.Zip#<br><br>
+#Store.Number# #Store.Email# </td>
+              </tr>
+            </table></td>
+            <td  width="96" height="56"><img src="/subscriber/SystemData/digital-templates/Dark_template/images/arrow.gif" width="96" height="56" alt="" style="display: block;"></td>
+          </tr>
+          <tr>
+            <td colspan="2" width="600" height="7" ><img src="/subscriber/SystemData/digital-templates/Dark_template/images/header_top_separator.gif" alt="arrow" width="600" height="7" style="display: block;" border="0"></td>
+          </tr>
+          <tr>
+            <td valign="top" width="504" height="125"><table width="100%" border="0" cellspacing="0" cellpadding="0" >
+              <tr>
+                <td valign="top" bgcolor="#161616" height="10">&nbsp;</td>
+              </tr>
+              <tr>
+                <td valign="top" bgcolor="#161616" height="50" style="font-family: Helvetica, Arial, sans-serif; font-size: 55px; font-weight: bold; color: #f9f8f2; letter-spacing: -2px; line-height: 90%; padding-left:10px;"> #Store.Name#<br></td>
+              </tr>
+              <tr>
+			<td valign="top" bgcolor="#161616" height="25" style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #808080; padding-left:10px;">		                #ShipTo.Name#<br><br>
+				#ShipTo.Street#<br>
+				#ShipTo.City#, #ShipTo.State# #ShipTo.Zip#
+				<br><br>
+				Receipt ID: #Receipt.ID#<br>
+				Receipt#: #Receipt.Number#<br>
+				Date: #Receipt.Date#<br>
+				Payment Method: #Receipt.PaymentMethod#</td>
+              </tr>
+            </table></td>
+            <td valign="top" width="96" height="125"><img src="/subscriber/SystemData/digital-templates/Dark_template/images/badge-whats-new.gif" width="96" height="125" alt="" style="display:block;" border="0">
+			
+			
+			</td>
+          </tr>
+          <tr>
+            <td colspan="2" valign="top" width="600" height="16"><img src="/subscriber/SystemData/digital-templates/Dark_template/images/header_border.gif" width="600" height="16" style="display:block;" border="0"></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td valign="top" bgcolor="#161616"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td valign="top" height="35">&nbsp;</td>
+          </tr>
+          <tr>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td  height="35" style="font-family: Helvetica, Arial, sans-serif; font-size: 30px; font-weight: bold; color: #767572; letter-spacing: -2px;padding-left:10px;">Your Order</td>
+              </tr>
+               <tr><td  height="30" style="padding-top:30px;padding-left:10px;"> </td></tr>
+              
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; color: #767572; padding-left:10px;">
+				
+	<table style="font-family:Arial, Helvetica, sans-serif; " class="items">
+
+									  <tbody>
+									   
+									  <tr bgcolor="#767572" style="color:#161616;"><td width="117" style="padding: 12px;"><strong>Description</strong></td><td width="117" style="padding: 12px;"><strong>Qty</strong></td><td width="117" style="padding:12px;"><strong>Unit Price</strong></td><td width="117" style="padding: 12px;"><strong>Amount</strong></td></tr>
+									##BEGIN ITEMS##  <tr ><td style="padding-bottom:5px;">#Item.Description#</td><td style="padding-bottom:5px;">#Item.Quantity#</td><td style="padding-bottom:5px;">#Item.UnitPrice#</td><td style="padding-bottom:5px;">#Item.Total#</td></tr>##END ITEMS##
+									</tbody>
+
+    							</table>
+        <table> 
+	<tr><td style="border-top: 1px solid #808080; " width="620">
+			<table>
+	
+		  <tbody>
+		  <tr><td  height="50" style="padding-bottom:20px;"> </td></tr>
+		  <tr><td><strong>Payment</strong></td></tr>
+		 ##BEGIN PAYMENTS## <tr ><td>#Payment.Amount#</td></tr>
+		  <tr ><td>#Payment.Number#</td></tr>
+		  <tr ><td>#Payment.Type#</td></tr>##END PAYMENTS##
+		</tbody>
+		</table>
+	</td>
+	</tr>
+	</table>
+				</td>
+              </tr>
+              <tr>
+                <td height="40">&nbsp;</td>
+              </tr>
+              <tr>
+                <td width="599" height="25"><img src="/subscriber/SystemData/digital-templates/Dark_template/images/footer_05.gif" width="599" height="25" alt=""></td>
+              </tr>
+              
+              <tr>
+			  <td valign="top" style="font-family: Helvetica, Arial, sans-serif; color: #767572; line-height: 130%;padding-left:10px;">#Receipt.Message#<br><br>
+#Receipt.Message2#
+</td>
+   </tr>
+             
+              <tr>
+                <td height="30">&nbsp;</td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td><table width="600" border="0" cellpadding="0" cellspacing="0" style="padding-top: 10px;">
+          <tr>
+            <td colspan="6"><img src="/subscriber/SystemData/digital-templates/Dark_template/images/footer_05.gif" width="599" height="25" alt=""></td>
+           
+          </tr>
+          <tr>
+            <td width="179" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="21%" valign="top" style="padding-left:10px;"><img src="/subscriber/SystemData/digital-templates/Dark_template/images/icon_email_friend.gif" width="37" height="37" alt=""></td>
+                <td width="10%" valign="top">&nbsp;</td>
+                <td width="69%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td style="font-family: Helvetica, Arial, sans-serif; font-size: 17px; font-weight: bold; color: #f9f8f2;">Help</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                  <tr>
+                    <td valign="top">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td valign="top" style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #767572;">Get in touch on #Store.Number# or email us at #Store.Email#.
+                    </td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table>
+              <p style="font-size: 16px; font-weight: bold; padding: 0 0 6px 0;">&nbsp;</p></td>
+            <td width="30" valign="top">&nbsp;</td>
+            <td width="36" rowspan="2" height="37" valign="top"><img src="/subscriber/SystemData/digital-templates/Dark_template/images/icon-footer.gif" width="36" height="37" alt=""></td>
+            <td width="16" rowspan="2" valign="top">&nbsp;</td>
+            <td width="334" rowspan="2" valign="top"><p style="font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; color: #767572; margin: 0; padding: 0 0 6px 0;">Address:</p>
+              <p style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #767572; padding: 0; letter-spacing: -0.3px;">#Store.Name#
+#Store.Street#
+#Store.City#, #Store.State# #Store.Zip#<br><br>
+#Store.Number# #Store.Email#</p></td>
+          </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

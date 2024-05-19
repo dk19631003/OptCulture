@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ReferralcodesRedeemed"
+		table="referral_codes_redeemed">            
+		
+		<id name="referralId" type="java.lang.Long" column="referral_id">
+			<generator class="native" />
+		</id>
+		
+		
+		<property name="referredName" type="string">
+			<column name="name" length="60"/>
+		</property>
+			
+		
+		<property name="refcodestatus" type="string">
+			<column name="refcode_status" />
+		</property>
+		
+		
+		<property name="referralcodeid" type="java.lang.Long">
+		<column name="referral_code_id"  />
+		</property>
+		
+		<property name="refcode" type="string">
+			<column name="code"  />
+		</property>
+		
+		<property name="docSID" type="string">
+			<column name="doc_sid" />
+		</property>
+		
+		<property name="referredcid" type="java.lang.Long">
+		<column name="referred_cid"  />
+		</property>
+		
+		
+		
+		<property name="refereecid" type="java.lang.Long">
+		<column name="referee_cid"  />
+		</property>
+		
+		
+		<property name="userId" type="long">
+			<column name="created_by" />
+		</property>
+		
+		
+		<property name="orgId" type="long">
+			<column name="org_id" />
+		</property>
+	
+	
+		<property name="redeemedDate" type="calendar">
+			<column name="redeemed_date" />
+		</property>
+		
+		<property name="totRevenue" type="double">
+			<column name="tot_revenue" />
+		</property>
+		
+		
+		
+
+	</class>
+</hibernate-mapping>
+
+
+
+

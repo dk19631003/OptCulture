@@ -1,0 +1,117 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  apply="org.mq.optculture.controller.loyalty.DetailedRewardsReportsController" xmlns:h="native" xmlns:w="client">
+
+<style>
+		
+		
+		.hoverlistheader > div.z-listheader-cnt{ 
+
+         cursor: pointer;
+        }
+		
+		</style>
+
+<h:table cellspacing="0" cellpadding="4" width="99%"
+			bgcolor="#F4F5F9"
+			style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+			<h:tr>
+				<h:td >
+				<hlayout>
+			       <div>
+						<label value="Search by : " sclass="theme-lbHeading" />
+							<listbox id="searchbyLbId" mold="select" >
+							<listitem label="Membership Number" value="card_number" selected="true"/>
+							<listitem label="Date" value="created_date"/>
+							<listitem label="Store" value="store"/>
+							<listitem label="Program" value="program_id"/>
+						</listbox>
+					</div>
+					<div id="searchByCardDivId" visible="false">
+        		   	 <textbox id="searchByCardTbId" width="200px"/>
+        		    </div>
+			       
+			       <div id="searchByDateDivId" visible="false">
+			    	 <label value="Date:" sclass="theme-lbHeading" />
+					 <space />
+					 <label value="From: " />
+					 <datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+					 <space />
+					 <label value="To: " />
+					 <datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			      </div>
+			      <div id="searchByStoreDivId" visible="false">
+        		   	 <listbox id="storeLb" mold="select"  width="140px" visible="false"></listbox>
+        		  </div>
+			      <div id="searchByProgramDivId" visible="true">                           
+					  <listbox id="programLb" mold="select"  width="140px" visible="false">
+					  </listbox>
+				  </div>
+						<div id="filterBtnDivId">
+				      <button label="Filter" id="filterBtnId" sclass="idle140" style="margin-left:20px;" />
+				  </div>
+				  <div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;" >
+				  	  <a label="Reset" id="resetAnchId" />
+				  </div>
+			    </hlayout>
+			    </h:td>
+			</h:tr>
+		</h:table>
+	<div  width="100%" style="margin-top:20px">
+		<listbox id="spRewardLbId" emptyMessage="No records  exist.." width="99%"   >
+			<listhead sizable="true"  style="background-color:#488eb0;" menupopup="auto">
+			<listheader label="Date" id="sortbyDate" sclass="hoverlistheader"/>
+			<listheader label="Program" id="sortbyProgram" sclass="hoverlistheader"/>
+			<listheader label="Membership No." id="sortbyCard" sclass="hoverlistheader"/>
+			<listheader label="Subsidiary" id="sortbySubsidiary" sclass="hoverlistheader"/>
+			<listheader label="Store" id="sortbyStore" sclass="hoverlistheader" />	
+			<listheader label="Receipt Number" id="sortbyReceiptNo" sclass="hoverlistheader"/>		
+			<listheader label="Issued Reward" id="sortbyReward" sclass="hoverlistheader"/>
+			<listheader label="Revenue" id="sortbyRevenue" sclass="hoverlistheader" />
+			</listhead>
+		             		 
+		</listbox>	
+	</div>	
+	<h:table width="100%">
+		<h:tr>
+		
+		<h:td />
+			<h:td  valign="center">
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value=".csv" />   
+			 	   			<comboitem label=".xls " value=".xls" /> 
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file." style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId"  />
+		
+		</h:td >
+		
+			<h:td width="320" align="right">
+	   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+	   		<listbox rows="1" mold="select" id="pageSizeLbId"
+						style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15" />
+					</listbox>
+		</h:td>
+		<h:td width="300px"  >
+			<paging id="rewardPagingId" detailed="true" pageSize="5" width="300px" 
+				class="contactsViewPaging" style="border:none;"/>
+		</h:td>
+		</h:tr>
+		
+		</h:table>
+		<div align="right" style="padding:10px 10px;">
+		
+				<button label="Back"  sclass="idle140" id="backBtnId" />
+		</div>
+</window>
+</zk>

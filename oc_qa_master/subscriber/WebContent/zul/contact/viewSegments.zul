@@ -1,0 +1,250 @@
+<zk>
+<style>
+ .custCheck {
+  width:140px;
+ }
+</style>
+	<window id="viewSegmentWinId" width="100%" apply="org.mq.marketer.campaign.controller.contacts.ViewSegmentsController"  xmlns:h="http://www.zkoss.org/2005/zk/native">
+	
+	<h:table cellspacing="0" cellpadding="4" width="100%" border="0">
+		<h:tr>
+			<h:td width="300px" align="right" valign="bottom">
+						<toolbarbutton id="createSegmentTBarBtnId" label="Create a Segment"    image="img/icons/Create_Segment_icn.png"    />
+						<toolbarbutton id="viewDownloadsTBarBtnId" label="View Downloads"    image="/img/icons/View-Downloads.png"    />
+			</h:td>
+		</h:tr>
+	</h:table>
+	<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+		<h:tr >		
+			<h:td>
+				<hlayout>
+					<div>
+						<label value="Search by : " sclass="theme-lbHeading" />
+							<listbox id="searchByLbId" mold="select">
+							<listitem label="Segment Name" value="Name" selected="true" />
+							<listitem label="Created Date" value="Date" />
+						</listbox>
+					</div>
+			<!-- <h:td valign="top"> 
+			</h:td> -->
+			
+					<div id="searchBySegmentNameDivId" >
+						<textbox id="searchByTbId" width="200px"/>
+					</div>	
+			
+					<div id="searchBySegmentDateDivId" visible ="false">
+						<label value="Date:" sclass="theme-lbHeading" />
+						<space />
+						<label value="From: " />
+						<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							 constraint="no future" />
+						<space />
+						<label value="To: " />
+						<datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							 constraint="no future" />
+					</div>					
+			
+					
+					<div id="filterBtnDivId">
+						<button label="Filter" sclass="idle" width="100px" id="filterBtnId" style="margin-left:20px;" />
+					</div>
+					
+					<div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;">
+						<a label="Reset" id="resetAnchId"/>
+					</div>
+		
+					<!-- <h:td width="210" align="right" vailgn="bottom">
+						</h:td> -->
+				</hlayout>
+			</h:td>
+		</h:tr>
+	</h:table>
+	<separator/>
+		<grid id="segmentRulesGridId"  emptyMessage="No Records Found...">
+			<auxhead>
+				<auxheader label="" colspan="5"/>
+				<auxheader label="Contacts Count" colspan="3" style="color:#222222;" align="center"/>
+				<auxheader label="" colspan="1"/>
+			
+			
+			</auxhead>
+		
+		 	<columns >
+		      
+		       <column   label="Segment Name" />
+		       <column label="Description" />
+		       <column  label="Created from List(s)" />
+		       <column label="Created Date" />
+		       <column label="Last Refreshed On" />
+		       
+		       <column label="All" width="90px"/> 
+		       <column label="Active Email Addresses" width="180px"/>
+		       <column label="Active Phone Numbers" width="180px"/>
+		       <column   label="Actions"/>
+		     </columns>				
+		</grid>
+		
+		<h:table width="100%">
+		<h:tr>
+			<h:td />
+			<h:td width="320" align="right">
+	   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+	   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+				<listitem label="5" selected="true" />
+				<listitem label="10"  />
+				<listitem label="15"/>
+			</listbox>
+		</h:td>
+		<h:td width="300px"  >
+			<paging id="segmentsPagingId" detailed="true" pageSize="5" width="300px" 
+				class="contactsViewPaging" style="border:none;"/>
+		</h:td>
+		</h:tr>
+		
+		</h:table>
+		<separator />
+		
+		<h:table cellspacing="0" cellpadding="2" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			<h:tr >
+					<h:td align="right"> <image src="/images/Refresh-list-size_icn.png"/></h:td>
+					<h:td align="left" style="padding-right:30px;" > <label value="- Refresh" style="font-size:11px;"/> </h:td>
+					<h:td align="right"><image src="/images/Preview_icn.png"/></h:td>
+					<h:td align="left" style="padding-right:30px;"><label value="- Preview" style="font-size:11px;" /> </h:td>
+					<h:td align="right" ><image src="/images/Edit_icn.png"/></h:td>
+					<h:td  align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+					<h:td align="right"><image src="/images/Delete_icn.png"/></h:td>
+					<h:td align="left" style="padding-right:30px;"><label value="- Delete" style="font-size:11px;" /> </h:td>
+					<h:td align="right"><image src="/img/icons/Export-of-Promo-codes-icon.png"/></h:td>
+					<h:td align="left" style="padding-right:30px;"><label value="- Export" style="font-size:11px;" /> </h:td>
+			</h:tr>
+		
+		</h:table>
+		
+		
+	<window id="viewSegRuleWinId" visible="false" closable="true" title="Segment Rule"  contentStyle="overflow-y:auto;position:relative;"
+				xmlns:h="native"	border="normal"	width="670px" onClose="self.setVisible(false);event.stopPropagation();">
+				
+			<div id="previewSegDivId" visible="false">
+				<label value="Segment Rule is:" /> 
+				<separator/>
+				<label value="" id="segRuleLblId" style="inline:block;word-wrap: break-word;margin:15px 15px;" sclass="listsLb" multiline="true" />
+				
+			</div>
+			
+			<div id="viewDownloadSegDivId" visible="false" style="margin:15px 10px 10px 30px;" >
+				
+				<h:table>
+					<h:tr>
+						<h:td>
+							<div>
+								<label value="Please note that exports take a while to process. Once processed, your exported file will "/><h:br/>
+								<label value="be listed and ready for download on the" /> <a label="Downloads" style="color:#00B0FF" id="downloadPageLinkId1"/>
+								<label value=" page. You can go to this page by clicking " style="padding-left:2px;"/><h:br/>
+								<a label=" Downloads " style="color:#00B0FF" id="downloadPageLinkId2"/>
+								<label value=" under the " style="padding-left:2px;" /><label value=" Contacts " style="font-weight:bold"/><label value="menu." />
+							</div>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+							<label value="The exported file will be listed in" style="padding-right:2px;"/><a label="Downloads" style="color:#00B0FF" id="downloadPageLinkId3"/><label value="with the name:" style="padding-left:2px;"/>
+							<label value="" id="fileNameLblId" />
+						</h:td>
+					</h:tr>
+					</h:table>
+				<h:table width="100%">
+					<h:tr  height="20"/>
+					<h:tr>
+						<h:td >
+							<label value="You can choose to receive an " />
+							<!-- <label value="email or SMS notification" style="font-weight:bold;"/> -->
+							<label value="email notification" style="font-weight:bold;"/>
+							<label value="once your download is ready." />	</h:td>
+					</h:tr>
+				</h:table>
+				<h:table width="100%">
+					<h:tr>
+						<h:td width="125">
+							<label value="Your Email Address :" />
+						</h:td>
+						<h:td>
+							<textbox id="sendEmailTxtBxId" width="240px" />
+						</h:td>
+					</h:tr>
+					
+					
+					<h:tr style="display:none">
+						<h:td>
+							<label value="Your Mobile Number :" />
+						</h:td>
+						<h:td>
+							<textbox id="sendMobileTxtBxId" />
+						</h:td>
+					</h:tr>
+					</h:table>
+					<h:table width="100%">
+					<h:tr height="20"/>
+					<h:tr>
+						<h:td align="right" >
+							<div style="margin-right:10px;">
+								<button id="notifyMeBtnId" label="Notify Me" sclass="idle140 greenbtn"/>
+								<button id="okBtnId" label="OK" />
+							</div>
+						</h:td>
+					</h:tr>
+				</h:table>
+				
+			</div>
+			
+			<div id="custFieldExprtDivId" visible="false" >
+				<h:table width="100%" align="center"  style="margin:3px;">
+					<h:tr>
+						<h:td ><a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />   <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					</h:tr>
+				</h:table>
+				
+				<div id="chkDivId"  style="margin:15px;" />
+				
+				<h:table>
+					<h:tr>
+						<h:td>
+							<label value="Choose the type of contacts you would like to export :" />
+						</h:td>
+						<h:td>
+							<listbox rows="1" mold="select" id="segDownloadTypeLbId"  sclass="contactsView" style="margin-left: 20px;">
+								<!-- <listitem label="All Contacts" selected="true" value="SEGMENT_ON_EXTERNALID"/>
+								<listitem label="All Email Contacts"  value="SEGMENT_ON_EMAIL"  />
+								<listitem label="All Mobile Contacts" value="SEGMENT_ON_MOBILE" /> -->
+								
+								<listitem label="All" selected="true" value="SEGMENT_ON_EXTERNALID"/> 
+		       					<listitem label="Active Email Addresses" value="SEGMENT_ON_EMAIL" />
+		       					<listitem label="Active Phone Numbers"  value="SEGMENT_ON_MOBILE" />
+		       					<listitem label="Contacts With Email"  value="SEGMENT_ON_CONTACT_WITH_EMAIL"  />
+								<listitem label="Contacts With Mobile" value="SEGMENT_ON_CONTACT_WITH_MOBILE" />
+							</listbox>
+						</h:td>
+					</h:tr>
+				</h:table>
+				
+				<h:table width="100%" >
+					<h:tr>
+						<h:td align="right">
+							<div align="right" style="margin:10px 40px 0 0;">
+								<button label="Start Export" id="selectFieldBtnId" sclass="idle140 greenbtn" style="margin-right:15px;"/> 
+								<button label="Cancel" sclass="idle70" onClick="viewSegRuleWinId.setVisible(false);" />
+							</div>
+						</h:td>
+					</h:tr>
+				</h:table>
+			
+			</div>
+			
+		</window>
+	</window>
+	
+	
+	
+	
+</zk>

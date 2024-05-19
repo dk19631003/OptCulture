@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.DRSMSChannelSent"
+		table="dr_sms_channel_sent">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" not-null="true" />
+		</property>
+		
+		
+		<property name="contactId" type="java.lang.Long">
+		<column name="contact_id" />
+		</property>
+		
+		<property name="mobile" type="string">
+			<column name="mobile"  length="60" />
+		</property>
+		
+		<property name="email" type="string">
+			<column name="email"  length="60" />
+		</property>
+		
+		<property name="name" type="string">
+			<column name="name"  length="60" />
+		</property>
+		
+		<property name="status" type="string">
+			<column name="status" length="30"  />
+		</property>
+		
+		<property name="sentDate" type="calendar">
+	        <column name="sent_date"/>
+	    </property>
+	    
+	    <property name="sentCount" type="int">
+			<column name="sent_count" />
+		</property>
+		
+		<property name="opens" type="int">
+			<column name="opens" />
+		</property>
+		
+		<property name="clicks" type="int">
+			<column name="clicks" />
+		</property>
+	 
+    	<property name="drJsonObjId" type="java.lang.Long">
+			<column name="drjson_obj_Id"  />
+		</property>
+		
+		<property name="docSid" type="string">
+			<column name="doc_sid"  length="60" />
+		</property>
+		
+		<property name="storeNumber" type="string">
+			<column name="store_number" />
+		</property>
+		
+		<property name="sbsNumber" type="string">
+			<column name="SBS_no" />
+		</property>
+		
+		<property name="ackId" type="string">
+			<column name="ack_id" />
+		</property>
+		
+		<property name="dlrStatus" type="string">
+			<column name="dlr_status" />
+		</property>
+		
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_id" />
+		</property>
+		
+		<property name="zoneId" type="java.lang.Long">
+			<column name="zone_Id" />
+		</property>
+		
+   		<property name="htmlContent" type="text" >
+			<column name="html_content" />
+		</property>
+		
+		<property name="originalShortCode" type="string">
+			<column name="original_short_code" />
+		</property>
+		<property name="shortUrl" type="string">
+			<column name="short_url" />
+		</property>
+		<property name="originalUrl" type="string">
+			<column name="original_url" />
+		</property>
+		<property name="generatedShortCode" type="string">
+			<column name="generated_short_code" />
+		</property>
+		
+		<property name="receiptNo" type="string">
+			<column name="receipt_no" />
+		</property>
+		<property name="transactionTime" type="string">
+			<column name="transaction_time" />
+		</property>
+		
+		<property name="channel" type="string">
+			<column name="channel" />
+		</property>
+	</class>
+</hibernate-mapping>

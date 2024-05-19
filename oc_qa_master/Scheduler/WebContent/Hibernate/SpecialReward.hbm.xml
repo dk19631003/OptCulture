@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.SpecialReward" table="special_rewards" lazy="false" >
+	
+
+		<id name="rewardId" type="java.lang.Long" column="reward_id">
+			<generator class="native" />
+		</id>
+		<property name="rewardName" type="string">
+			<column name="reward_name"  />
+		</property>
+		<property name="description" type="string">
+			<column name="description"  />
+		</property>
+		<property name="rewardRule" type="text">
+			<column name="reward_rule"  />
+		</property>
+		<property name="rewardType" type="string">
+			<column name="reward_type"  />
+		</property>
+		<property name="rewardValueCode" type="string">
+			<column name="reward_value_code"  />
+		</property>
+		<property name="rewardValue" type="string">
+			<column name="reward_value"  />
+		</property>
+		<property name="rewardExpiryType" type="string">
+			<column name="reward_expiry_type"  />
+		</property>
+		<property name="rewardExpiryValue" type="string">
+			<column name="reward_expiry_value"  />
+		</property>
+		<property name="orgId" type="string">
+			<column name="org_id"  />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by"  />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date"  />
+		</property>
+		<property name="statusSpecialReward" type="string">
+			<column name="status_special_reward"  />
+		</property>
+		<property name="autoCommEmail" type="string">
+			<column name="auto_comm_email"  />
+		</property>
+		<property name="autoCommSMS" type="string">
+			<column name="auto_comm_sms"  />
+		</property>
+		<property name="enableReturnOnCurrentRule" type="boolean">
+			<column name="enable_return_on_current_rule"  default="false"/>
+		</property>
+		
+		<property name="deductItemPrice" type="boolean">
+			<column name="deduct_item_price"  default="false"/>
+		</property>
+		<set name="loyaltyPrograms" table="spreward_program" >
+           <key column="sprule_id" />
+           <many-to-many class="org.mq.captiway.scheduler.beans.LoyaltyProgram" column="program_id" />
+       </set>	
+	
+	</class>
+	
+	
+	
+</hibernate-mapping>

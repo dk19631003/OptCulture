@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SparkBaseTransactions"
+		table="sparkbase_transaction">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+				
+		<property name="transactionId" type="string">
+			<column name="transaction_id" not-null="true" unique="true"/>
+		</property>
+		<property name="locationId" type="string">
+			<column name="location_id" />
+		</property>
+		
+		<property name="locationName" type="string">
+			<column name="location_name" />
+		</property>
+		<property name="cardId" type="string">
+			<column name="card_id" />
+		</property>
+		
+		<property name="type" type="string">
+			<column name="type" />
+		</property>
+		<property name="amountEntered" type="double">
+			<column name="amount_entered" />
+		</property>
+		
+		<property name="processedTime" type="calendar">
+			<column name="processed_time" />
+		</property>
+		<property name="difference" type="double">
+			<column name="difference" />
+		</property>
+		<property name="loyaltyBalance" type="double">
+			<column name="loyalty_balance" />
+		</property>
+		<property name="giftcardBalance" type="double">
+			<column name="giftcard_balance" />
+		</property>
+		
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" />
+		</property>
+		<property name="contactId" type="long">
+			<column name="contact_id" />
+		</property>
+		<property name="userId" type="long">
+			<column name="user_id" />
+		</property>
+		<property name="serverTime" type="calendar">
+			<column name="server_time" />
+		</property>
+		
+		<property name="triggerIds" type="string">
+			<column name="trigger_ids" />
+		</property>
+		<property name="storeNumber" type="string">
+			<column name="store_number" />
+		</property>
+	</class>
+</hibernate-mapping>

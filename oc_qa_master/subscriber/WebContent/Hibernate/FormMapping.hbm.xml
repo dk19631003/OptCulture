@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:53:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.FormMapping"
+		table="form_mapping" lazy="false">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<many-to-one name="users"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false">
+			<column name="user_id"  />
+		</many-to-one>
+		<property name="URL" type="string" column="url"/>
+		<property name="inputFieldMapping" type="string" column="input_field_mapping" lazy="false"/>
+		<property name="formName" type="string" column="form_name"/>
+<!-- 		<property name="custTemplateId" type ="java.lang.Long" column="cust_template_id"></property> -->
+		<!-- <property name="checkAutoWelcomeEmail" type ="boolean" >
+			<column name="check_auto_welcome_email" default="false" />
+		</property> -->
+		
+			<property name="formMappingName" type="string" column="form_mapping_name"/>
+			<property name="formType" type="string" column="form_type"/>
+			<property name="activeSince" type="calendar" column="active_since"  />
+			<!-- <property name="isLoyaltyEnroll" type="boolean" ><column name="is_loyalty_enroll" default="false"/>
+			</property> -->
+			<property name="consentCustTemplateId" type ="java.lang.Long" column="consent_cust_template_id"/>
+			<property name="checkParentalEmail" type="boolean" >
+			<column name="check_parental_email" default="false"/>
+			</property>
+			<!-- <property name="signupFormTypeSettings" type="java.lang.Byte" column="signup_form_type_settings"/> -->
+			<property name="listId" type="java.lang.Long" column="list_id"/>
+			
+<!-- 			<property name="loyaltyCustTemplateId" type ="java.lang.Long" column="loyalty_cust_template_id"/> -->
+			<!-- <property name="checkLoyaltyEmail" type="boolean" >
+			<column name="check_loyalty_email" default="false"/>
+			</property> -->
+			<property name="sendEmailToExistingContact" type="boolean" >
+			<column name="send_email_to_existing_contact" default="false"/>
+			</property>
+			
+		<!-- <many-to-one name="mailingList"
+			class="org.mq.marketer.campaign.beans.MailingList"
+			foreign-key="listId"  fetch="select" lazy="false">
+			<column name="list_id"  />
+		</many-to-one> -->
+		<property name="htmlRedirectURL" type="string" column="html_redirect_URL"/>
+		<property name="enable" type="boolean" column="enable"/>
+		<property name="submitFieldName" type="string" column="submit_field_name"/>
+		<property name="htmlRedirectFailureURL" type="string" column="html_redirect_failure_URL"/>
+		<property name="htmlRedirectDbFailureURL" type="string" column="html_redirect_db_failure_URL"/>
+		<property name="htmlRedirectParentalURL" type="string" column="html_redirect_parental_URL"/>
+		
+		<property name="loyaltyProgramId" type="java.lang.Long" column="loyalty_program_id"/>
+		<property name="loyaltyCardsetId" type="java.lang.Long" column="loyalty_cardset_id"/>
+		<property name="autoSelectCard" type="char" column="auto_select_card"/>
+		<property name="enableParentalConsent" type="char" column="enable_parental_consent"/>
+		<property name="checkFeedbackFormEmail" type="char" column="enable_feedback_mail"/>
+		<property name="checkFeedbackFormSms" type="char" column="enable_feedback_sms"/>
+		<property name="feedBackMailCustTemplateId" type="java.lang.Long" column="feedback_mail_custtemplateid"/>
+		<property name="feedBackSmsTemplateId" type="java.lang.Long" column="feedback_sms_templateid"/>
+		<property name="issueRewardIschecked" type="char" column="issuereward_ischecked"/>
+		<property name="issueRewardType" type="string" column="issuereward_type"/>
+		<property name="issueRewardValue" type="string" column="issuereward_value"/>
+		
+		<property name="checkSimpleSignUpForEmail" type="char" column="enable_simplesignup_mail"/>
+		<property name="checkSimpleSignUpFormSms" type="char" column="enable_simplesignup_sms"/>
+		<property name="simpleSignUpCustTemplateId" type="java.lang.Long" column="simplesignup_mail_custtemplateid"/>
+		<property name="simpleSignUpSmsTemplateId" type="java.lang.Long" column="simplesignup_sms_templateid"/>
+		
+		<property name="doIssuePoints" type="char" column="do_issue_points"/>
+		<property name="webHook" type="boolean" >
+			<column name="webhook" default="false"/>
+			</property>
+	
+	</class>
+</hibernate-mapping>

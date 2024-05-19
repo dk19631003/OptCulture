@@ -1,0 +1,213 @@
+<?page title="Test Message" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="textMsgWinId" xmlns:h="native" apply="org.mq.marketer.campaign.controller.campaign.TextMessageController"   xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<script src="/js/jsconfig.js"/>
+		<script src="/js/rmGlobal.js"/>
+		<!-- <style src="/css/theme.css" /> -->
+		<style src="/css/editor.css" />
+		<style src="/css/RMStyle.css" />
+		<style src="/css/campaign.css" />
+		
+			<script>
+						function insertPh(val, textbox){
+							if(val == 'select') {
+								alert('Insert Merge Tags');
+								return;
+							}
+							var ckuuid = textbox.uuid
+							var tb = document.getElementById(ckuuid);
+							if(tb == undefined) return;
+							insertAtCursor(tb, val);
+						} 
+						function insertCPh(val, textbox){
+							if(val == 'cselect') {
+								alert('Select a Promotion');
+								return;
+							}
+							var ckuuid = textbox.uuid
+							var tb = document.getElementById(ckuuid);
+							if(tb == undefined) return;
+							insertAtCursor(tb, val);
+						} 
+		  </script>
+		  
+	<h:table cellspacing="0" cellpadding="2" width="100%" >
+		<h:tr height="50">
+		<h:td valign="top">
+
+		<div>
+		  	<label value="Enter your plain-text message below" /><h:br/><h:br/>
+		  	<label value="Please Note:" sclass="theme-lbHeading" />
+			<label value="i) This plain-text email is displayed if recipient can't (or won't) display your HTML email." sclass="textMsgLabelPos"/><h:br/>
+		  <div style="margin-left:75px;">
+			<label value="ii) Your email might get trapped in spam filters without a plain-text message." sclass="textMsgLabelPos"/><h:br/>
+			<label value="iii) Use " /><label value=" Ctrl+Z" style="font-weight:bold;" /><label value=" if u want to retain the old content" sclass="textMsgLabelPos"/>
+		  </div>
+		</div>
+		</h:td>
+		<h:td align="left" valign="bottom" width="450">
+			<label value="" id="autoSaveLbId" style = "color:#0063A1;font-weight: bold;" />
+		</h:td>
+		<h:td width="110" valign="bottom">
+		  <div >
+		  	
+			<toolbarbutton label="Save" style="font-weight: bold;" image="/img/icons/icon_save_big.png" width="80px" sclass="alink" id="saveHtmlId" />
+		  </div>
+		</h:td>
+		</h:tr>
+	</h:table>
+		  
+	  	<h:table cellspacing="0" cellpadding="2" width="100%" >
+			<h:tr>
+				<h:td width="230px" valign="top">
+				
+				<vlayout style="margin-right:10px;">
+						<groupbox closable="false" style="margin-bottom:20px;">
+							<caption label="Tools"/>
+							<toolbarbutton id="checkSpamTlbId" label="Check for Spam score"  visible="false"  sclass="alink" width="180px"
+							 image="/img/icons/icon_check_spam.png" style="font-weight: bold;margin-bottom:10px;"   />
+							<image id="troberImgId" src="/img/theme/throbber.gif" visible="false"/>
+							
+							<toolbarbutton label="Grab text from HTML" id="grabTxtFrHtmlIdTBarBtnId" sclass="alink" 
+							image="/img/icons/icon_grab_text.png" width="180px" style="font-weight: bold;margin-bottom:10px;"/>
+						</groupbox>
+						
+						<groupbox closable="false" style="margin-bottom:20px;">
+							<caption label="Insert Merge Tags"/>
+								<listbox id="phLbId" mold="select" width="130px" onSelect="phTbId.setValue((String)phLbId.getSelectedItem().getValue())" style="font-size:11px;"/>
+								<button label="Insert" sclass="idle70" w:onClick="insertPh(this.$f('phTbId').getValue(),this.$f('plainMsgTbId'))" />					
+							<textbox value="select" id="phTbId" w:onChange="alert(this.getValue());" visible="false"/>
+						</groupbox>
+						
+						<groupbox closable="false"  id ="coupGrpbId" style="margin-bottom:20px;" visible="false" >
+							<caption label="Insert Discount Code"/>
+								<listbox id="cphLbId" mold="select" width="130px" onSelect="cphTbId.setValue((String)cphLbId.getSelectedItem().getValue())" style="font-size:11px;"/>
+								<button label="Insert" sclass="idle70"  w:onClick="insertCPh(this.$f('cphTbId').getValue(),this.$f('plainMsgTbId'))" />					
+							<textbox value="cselect" id="cphTbId" w:onChange="alert(this.getValue());" visible="false"/>
+						</groupbox>
+						
+						<groupbox closable="false"> 
+							<caption label="Send a Test Email"/>
+								<textbox id="testEmailTbId" value="Email Address..." cols="18"  width="200px;"  />
+								<div>
+									<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+									<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+								</div>
+						
+						
+							<div align="right" style="padding-top:8px;">
+								<button label="Send" id="sendBtnId" sclass="idle70" style="margin-top:2px;"/>
+							</div>
+						</groupbox>
+						
+				</vlayout>
+				</h:td>
+				
+				<h:td>
+					<groupbox closable="false">
+					<caption label="Plain Text" />
+						<h:table width="660" style="padding-left:8px;" >
+							<h:tr>
+								<h:td  align="left">
+									<separator/>
+									<textbox width="660px" id="plainMsgTbId" value=" " rows="28" height="400px" sclass="textBg" />
+								</h:td>
+							</h:tr>		
+						</h:table>
+				
+					</groupbox>
+				</h:td>
+				
+			</h:tr>
+	  	
+	  	</h:table>
+		  
+		  
+		  <div align="right" style="margin-top:10px;">
+		  	<button id="backBtnId" label="Back" sclass="idle140" />
+			<button id="saveAsDraftBtnId" label="Save as Draft" sclass="idle140"/>
+			<button id="nextBtnId" label="Next" sclass="idle140 greenbtn"/>
+		  </div>
+		
+		<div visible="false">
+		<h:table cellspacing="0" cellpadding="2" width="99%" align="center" class="fontStyle"  >
+			
+			<h:tr>
+				<h:td class="gradeTopLeft" />
+				<h:td class="gradeTop" />
+				<h:td class="gradeTopRight" />
+				
+				<h:td class="gradeTopLeft" />
+				<h:td class="gradeTop" />
+				<h:td class="gradeTopRight" />
+			</h:tr>
+			
+			<h:tr>
+				<h:td class="gradeLeft" />
+
+				<h:td   valign="top" width="210px">
+				
+				<grid style="border:none;">
+					<columns>
+						<column align="center" />
+					</columns>
+					<rows>
+						<row visible="false">Save repeatedly to avoid loss of work</row>
+						<row visible="false"><cell>
+							<toolbarbutton id="reloadTblBtnId" label="Reload"  width="80px" sclass="alink"  image="/img/theme/reload.png"  w:onClick="previewEmail()"  style="font-weight: bold;" />
+							<toolbarbutton label="Preview" width="80px" sclass="alink"  image="/img/theme/preview.png"  w:onClick="previewEmail();" style="font-weight: bold;" />
+							</cell>
+						</row>
+					
+						<row ><cell align="left">
+							<label value="Insert Merge Tags" style="font-size:11px;" /><h:br/>
+							
+								
+						</cell></row>
+						
+						<row style="padding-top:10px;"><cell align="left" >
+							<label value="Send a test email" style="font-size:11px;" /><h:br/>
+							
+						
+						</cell></row>
+						
+					</rows>
+				</grid>
+					
+				</h:td>
+				
+				<h:td class="gradeRight" />
+				
+				<h:td class="gradeLeft" />
+				
+				<h:td valign="top" align="left" bgcolor="#FFFFFF">
+
+					
+				</h:td>
+				
+				<h:td class="gradeRight" />
+				
+			</h:tr>
+			
+			<h:tr>
+				<h:td class="gradeBotLeft" />
+				<h:td class="gradeBot" />
+				<h:td class="gradeBotRight" />
+				
+				<h:td class="gradeBotLeft" />
+				<h:td class="gradeBot" />
+				<h:td class="gradeBotRight" />
+			</h:tr>
+		</h:table>
+		</div>  
+		<!-- <zscript>
+			<![CDATA[
+				textMsgWinId.init(plainMsgTbId, saveAsDraftBtnId,phLbId);
+			]]>
+		</zscript> -->
+		
+		<timer id="textAutoSaveTimerId" delay="60000" repeats="true" >
+		</timer>
+		
+	</window>						
+</zk>

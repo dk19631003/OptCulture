@@ -1,0 +1,107 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+ <!--<style>
+.z-button .z-button-tl, .z-button .z-button-tr,
+ .z-button .z-button-bl, .z-button .z-button-br,
+.z-button .z-button-tm, .z-button .z-button-bm,
+ .z-button .z-button-cl, .z-button .z-button-cr, .z-button .z-button-cm {
+    background-image:none;
+}
+</style> 
+
+-->
+<window id="galleryWinId" border="0" apply="org.mq.marketer.campaign.controller.gallery.GalleryController" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%" xmlns:w="http://www.zkoss.org/2005/zk/client">
+	
+										<div id="beeManagerDivId"  style="overflow:auto;" width="100%" />
+	
+
+	
+	<html>
+<![CDATA[
+  <head>
+  <title>BEE Plugin - Integration Example</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content_area_width="width:600px, initial-scale=1" />
+ <script>
+ 	var namevalue = '${userName}';
+	var beekey;
+	var onErrorCall = null;
+	var containerId = 'beeManagerDivId';
+	var requestFrom='';
+//	var data='{fileName: "example.jpeg",fileType: "image/svg+xml",fileSize: 1024,fileContent: "My  text editor to load"}';
+	var data='';
+	
+	zk.afterMount(function () {
+		$.getScript("js/fileManager.js", function() {
+			
+			onFilePickerInsert = function(data){
+				
+			}
+				
+			onErrorCall = function(){
+				   errorMessage();
+				}
+			
+			function errorMessage(){
+				   zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onError', null));
+			}
+				
+			
+	});
+});
+</script>
+</head>
+  <body>
+  	<div id="superdiv" style="height:650px;">
+    	<div id="beeManagerDivId" style="height:650px;">  </div>    
+	</div>
+  </body>
+]]>
+</html>
+	<script>
+		 function onImgMouseOver(thisObj) {
+	      	
+	      	thisObj.setStyle('margin:1px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;border:#E1E1E1 1px solid;');
+			var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+			var delId = 'del_' + vboxId;
+		
+			thisObj.$f(delId).setVisible(true); 
+			thisObj.$f(zoomId).setVisible(true);
+			
+	      } 
+      
+	      function onImgMouseOut(thisObj) {
+	      
+	      	thisObj.setStyle('margin:2px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;');
+	      	
+	      	var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+			var delId = 'del_' + vboxId;
+			
+	      	thisObj.$f(delId).setVisible(false); 
+			thisObj.$f(zoomId).setVisible(false);
+	     
+	      } 
+
+			var visible = false;
+		
+			function viewFold(btn) {
+				if(!visible) {
+					
+					jq(btn.$f('createFolderId')).hide().slideDown();
+					visible = true;
+				}else { 
+			  			jq(btn.$f('createFolderId')).show().slideUp();
+			   			visible = false;
+				}
+		  	}
+    </script>
+  
+</window>
+</zk>

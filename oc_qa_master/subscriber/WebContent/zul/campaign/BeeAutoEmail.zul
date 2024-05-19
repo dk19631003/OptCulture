@@ -1,0 +1,320 @@
+<zk>
+<style>
+.search_categories{
+  font-size: 13px;
+  padding: 0px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  position: relative;
+}
+.search_categories .select{
+  width: 80%;
+  background:url('arrow.png') no-repeat;
+  background-position:80% center;
+}
+.search_categories .select select{
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  width: 120%;
+  z-index: 10;
+ }
+   
+.submitButtonClass{
+ 	padding-top:10px; 
+ 	margine-top:10px;
+}
+.sendMailButtonCss{
+	font-weight: bold;
+	float: right;
+}
+</style>
+	<window id="BeeAutoEmailId" apply="org.mq.marketer.campaign.controller.layout.BeeAutoEmailController" width="100%" 
+	xmlns:h="http://www.w3.org/1999/xhtml"  
+	xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<style src="/css/editor.css"/>
+	
+	<h:table cellspacing="0" cellpadding="2" width="100%">
+					<toolbarbutton id="plainPreviewImgId" label="Preview" width="80px" sclass="alink"  image="/images/icon_preview_big.png"  style="font-weight: bold;" />		
+					<toolbarbutton id="" tooltip="help2" image="/img/icons/rsz_info-icon_bee.png" sclass="alink"  width="250px" label="Merge Tags/Discount codes/Barcodes" style="font-weight: bold;" />
+					<popup id="help2" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="To insert merge tags within text blocks, type'@' and select from list." class="labelPos" />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<label  value="To insert discount codes within text blocks, select “special links” from the text formatting options, click on “DiscountCodes”, and select from list. " sclass="labelPos" />
+										</h:td>
+									</h:tr>	
+									<h:tr>
+										<h:td>
+											<label  value="To insert barcodes, select the “Dynamic Content” block and select from list." class="labelPos" />
+										</h:td>
+									</h:tr>							
+								</h:table>								
+							
+					</popup>
+					
+					<toolbarbutton id="promoId2" tooltip="help3" image="/img/icons/rsz_info-icon_bee.png" sclass="alink"  width="80px" label="Images" style="font-weight: bold;" />		
+					<popup id="help3"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="Image/folder names should be alpha-numeric. Special characters allowed are spaces, 
+												'%','&amp;','+','-',';','=','@','^' and '_'   If any other characters are used, images may not be rendered." class="labelPos" />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<label  value="Please ensure that images are below 10 megabytes in file size before uploading to OptCulture. Images can be resized using the free tool at https://www.aviary.com/." class="labelPos" />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<label  value="Hint: Images under 1000px on both sides will be well below 10MB." sclass="labelPos" />
+										</h:td>
+									</h:tr>								
+								</h:table>								
+					</popup>
+					<toolbarbutton id="promoId3" tooltip="help4" image="/img/icons/rsz_info-icon_bee.png" sclass="alink"  width="250px" label="OTP TAGS" style="font-weight: bold;" />		
+					<popup id="help4"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+							
+									<h:tr>
+										<h:td>
+											<label  value="Please ensure that include OTP TAGS while creating OTP type Auto Emails as follows" class="labelPos" />
+										</h:td>
+									</h:tr>
+											<h:tr>
+										<h:td>
+											<label  value="1.OTP Code" class="labelPos" />
+										</h:td>
+									</h:tr>	
+									
+									
+										<h:tr>
+										<h:td>
+											<label  value="2.Organization NAme" class="labelPos" />
+										</h:td>
+									</h:tr>			
+								</h:table>								
+					</popup>
+					
+					
+					<label value="" id="autoSaveLbId" style = "color:#0063A1;font-weight: bold;padding-left: 250px;"  />
+					<toolbarbutton id="sendTestBtnId" image="/img/icons/Send-test-DR-Icon_2_bee.png" sclass="alink sendMailButtonCss" style="display:none" label="Send Test Mail" />
+					
+		<h:tr>
+			<h:td>
+				<groupbox closable="false">
+					<caption label="Editor" />
+					<html>
+						<![CDATA[ 
+						<head> 
+						<title>BEE Plugin - Integration	Example</title> <meta charset="utf-8" /> 
+						<meta name="viewport" content_area_width="width:600px, initial-scale=1" />
+						<script>
+						var mytemplate;
+						var namevalue;
+						var beekey;
+						var mergeTags97;
+						var barCodes79;
+						var containerId = 'bee-plugin-container-autoEmail';
+						var specialLinks79;
+						var externalUrl;
+						var savejsonhtmlcontent = null;
+						var saveRowPopupcall = null;
+						var autosave = null;
+						var send = null;
+						var onErrorCall = null;
+						var showButtonsAfterLoad = null;
+						var requestFrom=''
+						var autosaveTimer = 60;
+					zk.afterMount(function () {
+						$.getScript("js/beeCommonFile.js", function() {
+
+						savejsonhtmlcontent = function(jsonFile, htmlFile) {
+							updateHtmlJsonContents(jsonFile, htmlFile,"save");
+						}
+						
+						saveRowPopupcall = function(args){
+							var myJSON = JSON.stringify(args);
+							zAu.send(new zk.Event(zk.Widget.$('$jsonDataSaveRow'),'onClickSaveRowAutoEmail',myJSON));
+						}
+						
+						var autosaveJson;
+						var autosaveHtml;
+						autosave = function(jsonFile,htmlFile){
+							updateHtmlJsonContents(jsonFile,null,"autoSave");
+							autosaveJson = jsonFile;
+						}
+						
+						send = function(jsonFile,htmlFile){
+							updateHtmlJsonContents(autosaveJson,htmlFile,"send");
+						}
+
+						function updateHtmlJsonContents(jsonFile, htmlFile,saveType){
+							 if(saveType != "autoSave"){
+								 var jsonString = JSON.stringify({html:htmlFile, json:jsonFile});
+								 zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onCustomEvent', jsonString));
+							 }else if(saveType == "autoSave"){
+								 if(jsonFile!=null){
+									 autosaveJson = jsonFile;
+								 }
+								 zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onCustomEventAutoSave', null));
+							 }else if(saveType == "send"){
+								 if(htmlFile!=null){
+									 autosaveHtml = htmlFile;
+								  }
+								 var jsonString = JSON.stringify({html:autosaveHtml, json:autosaveJson});
+								 zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onCustomEvent', jsonString));
+								 autosaveJson = null;
+								 autosaveHtml = null;
+							 }
+					   	};
+					   	
+					   onErrorCall = function(){
+						   errorMessage();
+					   	}
+					   
+					   function errorMessage(){
+						   zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onError', null));
+					   }
+					   	
+					   showButtonsAfterLoad = function(){
+					   		jq('$autoEmailSaveButtonId').attr('style','display:block'); 
+					   		jq('$sendTestBtnId').attr('style','display:block');
+					   	}
+					});
+				});
+						</script>
+						</head>
+							<body>
+								<div id="superdiv" style="height:650px;"> 
+									<div id="bee-plugin-container-autoEmail" style="height:650px;">
+										</div> 
+							</div>
+							</body> ]]>
+					</html>
+				</groupbox>
+			</h:td>
+		</h:tr>
+	</h:table>
+	<div>
+	</div>
+	<div style="display: none">
+		<textbox id="jsonDataSaveRow" ></textbox>
+		<textbox id="jsonData" ></textbox>
+		<textbox id="editTemplateIdTextBox"></textbox>
+	</div>
+		<div align="right" id="autoEmailSaveButtonId" class="submitButtonClass" style="display:none">
+			<button id="backAutoEmailId" label="Back"   sclass="idle140"/>
+			<button  id="saveAutoEmailId" label="Save" sclass="idle140 greenbtn"/>
+		</div>
+    
+        <window id="createCustTemplateWinId" title="Save My Templates" border="normal" visible="false" width="350px" height="190px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+				
+			<h:table style="padding:10px;">
+			<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+				<h:tr>
+					<h:td colspan="2">
+						<label value="You can add a new message for your Auto-email here."/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Template Name :" /></h:td>
+					<h:td ><textbox  id="customTemplateTextId" width="183px"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td><label value="Select folder:"/></h:td>
+					<h:td >
+						<div class="search_categories">
+    							<div class="select">
+									<listbox id="myTempListId" sclass="templateList" rows="1" mold="select"/>
+								</div>
+						</div>								
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Add" sclass="idle70 greenbtn" id="saveAutoEmailTemplate" /></h:td>
+				</h:tr>
+			</h:table>
+		 </window>
+		 
+		 		<window id="testWinId" visible="false" closable="true" title="Send Test Mail" 
+						height="185px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+						<h:table style="padding:10px;">
+							<h:tr>
+								<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td colspan="1"><label value="Email address:" /></h:td>
+								<h:td colspan="2"><textbox  id="testTbId"  width="250px"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td/>
+								
+								<h:td  colspan="2" valign="left">	
+									<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+									<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+									<div style=" margin: 20px;">
+										<button label="Send" id="sendTestMailBtnId" width="80px"/>
+										<button label="Cancel" id="cancelSendTestMailBtnId" width="80px"/>
+									</div>	
+								</h:td>
+							</h:tr>
+							
+						</h:table>
+					</window>
+		 	<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+				<caption>
+					<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)"/>
+				</caption>
+				<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+				<iframe id="iframeId" width="100%" height="100%"/>
+				</div>
+			</window>
+			
+			<window id="customRowId" title="Save Rows" border="normal" visible="false" width="350px" height="190px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<h:table style="padding:10px;">
+			<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+				<h:tr>
+					<h:td colspan="2">
+						<label value="You can add a new name for your customized row here."/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td><label value="Category :"/></h:td>
+					<h:td ><combobox  id="comboCategoryRowId" width="230px" autodrop="true">
+                        	<comboitem  id="comboCategoryRowItems"/>
+						   </combobox></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Row Name :" /></h:td>
+					<h:td ><textbox  id="rowTextId" width="200px" maxlength="50"/></h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="save" sclass="idle70 greenbtn" id="onsaveRowTemplate" /></h:td>
+				</h:tr>
+			</h:table>
+		 </window>
+		 
+    </window> 	
+</zk>

@@ -1,0 +1,475 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="subscriptionFormWinId"  apply="org.mq.marketer.campaign.controller.contacts.PromoteCenterController" xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:h="http://www.zkoss.org/2005/zk/native">
+		<style src="/css/campaign.css"/>
+		<script>
+			<![CDATA[
+				function setSelectedSubscriptionForm(hiddenId,selectedId) {
+					hiddenId.value= selectedId;
+					hiddenId.fire('onChange',{value:hiddenId.value},{toServer:true},0);
+				}
+			]]>         
+		</script>
+	  <tabbox width="100%" id="typeTabboxId">
+	  <tabs>
+	  		<tab label="Subscription Form" />
+			<tab label="Welcome Message Editor" />
+			<tab label="Fetch URL" />
+	  </tabs>
+	  
+	  <tabpanels>
+			<tabpanel>
+					
+				   <textbox id="selectedFormId" value="default" visible="false"/>
+				   <h:table  width="100%" cellspacing="10"  >
+					   <h:tr>
+					   		<h:td colspan="2"  align="right">
+					   			  <label value="Existing Forms :" />	
+					   			  <listbox mold="select" rows="1" id="existingFormsLbId" />
+					   			  <button label="Edit" id="editExistingFormsBtId" />
+					   			  <button label="Delete" id="deleteExistingFormsBtId" />
+					   		</h:td>
+					   </h:tr>
+						   <h:tr> 
+							   <h:td width="50%" valign="top"  align="center">					   
+									<h:table cellpadding="2" cellspacing="2"  xmlns:h="http://www.zkoss.org/2005/zk/native" >
+										<h:tr>
+											<h:td height="20px" style="background-color:#DDF0FB;" align="center">
+												<label value="Default" />
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td height="100px"  valign="top" >
+											   <html id="previewContentHTMLId1">
+											   <![CDATA[
+												<form name='webForm'  action='|^actionAttribute^|' method='get'>        
+												<table id="formId" cellpadding="2" cellspacing="2" style="background-color:#FFFFFF" width="300px">
+												
+												 	<tr>
+												 		<td colspan="2" align="center"> <span>Subscribe to our Mailing List</span> </td>
+												 	</tr>
+													<tr>
+											 			<td colspan="2" align="center"><div id='errorDivId'></div></td>
+											 		</tr>
+											 		
+											 		
+													<tr>
+													<td><span> Contact Name </span></td><td><input type="text" id="contactName" name="contactName" MAXLENGTH="100" /></td> 
+													</tr>
+													
+													
+													<tr>	
+														<td><span>Email Address</span></td><td><input type="text" id='emailId' name='emailId' MAXLENGTH="100" /></td>
+													</tr>
+													<tr>	
+													<td><span>Mobile</span></td><td><input type="text" id='mobile' name='mobile' MAXLENGTH="10" /></td>
+													</tr>
+													<tr>	
+													<td><span>DOB</span></td><td><input type="text" id='dob' name='dob' MAXLENGTH="100" /></td>
+													</tr>
+													<tr>	
+													<td><span>Anniversary</span></td><td><input type="text" id='aniversary' name='anniversary' MAXLENGTH="100" /></td>
+													</tr>
+													
+													<tr>
+														<td align="left"> <input type="reset" value="Reset" /></td>
+														<td align="right">
+														<input type='HIDDEN' name='process' value='true' />
+														<input type='HIDDEN' name='uId' value='|^uId^|' />
+														<input type='HIDDEN' name='mId' value='|^mId^|' />
+														<input type='HIDDEN' name='dId' value='|^dId^|' />
+														<input type="button" value="Submit"  /></td>
+													</tr>	 
+												</table>
+												</form>
+												]]>
+												</html>
+											</h:td>
+										</h:tr>
+										<h:tr>
+										   <h:td height="20px" style="background-color:#DDF0FB;">
+												<h:table width="100%"  xmlns:h="http://www.zkoss.org/2005/zk/native">
+												 	<h:tr>
+												 		<h:td align="left">
+															<toolbarbutton image="/img/theme/preview_icon.png" sclass="note" id="previewImgId1" style="cursor:pointer;" label="Preview" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'HTMLId1:previewContentHTMLId1')"/>
+														</h:td>
+							  							<h:td align="right">											
+															<toolbarbutton image="/img/theme/use_icon.png" label="Use it" sclass="note" id="useMeTlbarId" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'select1:previewContentHTMLId1')"/>
+															<image src="/img/QuestionmarkButton-16x16.png" tooltip="mail" style="cursor: help" />
+														</h:td>	
+													</h:tr>	
+												</h:table>
+											</h:td>
+										</h:tr>
+									</h:table>
+								
+								</h:td>
+								<h:td width="50%" valign="top" >
+							
+									<h:table cellpadding="2" cellspacing="2" xmlns:h="http://www.zkoss.org/2005/zk/native">
+										<h:tr>
+											<h:td height="20px" style="background-color:#DDF0FB;" align="center">
+												<label value="Classic" />
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td height="100px"  valign="top" align="center">
+												 <html id="previewContentHTMLId2">
+													   <![CDATA[
+														<form name='webForm' action='|^actionAttribute^|' method='get'>        
+														<table id="formId" cellpadding="2" cellspacing="2" style="background-color:#FFFFFF" width="300px">
+															<tr>
+														 		<td colspan="2" align="center"> <span>Subscribe to our Mailing List</span> </td>
+														 	</tr> 
+														 	<tr>
+														 		<td colspan="2" align="center"><div id='errorDivId'></div></td>
+														 	</tr>
+															<tr>
+																<td><span >Name </span></td> 
+															</tr>
+															<tr>
+															<td><input type="text" id="contactName" name="contactName" MAXLENGTH="100" /></td>
+															</tr>
+															<tr>	
+																<td><span>Email Id </span></td>
+															</tr>
+															<tr>
+															<td><input type="text" id='emailId' name='emailId' MAXLENGTH="100" /></td>
+															</tr>
+															<tr>	
+															<td><span>Mobile No </span></td>
+															</tr>
+															<tr>
+															<td><input type="text" id='mobileNo' name='mobileNo' MAXLENGTH="10" /></td>
+															</tr>
+															<tr>	
+															<td><span>Date Of Birth </span></td>
+															</tr>
+															<tr>
+															<td><input type="text" id='dateOfBirth' name='dateOfBirth' MAXLENGTH="100" /></td>
+															</tr>
+															<tr>	
+															<td><span>Anniversary </span></td>
+															</tr>
+															<tr>
+															<td><input type="text" id='Aniversary' name='Aniversary' MAXLENGTH="100" /></td>
+															</tr>
+															
+															<tr><td align="left"> <input type="reset" value="Reset" /></td>
+																<td colspan="2" align="right">
+																<input type='HIDDEN' name='process' value='true' />
+																<input type='HIDDEN' name='uId' value='|^uId^|' />
+																<input type='HIDDEN' name='mId' value='|^mId^|' />
+																<input type='HIDDEN' name='dId' value='|^dId^|' />
+																<input type="button" value = "Submit"  /></td>
+															</tr>	 
+														</table>
+														</form>
+														]]>
+													</html>
+												</h:td>
+											</h:tr>
+											<h:tr>
+											    <h:td height="20px" style="background-color:#DDF0FB;">
+													<h:table width="100%" >
+													 	<h:tr>
+													 		<h:td align="left">
+																<toolbarbutton image="/img/theme/preview_icon.png" sclass="note" id="previewImgId2" style="cursor:pointer;" label="Preview" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'HTMLId2:previewContentHTMLId2')">
+																</toolbarbutton>
+															</h:td>
+								  							<h:td align="right">											
+																<toolbarbutton image="/img/theme/use_icon.png" label="Use it" sclass="note" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'select2:previewContentHTMLId2')"/>
+																<image src="/img/QuestionmarkButton-16x16.png" tooltip="mail" style="cursor: help" />
+															</h:td>	
+														</h:tr>	
+													</h:table>
+												</h:td>
+											</h:tr>
+									</h:table>
+								</h:td>
+							</h:tr>
+						</h:table>
+			</tabpanel>
+			
+			<tabpanel id="welcomMsageTabId">
+				<include id="welcomMsageIncId" src="" />
+			</tabpanel>
+			<tabpanel  style="padding:20px;">
+				<div id="existingFormMapDivId">
+					<h:spacer height="10px" />
+					<label value="Web Form Mapping collects information from the web forms available in your website. Our application tracks that contact information entered in your web form and automatically saves it into your configured mailing list." style=":30px;" />
+					<h:spacer height="20px" />
+					
+					<h:br />  
+					<h:br />  
+					<button id="AddNewBtnId" label="Add New" ></button> <h:br /> <h:br />
+					<div id="exstgFrmMapDivId">
+						<grid id="existgFrmMapsGbId" rowRenderer="${subscriptionFormWinId$PromoteCenterController.rowRenderer}"  width="99%"  height="200px">
+							<columns >
+							   <column   label="URL"/>	 
+						       <column  width="18%" label="Form Name"/>
+						       <column  width="12%" label="Javascript" align="center" popup="fmCodePopupId" />
+						       <column  width="12%" label="Form Action " align="center" popup="fmCodePopupId" />
+						       <column  width="6%" label="Enable" align="center"/>
+						       <column  width="6%" label="Delete" align="center"/>
+					     	</columns>
+						</grid>
+					</div>
+						
+					<h:br />
+					
+				</div>	
+					
+				<div id="addNewDivId" visible="false">
+					    <div width="98%" style="padding-right:10px" align="right">
+					    	<button id="bckBtnId" label="Back"  ></button>
+				</div>
+					
+			
+						<div id="urlFomrsToMlDivId">
+								<label value="Enter the Web Page Form URL to fetch the form(s) and configure the fields . " /><h:br/><h:br/>
+						 		<label value="Form URL : " id="urlLabelId"/>
+								<textbox value="http://" id="pageUrlId"  width="360px" />
+								<button id="fetchBtnId" label="Fetch" ></button> 
+								<h:br/>
+								<h:br/>
+						
+							 <div id="configDivId" visible="false">	
+								<groupbox width="470px" closable="false">
+								<caption id="formsFoundCaptionlId" style="font-weight:bold;" label="Form Found with the name :"/>
+									<listbox id="urlFormsToMlLbId" width="470px" sclass="contactsView" multiple="false" checkmark="true"  >
+									<listhead>
+									<listheader label="Form Name" />
+									
+									<listheader label="Mailing List" />
+									</listhead>
+									</listbox>
+								<hbox width="100%" pack="end" style="padding-top:20px;">
+								 	<button id="configureFieldsBtnId" label="Configure Selected" />
+								 </hbox>
+								</groupbox>
+						 	 </div>		
+						</div>
+						
+						
+						<div visible="false" id="displayFormsDivId">
+						 	<groupbox id="selFrmGbid"   closable="false" >
+			  					<caption id="selFrmCaptionId" style="font-weight:bold;" label="Map Form Fields"/>
+			  					 <label id="selectedFormAndMlLabelId" />  
+										<div id="inputFieldsDivId" >
+										    <grid id="inputFieldsGrId" >
+										         <columns>
+										         		<column align="center" width="15%">Field No</column>
+										         		<column align="right" width="25%">Input Name</column>
+										         		<column>Contact Field</column>
+										         		<column align="center" width="15%"></column>
+										         </columns>
+										         <rows></rows>
+										     </grid>
+										 </div>
+							</groupbox>	
+							<groupbox id="multiSubmitGbId"  closable="false" visible="false" >
+								<caption label="Found Multiple Submit Buttons. Please Select One :" style="font-weight:bold;" />
+								<hbox pack="end" width="100%" align="center">
+								 	<label value="Select form submit button :" />
+								 	<listbox id="multiSubmitLbId"  mold="select" width="150px"></listbox>
+								</hbox> 
+							 </groupbox>
+							
+							<h:br/>
+							<div>
+								<h:table>
+								<h:tr>
+									<h:td  width="230">
+										<label value="Enable a Welcome Email:" />
+									</h:td>
+									<h:td >
+										<checkbox id="welcomeEmailsCbId"  checked="false" style="padding-right:0px;" />
+									</h:td>
+									</h:tr>
+									
+									<h:tr>
+									<h:td  width="230" />
+									<h:td>
+								
+									<div id="enableWelcomeEmailDivId" width="100%" visible="false" style="z-index: 0;">
+		          						<label value="Welcome Message: :" />
+										<listbox id="welcomeEmailsLbId"  width="270px"   mold="select" sclass="contactsView" />
+										
+										<image src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="previewBtnId" sclass="idle140"/>
+											<a label="Edit Message"
+												style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+												id="editMsgBtnId" sclass="idle140" />
+	        						</div>  
+									</h:td>
+									
+								</h:tr>
+								
+								<h:tr>
+									<h:td >
+										<label value="Redirecting  URL Link in case of success:" />
+									</h:td>
+									<h:td>
+										<textbox id="redirectTbId"  width="500px" ></textbox>
+									</h:td>
+								</h:tr>
+								
+								<h:tr>
+									<h:td >
+										<label value="Redirecting  URL Link in case of failure:" />
+									</h:td>
+									<h:td>
+										<textbox id="redirectfailureTbId"  width="500px" ></textbox>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td >
+										<label value="Redirecting  URL Link in case of Existing:" />
+									</h:td>
+									<h:td>
+										<textbox id="redirectfailure1TbId"  width="500px" ></textbox>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td >
+										<label value="Redirecting URL Link in case of Email-Parent:" />
+									</h:td>
+									<h:td>
+										<textbox id="redirectParentalTbId"  width="500px" ></textbox>
+									</h:td>
+								</h:tr>
+							
+							</h:table>
+							
+						</div>
+
+
+							<!-- <groupbox id="welcomeEmailsGrbId" open="true" >
+								<caption>
+									<checkbox style="font-weight:bold;"
+										checked="false" label="Enable a Welcome Email:"
+										id="welcomeEmailsCbId" />
+
+								</caption>
+									
+								
+									<div id="testDiv" >
+										<div id="enableWelcomeEmailDivId" >
+								
+										<label
+											value="Welcome Message:" />
+										<listbox
+											id="welcomeEmailsLbId" width="270px" mold="select"
+											sclass="contactsView">
+											
+										</listbox>
+										<image
+											src="/images/Preview_icn.png" style="margin-left:20px;" />
+										<a label="Preview"
+											style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+											id="previewBtnId" sclass="idle140" />
+										<a label="Edit Message"
+											style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+											id="editMsgBtnId" sclass="idle140" />
+												</div>
+										</div>
+								</groupbox> -->
+								
+								
+								
+								
+								
+
+									<!-- <groupbox  id="htmlActionGrbId" visible="true" open="true">
+										<caption>
+										<checkbox  style="font-weight:bold;" checked="false" />
+											Edit HTML Action attribute settings
+     								   </caption>
+     								    <h:table>
+     								      <h:tr>
+     								      	<h:td>
+										 		<label value="Please select form redirect submission page :" />
+										 	</h:td>
+										 </h:tr>
+										 <h:tr>	
+										 	<h:td>
+										 	<radiogroup id="redirectRgId">
+										 			<radio label="Redirect to same page" w:onClick="zk.Widget.$('$redirectURLDivId').setVisible(false);" selected="true" />
+										 			<radio label="Redirecting  URL in case of sucess" w:onClick="zk.Widget.$('$redirectURLDivId').setVisible(true);zk.Widget.$('$redirectFailureURLDivId').setVisible(false);" ></radio> 
+										 			<radio label="Redirecting  URL in case of failure " w:onClick="zk.Widget.$('$redirectURLDivId').setVisible(false);zk.Widget.$('$redirectFailureURLDivId').setVisible(true);" ></radio> 
+											 </radiogroup>
+										 	 </h:td>
+										 </h:tr>
+										 <h:tr>	 
+										 	 <h:td valign="top">
+										 	 	<div id="redirectURLDivId" visible="false" align="top">
+										 	 		<label value="Enter the url :"  /> <h:br/>		
+										 			<textbox id="redirectTbId" rows="5" width="400px" ></textbox>
+										 		</div>
+										 		<div id="redirectFailureURLDivId" visible="false" align="top">
+										 	 		<label value="Enter the failure url :"  /> <h:br/>		
+										 			<textbox id="redirectfailureTbId" rows="5" width="400px" ></textbox>
+										 		</div>
+										 	</h:td>	
+										 </h:tr>
+										 </h:table>		
+									</groupbox> -->
+									 
+									<hbox width="470px" pack="end" style="padding-top:20px;">
+										<button id="innerBackBtnId" label="Back" />
+										<button label="Reset" />
+										<button  id="SaveBtnId" label="Save" />
+										<button  id="closeBtnId" label="Close" />
+									</hbox>							
+						</div>
+  						
+					<!--  SHOW CONTACTS
+					<div id="contactsDivId" visible="false" >
+					  	<listbox id="contactsLbId" sclass="contactsView" width="875px" rows="8"/>
+ 					  	<button id="contactCloseBtnId" label="Close" visible="true" />
+					</div>   -->
+					
+					<h:br/>
+					<h:br/>
+					<button  label="Save Settings" visible="false" />
+					<!--  <button id="closeBtnId" label="Close" visible="false" />  -->
+				</div>		
+			</tabpanel>
+		</tabpanels>	
+	 </tabbox>	
+	 
+	 <popup id="fmCodePopupId" width="300px">
+	 	
+	 </popup>
+	 
+	 <popup id="mail" width="300px">
+		<html>
+		   <![CDATA[
+			 <span style="font-family:arial;font-size:12px;">   
+					-> Selects the form for editing as per your requirement.<br/>
+			</span>
+			]]>
+		</html>
+	</popup>
+	   <window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+			<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+
+	   
+	   <window id="PreviewWindId" title="Preview" border="normal" mode="overlapped" visible="false">
+			<caption>
+				<toolbarbutton label="Close"  onClick="PreviewWindId.setVisible(false)"/>
+			</caption>
+			<div id="previewDivId" width="300px" height="120px" style="overflow:auto;padding:auto;"  />
+		</window>		
+</window>
+
+
+
+</zk>

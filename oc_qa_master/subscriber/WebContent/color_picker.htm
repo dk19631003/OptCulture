@@ -1,0 +1,2467 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+
+
+
+
+
+
+
+
+<meta name="robots" content="noindex,nofollow">
+<title>Select Color</title>
+<style type="text/css">
+body {
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #333;
+	padding: 0px;
+	margin: 0px;
+	background: #fff;
+}
+
+form {
+	margin: 0px;
+	padding: 0px;
+}
+
+h1 {
+	font-size: 16px;
+	font-weight: bold;
+	color: #FFFFFF;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	text-align: left;
+}
+
+body input.btn-small {
+	color: #404040;
+	border: 1px solid #a6a6a6;
+	background: #e5e5e5 url(img/theme/editor/ab_inactive.gif) no-repeat;
+	margin: 0px;
+	cursor: pointer;
+	padding: 1px 2px 1px 3px;
+	font-size: 11px;
+}
+
+body input.btn-primary {
+	color: #fff;
+	padding: 0.2em;
+	border: 1px solid #4d4d99;
+	background: #605f9a url(img/theme/editor/ab_active.gif) no-repeat; "
+	font: 11px Arial, helvetica, sans-serif;
+	margin: 0px;
+	cursor: pointer;
+}
+</style>
+<script language="javascript">
+<!--
+    //////////////////////////////////////////////////////////////////////
+    // NOTE: This code assumes that the color pick is in an iframe and  //
+    //       thus has a parent document.                                //
+    //////////////////////////////////////////////////////////////////////
+
+    var colorPickerCallbackObj = null;
+    var parentObjectName = null;
+    var originalColor = '';
+    var agt = navigator.userAgent.toLowerCase();
+    var isSafari = agt && agt.indexOf('safari') >= 0;
+
+    function handleClick(ignoreInput) {
+        if (document.all && parent.documentFrame && parent.documentFrame.editableFrame) {
+            clickedObj = window.event.srcElement;
+            if (clickedObj && (clickedObj.tagName != "A") && (clickedObj.tagName != "INPUT" || ignoreInput)) {
+                parent.documentFrame.editableFrame.recoverSelection();
+            }
+        }
+    }
+	function RGBtoHex(A){
+		//var A=arguments[0];
+		if(A.indexOf("rgb(")==-1){
+			return A
+		}
+		A=A.replace("rgb(","").replace(")","");
+		var B=A.split(",");
+		B[0]=Number(B[0]).toString(16);
+		B[1]=Number(B[1]).toString(16);
+		B[2]=Number(B[2]).toString(16);
+		if(B[0].length==1){
+			B[0]="0"+B[0]
+		}
+		if(B[1].length==1){
+			B[1]="0"+B[1]
+		}
+		if(B[2].length==1){
+			B[2]="0"+B[2]
+		}
+		return"#"+B.join("")
+	}
+    //
+    // ActivateColorPicker is the only public function here.
+    // Displays the color picker and sets up a callback object.
+    //
+    // @param relObj Display object relative to which we position ourselves
+    // @param callbackObj We call callbackObj.setValue(val) when user picks a color value
+    // @param origColor The original color.
+    //
+	var frameId = null;
+	var templateId = null;
+	var pickerId = null;
+    function ActivateColorPicker (relObj,fid,tid,pId) {
+		frameId = fid;
+		templateId = tid;
+		pickerId = pId;
+        if (parent.documentFrame &&
+            parent.documentFrame.editableFrame &&
+            parent.documentFrame.editableFrame.editableFrameObj.style.display != "none") {
+            document.onmouseup = function aclick(event) { handleClick(event);}
+        } else {
+            document.onmouseup = function aclick(event) { }
+        }
+
+        //alert(origColor);
+		var origColor = RGBtoHex(parent.document.getElementById(frameId).style.backgroundColor);
+        if (origColor != null) {
+            //
+            // Prepopulate all the objects with the original value
+            originalColor = origColor;
+
+            document.getElementById('originalRow').style.display = '';
+
+            document.getElementById('originalColor').style.backgroundColor = origColor;
+            document.getElementById('newColor').style.backgroundColor = origColor;
+            document.forms[0].elements['hexval'].value = origColor.toUpperCase();
+        }
+        else{
+            document.getElementById('originalRow').style.display = 'none';
+        }
+
+        displayColorPicker(relObj,pickerId);
+        
+    }
+
+    //
+    // Private function to display the color picker window.  It calculates the absolute
+    // position of the window
+    //
+    function displayColorPicker (relObj,pickerId) {
+       //
+       // Set up the position
+
+       var osLeft = getLeftPosition(relObj);
+       var osTop = getTopPosition(relObj);
+       var osLeftToCompare = (parent.document.body.clientWidth+parent.document.body.scrollLeft) - osLeft;
+
+       //alert("osLeft: " + osLeft + ", osTop: " + osTop + ", osTopToCompare: " + osTopToCompare + ", osLeftToCompare: " + osLeftToCompare);
+
+       var colorPicker = parent.document.getElementById(pickerId);
+		
+       // Get parent's window viewport height
+       var viewPortHeight = getViewPortHeight(parent);
+
+       if (osLeftToCompare > 300) {
+           colorPicker.style.left = osLeft + 'px';
+       } else {
+          colorPicker.style.left = osLeft - 340 + 'px';
+       }
+
+       if ( ( osTop + 270 - getScrollTop(parent)) < viewPortHeight || viewPortHeight < 270) {
+           colorPicker.style.top = osTop + relObj.offsetHeight + 'px';
+       } else {
+           colorPicker.style.top = (osTop - 270) + 'px';
+       }
+
+       // Display it
+       colorPicker.style.display = "";
+       colorPicker.style.visibility = "visible";
+
+       // set the z-index at a high value
+       colorPicker.style.zIndex = "100000";
+    }
+
+    //
+    // Private function to calculate the window top position
+    //
+    function getTopPosition (obj) {
+       var mOffsetTop = obj.offsetTop;
+       var mOffsetParent = obj.offsetParent;
+
+       while (mOffsetParent) {
+          mOffsetTop += mOffsetParent.offsetTop;
+          mOffsetParent = mOffsetParent.offsetParent;
+       }
+
+       return mOffsetTop;
+    }
+
+    //
+    // Private function to calculate the window left position
+    //
+    function getLeftPosition (obj) {
+       var mOffsetLeft = obj.offsetLeft;
+       var mOffsetParent = obj.offsetParent;
+
+       while (mOffsetParent) {
+          mOffsetLeft += mOffsetParent.offsetLeft;
+          mOffsetParent = mOffsetParent.offsetParent;
+       }
+
+       return mOffsetLeft;
+    }
+
+    //
+    // Update the current hex value and new color box
+    function updateCurrentSelection (newColor) {
+        updateNewColor (newColor);
+        document.forms[0].hexval.value = newColor;
+    }
+
+    //
+    // Update the color of the newcolor box
+    function updateNewColor (newColor) {
+        if (document.all) {
+            document.all['newColor'].style.backgroundColor = newColor;
+        }
+        else if (document.getElementById) {
+            document.getElementById('newColor').style.backgroundColor = newColor;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    // Functions used to update the display. Used only in HTML below.   //
+    //////////////////////////////////////////////////////////////////////
+
+    //
+    // Validates that hexColor is a valid hexadecimal color
+    //
+    function isValidColor(hexColor) {
+
+        var expr=/^#([0-9a-f]{6})$/i;
+        var t=expr.exec(hexColor);
+        return t != null;
+    }
+
+    //
+    // If the  color is valid update selections, otherwise show alert
+    //
+    function ValidateColor(obj) {
+
+        if (isValidColor(obj, true)) {
+            updateCurrentSelection(obj);
+            return true;
+        }
+        else
+        {
+            window.alert( 'Please enter a valid hexadecimal color reference' );
+            return false;
+        }
+        return false;
+    }
+
+
+    function validateHexColor (inpHexColor) {
+        if (isValidColor(inpHexColor.value)) {
+            updateNewColor (inpHexColor.value)
+        }
+    }
+
+    //
+    // Call the client's callback function with the picked value
+    // and undisplay ourself
+    //
+    function pickColor() {
+        originalColor = null;
+        var hexColor = document.forms[0].elements['hexval'].value;
+        if (ValidateColor(hexColor)) {
+            hideColorPicker();
+			if(templateId=='bodyDivId'){
+				parent.document.getElementById('bodyColorUndobtn').disabled = "";
+				bodyColor = parent.document.getElementById(templateId).style.backgroundColor;
+			}
+			if(templateId=='bodyTableId'){
+				parent.document.getElementById('tableColorUndobtn').disabled = "";
+				tableColor = parent.document.getElementById(templateId).style.backgroundColor;
+			}
+			parent.document.getElementById(templateId).style.backgroundColor = hexColor;
+			parent.document.getElementById(frameId).style.backgroundColor = hexColor;
+        }
+    }
+	var bodyColor='';
+	var tableColor='';
+	parent.document.getElementById('BODY_color').style.backgroundColor = parent.document.getElementById('bodyDivId').style.backgroundColor;
+	//parent.document.getElementById('TABLE_color').style.backgroundColor = parent.document.getElementById('bodyTableId').style.backgroundColor;
+	bodyColor = parent.document.getElementById('bodyDivId').style.backgroundColor;
+	//tableColor = parent.document.getElementById('bodyTableId').style.backgroundColor;
+    function RMUndoColor(id) {
+ 		if(id=='bodyDivId'){
+			parent.document.getElementById(id).style.backgroundColor = bodyColor;
+			parent.document.getElementById('BODY_color').style.backgroundColor = bodyColor;
+			parent.document.getElementById('bodyColorUndobtn').disabled = "true";
+		}
+		if(id=='bodyTableId'){
+			parent.document.getElementById(id).style.backgroundColor = tableColor;
+			parent.document.getElementById('TABLE_color').style.backgroundColor = tableColor;
+			parent.document.getElementById('tableColorUndobtn').disabled = "true";
+		}
+	}
+
+
+
+    //
+    // Hide this window
+    //
+    function hideColorPicker () {
+        if (isSafari) {
+            parent.document.getElementById(pickerId).style.visibility='hidden';
+        } else {
+            parent.document.getElementById(pickerId).style.display='none';
+        }
+    }
+
+
+    function getScrollTop(windowObj) {
+        var scrTop = windowObj.document.body.scrollTop;
+        if (windowObj.document.documentElement && windowObj.document.documentElement.scrollTop)
+            scrTop = windowObj.document.documentElement.scrollTop;
+        return scrTop;
+    }
+
+    function getViewPortHeight(windowObj) {
+        var y;
+        if (windowObj.innerHeight) // all except Explorer
+        {
+           y = windowObj.innerHeight;
+        }
+        else if (windowObj.document.documentElement && windowObj.document.documentElement.clientHeight)
+           // Explorer 6 Strict Mode
+        {
+           y = windowObj.document.documentElement.clientHeight;
+        }
+        else if (windowObj.document.body) // other Explorers
+        {
+           y = windowObj.document.body.clientHeight;
+        }
+
+        return y;
+    }
+
+// -->
+</script>
+</head>
+<body topmargin="0" leftmargin="0" bgcolor="#ffffff" marginheight="0"
+	marginwidth="0">
+
+<table style="width: 100%; background-color: rgb(0, 0, 0);" border="0"
+	cellpadding="0" cellspacing="0" width="100%">
+	<tbody>
+		<tr>
+			<td
+				style="width: 100%; padding-left: 5px; background-color: rgb(0, 0, 0);"
+				nowrap="nowrap" valign="top">
+			<h1>Color Picker</h1>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<br>
+
+<form onsubmit="return false;">
+<table border="0" cellpadding="0" cellspacing="3">
+	<tbody>
+		<tr>
+			<td valign="top">
+			<table border="0" cellpadding="0" cellspacing="3">
+				<tbody>
+					<tr>
+						<td colspan="2"><strong>Click on a color chip or
+						enter a hex code value.</strong></td>
+					</tr>
+					<tr id="originalRow">
+						<td id="originalLabel" nowrap="nowrap">Original:</td>
+						<td id="originalColor"
+							style="border: 1px solid rgb(102, 102, 102); width: 50px; height: 20px; background-color: rgb(0, 0, 0);"><a
+							href="#"
+							onclick="updateCurrentSelection(originalColor); return false;"
+							style="text-decoration: none; font-size: 10pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap">New:</td>
+						<td id="newColor"
+							style="border: 1px solid rgb(102, 102, 102); width: 50px; height: 20px; background-color: rgb(0, 0, 0);">&nbsp;</td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap">Hex Value:</td>
+						<td><input id="hexval" name="hexval" size="6" maxlength="7"
+							value="" onkeyup="validateHexColor(this);"
+							onblur="handleClick(true);" type="text"></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center"><input class="btn-primary"
+							value="Use New Color" style="width: 100px;" onclick="pickColor()"
+							type="button"></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center"><input class="btn-small"
+							value="Cancel" style="width: 100px;" onclick="hideColorPicker()"
+							type="button"></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+			<td>
+			<table border="0" cellpadding="0" cellspacing="2">
+
+
+
+				<tbody>
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(0, 0, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#000000'); return false;"
+							style="color: rgb(0, 0, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 0, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#000033'); return false;"
+							style="color: rgb(0, 0, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 0, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#000066'); return false;"
+							style="color: rgb(0, 0, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 0, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#000099'); return false;"
+							style="color: rgb(0, 0, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 0, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0000CC'); return false;"
+							style="color: rgb(0, 0, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 0, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0000FF'); return false;"
+							style="color: rgb(0, 0, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 0, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#330000'); return false;"
+							style="color: rgb(51, 0, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 0, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#330033'); return false;"
+							style="color: rgb(51, 0, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 0, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#330066'); return false;"
+							style="color: rgb(51, 0, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 0, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#330099'); return false;"
+							style="color: rgb(51, 0, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 0, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3300CC'); return false;"
+							style="color: rgb(51, 0, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 0, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3300FF'); return false;"
+							style="color: rgb(51, 0, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 0, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#660000'); return false;"
+							style="color: rgb(102, 0, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 0, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#660033'); return false;"
+							style="color: rgb(102, 0, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 0, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#660066'); return false;"
+							style="color: rgb(102, 0, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 0, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#660099'); return false;"
+							style="color: rgb(102, 0, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 0, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6600CC'); return false;"
+							style="color: rgb(102, 0, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 0, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6600FF'); return false;"
+							style="color: rgb(102, 0, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(153, 0, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#990000'); return false;"
+							style="color: rgb(153, 0, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 0, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#990033'); return false;"
+							style="color: rgb(153, 0, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 0, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#990066'); return false;"
+							style="color: rgb(153, 0, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 0, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#990099'); return false;"
+							style="color: rgb(153, 0, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 0, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9900CC'); return false;"
+							style="color: rgb(153, 0, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 0, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9900FF'); return false;"
+							style="color: rgb(153, 0, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 0, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC0000'); return false;"
+							style="color: rgb(204, 0, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 0, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC0033'); return false;"
+							style="color: rgb(204, 0, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 0, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC0066'); return false;"
+							style="color: rgb(204, 0, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 0, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC0099'); return false;"
+							style="color: rgb(204, 0, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 0, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC00CC'); return false;"
+							style="color: rgb(204, 0, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 0, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC00FF'); return false;"
+							style="color: rgb(204, 0, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 0, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF0000'); return false;"
+							style="color: rgb(255, 0, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 0, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF0033'); return false;"
+							style="color: rgb(255, 0, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 0, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF0066'); return false;"
+							style="color: rgb(255, 0, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 0, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF0099'); return false;"
+							style="color: rgb(255, 0, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 0, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF00CC'); return false;"
+							style="color: rgb(255, 0, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 0, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF00FF'); return false;"
+							style="color: rgb(255, 0, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(0, 51, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#003300'); return false;"
+							style="color: rgb(0, 51, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 51, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#003333'); return false;"
+							style="color: rgb(0, 51, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 51, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#003366'); return false;"
+							style="color: rgb(0, 51, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 51, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#003399'); return false;"
+							style="color: rgb(0, 51, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 51, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0033CC'); return false;"
+							style="color: rgb(0, 51, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 51, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0033FF'); return false;"
+							style="color: rgb(0, 51, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 51, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#333300'); return false;"
+							style="color: rgb(51, 51, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 51, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#333333'); return false;"
+							style="color: rgb(51, 51, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 51, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#333366'); return false;"
+							style="color: rgb(51, 51, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 51, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#333399'); return false;"
+							style="color: rgb(51, 51, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 51, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3333CC'); return false;"
+							style="color: rgb(51, 51, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 51, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3333FF'); return false;"
+							style="color: rgb(51, 51, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 51, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#663300'); return false;"
+							style="color: rgb(102, 51, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 51, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#663333'); return false;"
+							style="color: rgb(102, 51, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 51, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#663366'); return false;"
+							style="color: rgb(102, 51, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 51, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#663399'); return false;"
+							style="color: rgb(102, 51, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 51, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6633CC'); return false;"
+							style="color: rgb(102, 51, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 51, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6633FF'); return false;"
+							style="color: rgb(102, 51, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(153, 51, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#993300'); return false;"
+							style="color: rgb(153, 51, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 51, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#993333'); return false;"
+							style="color: rgb(153, 51, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 51, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#993366'); return false;"
+							style="color: rgb(153, 51, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 51, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#993399'); return false;"
+							style="color: rgb(153, 51, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 51, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9933CC'); return false;"
+							style="color: rgb(153, 51, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 51, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9933FF'); return false;"
+							style="color: rgb(153, 51, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 51, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC3300'); return false;"
+							style="color: rgb(204, 51, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 51, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC3333'); return false;"
+							style="color: rgb(204, 51, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 51, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC3366'); return false;"
+							style="color: rgb(204, 51, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 51, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC3399'); return false;"
+							style="color: rgb(204, 51, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 51, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC33CC'); return false;"
+							style="color: rgb(204, 51, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 51, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC33FF'); return false;"
+							style="color: rgb(204, 51, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 51, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF3300'); return false;"
+							style="color: rgb(255, 51, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 51, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF3333'); return false;"
+							style="color: rgb(255, 51, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 51, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF3366'); return false;"
+							style="color: rgb(255, 51, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 51, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF3399'); return false;"
+							style="color: rgb(255, 51, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 51, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF33CC'); return false;"
+							style="color: rgb(255, 51, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 51, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF33FF'); return false;"
+							style="color: rgb(255, 51, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(0, 102, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#006600'); return false;"
+							style="color: rgb(0, 102, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 102, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#006633'); return false;"
+							style="color: rgb(0, 102, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 102, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#006666'); return false;"
+							style="color: rgb(0, 102, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 102, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#006699'); return false;"
+							style="color: rgb(0, 102, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 102, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0066CC'); return false;"
+							style="color: rgb(0, 102, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 102, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0066FF'); return false;"
+							style="color: rgb(0, 102, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 102, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#336600'); return false;"
+							style="color: rgb(51, 102, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 102, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#336633'); return false;"
+							style="color: rgb(51, 102, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 102, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#336666'); return false;"
+							style="color: rgb(51, 102, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 102, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#336699'); return false;"
+							style="color: rgb(51, 102, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 102, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3366CC'); return false;"
+							style="color: rgb(51, 102, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 102, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3366FF'); return false;"
+							style="color: rgb(51, 102, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 102, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#666600'); return false;"
+							style="color: rgb(102, 102, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 102, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#666633'); return false;"
+							style="color: rgb(102, 102, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 102, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#666666'); return false;"
+							style="color: rgb(102, 102, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 102, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#666699'); return false;"
+							style="color: rgb(102, 102, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 102, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6666CC'); return false;"
+							style="color: rgb(102, 102, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 102, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6666FF'); return false;"
+							style="color: rgb(102, 102, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(153, 102, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#996600'); return false;"
+							style="color: rgb(153, 102, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 102, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#996633'); return false;"
+							style="color: rgb(153, 102, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 102, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#996666'); return false;"
+							style="color: rgb(153, 102, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 102, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#996699'); return false;"
+							style="color: rgb(153, 102, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 102, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9966CC'); return false;"
+							style="color: rgb(153, 102, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 102, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9966FF'); return false;"
+							style="color: rgb(153, 102, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 102, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC6600'); return false;"
+							style="color: rgb(204, 102, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 102, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC6633'); return false;"
+							style="color: rgb(204, 102, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 102, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC6666'); return false;"
+							style="color: rgb(204, 102, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 102, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC6699'); return false;"
+							style="color: rgb(204, 102, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 102, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC66CC'); return false;"
+							style="color: rgb(204, 102, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 102, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC66FF'); return false;"
+							style="color: rgb(204, 102, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 102, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF6600'); return false;"
+							style="color: rgb(255, 102, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 102, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF6633'); return false;"
+							style="color: rgb(255, 102, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 102, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF6666'); return false;"
+							style="color: rgb(255, 102, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 102, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF6699'); return false;"
+							style="color: rgb(255, 102, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 102, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF66CC'); return false;"
+							style="color: rgb(255, 102, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 102, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF66FF'); return false;"
+							style="color: rgb(255, 102, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(0, 153, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#009900'); return false;"
+							style="color: rgb(0, 153, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 153, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#009933'); return false;"
+							style="color: rgb(0, 153, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 153, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#009966'); return false;"
+							style="color: rgb(0, 153, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 153, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#009999'); return false;"
+							style="color: rgb(0, 153, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 153, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0099CC'); return false;"
+							style="color: rgb(0, 153, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 153, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#0099FF'); return false;"
+							style="color: rgb(0, 153, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 153, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#339900'); return false;"
+							style="color: rgb(51, 153, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 153, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#339933'); return false;"
+							style="color: rgb(51, 153, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 153, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#339966'); return false;"
+							style="color: rgb(51, 153, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 153, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#339999'); return false;"
+							style="color: rgb(51, 153, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 153, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3399CC'); return false;"
+							style="color: rgb(51, 153, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 153, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#3399FF'); return false;"
+							style="color: rgb(51, 153, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 153, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#669900'); return false;"
+							style="color: rgb(102, 153, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 153, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#669933'); return false;"
+							style="color: rgb(102, 153, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 153, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#669966'); return false;"
+							style="color: rgb(102, 153, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 153, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#669999'); return false;"
+							style="color: rgb(102, 153, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 153, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6699CC'); return false;"
+							style="color: rgb(102, 153, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 153, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#6699FF'); return false;"
+							style="color: rgb(102, 153, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(153, 153, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#999900'); return false;"
+							style="color: rgb(153, 153, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 153, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#999933'); return false;"
+							style="color: rgb(153, 153, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 153, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#999966'); return false;"
+							style="color: rgb(153, 153, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 153, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#999999'); return false;"
+							style="color: rgb(153, 153, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 153, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9999CC'); return false;"
+							style="color: rgb(153, 153, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 153, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#9999FF'); return false;"
+							style="color: rgb(153, 153, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 153, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC9900'); return false;"
+							style="color: rgb(204, 153, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 153, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC9933'); return false;"
+							style="color: rgb(204, 153, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 153, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC9966'); return false;"
+							style="color: rgb(204, 153, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 153, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC9999'); return false;"
+							style="color: rgb(204, 153, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 153, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC99CC'); return false;"
+							style="color: rgb(204, 153, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 153, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CC99FF'); return false;"
+							style="color: rgb(204, 153, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 153, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF9900'); return false;"
+							style="color: rgb(255, 153, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 153, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF9933'); return false;"
+							style="color: rgb(255, 153, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 153, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF9966'); return false;"
+							style="color: rgb(255, 153, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 153, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF9999'); return false;"
+							style="color: rgb(255, 153, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 153, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF99CC'); return false;"
+							style="color: rgb(255, 153, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 153, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FF99FF'); return false;"
+							style="color: rgb(255, 153, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(0, 204, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00CC00'); return false;"
+							style="color: rgb(0, 204, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 204, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00CC33'); return false;"
+							style="color: rgb(0, 204, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 204, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00CC66'); return false;"
+							style="color: rgb(0, 204, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 204, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00CC99'); return false;"
+							style="color: rgb(0, 204, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 204, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00CCCC'); return false;"
+							style="color: rgb(0, 204, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 204, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00CCFF'); return false;"
+							style="color: rgb(0, 204, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 204, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33CC00'); return false;"
+							style="color: rgb(51, 204, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 204, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33CC33'); return false;"
+							style="color: rgb(51, 204, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 204, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33CC66'); return false;"
+							style="color: rgb(51, 204, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 204, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33CC99'); return false;"
+							style="color: rgb(51, 204, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 204, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33CCCC'); return false;"
+							style="color: rgb(51, 204, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 204, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33CCFF'); return false;"
+							style="color: rgb(51, 204, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 204, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66CC00'); return false;"
+							style="color: rgb(102, 204, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 204, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66CC33'); return false;"
+							style="color: rgb(102, 204, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 204, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66CC66'); return false;"
+							style="color: rgb(102, 204, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 204, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66CC99'); return false;"
+							style="color: rgb(102, 204, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 204, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66CCCC'); return false;"
+							style="color: rgb(102, 204, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 204, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66CCFF'); return false;"
+							style="color: rgb(102, 204, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(153, 204, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99CC00'); return false;"
+							style="color: rgb(153, 204, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 204, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99CC33'); return false;"
+							style="color: rgb(153, 204, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 204, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99CC66'); return false;"
+							style="color: rgb(153, 204, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 204, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99CC99'); return false;"
+							style="color: rgb(153, 204, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 204, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99CCCC'); return false;"
+							style="color: rgb(153, 204, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 204, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99CCFF'); return false;"
+							style="color: rgb(153, 204, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 204, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCCC00'); return false;"
+							style="color: rgb(204, 204, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 204, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCCC33'); return false;"
+							style="color: rgb(204, 204, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 204, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCCC66'); return false;"
+							style="color: rgb(204, 204, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 204, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCCC99'); return false;"
+							style="color: rgb(204, 204, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 204, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCCCCC'); return false;"
+							style="color: rgb(204, 204, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 204, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCCCFF'); return false;"
+							style="color: rgb(204, 204, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 204, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFCC00'); return false;"
+							style="color: rgb(255, 204, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 204, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFCC33'); return false;"
+							style="color: rgb(255, 204, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 204, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFCC66'); return false;"
+							style="color: rgb(255, 204, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 204, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFCC99'); return false;"
+							style="color: rgb(255, 204, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 204, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFCCCC'); return false;"
+							style="color: rgb(255, 204, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 204, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFCCFF'); return false;"
+							style="color: rgb(255, 204, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(0, 255, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00FF00'); return false;"
+							style="color: rgb(0, 255, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 255, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00FF33'); return false;"
+							style="color: rgb(0, 255, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 255, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00FF66'); return false;"
+							style="color: rgb(0, 255, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 255, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00FF99'); return false;"
+							style="color: rgb(0, 255, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 255, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00FFCC'); return false;"
+							style="color: rgb(0, 255, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(0, 255, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#00FFFF'); return false;"
+							style="color: rgb(0, 255, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 255, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33FF00'); return false;"
+							style="color: rgb(51, 255, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 255, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33FF33'); return false;"
+							style="color: rgb(51, 255, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 255, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33FF66'); return false;"
+							style="color: rgb(51, 255, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 255, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33FF99'); return false;"
+							style="color: rgb(51, 255, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 255, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33FFCC'); return false;"
+							style="color: rgb(51, 255, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(51, 255, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#33FFFF'); return false;"
+							style="color: rgb(51, 255, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 255, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66FF00'); return false;"
+							style="color: rgb(102, 255, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 255, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66FF33'); return false;"
+							style="color: rgb(102, 255, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 255, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66FF66'); return false;"
+							style="color: rgb(102, 255, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 255, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66FF99'); return false;"
+							style="color: rgb(102, 255, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 255, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66FFCC'); return false;"
+							style="color: rgb(102, 255, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(102, 255, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#66FFFF'); return false;"
+							style="color: rgb(102, 255, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+
+
+					<tr>
+
+
+
+						<td
+							style="background-color: rgb(153, 255, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99FF00'); return false;"
+							style="color: rgb(153, 255, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 255, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99FF33'); return false;"
+							style="color: rgb(153, 255, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 255, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99FF66'); return false;"
+							style="color: rgb(153, 255, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 255, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99FF99'); return false;"
+							style="color: rgb(153, 255, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 255, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99FFCC'); return false;"
+							style="color: rgb(153, 255, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(153, 255, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#99FFFF'); return false;"
+							style="color: rgb(153, 255, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 255, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCFF00'); return false;"
+							style="color: rgb(204, 255, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 255, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCFF33'); return false;"
+							style="color: rgb(204, 255, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 255, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCFF66'); return false;"
+							style="color: rgb(204, 255, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 255, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCFF99'); return false;"
+							style="color: rgb(204, 255, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 255, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCFFCC'); return false;"
+							style="color: rgb(204, 255, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(204, 255, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#CCFFFF'); return false;"
+							style="color: rgb(204, 255, 255); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 255, 0); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFFF00'); return false;"
+							style="color: rgb(255, 255, 0); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 255, 51); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFFF33'); return false;"
+							style="color: rgb(255, 255, 51); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 255, 102); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFFF66'); return false;"
+							style="color: rgb(255, 255, 102); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 255, 153); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFFF99'); return false;"
+							style="color: rgb(255, 255, 153); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 255, 204); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFFFCC'); return false;"
+							style="color: rgb(255, 255, 204); font-size: 8pt;">00</a></td>
+
+
+
+
+						<td
+							style="background-color: rgb(255, 255, 255); height: 12px; width: 12px;"><a
+							href="#"
+							onclick="updateCurrentSelection('#FFFFFF'); return false;"
+							style="color: rgb(255, 255, 255); font-size: 8pt;">00</a></td>
+
+
+
+					</tr>
+
+
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</form>
+</body>
+</html>

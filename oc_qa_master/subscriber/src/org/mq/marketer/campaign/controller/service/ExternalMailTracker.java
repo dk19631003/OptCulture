@@ -1,0 +1,1117 @@
+package org.mq.marketer.campaign.controller.service;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TimerTask;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.activation.DataHandler;
+import javax.mail.BodyPart;
+import javax.mail.Message.RecipientType;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.SharedByteArrayInputStream;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.mq.marketer.campaign.beans.Address;
+import org.mq.marketer.campaign.beans.CampaignSchedule;
+import org.mq.marketer.campaign.beans.Campaigns;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.EmailQueue;
+import org.mq.marketer.campaign.beans.MailingList;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.CampaignScheduleDao;
+import org.mq.marketer.campaign.dao.CampaignScheduleDaoForDML;
+import org.mq.marketer.campaign.dao.CampaignsDao;
+import org.mq.marketer.campaign.dao.CampaignsDaoForDML;
+import org.mq.marketer.campaign.dao.ContactsDao;
+import org.mq.marketer.campaign.dao.ContactsDaoForDML;
+import org.mq.marketer.campaign.dao.EmailQueueDao;
+import org.mq.marketer.campaign.dao.EmailQueueDaoForDML;
+import org.mq.marketer.campaign.dao.MailingListDao;
+import org.mq.marketer.campaign.dao.MailingListDaoForDML;
+import org.mq.marketer.campaign.dao.MessagesDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.LRUCache;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.PurgeList;
+import org.mq.marketer.campaign.general.Utility;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.zkoss.zkplus.spring.SpringUtil;
+
+import com.sun.mail.smtp.SMTPMessage;
+
+public class ExternalMailTracker extends TimerTask implements ApplicationContextAware {
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	public ExternalMailTracker() {
+	}
+	
+	private SessionFactory sessionFactory = null;
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	private CampaignsDao campaignsDao = null;
+	public CampaignsDao getCampaignsDao() {
+		return campaignsDao;
+	}
+	public void setCampaignsDao(CampaignsDao campaignsDao) {
+		this.campaignsDao = campaignsDao;
+	}
+	
+	
+	private CampaignsDaoForDML campaignsDaoForDML = null;
+	public CampaignsDaoForDML getCampaignsDaoForDML() {
+		return campaignsDaoForDML;
+	}
+	
+	public void setCampaignsDaoForDML(CampaignsDaoForDML campaignsDaoForDML) {
+		this.campaignsDaoForDML = campaignsDaoForDML;
+	}
+	
+	
+	
+	private MessagesDao messagesDao = null;
+	public MessagesDao getMessagesDao() {
+		return messagesDao;
+	}
+	public void setMessagesDao(MessagesDao messagesDao) {
+		this.messagesDao = messagesDao;
+	}
+	
+	private UsersDao usersDao;
+	public UsersDao getUsersDao() {
+		return usersDao;
+	}
+	public void setUsersDao(UsersDao usersDao) {
+		this.usersDao = usersDao;
+	}
+	
+	private MailingListDao mailingListDao;
+	public MailingListDao getMailingListDao() {
+		return mailingListDao;
+	}
+	public MailingListDaoForDML getMailingListDaoForDML() {
+		return mailingListDaoForDML;
+	}
+	public void setMailingListDaoForDML(MailingListDaoForDML mailingListDaoForDML) {
+		this.mailingListDaoForDML = mailingListDaoForDML;
+	}
+	public void setMailingListDao(MailingListDao mailingListDao) {
+		this.mailingListDao = mailingListDao;
+	}
+	
+	private MailingListDaoForDML mailingListDaoForDML;
+	
+	
+	private ContactsDao contactsDao;
+	public ContactsDao getContactsDao() {
+		return contactsDao;
+	}
+	public void setContactsDao(ContactsDao contactsDao) {
+		this.contactsDao = contactsDao;
+	}
+	private ContactsDaoForDML contactsDaoForDML;
+	
+	public ContactsDaoForDML getContactsDaoForDML() {
+		return contactsDaoForDML;
+	}
+	public void setContactsDaoForDML(ContactsDaoForDML contactsDaoForDML) {
+		this.contactsDaoForDML = contactsDaoForDML;
+	}
+
+	private CampaignScheduleDao campaignScheduleDao;
+	public CampaignScheduleDao getCampaignScheduleDao() {
+		return campaignScheduleDao;
+	}
+	public void setCampaignScheduleDao(CampaignScheduleDao campaignScheduleDao) {
+		this.campaignScheduleDao = campaignScheduleDao;
+	}
+	
+	private CampaignScheduleDaoForDML campaignScheduleDaoForDML;
+	public void setCampaignScheduleDaoForDML(CampaignScheduleDaoForDML campaignScheduleDaoForDML) {
+		this.campaignScheduleDaoForDML = campaignScheduleDaoForDML;
+	}
+	public CampaignScheduleDaoForDML getCampaignScheduleDaoForDML() {
+		return campaignScheduleDaoForDML;
+	}
+	
+
+	private EmailQueueDao emailQueueDao;
+	private EmailQueueDaoForDML emailQueueDaoForDML;
+	public EmailQueueDaoForDML getEmailQueueDaoForDML() {
+		return emailQueueDaoForDML;
+	}
+	public void setEmailQueueDaoForDML(EmailQueueDaoForDML emailQueueDaoForDML) {
+		this.emailQueueDaoForDML = emailQueueDaoForDML;
+	}
+	public EmailQueueDao getEmailQueueDao() {
+		return emailQueueDao;
+	}
+	public void setEmailQueueDao(EmailQueueDao emailQueueDao) {
+		this.emailQueueDao = emailQueueDao;
+	}
+
+	private PurgeList purgeList;
+	public PurgeList getPurgeList() {
+		return purgeList;
+	}
+	public void setPurgeList(PurgeList purgeList) {
+		this.purgeList = purgeList;
+	}
+
+	
+	ApplicationContext context;
+	@Override
+	public void setApplicationContext(ApplicationContext context)
+			throws BeansException {
+		this.context = context;
+	}
+	
+	private static LRUCache<String, Integer> messageIdCache = new LRUCache<String, Integer>(100);
+	
+	private volatile boolean isRunning=false;
+	private Vector<String> validEmailAttachmentsVec = new Vector<String>();
+	
+	private Vector<String> htmlContentVec = null;
+	private Vector<String> textContentVec = null;
+	
+	private Map<String, String> cidFileMap = null;
+	private String emailInbox = PropertyUtil.getPropertyValue("externalMailInbox");
+	private String eeProcessFolder = PropertyUtil.getPropertyValue("externalEmailProcessFolder");
+	private String userParentFolder = PropertyUtil.getPropertyValue("usersParentDirectory");
+	private String ignoredEmailsFolder = PropertyUtil.getPropertyValue("ignoredEmailsFolder");
+	private String validEmailAttachments = PropertyUtil.getPropertyValue("validEmailAttachments");
+
+	private final String ATTACHMENT_FOLDER = "attachments";
+	
+	private long currTimelong=0l;
+	Users user = null;
+	
+	
+	/**
+	 * 
+	 */
+	public void run() {
+		logger.debug(" -- just entered --");
+
+		try {
+			
+			String extenalMailTrackerFlag = PropertyUtil.getPropertyValueFromDB("ExternalMailTrackerFlag");
+			
+			if(extenalMailTrackerFlag == null || extenalMailTrackerFlag.equalsIgnoreCase("false")){
+				logger.debug("No property Found In DB / It has configured as false.....so returning");
+				return;
+			}
+			
+			
+			if(isRunning) {
+				logger.debug(" Already in process...");
+				return;
+			}
+			isRunning=true;
+			
+			if(validEmailAttachmentsVec.size() == 0) {
+
+				logger.debug("Trying to load valid eamil attachments...");
+				
+				if(validEmailAttachments == null || validEmailAttachments.trim().length() == 0) {
+					logger.error("validEmailAttachments is not configured in application.properties");
+					return;
+				} //if
+				
+				String validExtentionArr[] = validEmailAttachments.split(",");
+				
+				validEmailAttachmentsVec.removeAllElements();
+				
+				for (String validExt : validExtentionArr) {
+					validEmailAttachmentsVec.add(validExt.toLowerCase().trim());
+				}// for
+			} // if
+			
+			
+			
+			if(emailInbox==null || eeProcessFolder==null || 
+					emailInbox.trim().length()==0 || eeProcessFolder.trim().length()==0) {
+				logger.error("Email Inbox / External Email process folder is not configured.");
+				return;
+			}
+			logger.debug(" Email Inbox::"+emailInbox);
+			
+			File emailInboxDir = new File(emailInbox);
+			
+			if(emailInboxDir.exists()==false || emailInboxDir.isDirectory()==false) {
+				logger.error("Not a Valid Email Inbox Directory ::"+emailInbox);
+				return;
+			} // if
+			
+/*			File[] userEmailDirs = emailInboxDir.listFiles();
+			
+			for (File userEmailDir : userEmailDirs) { // Like Krishna , Venkatesh, Vinay
+				
+				if(!userEmailDir.isDirectory()) continue;
+				
+				//*********** Validate USER ***********************
+				Users user = getUserObject(userEmailDir.getName());
+				if(user==null) {
+					logger.error("User Name is not found :"+userEmailDir.getName());
+					continue;
+				}
+				
+				File externalEmailDir = new File(userEmailDir, Constants.CAMP_EDTYPE_EXTERNAL_EMAIL);
+
+				if(!externalEmailDir.exists() || !externalEmailDir.isDirectory()) {
+					logger.error("Not a Valid External Email Directory ::"+externalEmailDir.getAbsolutePath());
+					continue;
+				} // if
+				
+				File newEmailDir = new File(externalEmailDir, "New");
+				
+				if(!newEmailDir.exists() || !newEmailDir.isDirectory()) {
+					logger.error("Not a Valid New External Email Directory ::"+newEmailDir.getAbsolutePath());
+					continue;
+				} // if
+*/				
+				File[] emlFiles = emailInboxDir.listFiles();
+				
+				if(emlFiles == null || emlFiles.length <= 0) {
+					logger.debug("No new email to process");
+					return;
+				} // if
+
+				for (File emlFile : emlFiles) {  // each Email file
+				
+					logger.debug("Parsing file : "+emlFile.getAbsolutePath());
+					
+					//*********** Validate EMAIL File *****************
+					if(!emlFile.exists() || !emlFile.canRead()) {
+						logger.error("Invalid Email File / Unable to read the file : "+emlFile.getAbsolutePath());
+						continue;
+					}
+					
+					SMTPMessage smtpMessage = null;
+					String mailReceivedFromEmailId=null;
+					
+					try {
+						Properties props = System.getProperties();
+				        Session session = Session.getInstance(props, null);
+
+				        FileInputStream fis =  new FileInputStream(emlFile);
+				        smtpMessage = new SMTPMessage(session, fis );
+				        fis.close();
+				        
+				        //*********** Check for Uniqueness of the Message **************
+				        
+				        try {
+				        	String msgId = smtpMessage.getMessageID().trim().toLowerCase();
+				        	
+				        	if(messageIdCache.get(msgId) != null) {
+				        		
+				        		logger.debug("Duplicate messageId: "+msgId);
+				        		messageIdCache.put(msgId, messageIdCache.get(msgId)+1);
+				        		
+				        		File moveFile = new File(ignoredEmailsFolder, emlFile.getName());
+				        		
+				        		if(!emlFile.renameTo(moveFile)) {
+									logger.debug("Unable to move the Ignored File file: "+moveFile);
+								}
+				        		
+				        		continue;
+				        	}
+				        	else {
+				        		messageIdCache.put(msgId,new Integer(1));
+				        	}
+				        }
+				        catch(Exception e) {
+				        	logger.error("Exception ::" , e);
+				        	continue;
+				        }
+				        
+				        logger.debug(">>>>>>>>>>>>>>> msgIdCache: "+messageIdCache);
+				        
+				      //*********** Validate USER ***********************
+						String fromEmailId = InternetAddress.toString(smtpMessage.getFrom());
+						user = getUserObject(fromEmailId.trim());
+						if(user==null) {
+							logger.error("User Name is not found by the email Id :"+fromEmailId);
+							continue;
+						}
+				        
+						mailReceivedFromEmailId = fromEmailId.trim();
+
+						if(mailReceivedFromEmailId.indexOf('<')!=-1 && mailReceivedFromEmailId.indexOf('>')!=-1) {
+							
+							mailReceivedFromEmailId = mailReceivedFromEmailId.substring( 
+									mailReceivedFromEmailId.indexOf('<')+1, mailReceivedFromEmailId.indexOf('>')).trim();
+						} // if
+						
+						if(emlFile.length() > (1024 * 100)) {
+							String errorMsg ="Email file size should not be more than 100 KB, " +
+								"current emil file size is : "+(emlFile.length()/1024) +" KB";
+							
+							logger.error(errorMsg);
+							
+							sendErrorMailToClient(user, "ExternalEmail - Invalid Email content...",
+									mailReceivedFromEmailId, errorMsg); // TODO need to put fromEmailId
+							
+							File moveFile = new File(eeProcessFolder, "Unprocessed" + 
+									File.separator + user.getUserName() + "_" + currTimelong + "_" + emlFile.getName());
+
+							logger.debug("------------Rename to "+moveFile.getAbsolutePath());
+
+							if(!emlFile.renameTo(moveFile)) {
+								logger.debug("Unable to move the Unprocessed file :"+moveFile.getAbsolutePath());
+							}
+							
+							continue; // TODO need to enable this line
+						} // if
+				     
+					} catch (Exception e) {
+						logger.error("Exception ::" , e);
+						continue;
+					}
+					
+					
+					currTimelong=System.currentTimeMillis();
+					
+					if(createNewCampaign(smtpMessage, mailReceivedFromEmailId) == true) {
+					
+/*						File moveFile = new File(userParentFolder, user.getUserName() + File.separator +     
+								Constants.CAMP_EDTYPE_EXTERNAL_EMAIL + File.separator + "Ready" + 
+								File.separator + user.getUserName()+"_"+currTimelong+".eml");
+*/	
+						File moveFile = new File(eeProcessFolder, "Ready" + 
+								File.separator + user.getUserName()+"_"+currTimelong+".eml");
+
+						
+						logger.debug("------------Rename to "+moveFile.getAbsolutePath());
+						
+						if(!emlFile.renameTo(moveFile)) {
+							logger.debug("Unable to move the processed file :"+moveFile);
+						}
+					}
+					else {
+/*						File moveFile = new File(userParentFolder, user.getUserName() + File.separator + 
+								Constants.CAMP_EDTYPE_EXTERNAL_EMAIL + File.separator + "Unprocessed" + 
+								File.separator + user.getUserName() + "_" + currTimelong + "_" + emlFile.getName());
+*/
+						File moveFile = new File(eeProcessFolder, "Unprocessed" + 
+								File.separator + user.getUserName() + "_" + currTimelong + "_" + emlFile.getName());
+
+						logger.debug("------------Rename to "+moveFile.getAbsolutePath());
+
+						if(!emlFile.renameTo(moveFile)) {
+							logger.debug("Unable to move the Unprocessed file :"+moveFile.getAbsolutePath());
+						}
+					}
+					
+				} // for each emlFile
+				
+//			} // for each user
+			
+		}catch(Exception e) {
+			logger.error("Exception ::" , e);
+			logger.error(" ** Exception  : Root "+ e + " **");
+		}
+		finally {
+			isRunning=false;
+		}
+	} // run
+	
+	
+	/**
+	 * 
+	 * @param user
+	 * @param smtpMessage
+	 * @param msg
+	 */
+	private void sendErrorMailToClient(Users user,  String subject, String toMailId, String msg) {
+		try {
+			String branding = GetUser.getUserObj().getUserOrganization().getBranding();
+
+			String brandStr="OptCulture";
+			if(branding!=null && branding.equalsIgnoreCase("CAP")) {
+				brandStr="Captiway";
+			}
+			
+			String emailMsg="Hello "+user.getUserName()+" ,<br/><br/> " + msg + "<br/><br/>"+"Regards<br/>"+brandStr+" Team.";
+			
+			EmailQueue emailQueue = new EmailQueue(subject, emailMsg, Constants.EQ_TYPE_FEEDBACK, 
+					"Active", toMailId, MyCalendar.getNewCalendar(),user);
+		 	
+			//emailQueueDao.saveOrUpdate(emailQueue);
+			emailQueueDaoForDML.saveOrUpdate(emailQueue);
+			
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+		}
+		
+	} // sendErrorMailToClient
+	
+	
+	/**
+	 * 
+	 * @param campName
+	 * @param userName
+	 * @return
+	 */
+	private boolean createNewCampaign(SMTPMessage smtpMessage, String mailReceivedFromEmailId) {
+		try {
+			logger.info(" -- just entered --");
+			//*********** Reset all the Global Variables ***************
+			
+			htmlContentVec = new Vector<String>();
+			textContentVec = new Vector<String>();
+			
+			cidFileMap = new HashMap<String, String>();
+			
+			/*//*********** Validate EMAIL File *****************
+			if(!emlFile.exists() || !emlFile.canRead()) {
+				logger.error("Invalid Email File / Unable to read the file : "+emlFile.getAbsolutePath());
+				return false;
+			}*/
+			
+			//*********** Create SMTP Message from the New Mail ***********************
+			
+			
+			try {
+/*				Properties props = System.getProperties();
+		        Session session = Session.getInstance(props, null);
+
+		        FileInputStream fis =  new FileInputStream(emlFile);
+		        smtpMessage = new SMTPMessage(session, fis );
+		        fis.close();
+		        
+		      //*********** Validate USER ***********************
+				String fromEmailId = InternetAddress.toString(smtpMessage.getFrom());
+				user = getUserObject(fromEmailId.trim());
+				if(user==null) {
+					logger.error("User Name is not found by the email Id :"+fromEmailId);
+					return false;
+				}
+				
+		        
+				if(emlFile.length() > (1024 * 100)) {
+					String errorMsg ="Email file size should not be more than 100 KB, " +
+						"current emil file size is : "+(emlFile.length()/1024) +" KB";
+					
+					logger.error(errorMsg);
+					
+					sendErrorMailToClient(user, "ExternalEmail - Invalid Email content...",
+							mailReceivedFromEmailId, errorMsg);
+					
+					//return false; // TODO need to enable this line
+				} // if
+
+*/		        
+		        smtpMessage.removeHeader("Delivered-To");
+		        
+			        try {
+						if(validateSmtpMessage(smtpMessage) == false) {
+							logger.debug(" SMTP Message validation Failed.");
+							return false;
+						}
+					} catch (InvalidEmailException e) {
+						logger.debug(" Email Error:: "+e.getMessage());
+						sendErrorMailToClient(user, "ExternalEmail - Invalid Email content...", 
+								mailReceivedFromEmailId, e.getMessage());
+						return false;
+					}
+					
+			} catch (Exception e) {
+				logger.error("Exception ::" , e);
+				return false;
+			}
+
+			
+			//*********** Validate Campaign ***********************
+			
+			String subjectName = smtpMessage.getSubject();
+			if(subjectName==null) {
+				subjectName="No Subject";
+			}
+			else {
+				
+				subjectName = subjectName.trim();
+				if(subjectName.length() > 15) {
+					subjectName = subjectName.substring(0, 15)+"...";
+				}
+			}
+			
+			SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm:ss aaa");//"dd/MM/yyyy HH:mm:ss aaa");
+			String campName=subjectName+"_"+ format.format(currTimelong);
+			
+			logger.debug("CampName="+campName);
+			
+			Campaigns tempCamp = campaignsDao.getSingleCampaign(campName.trim(), user.getUserId());
+			if(tempCamp!=null) {
+				logger.error("Campaign Name is already exist:"+campName);
+				return false;
+			} // if
+			
+			
+			//*************  Campaign Creation ****************
+			
+			Campaigns campaign = new Campaigns();
+			campaign.setCampaignName(campName);
+			
+			setCampaignDetails(campaign, smtpMessage, user);
+			
+			if(htmlContentVec.size()==0) { // NO HTML Content
+				
+				
+				if(textContentVec.size()==0) { // NO Text content.
+				
+					logger.error("********HTML/TEXT Content is not found***********");
+					sendErrorMailToClient(user, "ExternalEmail - Invalid Email content.",
+							mailReceivedFromEmailId, "HTML / TEXT Contents is not found. \n");
+					return false;
+				}
+				else {  // TEXT Content exist
+					
+					String htmlFromTextContent="";
+					String totalTextParts="";
+					
+					for (String tempTxt : textContentVec) {
+						
+						totalTextParts += tempTxt +"\r\n";
+						htmlFromTextContent += "<DIV> "+tempTxt+" </DIV> \r\n"; 
+					} // for
+					
+					campaign.setHtmlText(htmlFromTextContent);
+					campaign.setTextMessage(totalTextParts);
+					
+				} // else
+			} // if
+			else { // HTML Content exist
+
+				if(htmlContentVec.size() > 1) { // More than one HTML Content exist
+					logger.error("More than one html found in the Email:"+campName);
+				}
+				String attachmentDirPath = userParentFolder + File.separator + user.getUserName() + File.separator + 
+				Constants.CAMP_EDTYPE_EXTERNAL_EMAIL + File.separator + currTimelong + File.separator +	ATTACHMENT_FOLDER;
+				
+				//TODO 
+				String replacedHtml = replaceImageCidLinks(htmlContentVec.get(0), attachmentDirPath);
+				campaign.setHtmlText(replacedHtml);
+			
+			} // else
+			
+			campaign.setLabel(user.getUserName()+"_"+currTimelong+".eml"); // TODO need to make it as Generic
+			//campaignsDao.saveOrUpdate(campaign);
+			
+			campaignsDaoForDML.saveOrUpdate(campaign);
+			
+
+			//*************  MailingList Creation ****************
+			
+			Calendar cal = MyCalendar.getNewCalendar(); 
+			
+			MailingList mailingList = new MailingList(campName+"_ML", "Desc", cal, "Active", cal, cal,false,false,null, user, false,false);
+			mailingListDaoForDML.saveOrUpdate(mailingList);
+			
+			Set<Campaigns> campaignLists = new HashSet<Campaigns>();
+			campaignLists.add(campaign);
+			mailingList.setCampaigns(campaignLists);
+			
+			Set<MailingList> mailingLists = new HashSet<MailingList>();
+			mailingLists.add(mailingList);
+			
+			campaign.setMailingLists(mailingLists);
+
+			//campaignsDao.saveOrUpdate(campaign);
+			mailingListDaoForDML.saveOrUpdate(mailingList);
+            campaignsDaoForDML.saveOrUpdate(campaign);
+			
+			
+			//*************  Contacts Creation ****************
+			Vector<String> tempEmailsVec = new Vector<String>();
+			
+			for (int i = 0; i < 3; i++) {
+				String rcptStr=null;
+				
+				if(i==0) {
+					rcptStr  = InternetAddress.toString(smtpMessage.getRecipients(RecipientType.TO));
+				}
+				else if (i==1) {
+					rcptStr  = InternetAddress.toString(smtpMessage.getRecipients(RecipientType.CC));
+				}
+				else if (i==2) {
+					rcptStr  = InternetAddress.toString(smtpMessage.getRecipients(RecipientType.BCC));
+				}
+				
+				if(rcptStr==null) continue; // Skip if the contacts does't exist 
+				
+				String rcptArr[] = rcptStr.split(",");
+				String tempMailStr = null;
+				
+				for (String rcpt : rcptArr) {
+
+					if(rcpt.indexOf('<')!=-1 && rcpt.indexOf('>')!=-1) {
+						tempMailStr = rcpt.substring(rcpt.indexOf('<')+1, rcpt.indexOf('>')).trim();
+					} // if
+					else {
+						tempMailStr = rcpt.trim();
+					} // else
+
+					if(tempEmailsVec.contains(tempMailStr.toLowerCase())) {
+						continue;
+					}
+					else {
+						tempEmailsVec.add(tempMailStr.toLowerCase());
+					}
+					
+					Contacts contact = new Contacts();
+					contact.setCreatedDate(Calendar.getInstance());
+					contact.setOptinMedium(Constants.CONTACT_OPTIN_MEDIUM_EXTERNALMAIL);
+					contact.setEmailId(tempMailStr);
+					contact.setEmailStatus(Constants.CONT_STATUS_PURGE_PENDING);
+					//contact.setMlSet(mailingLists);
+					contact.setMlBits(contact.getMlBits().longValue() | mailingList.getMlBit().longValue());
+					//contact.setMailingList(mailingList);
+					contact.setPurged(false);
+					contact.setOptin(new Byte((byte)0));
+				
+					contactsDaoForDML.saveOrUpdate(contact);
+					
+				} // for rcpt
+				
+			} // for i
+			
+			//************ Activate the Purging process *******************
+			
+			List<Long> list = new ArrayList<Long>();
+			list.add(mailingList.getListId());
+			purgeList.addAndStartPurging(mailingList.getUsers().getUserId(), list);
+			
+			
+			//************* Create the Campaign Schedule object *************
+			
+			Calendar tempCal = Calendar.getInstance();
+			tempCal.set(Calendar.SECOND,0);
+			tempCal.set(Calendar.MILLISECOND,0);
+			
+			Long csId = campaignScheduleDao.getCurrentId();
+			
+			CampaignSchedule campSchedule = new CampaignSchedule(csId, tempCal, (byte)0);
+			campSchedule.setResendLevel((byte)0);
+			campSchedule.setCampaignId(campaign.getCampaignId());
+			campSchedule.setStatus((byte)0);
+			
+			//campaignScheduleDao.saveOrUpdate(campSchedule);
+			campaignScheduleDaoForDML.saveOrUpdate(campSchedule);
+			
+			return true;
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+			return false;
+		}
+	} // createNewCampaign
+
+
+	private String replaceImageCidLinks(String htmlStr, String attachmentDirPath) {
+
+		String APP_URL = PropertyUtil.getPropertyValue("ApplicationUrl");
+		String USER_DATA_URL = APP_URL+"UserData/";
+		
+		String attachDir = USER_DATA_URL + attachmentDirPath.substring(attachmentDirPath.indexOf("/UserData/")+10);
+		
+		String pattern = "<img\\s.*?src\\s*?=\\s*?['\"]cid:(.*?)['\"].*?>";
+		
+		logger.debug("CID F MAP: "+cidFileMap);
+		int options = 0;
+		options |= 128; 	//This option is for Case insensitive
+		options |= 32; 		//This option is for Dot matches newline
+
+		Pattern r = Pattern.compile(pattern, options);
+		
+		StringBuffer contentSb = new StringBuffer(htmlStr);
+		StringBuffer sb = new StringBuffer();
+		
+		String cidStr;
+		String orgStr;
+		String replaceStr;
+		
+		Matcher m = r.matcher(contentSb);
+		
+		while (m.find()) {
+			orgStr = m.group();
+			cidStr = m.group(1);
+			logger.debug(orgStr+" :: cidstr:: "+cidStr);
+		
+			if(cidFileMap.containsKey(cidStr)) {
+				replaceStr = orgStr.replace("cid:"+cidStr, attachDir+"/"+cidFileMap.get(cidStr));
+				logger.debug("Replaced String : " + replaceStr);
+				m.appendReplacement(sb, replaceStr);
+			}
+		} // while
+		
+		m.appendTail(sb);
+		
+//		logger.debug("INPUT :"+htmlStr);
+//		logger.debug("OUPUT :"+sb.toString());
+		
+		
+		return sb.toString();
+		
+	} // replaceImageCidLinks
+	
+	
+	/**
+	 * 
+	 * @param smtpMessage
+	 * @return
+	 * @throws Exception
+	 */
+	private boolean validateSmtpMessage(SMTPMessage smtpMessage) throws Exception {
+		
+		if(smtpMessage.getSubject() == null || 
+				smtpMessage.getSubject().trim().length()==0) {
+			throw new InvalidEmailException("  Mail Subject can not be empty.");
+		} // if
+
+		if(smtpMessage.getRecipients(RecipientType.TO) == null && 
+				smtpMessage.getRecipients(RecipientType.CC) == null) {
+			throw new InvalidEmailException("  Email To: / CC: can not be empty.");
+		} // if
+
+		if(smtpMessage.getContent() instanceof Multipart) {
+
+			dispMultiPart((Multipart)smtpMessage.getContent());
+		} 
+		else {
+			logger.info("****** :: "+smtpMessage.getContent() + " :: Type="+smtpMessage.getContentType());
+			textContentVec.add(smtpMessage.getContent().toString());
+		}
+		
+		
+		return true;
+	} //validateSmtpMessage(smtpMessage)
+	
+	
+	/**
+	 * 
+	 * @param multipart
+	 * @throws Exception
+	 */
+	private void dispMultiPart(Multipart multipart) throws Exception {
+		
+		for (int x = 0; x < multipart.getCount(); x++) {
+		
+			logger.debug("  :BodyPart("+x+"): " + multipart.getBodyPart(x).getClass());
+
+			BodyPart bodyPart = multipart.getBodyPart(x);
+
+			String disposition = bodyPart.getDisposition();
+			String contentType = bodyPart.getContentType();
+
+			logger.debug("    -----> disposition : "+disposition);
+			logger.debug("    -----> content type: "+contentType);
+			String cidArr[] = null;
+			
+			if(contentType!=null && contentType.trim().startsWith("image/")) {
+				cidArr = bodyPart.getHeader("Content-ID");
+				logger.debug("  file name : " + bodyPart.getFileName()+ " and Cid="+cidArr);
+
+				if(cidArr !=null) {
+					for (String cid : cidArr) {
+						logger.debug("Content Id:"+ cid);
+					}
+				}
+			}
+			
+			if (cidArr!=null || 
+				(disposition != null &&	(disposition.equals(BodyPart.ATTACHMENT) || 
+										 disposition.equals(BodyPart.INLINE))) ) {
+				
+				logger.debug("  Mail have some attachment : ");
+				logger.debug("  DISC=" + disposition);
+
+/*				DataHandler handler = bodyPart.getDataHandler();
+				String fileName = handler.getName().trim();
+*/				
+				String fileName = bodyPart.getFileName();
+				
+				if(fileName != null) {
+					fileName = fileName.trim().replace(" ", "_");
+				}
+				
+				if(fileName==null && cidArr !=null) { 		//  To handle emails of type "Forward". 
+					    
+						for (String cid : cidArr) {
+							logger.debug("Content Id:"+ cid);
+							
+							if(cid.indexOf('<')!=-1 && cid.indexOf('>')!=-1)
+								cid = cid.substring(cid.indexOf('<')+1, cid.indexOf('>'));
+							
+							if(cid.indexOf('@')!=-1) cid = cid.substring(0, cid.indexOf('@'));
+							
+							fileName = cid.replace('.', '_').trim();
+						} // for
+						
+						if(contentType.startsWith("image/")) {
+							
+							String ext=contentType.substring(contentType.indexOf('/')+1).trim();
+							if(ext.indexOf(';')!=-1) ext = ext.substring(0,ext.indexOf(';'));
+							if(ext.indexOf(' ')!=-1) ext = ext.substring(0,ext.indexOf(' '));
+							
+							if(ext.equalsIgnoreCase("jpeg")) ext = "jpg";
+							fileName = fileName+"."+ext;
+						}
+				}
+				
+				logger.debug("  file name : " + fileName);
+				
+				if(fileName==null) {
+					logger.error(" Unable to Get/generate the Image File name for content type =" + contentType);
+					continue;
+				}
+				
+				if(fileName.lastIndexOf('.') == -1) {
+					throw new InvalidEmailException(" Invalid File type : "+fileName);
+				}
+				else {
+					String ext=fileName.toLowerCase().trim();
+					ext = fileName.substring(fileName.lastIndexOf(".")+1).trim();
+
+					if(!validEmailAttachmentsVec.contains(ext)) {
+						throw new InvalidEmailException("."+ext+
+								"  file types are not supported as an attachment, Please remove the attachemnt : " + 
+								fileName+"<br/>  Alowable file types are: "+validEmailAttachmentsVec);
+					} // if
+				}
+				
+				logger.debug("  attachment data : " + bodyPart.getContentType());
+				logger.debug("  Content : " + bodyPart.getContent());
+			
+				//TODO need to save the attachment.
+				
+				
+				File outFile = new File(userParentFolder, user.getUserName() + File.separator + 
+						Constants.CAMP_EDTYPE_EXTERNAL_EMAIL + File.separator + currTimelong + File.separator + 
+						ATTACHMENT_FOLDER + File.separator + fileName);
+				
+				if(!outFile.getParentFile().exists()) {
+					if(!outFile.getParentFile().mkdirs()) {
+						logger.error("Unable to create the folder : "+outFile.getParentFile().getAbsolutePath());
+					}
+				}
+				
+				BufferedInputStream bis = new BufferedInputStream(bodyPart.getInputStream());
+				BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outFile));
+				
+				byte readArr[] = new byte[1024];
+				int n=-1; // =bis.read(readArr);
+				
+				while( (n=bis.read(readArr)) != -1 ) {
+					
+					bos.write(readArr, 0, n);
+					
+				} // while
+				
+				bos.flush();
+				bos.close();
+				bis.close();
+				
+				//String cidArr[] = bodyPart.getHeader("Content-ID");
+
+				if(cidArr !=null) {
+					for (String cid : cidArr) {
+						logger.debug("Content Id:"+ cid);
+						
+						if(cid.indexOf('<')!=-1 && cid.indexOf('>')!=-1)
+							cid = cid.substring(cid.indexOf('<')+1, cid.indexOf('>'));
+						
+						cidFileMap.put(cid, fileName);
+					}
+				}
+				
+				if (bodyPart.getContent() instanceof Multipart) {
+					logger.debug("  ========================= RECURSIVE Attachment =====================");
+					dispMultiPart((Multipart)bodyPart.getContent());
+					logger.debug("  ========================= RECURSIVE RETURNED  Attachment =====================");
+				}
+			} 
+			else {
+				if(bodyPart.getContent() instanceof SharedByteArrayInputStream) {
+					
+					logger.debug("  >>>>> ShBaIs="+bodyPart.getContent());
+					/*SharedByteArrayInputStream tempSb = (SharedByteArrayInputStream)bodyPart.getContent();
+					
+					DataInputStream dis = new DataInputStream( new BufferedInputStream(tempSb));
+					String tempStr=null;
+					
+					while( (tempStr = dis.readLine())!= null ) {
+					logger.debug("  >>>>> "+tempStr);
+					}*/
+				}
+				else if (bodyPart.getContent() instanceof Multipart) {
+					logger.debug("  ========================= RECURSIVE =====================");
+					dispMultiPart((Multipart)bodyPart.getContent());
+					logger.debug("  ========================= RECURSIVE RETURNED =====================");
+				}
+				else if (bodyPart.getContent() instanceof MimeMessage) {
+					logger.debug("  ========================= RECURSIVE MM =====================");
+					MimeMessage mm = (MimeMessage)bodyPart.getContent() ;
+					logger.debug("  MM Type="+mm.getContent());
+					
+					if(mm.getContent() instanceof Multipart)
+						dispMultiPart((Multipart)mm.getContent());
+					
+					logger.debug("  ========================= RECURSIVE RETURNED MM=====================");
+				}
+				else {
+					logger.debug("  ShBaIs= NOT "+bodyPart.getContent().getClass() );
+					logger.debug("  data type : " + bodyPart.getContentType());
+					
+						logger.debug("  -------- "+bodyPart.getContent());
+						
+						if(bodyPart.getContentType().contains("text/html;")) {
+							
+							htmlContentVec.add(bodyPart.getContent().toString());
+							
+						}
+						else if(bodyPart.getContentType().contains("text/plain;")) {
+							
+							textContentVec.add(bodyPart.getContent().toString());
+							// bodyPart.setText(bodyPart.getContent().toString().replace("Friend","Friend KKKKK "));
+							
+						}
+					
+				}
+			} // else
+			
+		} // for x
+		
+	} // dispMultiPart
+
+	
+	
+	/**
+	 * 
+	 * @param campaign
+	 * @param campName
+	 * @param user
+	 */
+	private void setCampaignDetails(Campaigns campaign, SMTPMessage smtpMessage, Users user) throws Exception {
+		
+		Address address = new Address();
+		
+		address.setAddressOne(user.getAddressOne());
+		address.setAddressTwo(user.getAddressTwo());
+		address.setCity(user.getCity());
+		address.setState(user.getState());
+		address.setCountry(user.getCountry());
+		try {
+			address.setPin((user.getPinCode()));
+		}catch (Exception e) { }
+		address.setPhone(user.getPhone());
+		
+		// TODO: Need to filter the special characters from Email subject(Ex: Fwd:... )
+		campaign.setSubject(smtpMessage.getSubject());
+		
+		campaign.setFromName(user.getFirstName());
+		campaign.setFromEmail(user.getEmailId());
+		campaign.setReplyEmail(user.getEmailId());
+		
+		campaign.setAddressFlag(true);
+		campaign.setAddress(address);
+
+		campaign.setPermissionRemainderFlag(false);
+		campaign.setWebLinkFlag(false);
+
+		campaign.setPersonalizeTo(false);
+		
+		campaign.setEditorType(Constants.CAMP_EDTYPE_EXTERNAL_EMAIL);
+		campaign.setStatus(Constants.CAMP_STATUS_ACTIVE);
+		campaign.setCreatedDate(MyCalendar.getNewCalendar());
+		campaign.setDraftStatus("complete");
+		campaign.setModifiedDate(Calendar.getInstance());
+		
+		// campaign.setPrepared(true);  //TODO Need to check this field
+		
+		campaign.setUsers(user);
+		
+		//TODO need to set the textMessage and HTML Text from the smtpMessage object 
+		campaign.setTextMessage(" ");
+		//campaign.setHtmlText("<b>Testing HTML Message...</b>");
+	
+	} //
+	
+	
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 * @throws Exception
+	 */
+	private Users getUserObject(String userEmailId) throws Exception {
+		if(userEmailId==null) return null;
+
+		if(userEmailId.indexOf('<')!=-1 && userEmailId.indexOf('>')!=-1) {
+			userEmailId = userEmailId.substring(userEmailId.indexOf('<')+1, userEmailId.indexOf('>')).trim();
+		} // if
+		else {
+			userEmailId = userEmailId.trim();
+		} // else
+
+		logger.debug("User Email fd: "+userEmailId);
+		List<Users> usersList = usersDao.getUserInfoByEmail(userEmailId);
+		
+		if(usersList.size()==1) {
+			return usersList.get(0);
+		}
+		else if(usersList==null || usersList.size()==0) {
+			return null;
+		}
+		else {
+			logger.error("More than one User found with the same user email Id: "+userEmailId);
+			return usersList.get(0);
+		}
+		
+	} //
+
+} // class
+
+class InvalidEmailException extends Exception {
+	
+	private String msg;
+	public InvalidEmailException() {
+		super();
+	}
+	
+	public InvalidEmailException(String msg) {
+		
+		super(msg);
+		this.msg=msg;
+	}
+	
+} // InvalidEmailException

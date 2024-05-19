@@ -1,0 +1,67 @@
+<zk>
+	<!--
+		<desktop-config>
+		<file-check-period>600</file-check-period> 
+		<theme-provider-class>zkthemer.ThemeProvider</theme-provider-class>
+		</desktop-config>
+	-->
+	<device-config>
+		<device-type>ajax</device-type>
+		<timeout-uri>/sessionTimeout.jsp</timeout-uri>
+	</device-config>
+	<system-config>
+		<disable-event-thread>false</disable-event-thread>
+	</system-config>
+	<!-- Turn on if you want to ignore the consecutive click events,
+		if it happens too close to the previous one, or the server is still
+		serving the previous click.
+	-->
+	<session-config>
+		<max-desktops-per-session>50</max-desktops-per-session>
+		<max-requests-per-session>20</max-requests-per-session>
+		<max-pushes-per-session>-1</max-pushes-per-session>
+	</session-config>
+	<client-config>
+		<click-filter-delay>390</click-filter-delay>
+	</client-config>
+	<!-- Uncomment if you want to embed JavaScript codes and any other
+		tags to be generated inside HTML HEAD.
+		<device-config>
+		<device-type>ajax</device-type>
+		<embed><![CDATA[
+		<script type="text/javascript">	
+		</script>
+		]]></embed>
+		</device-config>
+	-->
+	<!-- Configure additional theme URIs
+		<desktop-config>
+		<theme-uri>/a.css</theme-uri>
+		<theme-uri>/b**.css</theme-uri>
+		</desktop-config>
+	-->
+	<!-- Uncomment the following if you want to redirect to particular
+		page when ZK Client receives an error code.
+		<client-config>
+		<error-reload>
+		<error-code>301</error-code>
+		<reload-uri>/login.zul</reload-uri>
+		</error-reload>
+		</client-config>
+	-->
+	<!-- Uncommet to control the number of lines to log an error message.
+		Default: 6. If nonpostive is specified, the full stack traces are logged.
+		Notice that # of lines don't include packages starting with java, javax or sun.
+	<library-property>
+		<name>org.zkoss.util.logging.realCauseBriefly</name>
+		<value>2</value>
+	</library-property>
+	-->
+	
+	<error-page>
+    	<exception-type>java.lang.Throwable</exception-type>   
+    	<location>/zul/error.zul</location>   
+	</error-page>
+
+</zk>
+

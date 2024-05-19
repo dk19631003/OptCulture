@@ -1,0 +1,90 @@
+<zk>
+<window id="manageOCEventWinId"  apply="org.mq.optculture.controller.ocevent.ManageOCEventController" xmlns:w="client" xmlns:h="native"
+		width="100%">
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+			bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+		<h:tr>
+			<h:td>
+			  	      <hlayout>
+			  	   <div>
+			       	 <label value="Search by:" style="font-weight:bold;" />                              
+				     <listbox id="srchLbId" mold="select"  width="150px" >
+				        <listitem label="Status" value ="Status" selected="true"/>
+            			<listitem label="Created Date" value="Date"/>
+            			<listitem label="City" value="City"/>
+            			<listitem label="Event Name" value="EventName"/>
+        		     </listbox>
+			       </div>
+			       <div id="searchByCityDivId" visible="false">
+        		   	 <textbox id="searchByCityTbId" width="200px"/>
+        		   </div>
+			       <div id="searchByEventNameDivId" visible="false">
+        		   	 <textbox id="searchByEventNameTbId" width="200px"/>
+        		   </div>
+			       
+			       <div id="searchByCreatedDateDivId" visible="false">
+					 <space />
+					 <label value="From: " />
+					 <datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+					 <space />
+					 <label value="To: " />
+					 <datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+			      </div>
+			      <div id="searchByStatusDivId" visible="true">                           
+					  <listbox id="statusLbId" mold="select"  width="100px" >
+					    <listitem label="All" selected="true"  value="All"/>
+            			<listitem label="Active"  value="Active" />
+            			<listitem label="Suspended"  value="Suspended"/>
+					    <listitem label="Expired"  value="Expired"/>
+					
+					  </listbox>
+				  </div>
+				  <div id="filterBtnDivId">
+				      <button label="Get Reports" id="getReportBtnId" sclass="idle140 greenbtn" style="margin-left:20px;" />
+				  </div>
+				  <div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;" >
+				  	  <a label="Reset" id="resetAnchId" />
+				  </div>
+			  	</hlayout>
+			  	   </h:td>
+		</h:tr>
+		
+		</h:table>
+				<grid id="eventsGridId" 
+			emptyMessage="No records found...">
+			<columns menupopup="auto" sizable="true">
+				<column label="Event Title" id="sortbyPromotionName" sclass="hovergridcolumn" width="20%" />
+				<column label="Start Date time" id="sortbyStatus" sclass="hovergridcolumn" width="20%" />
+				<column label="End Date time" width="20%" />
+				<column label="City" width="20%" />
+				<column label="Action" width="20%"/>
+			</columns>
+			 <rows id="eventsGridRowsId" />
+		</grid>
+			<h:table width="100%" cellspacing="0" cellpadding="0"
+			style="padding-top:10px;" >
+				<h:tr bgcolor="#F9F9F9">
+								<h:td align="left"></h:td>		
+					<h:td align="right">
+								<label value="Items per page:"
+									style="padding-right:5px;font-size:11px;" />
+								<listbox rows="1" mold="select"
+									id="pageSizeLbId" style="margin-right:30px;">
+									<listitem label="5" selected="true"  />
+									<listitem label="10"
+										 />
+									<listitem label="15" />
+								</listbox>
+							</h:td>
+						
+				<h:td width="300px">
+					<paging id="eventListBottomPagingId"
+						detailed="true" pageSize="5" width="280px"
+						class="contactsViewPaging" style="border:none;" />
+				</h:td>
+			</h:tr>
+
+		</h:table>
+		
+</window>
+</zk>

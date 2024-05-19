@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Baseball_template</title>
+
+</head>
+<body>
+<!--100% body table-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#d8e7ea">
+    <tr>
+        <td bgcolor="#d8e7ea" >
+            <!--header text-->
+            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td bgcolor="#0d2d42">
+                        <table width="620" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td valign="middle" align="center" height="60" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #FFFFFF; ">
+                                    Digital Receipt from #Store.Name#
+#Store.Street#, #Store.City#, #Store.State# #Store.Zip#
+                                  
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!--/header text-->
+            <!--intro-->
+            <table width="620" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td valign="middle" width="11" height="100"></td>
+                    <td valign="middle" height="100">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="64%" height="100">
+                                    <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 42px;padding: 0; color: #0d2d42; text-shadow: 1px 1px 1px #fff;">#Store.Name#</h1>
+									   </td>
+                                <td width="36%" height="100" valign="top">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td valign="bottom" height="70">
+                                                <p style="text-align: right; text-transform: uppercase; font-size: 11px;  color: #333333; font-family: Arial, Helvetica, sans-serif; float: right;">
+                                                    <strong>#ShipTo.Name#</strong><br>
+#ShipTo.Street#<br>
+#ShipTo.City#, #ShipTo.State# #ShipTo.Zip#<br><br>
+Date: #Receipt.Date#<br>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!--/intro-->
+            <!--content section-->
+            <table width="620" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td height="82" width="11" valign="middle"><img style="display: block;" src="/subscriber/SystemData/digital-templates/Baseball_template/images/side-corner.png" width="11" height="83"></td>
+                    <td height="82" bgcolor="#FFFFFF" valign="middle">
+                        <table width="594" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td valign="middle" height="37" bgcolor="#cc0000">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                         <td  bgcolor="#cc0000" width="25" height="37"></td>
+                                            <td height="37" style="color:#ffffff; font-weight:bold; font-size:21px; font-family:Arial, Helvetica, sans-serif; text-shadow:1px 1px 1px #000000;">
+                                               Your Order #Receipt.ID#
+                                            </td>
+											<td height="37" valign="bottom"><img src="/subscriber/SystemData/digital-templates/Baseball_template/images/bar-end_b.png" width="47" height="37"  align="right" border="0" style="display:block;">
+											</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+						</td>
+                </tr>
+                <tr>
+                    <td valign="top"></td>
+					
+                    <td bgcolor="#FFFFFF" valign="top">
+					
+                        <table width="560" border="0" align="center" cellpadding="0" cellspacing="0">
+                            
+							
+							<tr>
+                                <td valign="top" style="font-size:13px; color:#333333; font-family: Arial, Helvetica, sans-serif;" >
+								
+                                    <table style="font-family:Arial, Helvetica, sans-serif;" class="items">
+
+									  <tbody>
+									   
+									  <tr bgcolor="#f5f5f5"><td width="117" style="padding: 12px;"><strong>Description</strong></td><td width="117" style="padding: 12px;"><strong>Qty</strong></td><td width="117" style="padding:12px;"><strong>Unit Price</strong></td><td width="117" style="padding: 12px;"><strong>Amount</strong></td></tr>
+									##BEGIN ITEMS##  <tr ><td style="padding-bottom:5px;">#Item.Description#</td><td style="padding-bottom:5px;">#Item.Quantity#</td><td style="padding-bottom:5px;">#Item.UnitPrice#</td><td style="padding-bottom:5px;">#Item.Total#</td></tr>##END ITEMS##
+									</tbody>
+
+    							</table>
+
+	<table> 
+	<tr><td style="border-top: 2px solid #DEDEDE ;" width="620">
+			<table>
+	
+		  <tbody>
+		  <tr><td  height="50" style="padding-bottom:20px;"> </td></tr>
+		  <tr><td><strong>Payment</strong></td></tr>
+		 ##BEGIN PAYMENTS## <tr ><td>#Payment.Amount#</td></tr>
+		  <tr ><td>#Payment.Number#</td></tr>
+	
+		  <tr ><td>#Payment.Type#</td></tr>
+	##END PAYMENTS##
+		
+	
+		</tbody>
+	
+		</table>
+	</td>
+	</tr>
+	</table>
+
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!--/content section-->
+            <!--content section-->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"  bgcolor="#d8e7ea">
+			<tr>
+			<td>
+            <table width="620" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td height="82" width="11" valign="middle"><img style="display: block;" src="/subscriber/SystemData/digital-templates/Baseball_template/images/side-corner.png" width="11" height="83" border="0"></td>
+                    <td height="82" bgcolor="#FFFFFF" valign="middle">
+                        <table width="594" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td valign="middle" height="37" bgcolor="#cc0000">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td  bgcolor="#cc0000" width="25" height="37"></td>
+                                            <td height="37" style="color: #ffffff; font-weight:bold; font-size: 21px; font-family: Arial, Helvetica, sans-serif; text-shadow: 1px 1px 1px #000000;" >
+                                                Thank You
+                                            </td>
+											<td height="37" valign="bottom"><img src="/subscriber/SystemData/digital-templates/Baseball_template/images/bar-end_b.png" width="47" height="37"  align="right" border="0" style="display:block;">
+											</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top"></td>
+                    <td bgcolor="#FFFFFF" valign="top">
+                        <table width="560" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td valign="top" style="font-size: 13px; color: #333333; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif;">
+                                    
+  #Receipt.Message#<br>
+
+      #Receipt.Message2#
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+			</td>
+			</tr>
+			</table>
+            <!--/content section-->
+            <!--content section-->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"  bgcolor="#d8e7ea">
+			<tr>
+			<td>
+            <table width="620" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td height="82" width="11" valign="middle"><img style="display: block;" src="/subscriber/SystemData/digital-templates/Baseball_template/images/side-corner.png" width="11" height="83" border="0"></td>
+                    <td height="82" bgcolor="#FFFFFF" valign="middle">
+                        <table width="594" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="background-image: url(/subscriber/SystemData/digital-templates/Baseball_template/images/bar-end.png); background-repeat: no-repeat; background-position: right;" valign="middle" height="37" bgcolor="#cc0000">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td  bgcolor="#cc0000" width="25" height="37"></td>
+                                            <td height="37" style="color: #ffffff; font-weight:bold;font-size: 21px; font-family: Arial, Helvetica, sans-serif; text-shadow: 1px 1px 1px #000;">
+                                               You may also be interested in
+                                            </td>
+											<td height="37" valign="bottom"><img src="/subscriber/SystemData/digital-templates/Baseball_template/images/bar-end_b.png"  width="47" height="37"  align="right" border="0" style="display:block;">
+											</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top"></td>
+                    <td bgcolor="#FFFFFF" valign="top">
+                        <table width="560" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td valign="top">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td valign="top" width="160">
+                                                <table bgcolor="#000000" width="119" border="0" cellspacing="0" cellpadding="10">
+                                                    <tr>
+                                                        <td width="119"><img style="display: block;" src="/subscriber/SystemData/digital-templates/Baseball_template/images/img2.jpg" width="119" height="158" alt="img2" border="0"></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td valign="top" style="font-size: 13px; color: #333333; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif;">
+                                           Suspendisse imperdiet ullamcorper est at interdum. Suspendisse at felis nunc. Integer eu felis lacus, id blandit augue. Mauris commodo hendrerit risus, quis vehicula mi adipiscing in. Integer nec pretium odio. Sed ligula enim, scelerisque ut tempor lacinia, iaculis eget erat blandit augue. Mauris commodo hendrerit risus, quis vehicula mi adipiscing in. Integer nec pretium odio. Sed ligula enim, scelerisque ut tempor lacinia, iaculis eget erat. blandit augue. Mauris commodo hendrerit risus, quis vehicula mi adipiscing in. Integer nec pretium odio. Sed ligula enim, sceleris
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!--break-->
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td height="25"></td>
+                                        </tr>
+                                    </table>
+                                    <!--/break-->
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+			</td>
+			</tr>
+			</table>
+            <!--/content section-->
+            <!--footer-->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"  bgcolor="#d8e7ea">
+			<tr>
+			<td>
+            <table width="620" border="0" align="center" cellpadding="20" cellspacing="0">
+                <tr>
+                    <td valign="top" height="50">
+                        #Receipt.Footer# 
+                      
+                    </td>
+					</tr>
+					<tr>
+                    <td valign="top">
+                        <!--button-->
+                        <table width="200" border="0" cellspacing="0" cellpadding="10">
+                            <tr>
+                                <td style="border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; -khtml-border-radius: 6px; color: #ffffff; text-align: center; font-family:Arial, Helvetica, sans-serif; font-size:13px;" height="28" bgcolor="#0099ff">
+© #Store.Name#
+                                </td>
+                            </tr>
+                        </table>
+                        <!--/button-->
+                    </td>
+                </tr>
+            </table>
+			</td>
+			</tr>
+			</table>
+            <!--footer-->
+            <!--break-->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#d8e7ea">
+                <tr>
+                    <td height="25"></td>
+                </tr>
+            </table>
+            <!--/break-->
+        </td>
+    </tr>
+</table>
+<!--/100% body table-->
+</body>
+</html>

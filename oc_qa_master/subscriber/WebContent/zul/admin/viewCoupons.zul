@@ -1,0 +1,127 @@
+<zk xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:h="http://www.w3.org/1999/xhtml">
+<window id="viewCouponsWinId" apply="org.mq.marketer.campaign.controller.admin.ViewCouponsController" width="100%" >
+    
+			<script > 
+			<![CDATA[
+			 function setScreenSize(){
+				 var width = screen.width;
+					var result = (width * 60)/100;
+					var label = (zk.Widget.$(jq('$screenSizeTBId')));
+					varJSLabel = document.getElementById(label.uuid);
+					varJSLabel.value=result;
+					label.value=result;
+					label=result;
+			 }        
+			]]>
+			</script>
+			
+		
+			  	<h:table cellspacing="0" cellpadding="4" width="99%"  bgcolor="#F4F5F9" style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+			  	 <h:tr>
+			  	   <h:td>
+			  	      <hlayout>
+			  	   <div>
+			       	 <label value="Search by:" style="font-weight:bold;" />                              
+				     <listbox id="srchLbId" mold="select"  width="150px" >
+				        <listitem label="Status" value ="Status" selected="true"/>
+            			<listitem label="Discount Code Name" value ="Name" />
+            			<listitem label="Created on" value="Date"/>
+        		     </listbox>
+			       </div>
+			       <div id="searchByPromoCodeNameDivId" visible="false">
+        		   	 <textbox id="searchByPromoCodeNameTbId" width="200px"/>
+        		   </div>
+			       
+			       <div id="searchByCreatedOnDivId" visible="false">
+			    	 <label value="Date:" sclass="theme-lbHeading" />
+					 <space />
+					 <label value="From: " />
+					 <datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+					 <space />
+					 <label value="To: " />
+					 <datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			      </div>
+			      <div id="searchByStatusDivId" visible="true">                           
+					  <listbox id="codeStatusLb" mold="select"  width="100px" >
+					    <listitem label="All" selected="true"  value="All"/>
+            			<listitem label="Active"  value="Active" />
+            			<listitem label="Running"  value="Running"/>
+            			<listitem label="Expired"  value="Expired" />
+            			<listitem label="Paused"  value="Paused"/>
+            			<listitem label="Draft"  value="Draft"/>
+					  </listbox>
+				  </div>
+				  <div id="filterBtnDivId">
+				      <button label="Filter" id="filterBtnId" sclass="idle140" style="margin-left:20px;" />
+				  </div>
+				  <div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;" >
+				  	  <a label="Reset" id="resetAnchId"  />
+				  </div>
+			  	</hlayout>
+			  	   </h:td>
+			  	 </h:tr>
+			  	</h:table>
+			  	
+			  	<div width="100%" >
+			  	
+			  		<separator />
+			  		<grid id="contactsGridId" emptyMessage="No data available" mold="paging" paginal="${pagingId}" >
+			  			<columns>
+							<column label="Discount code Name"></column>
+							<column label="Description"></column>
+							<column label="Discount code Type" width="150px"></column>
+							<column label="Created on" width="100px"></column>	
+							<column label="Status" width="80px"></column>
+							<column label="Discount" width="180px"></column>
+							<column label="Validity Period" width="180px"></column>
+							<column label="No. of Codes" width="100px"></column>
+							<column label="Actions"></column>
+						</columns>
+						<rows id="couponRowsId"/>
+			  		</grid>
+			  		<h:table width="100%">
+					<h:tr>
+							<h:td align="right">
+						   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+						   		<listbox rows="1" mold="select" id="memberPerPageLBId" style="margin-right:30px;">
+									<listitem label="5" selected="true" />
+									<listitem label="10"  />
+									<listitem label="15"/>
+								</listbox>
+							</h:td>
+							<h:td width="280px"  >
+								<paging id="couponsPagingId" detailed="true" pageSize="5" width="280px" 
+									class="contactsViewPaging" style="border:none;"  />
+							</h:td>
+					</h:tr>
+					
+				</h:table>
+			  	<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			
+						<h:tr >
+						<h:td align="right"><image src="/img/play_icn.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Activate" style="font-size:11px;" /> </h:td>
+						
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+								<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+								 
+								<h:td align="right"><image src="/img/pause_icn.png"/></h:td>
+								<h:td  align="left" style="padding-right:30px;"><label value="- Pause" style="font-size:11px;" /> </h:td>
+								
+								<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+								<h:td align="left" style="padding-right:30px;"><label value="- Delete" style="font-size:11px;" /> </h:td>
+								
+								<h:td align="right"><image src="/img/theme/home/reports_icon.png"/></h:td>
+								<h:td align="left" style="padding-right:10px;"> <label value="- Reports" style="font-size:11px;" /> </h:td>
+								
+								<h:td align="right"><image src="/img/icons/Export-of-Promo-codes-icon.png"/></h:td>
+								<h:td align="left" style="padding-right:10px;"> <label value="- Export" style="font-size:11px;" /> </h:td>
+					</h:tr>
+				</h:table>
+			  	<doublebox id="screenSizeTBId" value="800" w:onChanging="setScreenSize()" focus="true" width="0px" height="0px"></doublebox> 
+			  </div>
+			    
+	 			  
+	
+</window>
+</zk>

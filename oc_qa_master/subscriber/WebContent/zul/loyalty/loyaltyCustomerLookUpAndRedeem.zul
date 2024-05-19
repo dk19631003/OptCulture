@@ -1,0 +1,930 @@
+<zk>
+<window border="0" id="LoyaltyCustomerLookUpAndRedeemWinId" apply="org.mq.optculture.controller.loyalty.LoyaltyCustomerLookUpAndRedeemController" 
+		xmlns:h="native"  xmlns:w="client" width="100%" >
+		
+	<style>
+		.myTab .z-tab-accordion-img { float:right; margin-right: 10px;
+		margin-top: 3px; }
+		.custCheck { width:140px; } .line{ color: blue;
+		border-bottom:1px solid blue; } .underline{ color: #0000EE;
+		text-decoration: underline; } 
+
+.margineStyle{
+     margin-bottom: 10px;
+}
+.borderMargin{ 
+ margin:0px;
+}		
+.propertyTitle {
+    display:block;
+    width: auto;
+}
+.titleWrap{
+    display:inline-block;
+}
+
+.propertyValue {
+    display:block;
+    width:auto;
+}
+.propertyValue1 {
+    width:auto;
+}
+.valueWrap {
+    display:inline-block;
+    width:auto;
+}
+.tireAdjustment{
+	padding-left: 40px;
+}
+.suspendMember{
+	padding-left: 32px;
+}
+.adjustBalance{
+	padding-left: 67px;
+}.reason{
+    padding-left:150px;
+    padding-bottom: 0px;
+}.applyButton{
+	float: right;
+    padding: 0px 148px 5px 0px;
+}.reasonWidth{
+	width: 204px;
+}.verifyButton{
+	margin-left:111px;
+	/* margin-right: 154px; */
+}.verifyButtons{
+	margin-left:115px;
+}.brButton{
+	margin-top:5px;
+}
+	</style>
+	
+		<!-- <north id="northId" flex="true" height="50px" border="none" > -->
+			<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+				<h:tr height="25px">
+					<h:td >
+						<label value="Search by : " sclass="theme-lbHeading" />
+						<listbox id="searchbyLbId" mold="select" >
+							<listitem label="Email Address is" value="email_id" selected="true"/>
+							<listitem label="Phone Number is" value="mobile_phone" />
+							<listitem label="Name is like" value="fullName" />
+							<listitem label="Membership Number is" value="card_number"/>
+						</listbox>
+						<textbox id="searchByTbId" width="150px" style="color:grey;font-style: italic;font-size:12px; text-shadow: 2px 2px #ff0000;" />
+						<span id= "fullNameSpanId" visible="false"><!-- <label value="First Name" id="firstNameLbId" style="margin-left:10px;" /> -->
+										<textbox id="first_nameTbId" width="130px" value="first name" />
+										<!-- <label value="Last Name" id="lastNameLbId" style="margin-left:10px;" /> -->
+										<textbox id="last_nameTbId" width="130px" value="last name" />
+						</span>
+						</h:td>
+					<h:td width="50%">
+						<button label="Filter" sclass="idle" width="100px" id="filterBtnId" />
+						<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+					</h:td>
+				</h:tr>
+			</h:table>
+			
+		 <h:table  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+				 <h:tr height="2px" style="background-color: #E5F4FB; color: #125F7B;" />
+		 <h:tr style="background-color: #E5F4FB; color: #125F7B; padding: 15px 10px;" height="40px">
+				<h:td width="250px">
+					<label value="Name : " style="font-size: 13px;" />
+					<label id="nameLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>					
+				<h:td width="300px">	
+					<label value="Membership Number : " style="font-size: 13px;" />
+					<label id="membershipLblId" value="" style="font-size: 13px;font-weight:bold;" />
+					
+				</h:td >
+				<h:td width="250px">
+					<label value="Phone Number : " style="font-size: 13px;" />
+					<label id="moblieNumberLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+				<h:td width="350px">	
+					<label value="Email Address : " style="font-size: 13px;" />
+					<label id="emailAddressLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+				<h:td width="150px">
+					<button label="Edit Contact" sclass="idle" width="100px" id="editContactBtnId" />
+				</h:td>	
+				</h:tr>
+				 <h:tr height="3px" style="background-color: #E5F4FB; color: #125F7B;" />
+		 </h:table>	
+		
+		<!-- </north> -->
+	<borderlayout width="1290px" id="displaybrdrLOut" >
+	
+		<east size="35%"  splittable="false" collapsible="false"  border="none">
+		<div style="min-width: 410px; max-width:100%">
+			<div style="margin-left:10px;margin-top:5px;" >
+							
+				<tabbox>
+					<tabs>
+						<tab label="Membership Summary"  image="/img/icons/bullet_arrow_down.png" sclass="myTab"/> 
+						<tab label="Transactions Summary" image="/img/icons/bullet_arrow_down.png" sclass="myTab"/>
+					</tabs>
+					<tabpanels>
+					<!-- Membership Summary -->
+						<tabpanel style="overflow:auto;">
+							<div>
+								<h:table >
+									<h:tr height="25px">
+										<h:td><label value="Membership Number" /></h:td> 
+										<h:td width="10px" ><label value=":"  /></h:td> 
+										<h:td><label id="membershipMSummaryLblId" /></h:td>
+										<h:td width="110px">
+										<div id="whichprogramDivId" visible="false">
+										<a label="Which Program? " tooltip="whichProgram" style="margin-left:10px;font-size: 12px;" />
+										<popup id="whichProgram"   width="200px" style="bgcolor:#CCCCCC" >
+											<h:tr>
+												<h:td>
+													<label  value="Program Name :" sclass="labelPos" />
+													<label id="programNameLbId" />
+												</h:td>
+											</h:tr>
+											<separator/>
+											<h:tr>
+												<h:td>
+													<label  value="Card-Set Name :" sclass="labelPos" />
+													<label id="cardSetNameLbId" />
+												</h:td>
+											</h:tr>
+										</popup>
+										</div>
+										</h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Membership Status" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="membershipStatusMSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Opt-In Date" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="optInDateMSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Source" /></h:td> 
+										<h:td ><label value=":"  /></h:td>
+										<h:td><label id="sourceMSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Subsidiary " /></h:td> 
+										<h:td ><label value=":"  /></h:td>
+										<h:td><label id="subsidiaryNumberMSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Store " /></h:td> 
+										<h:td ><label value=":"  /></h:td>
+										<h:td><label id="storeNumberMSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px" style="line-height:1.5">
+										<h:td><label value="Lifetime Loyalty Purchase Value " /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="lifeTimePurchaseValueMSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Tier Name" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="tierNameMSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Expiration Date" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td width="150px"><label id="expirationDateMSummaryLblId" /></h:td>
+									</h:tr>
+									
+									<h:tr height="15px">
+									
+									</h:tr>
+								</h:table>
+							</div>
+							<separator/>
+						</tabpanel>
+					<!--Transactions Summary-->
+						<tabpanel style="overflow:auto;">
+							<div>
+								<h:table >
+									<h:tr height="25px">
+										<h:td><label value="Total Loyalty Issuances" /></h:td> 
+										<h:td width="10px"><label value=":"  /></h:td> 
+										<h:td><label id="totalIssuanceTSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Total Redemptions" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="totalRedemptionsTSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Lifetime Points" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="lifetimePointsTSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Total Currency Earned" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="totalAmountEarnedTSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Points Redeemed" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="pointRedeemedTSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Currency Redeemed" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="amountRedeemedTSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Total Gift Top-up Amount" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="totalGiftTopupAmountTSummaryLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Gift Amount Redeemed" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="giftAmountRedeemedTSummaryLblId" /></h:td>
+									</h:tr>
+								
+								</h:table>
+							</div>
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+				
+				<separator></separator>
+					<separator></separator>
+		<tabbox>
+				<tabs>
+						<tab label="Adjustments"  image="/img/icons/bullet_arrow_down.png" sclass="myTab"/> 
+						<tab label="Loyalty Redemption" image="/img/icons/bullet_arrow_down.png" sclass="myTab"/>
+					</tabs>
+					<tabpanels>
+					<!-- Adjustments -->
+						<tabpanel style="overflow:auto;">
+						<div id="emailSuppressionDivId" visible="true">
+			
+ 						<h:table cellspacing="2" cellpadding="2" width="100%">
+				  		  <h:tr height="2"/>
+				  			
+				  			<h:tr>
+				  				<h:td><label  value="Remove EmailID from Suppression : "/> 
+				  				<textbox  id="emailTxtBxId" />
+				  				<button label="Delete"  sclass="idle70 greenbtn" id="deleteEmailId" /> 
+										</h:td>
+										
+								</h:tr>
+								<h:tr>		
+								<h:td ><label  value="Remove mobile# from Suppression : "/> 
+				  				<textbox  id="phnTxtBxId" />
+				  				
+										
+								<button label="Delete"  sclass="idle70 greenbtn" id="deletephnId" /> 
+							</h:td>
+																
+										
+				  			</h:tr>
+						<h:tr height='20'></h:tr>
+
+						
+
+						<h:tr>
+						<h:td></h:td>
+						
+						
+						
+						</h:tr>
+					
+					
+						
+					
+					
+				  			
+				  		</h:table>	
+			  		
+			  		</div>
+				<div>
+						<h:table width="95%" cellpadding="0" >
+						   
+								   <div class="margineStyle">
+								    	<div class="titleWrap">
+											<label class="propertyTitle" value="Resend Membership Details" />
+									   </div>
+								    	<div class="valueWrap">
+											<button id="resendBtnId" class="propertyValue" label="Send" style="margin-left:2px;" sclass="idle70 greenbtn" />
+									   </div>
+								   </div>
+							<div id="moveTierDivId" visible="false">
+							<div class="margineStyle">
+								<div class="titleWrap">
+									<label class="propertyTitle" value="Tier adjustment " id="currentTierLbId"/>
+								</div>
+								<div class="valueWrap tireAdjustment">
+									<listbox id="toTierLbId" style="width: 71px;" mold="select"/>
+									<button id="moveTierBtnId" label="Change" sclass="greenbtn" />
+								</div>
+							</div>
+							<popup id="ltyPwdPopupMvtierId" width="200px">
+								Enter Loyalty Password
+					            <textbox id="ltyPwdTbMvtierdId" maxlength="25" type="password" value ="" /> 
+					            <div align="right" ><button label="Submit" id="submitPwdBtnMvtierId" /></div>
+							</popup>
+							</div>
+							
+							<div class="margineStyle">
+								<div class="titleWrap">
+									<label class="propertyTitle" value="Suspend Membership" />
+								</div>
+								<div class="valueWrap suspendMember">
+									<button id="suspendMembershipBtnId" label="Suspend" sclass="idle70 greenbtn" />
+								</div>
+								<popup id="ltyPwdPopupSuspendId" width="200px">Enter Loyalty Password
+						            <textbox id="ltyPwdTbSuspendId" maxlength="25" type="password" value ="" /> 
+						            <div align="right" style="margin-top:5px;">
+						            	<button label="Submit" id="submitPwdBtnSuspendId" />
+						            </div>
+								</popup>
+							</div>
+							
+							 <div class="margineStyle">
+								<div class="titleWrap">
+									<label class="propertyTitle" value="Adjust Balance" />
+								</div>
+								<div class="valueWrap adjustBalance">
+									
+									<listbox id="addLbId2" mold="select" style="width:173px;height:29px;font-size:13px">
+										<listitem id="listItemPts" label="Points Balance" value="Active-Points" selected="true" />
+										<listitem id="listItemAmt" label="Currency Balance" value="Active-Amount" />
+										<listitem label="Lifetime Purchase Value" value="Active-LPV" visible="true"/>
+										<listitem id="listItemHoldPts" label="Hold Points" value="Hold-Points"  visible="false" />
+										<listitem id="listItemHoldAmt" label="Hold Currency" value="Hold-Amount" visible="false"/>
+									</listbox>
+								</div>	
+								<div>
+									<label value="To" visible="false" id="toLbId" />
+								</div>						
+							</div>
+							<div class="valueWrap reason">
+							<listbox id="addLbId" mold="select" style="width:72x;height:29px;font-size:13px">
+										<listitem label="Add" value="Add" />
+										<listitem label="Subtract" value="Subtract" visible="true"/>
+									</listbox>
+									<textbox width="81px" id="addTbId" placeholder="Value" style="font-size:12px;" />
+								<!-- <textbox class="propertyValue" width="72px" id="addTbId" placeholder="Value" style="font-size:12px;" /> -->
+							</div>
+							<div class="valueWrap reason">
+							 <div class="userDefinedStyleButton-reason">
+					      <textbox class="reasonWidth" id="subTb2Id" placeholder="Reason for adjustment (Optional)" style="font-size:12px;"/><h:br/>
+						  <textbox class="reasonWidth" id="storeNoTbId" placeholder="Store#" style="font-size:12px;" width ="40px"/>
+						  <textbox class="reasonWidth" id="receiptNoTbId" placeholder="Receipt#" style="font-size:12px;" width ="60px"/>
+						  <textbox class="reasonWidth" id="receiptAmtTbId" placeholder="Receipt Amount" style="font-size:12px;" width ="100px"/>	
+					       </div>
+						 </div>
+						 	
+							
+							<div class="valueWrap applyButton">
+								<button id="subtractBtnId" label="Apply" sclass="idle70 greenbtn" />
+							</div>
+							<popup id="ltyPwdPopupSubId" width="200px">
+							Enter Loyalty Password
+				            <textbox id="ltyPwdTbSubId" maxlength="25" type="password" value ="" />
+				            <div align="right" style="margin-top:5px;"><button label="Submit" id="submitPwdBtnSubId" /></div>
+							</popup>
+							<h:tr height="25px" style ="display:none;">
+								                    <h:td><label value="Subtract" id="redeemPointsTbId" /></h:td>
+								  <h:td><textbox width="50px" id="add" style="margin-left:10px;" /></h:td>
+								   <h:td>
+									     <listbox id="subLbId" mold="select">
+										     <listitem label="Points" value="Points" selected="true" />
+										<listitem label="Currency " value="Amount" />
+									</listbox> 
+								</h:td> 
+								<h:td align="center"><label value="From" visible="false" id="fromLbId" /></h:td>
+								<h:td>
+								   <div id="subTypeDivId" visible="false">
+							    <listbox id="subTypeLbId" mold="select">
+										<listitem label="Active" value="Active" selected="true" />
+										<listitem label="Hold" value="Hold" />
+									</listbox>
+								</div> 
+								</h:td>
+							</h:tr> 
+						</h:table>
+                       <h:table>
+							<h:tr>
+								<h:td width="170px"><label value="Balance Currency" style="font-size: 15px;font-weight:bold;" /></h:td>
+								<h:td width="20px" ><label value=":" style="font-size: 15px;font-weight:bold;" /></h:td> 
+								<h:td><label  style="font-size: 15px;font-weight:bold;" id="finalBalanceRewardsLblId" /></h:td>
+							</h:tr>					
+						</h:table>
+                    	<h:table>
+							<h:tr>
+								<h:td width="170px"><label value="Balance Points" style="font-size: 15px;font-weight:bold;" /></h:td>
+								<h:td width="20px" ><label value=":" style="font-size: 15px;font-weight:bold;" /></h:td> 
+								<h:td><label  style="font-size: 15px;font-weight:bold;" id="finalBalancePointsLblId" /></h:td>
+							</h:tr>					
+						</h:table>
+					<div id="finalHoldBalDivId" visible="false">
+						<h:table>
+							<h:tr>
+								<h:td width="170px"><label value="Hold Balance" style="font-size: 15px;font-weight:bold;" /></h:td>
+								<h:td width="20px" ><label value=":" style="font-size: 15px;font-weight:bold;" /></h:td> 
+								<h:td><label  style="font-size: 15px;font-weight:bold;" id="finalHoldBalanceLblId" /></h:td>
+							</h:tr>					
+						</h:table>
+					</div>
+				</div>
+				</tabpanel>
+				
+			<tabpanel style="overflow:auto;">
+					<div>
+						<h:table width="95%" cellpadding="0">
+							<div class="titleWrap">
+								<label class="propertyTitle" value="Redeem Amount : " style="display:inline-block;font-weight:bold;margin-right:5px;" />
+							</div>
+							<div class="valueWrap">
+								<doublebox class="propertyValue" width="72px" id="redeemedAmountTbId" placeholder="Enter Value" style="font-size:12px;margin:5px;"/>	
+							</div>
+							<div class="valueWrap">
+								<label class="propertyTitle" value="from redeemable balance of" />
+							</div>
+							<div class="valueWrap">
+								<label id="balanceCurrency2LblId" style="display:inline-block;font-weight:bold;margin-left:3px;" />
+							</div>
+							
+							<div class="valueWrap verifyButton">
+								<button id="verifyBtnId" label="Verify" sclass="idle70 greenbtn" style="margin-right:159px;"/> 
+								<!-- <label value="Not received your code?" style="display:inline-block;" />
+								 <a label="Resend Code" id="resendotp" style="display:inline-block;font-weight:bold;" /> -->
+							</div>
+						
+							<div class="margineStyle" id="otpDivId" visible="false">
+								
+								<div class="valueWrap brButton">
+									<label class="propertyTitle" value="OTP code:" style="display:inline-block;font-weight:bold;margin-right:49px;"/>
+									
+								</div>
+								<div class="valueWrap brButton">
+									<textbox class="propertyValue1" width="72px" id="otpTbId" placeholder="Value" style="font-size:12px;" />
+									<label value="Not received your code?" style="display:inline-block;" />
+								 	<a label="Resend Code" id="resendotp" style="display:inline-block;font-weight:bold;" />
+								</div>
+								<div></div>
+								<div class="valueWrap brButton">
+									<label class="propertyTitle" value="Store # :" style="display:inline-block;font-weight:bold;margin-right:62px;"/>	
+								</div>
+								<div class="valueWrap brButton">
+									<textbox class="propertyValue" width="72px" id="storeNumberTbId" placeholder="Value" style="font-size:12px;" />
+								</div>
+								<div></div>
+								<div class="valueWrap brButton">
+									<label class="propertyTitle" value="Receipt #:" style="display:inline-block;font-weight:bold;margin-right:53px;"/>
+								</div>
+								<div class="valueWrap brButton">
+									<textbox class="propertyValue" width="72px" id="receiptNumTbId" placeholder="Value" style="font-size:12px;" />
+								</div>
+								<div></div>
+								<div class="valueWrap brButton">
+									<label class="propertyTitle" value="Receipt Amount :" style="display:inline-block;font-weight:bold;margin-right:12px;"/>	
+								</div>
+								<div class="valueWrap brButton">
+									<doublebox class="propertyValue" width="72px" id="receiptAmountTbId" placeholder="Value" style="font-size:12px; margin-right:50px;" />
+								</div>
+							
+								<div class="valueWrap verifyButtons brButton">
+								<button id="applyBtnId" label="Apply" sclass="idle70 greenbtn"/>
+								</div>
+								
+							</div>
+							
+							
+							<div class="valueWrap brButton">
+									<label class="propertyTitle" value="Message :" style="display:inline-block;font-weight:bold;margin-right:30px;"/>
+									<label  width="72px" id="errorMsgTbId" style="font-size:12px;color:red;font-weight:bold;" />	
+							</div>
+							
+						
+						</h:table>					
+							
+				</div>		
+                </tabpanel>       
+				</tabpanels>
+				</tabbox>		
+				
+				
+			</div>
+			</div>
+		</east>
+	
+		<center   border="none">
+			<div>
+			<div id="editContactDivId" visible="false">
+			<groupbox closable="false" height="150px">
+								<caption label="Edit Contact"/>
+			<h:table >
+				<h:tr>
+					<h:td width="200">
+						<label value="First Name" />
+					</h:td>
+					<h:td>
+						<textbox id="firstNameTbId"/>
+					</h:td>
+					<h:td width="200">
+						<label value="Last Name" />
+					</h:td>
+					<h:td>
+						<textbox id="lastNameTbId"/>
+					</h:td>
+											
+				</h:tr>
+				<h:tr>
+					<h:td width="200">
+						<label value="Email Address" />
+					</h:td>
+					<h:td>
+						<textbox id="emailTbId"/>
+					</h:td>
+					<h:td width="200">
+						<label value="Phone Number" />
+					</h:td>
+					<h:td>
+						<textbox id="phoneTbId"/>
+					</h:td>
+											
+				</h:tr>
+				<h:tr>
+					<h:td/>												
+					<h:td/><h:td >												
+						<button label="Update" sclass="idle70 greenbtn"  style="margin-top:20px;" id="saveBtnId"/>
+						<space/>
+						<button label="Cancel" sclass="idle70" id="cancelBtnId" style="margin-top:20px;" />
+					</h:td>
+					<h:td/>
+				</h:tr>
+			</h:table>
+			</groupbox>
+		</div>
+			<h:table  width="100%" >
+					<h:tr valign="top">
+						<h:td width="150px">
+						
+							<groupbox closable="false" height="150px">
+								<caption label="Balances Info"/>
+								<h:table style="padding:5px;">
+									<h:tr>
+										<h:td height="25px" width="200px" ><label value="Balance Points : "  /><label id="balancePointLblId"/></h:td>
+										<h:td  width="150px" ></h:td>
+										<h:td height="25px" width="200px" ><label value="Balance Currency : "  /><label id="balanceCurrencyLblId"/></h:td>
+										<h:td width="150px" ></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td height="25px" width="200px"><label value="Expired Points : "/><label id="expiredPointsLblId"/></h:td>
+										<h:td width="100px"> </h:td> 
+										<h:td height="25px" width="200px"><label value="Expired Currency : " /><label id="expiredAmountLblId"/> </h:td>
+										<h:td width="100px"></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td height="25px" width="200px" ><label value="Balance Gift Amount : "/><label id="balanceGiftAmountLblId"/> </h:td> 
+										<h:td width="100px"></h:td>
+										<h:td height="25px" width="200px"><label value="Expired Gift Amount : " /><label id="expiredGiftAmountLblId"/> </h:td>
+										<h:td width="100px"></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td height="25px" width="200px" ><label value="Hold Balance : " id="holdBalLbId" visible="false" /><label  id="holdBalValLbId" visible="false" /></h:td> 
+					                   	<h:td width="100px"></h:td>
+										<h:td height="25px" width="200px" ></h:td>
+										<h:td width="100px"></h:td>
+									</h:tr>
+								</h:table>
+							</groupbox>
+						</h:td>
+						</h:tr>
+					<!--	<h:tr valign="top">
+						<h:td width="550px">
+						
+						<groupbox closable="false" height="170px">
+								<caption label="Last Purchase"/>
+								<h:table style="padding:5px;">
+									<h:tr>
+										<h:td height="30px" width="250px" ><label value="Visit On : "  /><label id="visitOnLblId"/></h:td> <h:td width="100px"></h:td>
+										<h:td height="30px" ><label value="Store : "  /><label id="storeLblId"/></h:td><h:td width="105px"></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td height="30px"><label value="Purchase Amount : "/> <label id="purchaseAmountLblId"/></h:td> <h:td width="100px"></h:td>
+										<h:td height="30px"><label value="Issued Amount (After Deducting Exclusions) : " /> <label id="issuedAmountLblId"/></h:td><h:td width="100px"></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td height="30px"><label value="Earning : "/> <label id="earningLblId"/></h:td> <h:td width="100px"></h:td>
+										<h:td height="30px"><label value="Redemption : " /> <label id="redemptionLblId"/></h:td><h:td width="100px"></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td height="30px"><label value="Items Purchased : "/> <label id="itemPurchasedLblId"/></h:td> 
+										<h:td>
+											<div id="skuDetailsDivId" visible="false">
+												<a  label="Which Items?" id="whichItemsPurchaseAnchId" style="font-size: 12px;"/>
+											</div>	
+										</h:td>
+										<h:td height="30px"><label value="Promotions Applied : " /> <label id="promotionsAppliedLblId"/></h:td>
+											<h:td>
+												<div id="promotionDetailsDivId" visible="false">
+													<a  label="Which Promtions?" id="whichItemsPromotionAnchId" style="font-size: 12px;"/>
+												</div>	
+											</h:td>
+									</h:tr>
+								</h:table>
+								
+							</groupbox>
+						</h:td>
+						</h:tr> -->
+	<!--  Transfer  -->
+						<h:tr>
+						<div id="transferLblDivId">
+						<h:td>
+						<div style="margin-top:17px;margin-left:15px;" >
+						<label value="Transferred Card(s) Details" style="font-weight:700;" id="transferedOrNewCardLblId"/></div>
+						</h:td>
+						</div>
+						</h:tr>
+						<h:tr>
+						<div id="transferTableDivId">
+						<h:td>
+						<div style="margin-top:5px;">
+								<listbox id="transferListLbId" emptyMessage="No transactions found." sclass="contactsView" >
+									<listhead menupopup="auto">
+										<listheader label="Card #" width="150px"/>
+										<listheader label="Card Status"/>
+										<listheader label="Card-set Name"/>
+										<listheader label="Tier Name"  />
+										<listheader label="Balance Curr." width="120px"/>
+										<listheader label="Balance Pts." />
+										<listheader label="Transferred On" />
+									</listhead>
+								</listbox>
+							</div>
+						</h:td>
+						</div>
+						</h:tr> 
+						
+						 <!-- Transfer end -->
+						<h:tr valign="top" height="50px">
+						<h:td width="550px">
+						 <div style="margin-top:30px;"> 
+								<h:table>
+									<h:tr>
+										<h:td >
+											<label value="Loyalty Transactions Within :" />
+										</h:td>	
+										<h:td>	
+											<listbox id="timeDurLbId"  mold="select" style="position:relative;">
+												<listitem label="Last 30 Days" selected="true" />
+												<listitem label="Last 3 Months"  />
+												<listitem label="Last 6 Months"  />
+												<listitem label="Last 1 Year"  />
+												<listitem label="Custom Dates"  />
+												<listitem label="Today"  />
+											</listbox>
+										</h:td>
+										<h:td>	
+											<div id="datesDivId" visible="false">
+												<label value="From " style="display:inline-block;font-weight:bold;" />
+												<datebox id="fromDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+															format="dd-MMM-yyyy" constraint="no future"/>
+												<label value="To " style="display:inline-block;font-weight:bold;" />
+												<datebox id="toDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+															format="dd-MMM-yyyy" constraint="no future"/>
+												<button label="Filter" id="transactionFilterAncId" sclass="idle" width="100px"/>
+												<a label="Reset" id="transactionResetAnchId" style="margin-left:20px;"  />
+											</div>
+										</h:td>	
+											
+									</h:tr>					
+								</h:table>	
+								 </div>	 	
+						</h:td>	
+						</h:tr>
+					<h:tr valign="top" >
+					<h:td width="550px">
+					<!-- //Changes 2.5.3.1 -->
+							<div style="margin-top:15px;">
+								<listbox id="transListLbId" emptyMessage="No transactions found." sclass="contactsView">
+									<listhead menupopup="auto">
+										<listheader label="Processed Time" width="90px"  style="white-space: normal;"/>
+										<listheader label="Receipt No." width="90px" style="white-space: normal;"/>
+										<listheader label="Subsidiary " width="90px"/>
+										<listheader label="Store " width="90px"/>
+										<listheader label="Transaction Type" width="90px" style="white-space: normal;"/>
+										<listheader label="Amount Entered" style="white-space: normal;"/>
+										<listheader label="Amount Diff." style="white-space: normal;"/>
+										<listheader label="Points Diff." style="white-space: normal;"/>
+										<listheader label="Balance Curr." style="white-space: normal;"/>
+										<listheader label="Balance Pts." style="white-space: normal;"/>
+										<listheader label="Hold Balance" width="10%"  align="left" visible="false" style="white-space: normal;"/>
+										<listheader label="Receipt Amount" width="10%"  align="left" visible="false" style="white-space: normal;"/>
+										<listheader label="Action" width="80px"/>
+									</listhead>
+								</listbox>
+								<separator/>
+									<h:table cellspacing="0" cellpadding="0" width="100%">
+										<h:tr bgcolor="#F9F9F9">
+										
+										<h:td>
+											<label value="Export" />
+											<combobox  id="exportCbId" readonly="true" sclass="cb_100w">
+								 	  			<comboitem label=" .csv file" value="csv" />    
+											</combobox> 
+											<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId" />
+										</h:td>
+										
+										<h:td align="right" width="100">
+											<label value="Items per page:" style="font-size:11px;" />
+										</h:td>
+												
+										<h:td  width="70">
+											<listbox rows="1" mold="select" id="pageSizeLbId"	>
+												<listitem label="5" selected="true"/>
+												<listitem label="10"   />
+												<listitem label="15" />
+											</listbox>
+												
+										</h:td>
+										<h:td width="300">
+											<paging id="loyaltyListBottomPagingId" width="300px"
+													detailed="false" pageSize="5" class="contactsViewPaging" style="border:none;" />
+										</h:td>
+										</h:tr>
+								</h:table>
+							<separator/>
+							</div>
+					</h:td>
+					</h:tr>
+				</h:table>
+				</div>
+		</center>
+		
+	</borderlayout>	
+	
+	<window id="custExport" title="Select Fields to Export" border="normal"  width="600px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="580px" style="margin:15px;" />
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td >
+					 <a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />  
+					 <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+	</window>
+
+<window id="latestDetailsSubWinId" title="" closable="false" 
+			visible="false" border="normal" width="800px" height="300px" position="center" >
+				<caption>
+					<toolbarbutton label="Close" onClick="latestDetailsSubWinId.setVisible(false)"/>
+				</caption>
+				
+				<div id="viewSkuDetailsDivId" visible="false" >
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Item SKU"/>
+							<column label="Item Category"/>
+							<column label="Quantity"/>
+							<column label="Unit Price"/>
+						</columns>
+						<rows id="viewAllSKURowsId"/>
+					</grid>
+					
+				</div>
+				<div id="descDivId" visible="false" style="padding-left:30px;margin-top:10px;" >
+				<label id="descLBId" value="No Reason !"></label>
+				</div>
+				
+				<div id="viewPromotionDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Promotion Name"/>
+							<column label="Applied Discount"/>
+							
+						</columns>
+						<rows id="promotionRowsId"/>
+					</grid>
+					
+				</div>
+						
+				<div id="viewPurchaseDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Item SKU"/>
+							<column label="Item Category"/>
+							<column label="Quantity"/>
+							<column label="Unit Price"/>
+						</columns>
+						<rows id="viewPurchaseRowsId"/>
+					</grid>
+				</div>
+				
+				<!-- APP-3219 -->
+							<div id="foundMultipleMatchesDivId" visible="false" style="overflow:auto;" height="402px;" >
+				
+						<h:table cellspacing="0" cellpadding="0" width="100%"  style="padding-left:30px;margin-top:10px;">
+			
+							<h:tr height="10">
+								<h:td valign="top"  style="margin-top:20px;">
+									<label value="Multiple loyalty customers were found with your search criteria " /><label id="searchCriteriaLblId"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="40px">
+								<h:td>
+									<label value="Please select the most relevant customer to your search from results shown below: "/>	
+								</h:td>
+							</h:tr>		
+						</h:table>
+							<h:table >	
+							
+										<div visible="false" width="690px" height="120px" style="overflow-y:scroll; overflow-x:auto;border: #E0E0E0  solid 0.2px;">
+											<radiogroup id="multipleMatchesRgId" style="margin-right:4px; ">
+											</radiogroup>
+										</div>
+									
+								<h:tr height="40px">
+									<h:td>
+											<grid id="multipleFoundGridId" width="1165px"
+													emptyMessage="No records found...">
+														<columns menupopup="auto" sizable="true">
+															<column label="Membership# " sort="auto" sclass="hovergridcolumn" width="15%" />
+															<column label="Phone# " sort="auto"  width="10%" />
+															<column label="Email ID " sort="auto" width="23%" />
+															<column label="Customer Id " sort="auto" width="12%"/>
+															<column label="Shop Enrolled At" sort="auto" width="11%" />
+															<column label="Last Shopped Date" sort="auto" width="11%"/>
+															<column label="Address" sort="auto" width="10%"/>
+															<column label="Tier Name" sort="auto" width="9%"/>
+														</columns>
+														 <rows id="multipleFoundRowId" />
+											</grid>
+									</h:td>
+								</h:tr>
+								
+								
+						</h:table>
+			
+						
+						
+				<!-- 	</center>
+					</borderlayout>		 -->			
+				</div>
+		
+				
+				<div id="closeCardDivId" visible="false">
+				<h:table cellspacing="0" cellpadding="0" width="100%"  style="padding-left:30px;margin-top:10px;">
+			
+							<h:tr height="10">
+								<h:td valign="top"  style="margin-top:20px;">
+				<label value="The card # "/><label id="closedCardLblId"/><label value=" is closed as it has been merged with another card."/>
+				</h:td></h:tr>
+				<h:tr height="40px">
+								<h:td>
+				<label value="Click 'Go to new card' to view new card details or 'OK' to continue view this card."/>
+				</h:td></h:tr>
+				<h:tr height="20px"/>
+				<h:tr >
+				<h:table cellspacing="2" cellpadding="1" align="center" >
+				<h:tr ><h:td colspan="6">
+				 <button label="Go to new card" sclass="idle140 greenbtn"  id="goToNewCardBtnId" />
+				 <button label="OK" id="goToClosedCardBtnId"  width="50" sclass="idle140 "/>
+				 </h:td></h:tr></h:table></h:tr></h:table>
+				
+				
+				</div>
+</window>
+
+<!-- <window id="promotionDetailsSubWinId" title="Promotions In Last Purchase" closable="false" 
+			visible="false" border="normal" width="800px" height="300px" position="center" >
+				<caption>
+					<toolbarbutton label="Close" onClick="promotionDetailsSubWinId.setVisible(false)"/>
+				</caption>
+				
+				<div id="viewPromotionDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Promotion Name"/>
+							<column label="Applied Discount"/>
+							
+						</columns>
+						<rows id="promotionRowsId"/>
+					</grid>
+					
+				</div>
+</window> -->			
+</window>				
+</zk>

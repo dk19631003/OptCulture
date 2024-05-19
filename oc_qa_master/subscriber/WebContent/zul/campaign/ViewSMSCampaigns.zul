@@ -1,0 +1,104 @@
+<zk>
+	<window id="viewCampWinId" apply="org.mq.marketer.campaign.controller.campaign.ViewSMSCampaignsController" xmlns:h="http://www.zkoss.org/2005/zk/native">
+	<separator/>
+	<h:table cellspacing="0" cellpadding="4" width="99%"  bgcolor="#F4F5F9" style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+	
+		<h:tr>
+			<h:td>
+				<label value="SMS Campaigns by Status" style="font-weight:bold;" />                              
+				<listbox id="smsCampStatusLb" mold="select"  width="100px"  />
+				<button label="Filter" id="submintBtnId" sclass="idle140" style="margin-left:20px;" />
+				<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+			</h:td>
+		
+		</h:tr>
+	
+	</h:table>
+	<separator/>
+	
+	<h:table cellspacing="0" cellpadding="0" align="center"  width="100%">
+		
+		<h:tr>
+			<h:td>
+				<include id="viewCampIncId" src="/zul/campaign/SMSCampaignList.zul" smsCampStatusLb="${smsCampStatusLb}"/>
+			</h:td>
+		</h:tr>
+	</h:table>
+	</window>
+</zk>
+
+
+<!--<zk>
+	<window id="viewCampWinId" apply="org.mq.marketer.campaign.controller.campaign.ViewSMSCampaignsController" xmlns:h="http://www.zkoss.org/2005/zk/native">
+	<separator/>
+	<h:table cellspacing="0" cellpadding="0" align="center" width="100%">
+		<h:tr>
+			<h:td >
+				<h:table cellspacing="0" cellpadding="0"  style="margin-bottom: 8px;" width="100%">
+					<h:tr>
+						<h:td >
+							<label value="SMS Campaigns by Status"/>                              
+							<listbox id="smsCampStatusLb" mold="select"  width="100px" />
+						</h:td>
+						 <h:td align="center">
+							<hbox style="padding-left:10px;">
+								<div id="memPerpageDivId" >
+							   		<label value="SMS  per page:" sclass="boldLabel"/>
+							   		<listbox rows="1" mold="select"  style="position:relative;left:5px;">
+										<listitem label="5" selected="true" />
+										<listitem label="10"  />
+										<listitem label="15"/>
+									</listbox>
+								</div>
+						   </hbox> 
+						</h:td>
+						<h:td>
+							<h:table cellspacing="0" cellpadding="0"  style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; margin-left: 130px;">
+								<h:tbody>
+									<h:tr valign="top" >
+										<h:td align="left"> <image src="/img/email_page.gif"/></h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left" >-</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left" >Test mail</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left" ><image src="/img/email_go.gif"/></h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left" >-</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left">Send Again</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left" ><image src="/img/email_edit.gif"/></h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left" > -</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left" >Edit</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left"><image src="/img/action_delete.gif"/></h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left"> -</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left">Delete</h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left"><image src="/img/theme/home/reports_icon.png"/></h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left"> - </h:td>
+										<h:td style="width: 5px;">
+										</h:td><h:td align="left">Report</h:td>
+									</h:tr>
+								</h:tbody>
+							</h:table>
+						</h:td>
+					</h:tr>
+				</h:table>
+			</h:td>
+		</h:tr>
+		<h:tr>
+			 <h:td>
+				<include id="viewCampIncId" src="/zul/campaign/SMSCampaignList.zul" smsCampStatusLb="${smsCampStatusLb}"/>
+			</h:td>
+		</h:tr>
+	</h:table>
+	</window>
+</zk>
+-->

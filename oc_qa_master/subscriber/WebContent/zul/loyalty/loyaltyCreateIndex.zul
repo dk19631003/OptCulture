@@ -1,0 +1,5 @@
+<?page title="Create Loyalty Program" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="ltyCreateIndexWinId" apply="org.mq.optculture.controller.loyalty.LoyaltyCreateIndexController">
+</window>
+</zk>

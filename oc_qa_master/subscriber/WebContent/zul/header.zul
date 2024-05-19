@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<?page id="indexPageId" title="OptCulture" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" ?>
+<?link rel="icon" type="image/x-icon" href="img/favicon.ico" ?>
+<?taglib uri="http://www.zkoss.org/zkspring/security" prefix="sec"?>
+<zk>
+<window xmlns:h="native" id="headerWinId" apply="org.mq.marketer.campaign.controller.HeaderController" >
+<script defer="true"><![CDATA[
+var _portrait = {'0': true, '180': true}, //default portrait definition
+    _initLandscape = jq.innerWidth() > jq.innerHeight(), // initial orientation is landscape or not
+    _initDefault = _portrait[window.orientation]; //default orientation
+
+zAu.cmd0.clientInfo = function(dtid) {
+    zAu._cInfoReg = true;
+    var orient = '',
+        dpr = 1;
+
+    if (zk.mobile) {
+        //change default portrait definition because landscape is the default orientation for this device/browser.
+        if ((_initLandscape && _initDefault) || (!_initLandscape && !_initDefault))
+            _portrait = {'-90': true, '90': true};
+
+        orient = _portrait[window.orientation] ? 'portrait' : 'landscape';
+    } else {
+        orient = jq.innerWidth() > jq.innerHeight() ? 'landscape' : 'portrait';
+    }
+
+    if (window.devicePixelRatio)
+        dpr = window.devicePixelRatio;
+
+    zAu.send(new zk.Event(zk.Desktop.$(dtid), 'onClientInfo', 
+        [new Date().getTimezoneOffset(),
+        zk.parseInt(screen.width), zk.parseInt(screen.height), screen.colorDepth,
+        zk.parseInt(jq.innerWidth()), zk.parseInt(jq.innerHeight()), zk.parseInt(jq.innerX()), zk.parseInt(jq.innerY()), dpr.toFixed(1), orient],
+        {implicit:true, rtags: {onClientInfo: 1}}));
+}
+]]></script>
+
+	
+	<div id="logoBgDivId" >
+	<h:table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" >
+		<h:tr>
+			<h:td> <image src="/img/captiway_logo.jpg" id="goToRMHomeImgId" sclass="logo"/> </h:td>
+			
+			<h:td  valign="middle">
+				<div id="rightDivId" align="right" style="margin-right:10px;">
+				<h:table cellspacing="0" border="0" cellpadding="0">
+				<h:tr>
+				<h:td class="headerFirst"></h:td>
+				<h:td class="headerMiddle">
+					<label value="Welcome, "/>
+					<label sclass="headerSep2" id="userWelcomeId" style="font-weight:bold; padding-left:0;"/>
+				</h:td>
+				
+				<h:td  class="headerMiddle">
+			   	 	<div sclass="headerSep2">
+			   	 		<label sclass="emailIcon" /> <a id="emailCreditsAId" tooltiptext = "Click to refresh available email credits" label="0" sclass="headerLink" />
+			   	 	</div>
+				</h:td>
+				
+				<h:td  class="headerMiddle">
+			   	 	<div sclass="headerSep2">
+			   	 		<label sclass="smsIcon" /> <a  id="smsCreditsAId"  tooltiptext = "Click to refresh available SMS credits" label="0" sclass="headerLink" />
+			   	 	</div>
+				</h:td>
+				
+				<!-- <h:td  class="headerMiddle2">
+					<div sclass="headerSep">
+						<a label="Support" id="supportToolbarBtnId" sclass="headerLink" >
+						<label sclass="supportIcon" /></a>
+					</div>
+				</h:td> -->
+				
+				<h:td  class="headerMiddle2">
+					<div sclass="headerSep">
+						 <a  id="tutorialsAId"  target="_blank" href ="https://support.optculture.com" label="Support" sclass="headerLink" >
+						 <label sclass="tutorialIcon" /></a>
+					</div>			
+				</h:td>
+				<!-- <h:td  class="headerMiddle2">
+					<div sclass="headerSep">
+						<a label="Feedback" id="feedbackToolbarBtnId" sclass="headerLink" >
+						<label sclass="feedbackIcon" /></a>
+					</div>
+				</h:td> -->
+				
+				
+				
+				<h:td  class="headerMiddle2">
+				<div>
+			   	 	<a id="logoutAId" href="j_spring_security_logout" sclass="headerLink" style="padding:0 10px;">
+			   	 	Log out <label sclass="logoutIcon" /> </a></div>
+				</h:td>
+				
+				<h:td class="headerLast"></h:td>
+				</h:tr>
+				</h:table>
+				
+				 
+				</div>
+			</h:td>
+		</h:tr>
+	</h:table>
+	</div>
+    
+
+    <script>
+    	<![CDATA[
+    	         gUser = "${userWelcomeId.value}";
+		]]>
+    </script>
+    </window>
+ </zk>

@@ -1,0 +1,85 @@
+image: maven:3.6.1-jdk-8
+pipelines:
+  custom:
+    custom-build:
+      - variables:
+        - name: target
+      - step:
+          name: custom build $target subscriber 
+          caches:
+            - maven
+          script:
+            - cd subscriber
+            - mvn clean package resources:resources -P$target
+            - cd .. && mkdir tmpsub
+            - unzip subscriber/target/subscriber*.war -d tmpsub/
+            - cp subscriber/jars/uadetector-core-0.9.22.jar subscriber/jars/uadetector-resources-2014.10.jar subscriber/jars/quality-check-1.3.jar tmpsub/WEB-INF/lib/
+            - cd tmpsub/ && jar -cvf ../subscriber.war .
+          artifacts:
+            - subscriber.war
+
+  branches:
+    TEST_OC:
+      - step:
+          name: build subscriber for Test
+          caches:
+            - maven
+          script:
+            - cd subscriber
+            - mvn clean package resources:resources -Ptest
+            - cd .. && mkdir tmpsub
+            - unzip subscriber/target/subscriber*.war -d tmpsub/
+            - cp subscriber/jars/uadetector-core-0.9.22.jar subscriber/jars/uadetector-resources-2014.10.jar subscriber/jars/quality-check-1.3.jar tmpsub/WEB-INF/lib/
+            - cd tmpsub/ && jar -cvf ../subscriber.war .
+          artifacts:
+            - subscriber.war
+      - step:
+          name: Deploy to Test server
+          deployment: Test
+          trigger: manual
+          script:
+            - scp -F ~/.ssh/config subscriber.war optculture@test.optculture.com:/optdata/ocapp/tomcat/webapps/subscriber.war
+      
+      # - step:
+      #     name: build Scheduler
+      #     caches:
+      #       - maven
+      #     script:
+      #       - cd Scheduler
+      #       - mvn clean package
+      #     artifacts:
+      #       - Scheduler/target/scheduler*.war 
+    master:
+      - step:
+          name: build subscriber for QC Deployment
+          caches:
+            - maven
+          script:
+            - cd subscriber
+            - mvn clean package resources:resources -Pqcapp
+            - cd .. && mkdir tmpsub
+            - unzip subscriber/target/subscriber*.war -d tmpsub/
+            - cp subscriber/jars/uadetector-core-0.9.22.jar subscriber/jars/uadetector-resources-2014.10.jar subscriber/jars/quality-check-1.3.jar tmpsub/WEB-INF/lib/
+            - cd tmpsub/ && jar -cvf ../subscriber.war .
+          artifacts:
+            - subscriber.war
+      - step:
+          name: Deploy to QCApp server
+          deployment: QCApp
+          trigger: manual
+          script:
+            - scp -F ~/.ssh/config subscriber.war optculture@qcapp.optculture.com:/usr/local/tomcat/webapps/subscriber.war
+    # 2.8.2222.02_TEST:
+    #   - step:
+    #       name: build subscriber for Test Deployment
+    #       caches:
+    #         - maven
+    #       script:
+    #         - cd subscriber
+    #         - mvn clean package resources:resources -Ptest
+    #         - cd .. && mkdir tmpsub
+    #         - unzip subscriber/target/subscriber*.war -d tmpsub/
+    #         - cp subscriber/jars/uadetector-core-0.9.22.jar subscriber/jars/uadetector-resources-2014.10.jar subscriber/jars/quality-check-1.3.jar tmpsub/WEB-INF/lib/
+    #         - cd tmpsub/ && jar -cvf ../subscriber.war .
+    #       artifacts:
+    #         - subscriber.war

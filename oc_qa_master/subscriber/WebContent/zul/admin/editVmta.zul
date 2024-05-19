@@ -1,0 +1,234 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id ="vmtaWinId" border="0" apply="org.mq.marketer.campaign.controller.admin.VmtaController">
+		
+		<grid id="vmtaGridId" fixedLayout="true" height="185px" 
+				 	rowRenderer="${vmtaWinId$VmtaController.rowRenderer}" 
+					model="${vmtaWinId$VmtaController.usersModel}">
+					 	<columns >
+					       <!-- <column  width="50px" label="Id"/> -->
+					       <!-- <column  width="180px" label="Vmta_Name"/> -->
+					       <column  width="180px" label="Email Route Name"/>
+					       <column  label="Description"/>
+					       <!-- <column  label="Pooled_Vmta"/> -->
+					       <!-- <column  width="140px" label="Status"/> -->
+					       <column  width="120px" label="Account"/>
+					       <column  width="130px" label="Account API Name"/>
+					       <column  width="120px" label="Host"/>
+					       <column  width="100px" label="Actions"/>
+					     </columns>
+							
+					</grid>	
+					
+		<h:table cellspacing="2" cellpadding="2" width="100%"  xmlns:h="http://www.zkoss.org/2005/zk/native">
+
+		 <h:tr>
+			 <h:td colspan="2">
+			 <hbox> 
+				<!-- <button id="showVmtaBtnId" label="Add VMTA" /> -->
+				<button id="showVmtaBtnId" label="Add Email Route" />
+			 </hbox>
+			 </h:td>
+		</h:tr>
+
+
+			<h:tr align="left">
+				<h:td width="50%">
+				<groupbox id="newVmtaGbId"  style="padding-right:10px;" visible="false" closable="false">
+					<!-- <caption label="Add new VMTA / VMTA Pool"></caption> -->
+					<!-- <caption label="Add/Update a VMTA"></caption> -->
+					<caption label="Add/Update an Email Route"></caption>
+					<h:table width="100%" style="padding:10px;">
+					<!-- <h:tr>
+
+					<h:td align="right">
+						<label  value="Vmta / Pool Name :"/> 
+					</h:td>
+
+					<h:td colspan="2">
+					 <textbox id="vmtaNameId" width="200px" maxlength="30" cols="30"/>
+					</h:td>
+
+					</h:tr> -->
+					
+					<!-- <h:tr>
+					   <h:td  align="right" colspan="4">
+					      <div id="updateVmtaDivId" visible="false">
+					        <h:table width="100%" >
+					          <h:tr>
+					            <h:td align="right">
+									<label value="VMTA :"  sclass="boldLbl" />
+									<label value="Email Route :"  sclass="boldLbl" />
+								</h:td>
+								<h:td colspan="2">
+								    <textbox id="selectedVmtaNameTextBxId" width="200px" maxlength="30" cols="30"/>
+								</h:td>
+					          </h:tr>
+					          <h:tr>
+					            <h:td align="right">
+									<label value="Account :"  sclass="boldLbl" /> 
+								</h:td>
+								<h:td colspan="2">
+								    <combobox id="vmtaAccountNameCbId" readonly="true" />
+								</h:td>
+					          </h:tr>
+					        </h:table>
+        		   		</div>
+        		   		<div id="addVmtaDivId" visible="false">
+        		   		  <h:table width="100%">
+					          <h:tr>
+					            <h:td align="right">
+									<label value="VMTA"  sclass="boldLbl" /> <label value="*" style="color:red;"/> 
+									<label value="Email Route :"  sclass="boldLbl" /> <label value="*" style="color:red;"/>
+								</h:td>
+								<h:td colspan="2">
+								    <textbox id="vmtaNameId" width="200px" maxlength="30" cols="30"/>
+								</h:td>
+					          </h:tr>
+					          <h:tr>
+					            <h:td align="right">
+									<label value="Account"  sclass="boldLbl" /> <label value="*" style="color:red;"/> 
+								</h:td>
+								<h:td colspan="2">
+								    <textbox id="vmtaAccountTxtBxId" width="200px" maxlength="30" cols="30"/>
+								</h:td>
+					          </h:tr>
+					        </h:table>
+        		   		</div> 
+					     
+					   </h:td>
+						 
+        		   		          
+					</h:tr> -->
+					<!-- <h:tr>
+					    <h:td align="right">
+							<label  value="Password :"/> 
+						</h:td>
+
+						<h:td colspan="2">
+					 		<textbox id="vmtaNameId" width="200px" maxlength="30" cols="30"/>
+						</h:td>
+					</h:tr> -->
+					<h:tr align="left">
+					    <h:td align="right" >
+							<label  value="Email Route :"/> 
+						</h:td>
+
+						<h:td colspan="2">
+							<combobox id="emailRouteCbId"  />
+						</h:td>
+					</h:tr>
+					<h:tr align="left">
+					    <h:td align="right" >
+							<label  value="Account :"/> 
+						</h:td>
+
+						<h:td colspan="2">
+					 		<textbox id="vmtaAccountNameCbId" readonly="false" />
+						</h:td>
+					</h:tr>
+					<h:tr align="left">
+					    <h:td align="right" >
+							<label  value="Account API Name :"/> 
+						</h:td>
+
+						<h:td colspan="2">
+					 		<textbox id="vmtaAccountAPINameCbId" readonly="false" />
+						</h:td>
+					</h:tr>
+					<h:tr align="left">
+					    <h:td align="right" >
+							<label  value="Password :"/> 
+						</h:td>
+
+						<h:td colspan="2">
+					 		<textbox id="passTxtBxId" width="200px" maxlength="100" cols="30"  type="password"/>
+						</h:td>
+					</h:tr>
+					<!-- <h:tr>
+					    <h:td align="right">
+							<label  value="Vmta :"/> 
+						</h:td>
+
+						<h:td colspan="2">
+					 		<textbox id="vmtaNameId" width="200px" maxlength="30" cols="30"/>
+						</h:td>
+					</h:tr> -->
+					<h:tr>
+					    <h:td align="right">
+							<label  value="Host :"/> 
+						</h:td>
+
+						<h:td colspan="2">
+					 		<textbox id="hostTxtBxId" width="200px" maxlength="30" cols="30"/>
+						</h:td>
+					</h:tr>
+					
+					<h:tr>
+					
+					<h:td align="right">
+						<label value="Description :"/>
+					</h:td>
+					
+					<h:td colspan="2">
+					 <textbox id="vmtaDescTbId" rows="2" width="200px" height="80px" maxlength="125"/>
+					</h:td>
+					
+					</h:tr>
+					
+					<!-- <h:tr height="50">
+					<h:td align="right">
+						<label  value="Status : " />
+					</h:td>
+
+					<h:td  width="100">
+						<listbox id="vmtaStatusLbId" mold="select">
+							<listitem label= "Good" selected="true"/>
+							<listitem label="Average"/>
+							<listitem label="Basic"/>
+						</listbox>
+					</h:td>
+					<h:td>
+						<checkbox id="pooledVmtaCbId" checked="false" label="Is Pooled Vmta" style="padding-left:12px;display:inline;" />
+					</h:td>
+					</h:tr> -->
+					
+					
+					
+					<h:tr height="50">
+					<h:td colspan="3" align="center">
+						<button id="cancelVmtaBtnId"  label="Cancel" />
+						<button id="addVmtaBtnId"  label="Add" />
+						<button id="updateVmtaBtnId" label="Update" visible="false" />
+					</h:td>
+					</h:tr>
+					</h:table>
+			</groupbox>
+
+				</h:td>
+				<h:td align="left">
+
+					<groupbox id="vmtaPoolGbId" visible="false" closable="false">
+					<caption label="Select vmta(s) for the new Pool"></caption>
+					
+					<div width="100%" style="padding:5px;"> 
+						<checkbox id="onlyVmtaCbId" label="Show only free VMTA"  style="padding-left:30px;"/>
+
+						<listbox id="pvmtaLbId" height="200px" multiple="true" sclass="contactsView" width="150px" checkmark="true">
+						<listhead>
+						<listheader label="VMTA Name"></listheader>
+						</listhead> 
+							<listitem forEach="${vmtaWinId$VmtaController.onlyVmtaList}" value="${each}" > 
+								<listcell label="${each.vmtaName}" />
+							</listitem>
+						</listbox>
+					</div>
+					</groupbox>
+				</h:td>
+			</h:tr>
+
+			
+		</h:table>
+
+	</window>
+</zk>

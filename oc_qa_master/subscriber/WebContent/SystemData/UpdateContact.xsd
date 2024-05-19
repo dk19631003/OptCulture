@@ -1,0 +1,72 @@
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="contactRequests">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="contactRequest" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="header">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:long" name="requestId"/>
+                    <xs:element type="xs:string" name="requestDate"/>
+                    <xs:element type="xs:string" name="contactSource"/>
+                    <xs:element type="xs:string" name="contactList"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="user">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="userName"/>
+                    <xs:element type="xs:string" name="organizationId"/>
+                    <xs:element type="xs:string" name="token"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="customer">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:long" name="customerId"/>
+                    <xs:element type="xs:string" name="firstName"/>
+                    <xs:element type="xs:string" name="lastName"/>
+                    <xs:element type="xs:long" name="phone"/>
+                    <xs:element type="xs:string" name="emailAddress"/>
+                    <xs:element type="xs:string" name="addressLine1"/>
+                    <xs:element type="xs:string" name="addressLine2"/>
+                    <xs:element type="xs:string" name="city"/>
+                    <xs:element type="xs:string" name="state"/>
+                    <xs:element type="xs:int" name="postal"/>
+                    <xs:element type="xs:string" name="country"/>
+                    <xs:element type="xs:string" name="birthday"/>
+                    <xs:element type="xs:string" name="anniversary"/>
+                    <xs:element type="xs:string" name="gender"/>
+                    <xs:element type="xs:byte" name="homeStore"/>
+                    <xs:element type="xs:string" name="creationDate"/>
+                    <xs:element type="xs:string" name="UDF1"/>
+                    <xs:element type="xs:string" name="UDF2"/>
+                    <xs:element type="xs:string" name="UDF3"/>
+                    <xs:element type="xs:string" name="UDF4"/>
+                    <xs:element type="xs:string" name="UDF5"/>
+                    <xs:element type="xs:string" name="UDF6"/>
+                    <xs:element type="xs:string" name="UDF7"/>
+                    <xs:element type="xs:string" name="UDF8"/>
+                    <xs:element type="xs:string" name="UDF9"/>
+                    <xs:element type="xs:string" name="UDF10"/>
+                    <xs:element type="xs:string" name="UDF11"/>
+                    <xs:element type="xs:string" name="UDF12"/>
+                    <xs:element type="xs:string" name="UDF13"/>
+                    <xs:element type="xs:string" name="UDF14"/>
+                    <xs:element type="xs:string" name="UDF15"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+

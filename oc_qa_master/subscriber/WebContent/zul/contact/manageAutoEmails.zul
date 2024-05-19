@@ -1,0 +1,614 @@
+<zk>
+	<window id="customAutoEmailWelcomeMsgWindId" apply="org.mq.marketer.campaign.controller.contacts.ManageAutoEmailsController" 
+	 xmlns:h="http://www.w3.org/1999/xhtml" xmlns:w="client" >
+	 
+	 <script>
+        <![CDATA[
+                function updateCaretPosition() {
+                    // get the zk widgets
+                    var scriptTB = zk.Widget.$(jq('$cSubTb'))
+                    var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+                    // get the js elements
+                    var jsScriptTB = document.getElementById(scriptTB.uuid)
+                    var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+
+                    // get the caret position
+                    var pos = getCaret(jsScriptTB);
+
+                    // set the caret position in the hidden text field
+                    jsCaretPosTB.value = pos;
+                    // trigger an event to send the caret position to the server
+                    if (document.createEvent) {
+                     var evt = document.createEvent('HTMLEvents');
+                     evt.initEvent( 'blur', false, false);
+                     jsCaretPosTB.dispatchEvent(evt);
+
+                     var evt2 = document.createEvent('HTMLEvents');
+                     evt2.initEvent( 'change', false, false);
+                     jsCaretPosTB.dispatchEvent(evt2);
+                    } else if (document.createEventObject) {
+                     jsCaretPosTB.fireEvent('onblur');
+                     jsCaretPosTB.fireEvent('onchange');
+                    }
+                }
+
+                
+                function updateCoupCaretPosition() {
+                    // get the zk widgets
+                    var scriptTB = zk.Widget.$(jq('$htmlTbId'))
+                    var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+                    // get the js elements
+                    var jsScriptTB = document.getElementById(scriptTB.uuid)
+                    var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+
+                    // get the caret position
+                    var pos = getCaret(jsScriptTB);
+
+                    // set the caret position in the hidden text field
+                    jsCaretPosTB.value = pos;
+                    // trigger an event to send the caret position to the server
+                    if (document.createEvent) {
+                     var evt = document.createEvent('HTMLEvents');
+                     evt.initEvent( 'blur', false, false);
+                     jsCaretPosTB.dispatchEvent(evt);
+
+                     var evt2 = document.createEvent('HTMLEvents');
+                     evt2.initEvent( 'change', false, false);
+                     jsCaretPosTB.dispatchEvent(evt2);
+                    } else if (document.createEventObject) {
+                     jsCaretPosTB.fireEvent('onblur');
+                     jsCaretPosTB.fireEvent('onchange');
+                    }
+                }
+                
+               
+                	 function getCaret(el) {
+                     	
+                     	if (el.selectionStart) {
+                             return el.selectionStart;
+                         } else if (document.selection) {
+                             el.focus();
+
+                             var r = document.selection.createRange();
+
+                             
+                             if (r == null) {
+                             	
+                                 return 0;
+                             }
+
+                             var re = el.createTextRange();
+                             	
+                                     rc = re.duplicate();
+                             re.moveToBookmark(r.getBookmark());
+                             rc.setEndPoint('EndToStart', re);
+                             return rc.text.length;
+                         }else{
+                         	
+                         	if(el.value.length > 0) {
+                         		
+                         		el.selectionStart = el.value.length;
+                         		 return el.selectionStart;
+                         		
+                         	}
+                         	
+                         }
+                         return 0;
+
+
+                       
+                     
+                }
+                ]]>
+         </script>
+	 
+	 
+	 <h:table  cellspacing="0" cellpadding="0" width="100%" 
+			border="0" bgcolor="#EEF2F5" >
+			
+			<h:tr height="50">
+			
+			<h:td width="290">
+					<label value="Type of Auto-email:" id="typeLbId" style="font-weight:bold;font-size:12px;"/>
+					<listbox id="typeOfAutoEmailListLbId" mold="select" width="150px"/>
+					
+				</h:td>
+			
+				<h:td width="290">
+					<label value=" Message:" id="msgLbId" style="font-weight:bold;font-size:12px;"/>
+					<listbox id="welcomeListLbId" mold="select" width="150px"/>
+					
+				</h:td>
+				
+				<h:td width="200">
+						
+				<image src="/images/Preview_icn.png"  style="margin-left:20px;" />
+					<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+					 id="custTempPreviewBtnId" />
+				</h:td>
+				<h:td>
+					<a label="Send Test Email"  style="color:#2886B9;font-weight:bold;text-decoration: underline;" 
+					id="sendTestMsgBtnId" />
+				</h:td>
+				<h:td>
+				
+						
+						
+						<button id="delBtnId" label="Delete" sclass="idle140" visible="false"/>
+					
+				</h:td>
+				
+			</h:tr>
+		
+		</h:table>
+		
+		<div id="welcomeHTMLDivId" style="margin-top:15px;">
+			<tabbox    id="editorTabboxId" >
+			  <tabs>
+			  		<tab label="Create from Scratch" id="plainEditorTabId" />
+					<tab label="Copy-Paste HTML Code" id="textEditorTabId" />
+					
+			  </tabs>
+			  <tabpanels>
+			  	<tabpanel>
+					<ckeditor id="ckEditorId"  visible="true" customConfigurationsPath="/js/ckConfig.js" height="250px" width="98%"/>
+					<label value="Note :  Add place holders [url] for subscription link and [senderName] for user name, [url] is mandatory." /><h:br/>
+					
+			  	</tabpanel>
+			  	<tabpanel>
+				  	<label value="Paste / Edit your HTML code" sclass="theme-lbHeading" style="margin:10px;"/>
+					<listbox 
+						id="insertMergetagsLbId" mold="select" width="200px">
+						<listitem
+							label="Insert Merge Tags" selected="true" />
+					</listbox>
+					<!-- TODO need to hide it based on the user's role -->
+					<listbox 
+						id="insertCouponLbId" mold="select" visible="false" width="200px">
+						<listitem
+							label="Insert Promotion" selected="true" />
+					</listbox>
+					<textbox width="98%"  w:onClick="updateCoupCaretPosition()"  w:onChanging="updateCoupCaretPosition()"
+							w:onFocus="updateCoupCaretPosition()" id="htmlTbId"  height="250px"  sclass="textBg" style="margin:10px;" multiline="true" />
+					<label value="Note :  Add place holders [url] for subscription link and [senderName] for user name, [url] is mandatory." /><h:br/>
+					
+			  	</tabpanel>
+  			</tabpanels>
+		  	</tabbox>
+											  	
+											  	
+			
+		</div>
+		
+		
+		<groupbox style="margin-top:10px;" closable="false" open="true"  >
+			<caption label="Basic Settings" >
+				
+				<toolbarbutton id="basicSettingsTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="basicSettingsContentDivId" >
+			<h:table cellspacing="0" cellpadding="5" width="100%" border="0">
+				<h:tr>
+					
+					<h:td width="200" >
+						<label value="Subject :" />
+						<label value="*" style="font-size:15px;color:red;" />
+					</h:td>
+					
+					<h:td >
+						<!-- <textbox id="cSubTb" width="270px" maxlength="125" cols="30"/>  -->
+						<textbox id="cSubTb" width="250px" value=""  w:onClick="updateCaretPosition()"  w:onChanging="updateCaretPosition()"
+							w:onFocus="updateCaretPosition() " name="cSubTb" maxlength="200" />
+							<space width="10px"/>
+							<textbox id="caretPosTB" visible="false" />
+						<label visible="false" value="A carefully crafted Subject gets better opens, recommended length 50 - 55 characters." sclass="labelPos" />
+						
+						<!-- TODO need to hide it based on the user's role -->
+						<listbox id="couponLbId"  width="150px" sclass="cb_250w" mold="select" visible="false" style="margin:0 5px;"/>
+						<toolbarbutton id="couponTbId" label="Insert Promotion"  sclass="tbbLink" visible="false"
+				style="margin:0 0 0 5px; text-decoration: underline; color:#2787BA; font-weight:bold;font-size:12px;"/>
+					</h:td>	
+				</h:tr>
+				<h:tr>
+					<h:td width="200" >
+						<label value="From Name :" />
+						<label value="*" style="font-size:15px;color:red;" />
+					</h:td>
+					
+					<h:td >
+						<textbox id="cFromNameTb" width="250px" maxlength="50" cols="30"/>
+					</h:td>	
+				</h:tr>
+				<h:tr>
+					<h:td width="200" >
+						<label value="From Email Address :" />
+						<label value="*" style="font-size:15px;color:red;" />
+					</h:td>
+					
+					<h:td >
+						<combobox  id="cFromEmailCb" readonly="true" sclass="cb_250w" /> 
+					</h:td>	
+				</h:tr>
+				
+			
+			</h:table>
+		</div>
+		</groupbox>
+		<groupbox style="margin-top:10px;" closable="false" open="true"  >
+			<caption label="Sender Address" >
+				
+				<toolbarbutton id="addrSettingsTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			
+			<div id="addrContentDivId" >
+			<h:table cellspacing="0" cellpadding="5" width="100%" border="0">
+			
+			
+			
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+				<label value="Address in Footer" />
+				</h:td>
+				<h:td valign="top">
+				<div id="postalAddressDivId">
+					<radiogroup id="addrRgId"  orient="vertical"/>
+				
+					<hlayout>
+						<radio radiogroup="addrRgId" checked="true" id="postalAddressRbId"   />
+						<a label="Modify" onClick="changeAddressDivId.setVisible(true);postalAddressDivId.setVisible(false)" 
+						style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="modifySenderAddrId" />
+					</hlayout>
+					
+				
+					<hlayout>
+					<radio radiogroup="addrRgId" label="Choose a Store"/>
+					<listbox id="storesLbId" width="200px" mold="select"/>
+					<label id="storeAddrLblId" visible="false" />
+					</hlayout>
+				</div>
+				
+				<div visible="false" id="changeAddressDivId">
+							<h:table width="85%" cellspacing="10" cellpadding="0" align="left" style="padding-left:20px;">
+								<h:tr>
+									<h:td width="150">
+										<label value="Address one" />
+										<label value="*"  style="color:red;" />
+									</h:td>
+									
+									<h:td>
+										<textbox id="cAddressOneTbId" cols="25" maxlength="45" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Address two" />
+									</h:td>
+									
+									<h:td>
+										<textbox id="cAddressTwoTbId" cols="25" maxlength="45"  value=""/>
+									</h:td>
+								</h:tr>
+							 
+								<h:tr>
+									<h:td>
+										<label value="City" />
+										<label value="*" style="color:red;"/>
+									</h:td>
+									
+									<h:td>
+										<textbox id="cCityTbId" cols="25" maxlength="20" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="State" />
+										<label value="*" style="color:red;"/>
+									</h:td>
+									
+									<h:td>
+										<textbox id="cStateTbId" cols="25" maxlength="20" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Country" />
+										<label value="*" style="color:red;"/>
+									</h:td>
+									
+									<h:td>
+										<textbox id="cCountryTbId" cols="25" maxlength="20" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Zip / Pin" />
+										<!-- <label value="*" style="color:red;"/> -->
+									</h:td>
+									
+									<h:td>
+										<textbox id="cPinLbId" cols="25" maxlength="20" />
+										
+										<image
+											src="/img/icons/icon_q.png" tooltip="help4"
+											style="padding-left:40px;" />
+											<popup id="help4" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Required for countries where postal/ZIP codes are used."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+										
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label value="Phone" />
+									</h:td>
+									
+									<h:td>
+										<textbox id="cPhoneTbId" 
+										tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+										xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+										
+										cols="25" maxlength="30" />
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td></h:td>
+									<h:td>
+										<button label="Save"  sclass="idle70 greenbtn" id="doneAnchId" /> 
+										<space/>
+										<button label="Cancel" id="cancelAddressId" sclass="idle70" /> 
+										
+									</h:td>
+								</h:tr>
+							</h:table>
+					
+					
+					</div>				
+				
+				
+				
+				</h:td>
+			
+			</h:tr>
+			<h:tr>
+			<h:td></h:td>
+				<h:td >
+					
+				
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td valign="top" width="200" style="padding-top:5px;">
+				<label value="Include Before Address" />
+				</h:td>
+				<h:td>
+					<checkbox id="orgNameChkBoxId" checked="true" label="Organization Name" />
+					<checkbox id="orgUnitChkBoxId" label="Organization Unit" />
+					
+				</h:td>
+			
+			</h:tr>
+			
+			</h:table>
+			
+			
+			</div>
+		
+		</groupbox>
+		
+		
+		<groupbox  sclass="gbStyle" style="margin-top:10px;" closable="false" open="true" >
+			<caption>
+				<label value="Optional Settings"/>
+				<toolbarbutton id="optSettingsTbBtnId" image="/img/icons/icon_plus.png" />
+			</caption>
+			<div id="gbContentDivId" visible="false">
+			
+			
+			<h:table  width="100%" align="left"  >
+			<div id="weblinkVersionDivId">
+				<h:tr>
+					<h:td valign="top" width="200">
+						<label value="Web page Version" />
+					</h:td>
+					
+					<h:td valign="top">
+						<checkbox id="cWebPageCb"
+							label="Include a link to view a web page version of this email"
+							onCheck="cWebLinkHboxId.visible = !cWebLinkHboxId.visible"
+							checked="true" />
+						</h:td>
+						</h:tr>
+						
+						
+						<h:tr>
+						<h:td></h:td>
+						<h:td>
+						
+						
+						<div id="cWebLinkHboxId" style="text-align:left;" align="left" visible="true">
+						<h:table>
+							<h:tr>
+								<h:td>
+								
+								<label value="Text:" style="padding-right:5px;" />
+								<textbox id="cWebLinkTextTb"
+									width="250px" value=" Having Trouble viewing this email?"
+									maxlength="200" />
+							
+								</h:td>
+								<h:td width="20"></h:td>
+								<h:td>	
+							
+								<label value="Link  Text:" style="padding-right:5px;"/>
+								<textbox id="cWebLinkUrlTextTb"
+									width="150px" value=" Click here" maxlength="200" />
+							
+								
+								</h:td>
+							</h:tr>
+						</h:table>
+						</div>
+						</h:td>
+					</h:tr>
+					</div>
+				<div id="permRemindDivId">
+				<h:tr height="15"/>
+				
+				<h:tr>
+					<h:td valign="top" width="170" style="padding-top:5px;">
+						<label value=" Permission Reminder" />
+					</h:td>
+					
+					<h:td>
+						<radiogroup id="cPermRemRb">
+							<radio label="On" 
+								onCheck="permRemDivId.visible=true;"  />
+							<radio label="Off"
+								onCheck="permRemDivId.visible=false;" checked="true"  />
+						</radiogroup>
+						</h:td>
+						</h:tr>
+						<h:tr>
+						<h:td></h:td>
+						<h:td>
+						
+						<div id="permRemDivId" visible="false">
+							<textbox id="permRemTextId" rows="3" height="50px" cols="50" value="You are receiving this email because you had opted in on our website."
+								maxlength="200" />
+							<h:br />
+							
+						</div>
+						
+						</h:td>
+						
+						</h:tr>
+						</div>
+					<h:tr height="15"/>
+				
+							
+							
+					<h:tr >
+					<h:td colspan="2">
+						<div id="personalizeToDivId">
+							<h:table width="100%" align="left"  >
+							<h:tr>
+					
+						<h:td  valign="top" width="200">
+							<label value="Personalize the &quot;To:&quot; Field:" id="persLbId" />
+						</h:td>
+						<h:td  valign="top" >
+							<checkbox id="toNameChkId"  sclass="theme-lbHeading" checked="false" onCheck="persToDivId.visible=!persToDivId.visible" />
+						</h:td>
+						</h:tr>
+						
+						<h:tr>
+						<h:td></h:td>
+						<h:td>
+							<div id="persToDivId" visible="false">
+								<label value="Select tag for recipient name:"  sclass="theme-lbHeading"/>
+								<listbox  id="phLbId" mold="select" rows="1" >
+								<listitem label="First Name" value="firstName" selected="true"/>
+								<listitem label="Last Name" value="lastName"/>
+								<listitem label="First Name Last Name" value="fullName"/>
+								</listbox>
+							</div>
+						</h:td>
+					</h:tr>
+							
+							</h:table>
+													
+						</div>
+						</h:td>
+					</h:tr>
+				</h:table>
+					
+			</div>
+					
+		</groupbox>
+		<div align="right" style="padding-top:30px;" > 
+			<button id="newBtnId" label="Save As..." sclass="idle140 greenbtn" />
+			<button id="updateBtnId" label="Save" sclass="idle140 greenbtn" />
+		
+		</div>
+		
+		<window id="createCustTemplateWinId" visible="false" closable="true" title="Create Auto-email" 
+						height="180px" width="450px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="2">
+						<label value="You can add a new message for your Auto-email here."/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Message Name :" /></h:td>
+					<h:td ><textbox  id="custTempNameTbId" value="Enter Name..." w:onFocus="this.setValue('')" width="160px"/></h:td>
+				</h:tr>
+				
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Add" sclass="idle70 greenbtn" id="submitBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+		
+		<window id="testMailWinId" visible="false" closable="true" title="Send Test Email" 
+						height="195px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="1"><label value=" Email Id :" /></h:td>
+					<h:td colspan="2"><textbox  id="emailIdTbId" width="160px"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td/>
+					
+					<h:td  colspan="2" valign="center">	
+						<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+						<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td>
+				</h:tr>
+			</h:table>
+			<h:table cellspacing="2" cellpadding="1" align="right" >
+		    <h:tr height="10"/>
+			<h:tr >
+				<h:td  style="padding-right:20px;">
+					<button label="Send" id="sendTestMailBtnId" />
+					<button label="Cancel" id="cancelSendTestMailBtnId" />
+				</h:td>
+			</h:tr>
+			</h:table>	
+		</window>
+		
+		<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+				<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+	
+	 
+	 
+	
+</window>
+</zk>

@@ -1,0 +1,155 @@
+<zk>
+<window id="rcptActWinId" apply="org.mq.marketer.campaign.controller.report.NotificationRecipientActivityReportController" width="100%"  xmlns:h="native">
+		<groupbox sclass="gbStyle" closable="false" >
+				<caption label="Recipient Activity Report"  />
+	   	<!--	<h:table style="padding-top:30px;">
+       			<h:tr style="line-height:10px;"> 
+			    	
+			    	<h:td id="tabId2" class="tabmenu" onclick="changeRepTabMenu('tabId',2,5)"><toolbarbutton label="Received"  id="receivedToolbarBtnId" style="font-weight:bold;color:#43A0BA;"/></h:td>
+			    	<h:td style="padding:5px 15px;"></h:td>
+			    	<h:td id="tabId1"  class="tabmenu tabmenusel" onclick="changeRepTabMenu('tabId',1,5)"><toolbarbutton label="Pending" id="deliveredtoolbarBtnId" style="font-weight:bold;color:#43A0BA;"/></h:td>
+			    	<h:td style="padding:5px 15px;"></h:td>
+			    	<h:td style="display:none;" id="tabId3" class="tabmenu" onclick="changeRepTabMenu('tabId',3,5)"><toolbarbutton label="Opened" id="openedToolbarBtnId" style="font-weight:bold;color:#43A0BA;"/></h:td>
+			    	<h:td style="padding:5px 15px;"></h:td>
+			    	<h:td id="tabId4" style="display:none;" class="tabmenu" onclick="changeRepTabMenu('tabId',4,5)"><toolbarbutton label="Clicked" id="clickedToolbarBtnId" style="font-weight:bold;color:#43A0BA;"/></h:td>
+			    	<h:td style="padding:5px 15px;"></h:td>
+			    	<h:td id="tabId5" class="tabmenu" onclick="changeRepTabMenu('tabId',5,5)" style="display:none;">
+			    		<toolbarbutton label="Opt-outs" id="optoutsToolbarBtnId" style="font-weight:bold;color:#43A0BA;"/>
+			    	</h:td> 
+			    	 action="onClick:spamAlert();" 
+       			</h:tr>
+       			
+       		</h:table>	-->
+       		
+       		<hbox id="toolbarButtonHboxId" style="cursor:pointer;margin-right:5px;" align="center"/>
+       		
+			<listbox id="genericLbId" sclass="contactsView" width="99%" emptyMessage="No records found..." mold="paging" >
+				<listhead id="genericLbHeaderId">
+				<listheader label="Mobile Number"></listheader>
+				<listheader label="Opens"></listheader>
+				<listheader label="Cilcks"></listheader>
+				</listhead>
+				
+			</listbox>
+			
+			<h:table  width="99%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="280px"  >
+						<paging id="repPagingId" detailed="true" pageSize="10" width="280px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table>
+			
+			<h:table style="padding-top:20px;">
+	 				<h:tr >
+					<h:td colspan="2">
+						<label value="Export as a" /> 
+						<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+					 	   			<comboitem label=" .csv file." value="csv" />    
+						</combobox> 
+						<button label="Export" sclass="idle140 greenbtn" style="margin-left:15px;" id="exportBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+	
+		<window id="popupWindow" style="overflow:auto" border="normal" visible="false" width="500px" height="400px">
+			<caption>        
+            	<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="popupWindow.setVisible(false)"/>            
+        	</caption>
+        	<div id="popDivId" />
+        </window>
+		<script>
+			function spamAlert(){
+				alert("Spam Report feature will come soon");
+			}
+		</script>
+		</groupbox>
+	</window>
+	
+</zk>
+
+
+
+	<!-- <window id="smsRcptActWinId" width="100%" apply="org.mq.marketer.campaign.controller.report.SMSRecipientActivityReportController">
+	 <style src="/css/reports.css" />
+		<h:table width="100%" xmlns:h="http://www.zkoss.org/2005/zk/native" >
+			<h:tr>
+				<h:td>
+			   		<h:table >
+			   			<h:tr style="line-height:10px;"> 
+					    	<h:td id="tabId1" class="tabmenu tabmenusel" onclick="changeRepTabMenu('tabId',1,5)"><toolbarbutton label="Delivered" id="rcpntsTbBtnId"  /></h:td>
+					    	<h:td style="padding:5px 15px;">|</h:td>
+					    	<h:td id="tabId2" class="tabmenu" onclick="changeRepTabMenu('tabId',2,5)"><toolbarbutton label="Received"  /></h:td>
+					    	<h:td style="padding:5px 15px;">|</h:td>
+					    	<h:td id="tabId3" class="tabmenu" onclick="changeRepTabMenu('tabId',3,5)"><toolbarbutton label="Opened" /></h:td>
+					    	<h:td style="padding:5px 15px;">|</h:td>
+					    	<h:td id="tabId4" class="tabmenu" onclick="changeRepTabMenu('tabId',4,5)"><toolbarbutton label="Clicked" /></h:td>
+					    	<h:td style="padding:5px 15px;">|</h:td>
+					    	<h:td id="tabId5" class="tabmenu" onclick="changeRepTabMenu('tabId',5,5)"><toolbarbutton label="Opt-outs" id="optoutsTbBtnId" /></h:td> action="onClick:spamAlert();" 
+		       			</h:tr>
+		       		</h:table>	
+				</h:td>
+			</h:tr>
+			<h:tr>
+			  	<h:td>
+					<include id="cmptId" width="100%" src="zul/report/allRecipients.zul"  use="org.mq.marketer.campaign.controller.IncludeController" />
+					<listbox id="genericLbId" sclass="contactsView" width="100%" mold="paging" paginal="${repPagingId}">
+						<listhead id="genericLbHeaderId"/>
+					</listbox>
+					<div align="right" width="99%">
+						<paging id="repPagingId" pageSize="10" width="250px" sclass="contactsViewPaging"/>
+					</div>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td >	
+					<div visible="false" >
+						<h:table style="padding-top:20px;" width="100%">
+			  				<h:tr>
+								<h:td>
+									<label value="Export as a" /> 
+									<combobox width="50px" id="exportCbId" readonly="true">
+		  				 	   			<comboitem label=" .csv " value="csv" />    
+									</combobox> 
+									<zscript>
+										<![CDATA[
+											exportCbId.setSelectedIndex(0);
+										]]>
+									</zscript>
+									<label value=" file."/> <h:br /> 
+									<button label="Export" width="60px" />
+								</h:td>
+							</h:tr>
+						</h:table>
+					</div>
+				</h:td>		
+			</h:tr>
+		</h:table>
+		<window id="popupWindow" style="overflow:auto" border="normal" visible="false" width="500px" height="400px">
+			<caption>        
+            	<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="popupWindow.setVisible(false)"/>            
+        	</caption>
+        	<div id="popDivId" />
+        </window>
+		<zscript>
+			rcptActWinId.init(genericLbId,genericLbHeaderId,repPagingId,popupWindow);
+		</zscript>
+		<script>
+			function spamAlert(){
+				alert("Spam Report feature will come soon");
+			}
+		</script>
+	</window> -->
+
+

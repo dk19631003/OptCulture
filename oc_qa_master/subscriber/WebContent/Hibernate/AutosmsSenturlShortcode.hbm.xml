@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.AutosmsSenturlShortcode"
+		table="Autosms_sent_url_short_code">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="shortCodeId" type="java.lang.Long">
+			<column name="short_Code_Id" />
+		</property>
+		<property name="autoSmsQueueSentId" type="java.lang.Long">
+			<column name="auto_SmsQueue_SentId" />
+		</property>
+		<property name="generatedShortCode" type="java.lang.String">
+			<column name="generatedShortCode" length="20" />
+		</property>
+		<property name="originalShortCode" type="java.lang.String">
+			<column name="originalShortCode" length="20" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

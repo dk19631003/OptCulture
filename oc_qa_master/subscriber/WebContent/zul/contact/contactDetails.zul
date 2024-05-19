@@ -1,0 +1,521 @@
+<zk>
+<style>
+ 	 .myLinks {
+		color: #0000EE;
+        text-decoration: underline;
+     }
+   
+     </style>
+<window id="contactDetailsWinId"  border="0" apply="org.mq.marketer.campaign.controller.contacts.ContactDetailsController"  
+		xmlns:h="native" xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%">
+		
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+			<h:tr bgcolor="#F4F5F9">
+				<h:td width="300px"><label value="Contact Name: " style="font-weight:bold"/> <label id="contactNameLblId"/></h:td>
+				<h:td width="300px"><label value="Email Address: " style="font-weight:bold"/> <label id="emailLblId" /></h:td>
+				<h:td width="250px"><label value="Phone Number : " style="font-weight:bold"/> <label id="mobileLblId" /></h:td>
+				<h:td width="350px"><label value="Membership Number : " style="font-weight:bold"/> <label id="cardLblId" /></h:td>
+			</h:tr>
+		</h:table>
+		<textbox id="testId" visible="false"></textbox>
+		<h:table  width="100%" >
+			<h:tr valign="top">
+				<h:td width="550px">
+				
+					<groupbox closable="false" height="270px" >
+						<caption label="Basic Info"/>
+						<div style=" overflow-x: auto;overflow-y: auto; width:550px;  height: inherit">
+						<h:table>
+							<h:tr>
+								<h:td height="30px" width="180px"><label value="First Name : "  /></h:td> <h:td width="180px"><label id="firstNameLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="29px"><label value="Last Name : "/> </h:td> <h:td><label id="lastNameLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="29px"><label value="Address : " /> </h:td> <h:td><label id="addrLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="29px"><label value="Gender : " /> </h:td> <h:td><label id="genderLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="29px"><label value="Date of Birth : " /></h:td> <h:td> <label id="dobLblId"/></h:td>
+							</h:tr>
+							<h:tr >
+								<h:td height="29px"><label value="Anniversary : " /></h:td> <h:td height="29px"> <label id="AvyLblId"/></h:td>
+							</h:tr>
+							<h:tr >
+								<h:td height="24px" style="white-space: nowrap"><label value=" Part of lists: " /> </h:td> <h:td height="29px"><label id="subscribedLblId"/></h:td>
+							</h:tr>
+							<h:tr style="font-family: arial, sans-serif;font-size: 12px;font-weight: normal;">
+							<!-- 	<h:td height="30px"><label id="udfFieldsId"/></h:td> <h:td><label id="udfFieldsValue"/></h:td> -->
+								<h:td style="vertical-align:top;padding-bottom:0px">
+														
+														<html>
+
+															<div id="udfFieldsId" visible="true"></div>	
+														</html>															
+													</h:td>
+													<h:td width="400px" height="29px" >
+																											<html>
+													
+															<div   id="udfFieldsValue" visible="true"></div>
+																												</html>															
+														
+													</h:td>
+										
+							</h:tr>
+						
+						</h:table>
+						</div>
+						
+					</groupbox>
+				</h:td>
+				<h:td width="10"/>
+				<h:td>
+					<groupbox closable="false" height="270px">
+						<caption label="Purchase History"/>
+						<div style=" overflow-x: auto;overflow-y: auto;   height: inherit">
+						<h:table style="padding:5px;">
+							
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Lifetime Purchase :"  /></h:td> <h:td><label id="totPurchaseAmtLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Max Amount Purchased : "/> </h:td> <h:td><label id="maxAmtPurchaseLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Number of Purchases :" /> </h:td> <h:td><label id="numOfPurchaseLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="First Purchase Date : " /> </h:td> <h:td><label id="firstPurchaseDateLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Last Purchase Date : " /></h:td> <h:td> <label id="lastPurchaseDateLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Home Store :" /> </h:td> <h:td width="250px"><label id="homeStoreLblId"/></h:td>
+								<h:td height="30px" width="150px"><label value="Home Store Name:" /> </h:td> <h:td><label id="homeStoreNameLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Last Purchase Store :" /> </h:td> <h:td width="250px"><label id="lastPurchaseStorelId"/></h:td>
+								<h:td height="30px" width="150px"><label value="Last Purchase Store Name:" /> </h:td> <h:td><label id="lastPurchaseStoreNamelId"/></h:td>
+							</h:tr>
+					<!--	<h:tr>
+								<h:td height="30px"><label value="Home Store Name:" /> </h:td> <h:td><label id="homeStoreNameLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Last Purchase Store Name:" /> </h:td> <h:td><label id="lastPurchaseStoreNamelId"/></h:td>
+							</h:tr> -->
+						
+						</h:table>
+						</div>
+					</groupbox>
+				</h:td>
+			</h:tr>
+			<h:tr height="10"/>
+			<h:tr valign="top">
+			
+				<h:td >
+					<groupbox closable="false" height="300px">
+						<caption label="Opt-In Info"/>
+						<h:table style="padding:5px;">
+							<h:tr>
+								<h:td height="30px" width="180px"><label value="Contact Added On : "  /></h:td> <h:td><label id="createDateLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="180px"><label value="Contact Modified On : "  /></h:td> <h:td><label id="ModifiedDateLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Verified : "/> </h:td> <h:td><label id="verifiedLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Email Opt-In : " /> </h:td> <h:td><label id="optinLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Mobile Opt-In : " /> </h:td> <h:td><label id="mobileoptinLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Mobile Opt-In Source: " /> </h:td> <h:td><label id="mobileoptinsrcLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Mobile Opted-In On: " /> </h:td> <h:td><label id="mobileoptinDateLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Mobile Verified : " /> </h:td> <h:td><label id="cellVerifiedLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Cell Carrier : " /></h:td> <h:td> <label id="cellCarrLblId"/></h:td>
+							</h:tr>
+						</h:table>
+					</groupbox>
+				</h:td>
+				<h:td />
+				<h:td>
+					<groupbox closable="false"  height="300px"> 
+						<caption label="Loyalty Overview "/>
+							<h:table style="padding:5px;">
+							<h:tr>
+							<h:td width="140px"><label value="Membership Number : "/></h:td>
+							<h:td width="550px"><a id="ltyOverViewMembershipNumberAnchId"/></h:td>
+							</h:tr>
+							</h:table>
+							<h:table style="padding:5px;">
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Balance Currency :"  /></h:td> <h:td width="250px"><label id="balanceCurrencyLblId"/></h:td>
+								<h:td height="30px" width="150px"><label value="Balance Points : "/> </h:td> <h:td><label id="balancePointsLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Lifetime Points :"  /></h:td> <h:td width="250px"><label id="lifetimePointsLblId"/></h:td>
+								<h:td height="30px" width="150px"><label value="Total Currency Earned : "/> </h:td> <h:td><label id="totalCurrencyEarnedLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Points Redeemed :"  /></h:td> <h:td width="250px"><label id="pointsRedemedLblId"/></h:td>
+								<h:td height="30px" width="150px"><label value="Currency Redeemed : "/> </h:td> <h:td><label id="currencyRedemedLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Total Loyalty Issuance :"  /></h:td> <h:td width="250px"><label id="totalLoyaltyIssuanceLblId"/></h:td>
+								<h:td height="30px" width="150px"><label value="Total Redemptions : "/> </h:td> <h:td><label id="totalRedemptionsLblId"/></h:td>
+							</h:tr>
+<!-- 							<div visible="false" id="giftBalDivId"> -->
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Total Gift Top-up Amount :"  /></h:td> <h:td width="250px"><label id="totalGiftTopupAmountLblId"/></h:td>
+								<h:td height="30px" width="150px"><label value="Gift Amount Redeemed : "/> </h:td> <h:td><label id="giftAmountRedemedLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Gift Amount Balance :"  /></h:td> <h:td width="250px"><label id="giftAmtBalLblId" /></h:td>
+								<h:td height="30px" width="150px"><label value="Referral Code : "/> </h:td> <h:td><label id="referralcodeLblId"/></h:td>
+							
+							</h:tr>
+
+							
+<!-- 							</div> -->
+							<div id="holdBalDivId" visible="false">
+							<h:tr>
+								<h:td height="30px" width="140px"><label value="Hold Balance :"  /></h:td> <h:td width="250px"><label id="holdBalValLblId" /></h:td>
+								<h:td height="30px" width="150px"> </h:td> <h:td></h:td>
+							</h:tr>
+							</div>
+							<h:tr>
+								<h:td height="30px"><label value="Last refreshed on : " id="lastRefreshedOnlId"  visible="false"/> </h:td>
+								 <h:td width="140px"><label id="lastRefreshedlId" visible="false"/> <a  id="refreshLoyaltyAId" label="Refresh" visible="false"/></h:td>
+							</h:tr>
+							
+						</h:table>
+						<!-- 	<div id= "loyaltyHistoryDivId" style="padding-top:20px;" ></div> -->
+					</groupbox>
+				</h:td>
+			
+			</h:tr>
+			
+			<h:tr height="10"/>
+			<h:tr valign="top">
+				<h:td>
+					<groupbox closable="false" height="225px">
+						<caption label="Loyalty Info"/>
+					<!-- 	<div id= "loyaltyInfoDivId" ></div> -->
+						<h:table style="padding:5px;">
+							
+							<h:tr>
+							<span width="172px" style="padding:7px;"><label value="Enrolled in Loyalty Program :"/> <label id="enrolledInLtyPrgmLblId"/></span>
+							</h:tr>
+							<h:tr>
+								<h:td width="122px"><label value="Membership# : "/></h:td>
+								<h:td width="500px">  <span width="375px"><a id="ltyInfomembershipNumberAnchId"/></span></h:td>
+							</h:tr>
+							</h:table>
+							<h:table style="padding:5px;">
+							<h:tr>
+								<h:td height="30px" width="122px"><label value="Membership Status :"  /></h:td> <h:td width="175px"><label id="membershipStatusLblId"/></h:td>
+								<h:td height="30px" width="100px"><label value="Opt-In Medium :"  /></h:td> <h:td ><label id="optinMediumLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="122px"><label value="Opt-In Date :"  /></h:td> <h:td width="175px"><label id="optinDateLblId"/></h:td>
+								<h:td height="30px" width="100px"><label value="Store Number :"  /></h:td> <h:td ><label id="storeNumberLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px" width="122px"><label value="Tier Name :"  /></h:td> <h:td width="175px"><label id="tierNameLblId"/></h:td>
+								<h:td height="30px" width="100px"><label value="Expiration Date :"  /></h:td> <h:td ><label id="expirationDateLblId"/></h:td>
+							</h:tr>
+						</h:table>
+					</groupbox>
+				</h:td>
+				<h:td />
+				<h:td>
+					<groupbox closable="false" height="225px" >
+						<caption label="Interaction Overview"/>
+						
+						<h:table style="padding:5px;">
+							<h:tr>
+								<h:td height="30px" width="180px"><label value="Number of Messages Sent :"  /></h:td> <h:td><label id="numOfCampSentLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Number of Messages Opened : "/> </h:td> <h:td><label id="numOfCampOpenLblId"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="30px"><label value="Number of Times Clicked :" /> </h:td> <h:td><label id="numOfClicksLblId"/></h:td>
+							</h:tr>
+							
+						</h:table>
+						
+					</groupbox>
+				</h:td>
+			
+			</h:tr>
+			<h:tr height="10"/>
+			<h:tr valign="top">
+				<h:td>
+					<groupbox closable="false">
+						<caption label="Latest Campaign Info"/>
+						
+												
+						<div style="margin-top:10px">
+							<a  label="Campaigns" id="latesCampignAnchId"/>
+							<a  label="Opens" id="latesCampOpensAnchId"/>
+							<a  label="Clicks" id="latesCampClicksAnchId"/>
+						</div>
+						<separator />
+						<div id="campDetailsDivId" >
+							<grid emptyMessage="No Data available">
+								<columns>
+									<column label="Campaign"/>
+									<column label="Email"/>
+									<column label="Sent On"/>
+								</columns>
+								<rows id="latestCampRowsId"/>
+							</grid>
+							<a  label="View all Sent Campaigns" id="viewAllCampAnchId"/>
+							
+						</div>
+						
+						<div id="openDetailsDivId" visible="false">
+							<grid emptyMessage="No Data available">
+								<columns>
+									<column label="Email Campaign"/>
+									<column label="Viewed On"/>
+								</columns>
+								<rows id="latestOpenedCampRowsId"/>
+							</grid>
+							<a  label="View all  Opened Campaigns" id="viewAllOpenedCampAnchId"/>
+							
+						</div>
+						
+						<div id="clickDetailsDivId" visible="false">
+							<grid emptyMessage="No Data available">
+								<columns>
+									<column label="Email Campaign Link"/>
+									<column label="Campaign Name"/>
+									<column label="Clicked On"/>
+								</columns>
+								<rows id="latestCampClicksRowsId"/>
+							</grid>
+							<a  label="View all Clicked URLs" id="viewAllClickURLAnchId"/>
+							
+						</div>
+						
+					</groupbox>
+				</h:td>
+				
+				<h:td />
+				
+				<h:td>
+						<groupbox closable="false">
+						<caption label="Latest Purchase Info"/>
+						
+												
+						<div style="margin-top:10px">
+							<a  label="Purchase" id="latestPurchaseAnchId"/>
+							<a  label="SKU" id="latestSKUAnchId"/>
+							<a  label="Item Category" id="latestItemCategAnchId"/>
+							<a  label="Promos" id="latestPromosAnchId"/>
+						</div>
+						<separator />
+						<div id="purchaseDetailsDivId">
+							<grid emptyMessage="No Data available">
+								<columns>
+									<column label="Receipt No."/>
+									<column label="Receipt Amount"/>
+									<column label="Purchased On"/>
+								</columns>
+								<rows id="latestPurchaseRowsId"/>
+							</grid>
+							<a  label="View all Purchase made" id="viewAllPurchaseAnchId"/>
+							
+						</div>
+						
+						<div id="skuDetailsDivId" visible="false">
+							<grid emptyMessage="No Data available">
+								<columns>
+									<column label="SKU"/>
+									<column label="Item Category"/>
+									<column label="No.Of Items"/>
+									<column label="Purchased On"/>
+								</columns>
+								<rows id="latestSKURowsId"/>
+							</grid>
+							<a  label="View all SKUs Purchases made" id="viewAllSKUAnchId"/>
+							
+						</div>
+						
+						<div id="itemCategDetailsDivId" visible="false">
+							<grid emptyMessage="No Data available">
+								<columns>
+									<column label="Item Category"/>
+									<column label="Vendor Code"/>
+									<column label="No. Of Items Purchased"/>
+								</columns>
+								<rows id="latestItemCategRowsId"/>
+							</grid>
+							<a  label="View all Item Categories purchased" id="viewAllItemCategAnchId"/>
+							
+						</div>
+						
+						<div id="promoDetailsDivId" visible="false">
+							<grid emptyMessage="No Data available">
+								<columns>
+									<column label="Promo Code"/>
+									<column label="Redeemed On"/>
+									<column label="Purchase Amount"/>
+									<column label="Purchased at"/>
+								</columns>
+								<rows id="latestpromosRowsId"/>
+							</grid>
+							<a  label="View all Promos availed" id="viewAllPromosAnchId"/>
+							
+						</div>
+						
+					</groupbox>
+				
+				</h:td>
+			
+			</h:tr>
+		</h:table>
+		
+		<div align="right">
+					<button label="Back to List" id="backToListBtnId"/>
+		</div>
+		
+		
+		<window id="latestDetailsWinId" title="" closable="false" 
+			visible="false" border="normal" width="800px" height="300px" position="center" >
+				<caption>
+					<toolbarbutton label="Close" onClick="latestDetailsWinId.setVisible(false)"/>
+				</caption>
+				
+				<div id="viewAllCampDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+								<columns>
+									<column label="Campaign"/>
+									<column label="Email"/>
+									<column label="Sent On"/>
+								</columns>
+								<rows id="viewAllCampDetailsRowsId"/>
+						</grid>
+				</div>
+				
+				<div id="viewAllCampOpendDetailsDivId" visible="false">
+				
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Email Campaign"/>
+							<column label="Viewed On"/>
+						</columns>
+						<rows id="viewAllCampOpenedCampRowsId"/>
+					</grid>
+				</div>
+				
+				
+				<div id="viewClickDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Email Campaign Link"/>
+							<column label="Campaign Name"/>
+							<column label="Clicked On"/>
+						</columns>
+						<rows id="viewAllCampClicksRowsId"/>
+					</grid>
+					
+				</div>
+				<!-- PurChase Info SubWindow -->
+				<div id="viewPurchaseDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Receipt No."/>
+							<column label="Receipt Amount"/>
+							<column label="Purchased On"/>
+						</columns>
+						<rows id="viewAllPurchaseRowsId"/>
+					</grid>
+					
+				</div>
+				
+				<div id="viewSkuDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="SKU"/>
+							<column label="Item Category"/>
+							<column label="No.Of Items"/>
+							<column label="Purchased On"/>
+						</columns>
+						<rows id="viewAllSKURowsId"/>
+					</grid>
+					
+				</div>
+		
+				<div id="viewItemCategDetailsDivId" visible="false" height="250px">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Item Category"/>
+							<column label="Vendor Code"/>
+							<column label="No. Of Items Purchased"/>
+						</columns>
+						<rows id="viewAllItemCategRowsId"/>
+					</grid>
+					
+				</div>
+
+				
+				<div id="viewPromoDetailsDivId" visible="false">
+					<grid emptyMessage="No Data available" height="250px">
+						<columns>
+							<column label="Promo Code"/>
+							<column label="Redeemed On"/>
+							<column label="Purchase Amount"/>
+							<column label="Purchased at"/>
+						</columns>
+						<rows id="viewAllpromosRowsId"/>
+					</grid>
+					
+				</div>
+				
+				
+		</window>
+		
+		
+		
+</window>
+<html>
+<![CDATA[
+<script>
+
+function test(){
+	$('#udfFieldsId').empty();
+	$('#udfFieldsValue').empty();
+	var data = jq('$testId').val().split(';=;');
+	if(data!=null && data!=''){
+	for (i = 0; i < data.length; i++) { 
+		var code =data[i].split('||');
+			$("#udfFieldsId").append('<p style="white-space: nowrap;">'+code[0]+':<p>');	
+			$("#udfFieldsValue").append('<p style="white-space: nowrap;">'+code[1]+'<p>');	
+	}
+
+}
+}
+</script>
+]]>
+ 
+
+</html>
+
+				
+</zk>

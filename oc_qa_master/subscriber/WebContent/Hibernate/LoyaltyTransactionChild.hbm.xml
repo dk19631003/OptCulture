@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyTransactionChild"
+		table="loyalty_transaction_child">
+		<id name="transChildId" type="java.lang.Long" column="trans_child_id">
+			<generator class="native" />
+		</id>
+		<property name="transactionId" type="java.lang.Long">
+	      <column name="transaction_id" />
+	    </property>
+		<property name="membershipNumber" type="string">
+			<column name="membership_number" />
+		</property>
+		<property name="membershipType" type="string">
+			<column name="membership_type" />
+		</property>
+		<!-- <property name="contactId" type="java.lang.Long">
+			<column name="contact_id" />
+		</property> -->
+		<!-- <property name="customerId" type="string">
+			<column name="customer_id" />
+		</property> -->
+		<property name="transactionType" type="string">
+			<column name="transaction_type" />
+		</property>
+	    <property name="programId" type="java.lang.Long">
+			<column name="program_id" />
+		</property>
+		<property name="cardSetId" type="java.lang.Long">
+			<column name="card_set_id" />
+		</property>
+		<property name="tierId" type="java.lang.Long">
+			<column name="tier_id" />
+		</property>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_id" />
+		</property>
+		<property name="enteredAmount" type="double">
+			<column name="entered_amount" />
+		</property>
+		<property name="excludedAmount" type="double">
+			<column name="excluded_amount" />
+		</property>
+		<property name="enteredAmountType" type="string">
+			<column name="entered_amount_type" />
+		</property>
+		<property name="pointsDifference" type="string">
+			<column name="points_difference" />
+		</property>
+		<property name="amountDifference" type="string">
+			<column name="amount_difference" />
+		</property>
+		<property name="giftDifference" type="string">
+			<column name="gift_difference" />
+		</property>
+		<property name="pointsBalance" type="double">
+			<column name="points_balance"/>
+		</property>
+		<property name="amountBalance" type="double">
+			<column name="amount_balance" />
+		</property>
+		<property name="giftBalance" type="double">
+			<column name="gift_balance" />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="valueActivationDate" type="date">
+			<column name="value_activation_date" />
+		</property>
+		<property name="earnType" type="string">
+			<column name="earn_type" />
+		</property>
+		<property name="earnedPoints" type="double">
+			<column name="earned_points" />
+		</property>
+		<!-- <property name="excludedPoints" type="double">
+			<column name="excluded_points" />
+		</property> -->
+		<!-- <property name="netEarnedPoints" type="double">
+			<column name="net_earned_points" />
+		</property> -->
+		<property name="earnedAmount" type="double">
+			<column name="earned_amount" />
+		</property>
+		<property name="receiptAmount" type="double">
+			<column name="receipt_amount" />
+		</property>
+		<property name="conversionAmt" type="double">
+			<column name="conversion_amt" />
+		</property>
+		<!-- <property name="excludedAmount" type="double">
+			<column name="excluded_amount" />
+		</property> -->
+		<!-- <property name="netEarnedAmount" type="double">
+			<column name="net_earned_amount" />
+		</property> -->
+		<!-- <property name="exclusionReason" type="string">
+			<column name="exclusion_reason" />
+		</property>
+		<property name="valueExpirationDate" type="calendar">
+			<column name="value_expiration_date" />
+		</property>
+		<property name="netEarnedValueStatus" type="string">
+			<column name="net_earned_value_status" />
+		</property> -->
+		<property name="earnStatus" type="string">
+			<column name="earn_status" />
+		</property>
+		<!-- <property name="expiryStatus" type="string">
+			<column name="expiry_status" />
+		</property>
+		<property name="availableValue" type="double">
+			<column name="available_value" />
+		</property>
+		<property name="optInMedium" type="string">
+			<column name="optin_medium" />
+		</property> -->
+		<property name="storeNumber" type="string">
+			<column name="store_number" />
+		</property>
+		<property name="subsidiaryNumber" type="string">
+			<column name="subsidiary_number" />
+		</property>
+	
+		<property name="receiptNumber" type="string">
+			<column name="receipt_number" />
+		</property>
+		<property name="docSID" type="string">
+			<column name="docsid" />
+		</property>
+		<property name="sourceType" type="string">
+			<column name="source_type" />
+		</property>
+		<property name="description" type="string">
+			<column name="description" />
+		</property>
+		<property name="description2" type="string">
+			<column name="description2" />
+		</property>
+		<!-- <property name="eventTriggStatus" type="string">
+			<column name="event_trigg_status" />
+		</property> -->
+		<property name="contactId" type="long">
+			<column name="contact_id" />
+		</property>
+		<!-- <property name="triggerIds" type="string">
+			<column name="trigger_ids" />
+		</property> -->
+		<property name="loyaltyId" type="java.lang.Long">
+			<column name="loyalty_id" />
+		</property>
+		<property name="holdPoints" type="double">
+			<column name="hold_points" />
+		</property>
+		<property name="holdAmount" type="double">
+			<column name="hold_amount" />
+		</property>
+		<property name="redeemedOn" type="java.lang.Long">
+	      <column name="redeemed_on" />
+	    </property>
+	    
+	    <property name="transferedTo" type="java.lang.Long">
+			<column name="transfered_to" />
+		</property>
+		<property name="transferedOn" type="calendar">
+		<column name="transfered_on"  />
+	    </property>
+	     <property name="employeeId" type="string">
+		<column name="employee_id" />
+		</property>
+		<property name="terminalId" type="string">
+			<column name="terminal_id" />
+		</property>
+		<property name="rewardDifference" type="string">
+			<column name="reward_difference" />
+		</property>
+		<property name="rewardBalance" type="double">
+			<column name="reward_balance" />
+		</property>
+		<property name="earnedReward" type="double">
+			<column name="earned_reward" />
+		</property>
+		<property name="earnedRule" type="string">
+			<column name="earned_rule" />
+		</property>
+		<property name="specialRewardId" type="long">
+			<column name="special_reward_id" />
+		</property>
+		<property name="valueCode" type="string">
+			<column name="value_code" />
+		</property>
+		<property name="itemInfo" type="string">
+			<column name="item_info" />
+		</property>
+		<property name="issuanceAmount" type="double">
+			<column name="issuance_amount" />
+		</property>
+		<property name="valueCodeId" type="long">
+			<column name="value_code_id" />
+		</property>
+		<property name="excludedItemAmount" type="double">
+			<column name="excluded_item_amount" />
+		</property>
+		<property name="itemRewardsInfo" type="string">
+			<column name="item_rewards_info" />
+		</property>
+		
+		
+		
+	</class>
+</hibernate-mapping>

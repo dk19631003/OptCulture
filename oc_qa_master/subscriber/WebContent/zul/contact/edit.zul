@@ -1,0 +1,287 @@
+<?page title="List Settings" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<window id="viewContactListWinId"  border="0" apply="org.mq.marketer.campaign.controller.contacts.ListEditingController"  xmlns:h="http://www.w3.org/1999/xhtml" width="100%">
+	<div style="padding-left:10px;">
+		<label value="Please note :" style="font-weight:bold"/>
+		<label value=" Your new settings will reflect only on new contacts. Contacts added to list prior to the change will continue to work with last settings of your list."/>
+	</div>
+	<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+		<caption label="Edit List Settings"  />
+		
+		
+			<h:table cellspacing="2" cellpadding="2" width="100%">
+				<h:tr>
+					<h:td width="200" >
+						<label value="List Name :" />
+						<label value="*" style="font-size:15px;color:red;" />
+					</h:td>
+					
+					<h:td >
+						<textbox id="listNameTbId" width="270px" maxlength="50" cols="30"/>
+					</h:td>	
+				</h:tr>
+				<h:tr>
+					<h:td valign="top">
+						<label value="List Description :" />
+					</h:td>
+					
+					<h:td >
+						<textbox id="descTbId" rows="5" width="270px" maxlength="125" height="100px"/>
+					</h:td>	
+				</h:tr>	
+				<h:tr>
+					<h:td >
+						<label value="Enable Double Opt-in email :" />
+					</h:td>
+					
+					<h:td >
+						
+						<checkbox id="optInChkBox" />
+						
+					</h:td>	
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2">
+					
+					<div id="doubleOptLtDiv" width="100%" visible="false" style="z-index: 0;">
+		          				<h:table cellspacing="0" width="100%" cellpadding="0">
+		          				<h:tr>
+		          					<h:td width="200" style="padding:10px 0px 10px; 3px;">
+		          					
+		          						<label value="Opt-in Email:" />
+		          					</h:td>
+		          					
+		          					<h:td  valign="top"  >
+										<listbox id="optInEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Select Optin Message">
+										   
+										 </listitem>
+										
+										</listbox>
+										
+										<image id="optInPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="previewBtnId" sclass="idle140"/>
+										<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="editMsgBtnId" sclass="idle140"/>
+										<a label="Add New Message" visible="false" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="addNewBtnId" sclass="idle140"/>
+					        		</h:td>
+					        	</h:tr>
+					        
+								</h:table>
+					
+	         				</div>   
+					
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td >
+						<label value="Enable Welcome email :" />
+					</h:td>
+					
+					<h:td >
+						
+						<checkbox id="welcomeChkBox" />
+						
+					</h:td>	
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2">
+					
+					<div id="welcomeMailDiv" width="100%" visible="false" style="z-index: 0;">
+		          				<h:table cellspacing="0" width="100%" cellpadding="0">
+		          				<h:tr>
+		          					<h:td width="200" style="padding:10px 0px 10px; 3px;">
+		          					
+		          						<label value="Welcome Email:" />
+		          					</h:td>
+		          					
+		          					<h:td  valign="top"  >
+										<listbox id="welcomeEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Select Welcome Email Message">
+										   
+										 </listitem>
+										
+										</listbox>
+										
+										<image id="welcomePreviewemailIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="previewemailBtnId" sclass="idle140"/>
+										<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="editWelcomeMsgBtnId" sclass="idle140"/>
+					        		</h:td>
+					        	</h:tr>
+					        
+								</h:table>
+					
+	         				</div>   
+					
+					</h:td>
+				</h:tr>
+				
+				<h:tr style="display:none;" >
+					<h:td >
+						<label value="Enable Parental Consent Email :" />
+					</h:td>
+					
+					<h:td >
+						
+						<checkbox id="parentalConsentChkBox" />
+						
+					</h:td>	
+				</h:tr>
+				<h:tr  style="display:none;" >
+					<h:td colspan="2">
+					
+					<div id="parentalOptLtDiv" width="100%" visible="false" style="z-index: 0;">
+          				<h:table cellspacing="0" width="100%" cellpadding="0">
+          				<h:tr>
+          					<h:td width="200" style="padding:10px 0px 10px; 3px;">
+          					
+          						<label value="Parental Consent Email :" />
+          					</h:td>
+          					
+          					<h:td  valign="top"  >
+								<listbox id="parentalConsentEmailLbId"  width="270px"   mold="select" sclass="contactsView">
+								  <listitem  selected="true" label="Select Consent Email Template">
+								   
+								 </listitem>
+								
+								</listbox>
+								
+								<image id="parentalPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+								<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="parentalPreviewBtnId" sclass="idle140"/>
+								<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="parentalEditMsgBtnId" sclass="idle140"/>
+			        		</h:td>
+			        	</h:tr>
+			        
+						</h:table>
+			
+        				</div>   
+					
+					</h:td>
+				</h:tr>
+				
+			</h:table>
+		
+	</groupbox>
+	
+	<div align="right" style="padding:15px 0px;" >
+		<toolbarbutton id="addNewCustFieldTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add Custom Field"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	</div>
+	
+	<!-- <grid id="custFieldsGbId">
+				<columns>
+					<column label="File Attribute" />
+					<column label="OptCulture Field"></column>
+					<column label="Data Type" width="300px"/>
+					<column label="Optional Value" width="200px"/>
+					<column label="Display Label"></column>
+					<column label="Uniq.Pri" width="70px"></column>
+					<column label="Action" width="60px;" />
+				</columns>
+				<rows id="contactRowsId"/>
+	</grid>
+	 -->
+	
+	<!-- <grid id="custFieldsGbId" >
+						
+		<columns>
+		<column   label="Custom Field Name" />
+			<column width="30%" label="Field Type" />
+			<column width="30%" label="Field Format" id="dateFormatColumnId"/>
+			<column width="10%" label="" visible="false" />
+			<column width="10%" label="Actions"  />
+		</columns>
+		<rows></rows>
+	</grid> -->
+	
+	<!-- <div align="right" style="padding:15px 0px;">
+	
+		<image src="/img/icons/delete_icon.png" />
+		<label value="- Delete" style="font-size:11px;" /> 
+	</div> -->
+
+	<div align="right" style="padding:15px 0px;">
+		<button id="backBtn" sclass="idle140" label="Back" />
+		<button id="submitBtn" label="Save Changes" sclass="idle140 greenbtn" />
+	</div><!--
+
+
+	<h:table cellspacing="10" cellpadding="0"   width="90%" align="center" xmlns:h="http://www.zkoss.org/2005/zk/native">
+		<h:tr >
+			<h:td colspan="2"  width="100%">
+				<label value="List Settings"  sclass="boldLabel"/>
+			</h:td>
+		</h:tr>
+		<h:tr >
+			<h:td colspan="2"  width="100%">
+				<h:hr  width="100%"/>
+			</h:td>
+		</h:tr>
+		<h:tr>
+			<h:td width="10%" align="right">
+				<label value="List Name:"/>
+			</h:td>
+			<h:td width="90%">
+				<textbox id="listNameTbId" maxlength="50"/>
+			</h:td>
+		</h:tr>
+		<h:tr>
+			<h:td  align="right" >
+				<label value="List Description: " multiline="true"/>
+			</h:td>
+			<h:td>
+				<textbox id="descTbId" cols="30" rows="3" height="51px" maxlength="125"/>
+			</h:td>
+		</h:tr>
+		
+		<h:tr>
+			<h:td colspan="2"  width="100%">
+				<groupbox width="90%">
+					<caption label="Custom field(s) configuration"  /> 
+					<hbox align="center" width="100%">
+						<space width="400px"></space>
+						<toolbarbutton id="addRuleToolbarId" image="/img/icons/add_icon.png" 
+							label="Add new Custom field" sclass="tbbLink"  />
+					</hbox>
+					
+					<grid width="100%" id="custFieldsGbId" >
+						
+						<columns>
+						<column  label="Custom Field Name" />
+							<column width="180px" label="Data Type" />
+							<column width="180px" label="Date Format" id="dateFormatColumnId"/>
+							<column label="Default Value" id="defaultTypeColumnId" />
+							<column width="30px" label=""  />
+						</columns>
+						<rows></rows>
+					</grid>
+
+				</groupbox>
+			</h:td>
+		</h:tr>
+		
+		<h:tr>
+			<h:td colspan="2"  width="100%">
+				<button id="backBtn" label="Back" onClick="back()"/>
+				<button id="submitBtn" label="Save Changes" onClick="viewContactListWinId.updateList(listNameTbId.getValue(),descTbId.getValue())"/>
+				
+				<button id="backBtn" label="Back" />
+				<button id="submitBtn" label="Save Changes" />
+			</h:td>
+		</h:tr>
+	</h:table>
+	
+-->
+
+	<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+		</caption>
+		<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+		<iframe id="html" width="100%" height="100%"/>
+		</div>
+	</window>
+
+
+</window>
+</zk>

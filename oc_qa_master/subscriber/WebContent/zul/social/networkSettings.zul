@@ -1,0 +1,126 @@
+<zk>
+	<window id="" width="100%" apply="org.mq.marketer.campaign.controller.social.networkSettingsController" 
+		xmlns:h="native"  xmlns:w="client">
+	
+	<script defer="true"> <![CDATA[
+		$(document).ready(function() {
+			$(".connectButton").click(function(event){
+				event.preventDefault();
+				window.open("", "connectWindow", "width=800,height=600");
+				var cTP = $(event.currentTarget).parent();		
+				cTP[0].setAttribute("target", "connectWindow");
+				cTP[0].submit();
+			});
+		});
+	 ]]> </script>
+ 	
+ 	
+  	<style>
+ 	.myindent span.z-listitem-img.z-listitem-img-checkbox {
+ 	 	margin-left:20px;
+ 	 }
+ 	
+ 	</style> 
+ 	<div style="padding:5px;">
+ 		<label value="You can post to all checked accounts and fan pages." 
+ 			style="font-weight:bold;color:#555555;font-size:14px;"/>
+ 	</div>
+		<groupbox closable="false" width="700px" sclass="req_groupbox">
+			<caption image="/images/facebook_icon.png" >
+				<label value="Facebook Accounts" style="normal;font-size:14px;margin:0 3px;" />
+			</caption>
+			
+			<div align="right">
+			 <h:form action="/subscriber/connect/facebook" method="POST">
+				<button class="connectButton idle180 greenbtn" type="submit" id="addFbAccountBtnId"
+						image="/img/icons/add_icon.png" label="Add Facebook Account">
+				</button>
+				<h:input type="hidden" name="scope" 
+					value="publish_stream,user_photos,offline_access,manage_pages" />
+			</h:form>
+			
+			 <h:form action="/subscriber/connect/facebook" method="POST">
+				<button class="connectButton idle" type="submit" id="deleteFbAccountBtnId" visible="false"
+						image="/img/icons/delete_icon.png" label="Delete Facebook Account">
+				</button>
+				<h:input type="hidden" name="_method" value="delete" />
+			</h:form>
+			
+			</div>
+			
+			<div id="fbAccountsDivId" style="min-height:60px;padding:5px;margin-left:10px;" >
+				<listbox id="fbAccountsLBoxId" multiple="true" checkmark="true" />
+			</div>
+		</groupbox>
+	
+	
+		<groupbox closable="false" width="700px" sclass="req_groupbox">
+			<caption image="/images/twitter_icon.png" >
+				<label value="Twitter Accounts" style="normal;font-size:14px;margin:0 3px;" />
+			</caption>
+			
+			<div align="right">
+			 <h:form action="/subscriber/connect/twitter" method="POST">
+				<button class="connectButton idle180 greenbtn" type="submit" id="addTwAccountBtnId"
+						image="/img/icons/add_icon.png" label="Add Twitter Account">
+				</button>
+			</h:form>
+			
+			<h:form action="/subscriber/connect/twitter" method="POST">
+				<button class="connectButton idle" type="submit" id="deleteTwAccountBtnId" visible="false"
+						image="/img/icons/delete_icon.png" label="Delete Twitter Account">
+				</button>
+				<h:input type="hidden" name="_method" value="delete" />
+			</h:form>
+			
+			</div>
+			
+			<div id="twAccountsDivId" style="min-height:60px;padding:5px;margin-left:10px;" >
+				<listbox id="twAccountsLBoxId" multiple="true" checkmark="true" />
+			</div>
+		</groupbox>
+	
+	
+		<groupbox closable="false" width="700px" sclass="req_groupbox">
+			<caption image="/images/linkedin_icon.png" >
+				<label value="LinkedIn Accounts" style="normal;font-size:14px;margin:0 3px;" />
+			</caption>
+			
+			<div align="right">
+			 <h:form action="/subscriber/connect/linkedin" method="POST">
+				<button class="connectButton idle180 greenbtn" type="submit" id="addLnAccountBtnId"
+						image="/img/icons/add_icon.png" label="Add LinkedIn Account">
+				</button>
+			</h:form>
+			
+			<h:form action="/subscriber/connect/linkedin" method="POST">
+				<button class="connectButton idle" type="submit" id="deleteLnAccountBtnId" visible="false"
+						image="/img/icons/delete_icon.png" label="Delete LinkedIn Account">
+				</button>
+				<h:input type="hidden" name="_method" value="delete" />
+			</h:form>
+			
+			</div>
+			
+			<div id="lnAccountsDivId" style="min-height:60px;padding:5px;margin-left:10px;" >
+				<listbox id="lnAccountsLBoxId" multiple="true" checkmark="true" />
+			</div>
+		</groupbox>
+	
+	<separator height="20px" />
+	
+	<div>
+		<h:table class="req_nav_table">
+			 <h:tr>
+			 <h:td align="right"> 
+			 
+			 <label value="Error msg." sclass="req_data_error" visible="false"/>
+				 	
+			 	<button label="Save &amp; Continue" sclass="idle180" id="continueBtnId" />
+			 </h:td>
+			 </h:tr>
+		</h:table>
+	</div>		
+	
+	</window>
+</zk>

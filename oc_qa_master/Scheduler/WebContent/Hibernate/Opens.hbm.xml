@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.Opens" table="opens">
+    <id name="openId" type="java.lang.Long">
+      <column name="open_id"/>
+      <generator class="native"/>
+    </id>
+	<!-- <many-to-one name="sentId" class="org.mq.captiway.scheduler.beans.CampaignSent" foreign-key="open_sentFkey"  fetch="select" lazy="false">
+      <column name="sent_id" not-null="true"/>
+    </many-to-one> -->
+    
+    <property name="sentId" type="java.lang.Long">
+		<column name="sent_id" />
+	</property>
+	<property name="openDate" type="timestamp">
+      <column name="open_date"/>
+    </property>
+    <property name="emailClient" type="java.lang.Long">
+		<column name="email_client" />
+	</property>
+	<!-- <many-to-one name="emailClient" class="org.mq.captiway.scheduler.beans.EmailClient" foreign-key="FK_opens_emailclient"  fetch="select" lazy="false">
+      <column name="email_client" />
+    </many-to-one> -->
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,499 @@
+<zk>
+	
+	
+	<window id="suppressContactsWinId" xmlns:h="native" apply="org.mq.marketer.campaign.controller.contacts.SuppressContactsController" 
+	xmlns:w="client">
+    
+ 	
+    
+	<!-- <div style="padding:30px 0;">
+		<a  label="View Suppressed Contacts" id="viewSuppContsBtId"  style="font-weight:bold; font-size:13px;color:#43A0BA;padding-left:100px;" />
+	</div> -->
+
+		<div visible="true" id="suppContViewDivId" style = "padding-left:20px;padding-right:20px;padding-bottom:20px;padding-top:20px;" >
+		    <!-- <groupbox id="gbId" sclass="gbStyle"  closable="false" width="100%" >
+		     <caption  label="Suppressed Contacts" style="font-weight:bold;font-size:13px;"/> -->
+				
+				 <h:table cellspacing="0" style="padding-left:0px;" cellpadding="0" width="100%" 	border="0" >
+				 	<h:tr>
+				 	
+				 		<h:td>
+		     			 <label value="Select Suppression Type :" />
+		     			 <listbox mold="select" rows="1" id="supptypeLbId" > 
+		     			     <listitem value="all" label="All" selected="true"></listitem>
+	     			 		 <listitem value="bouncedcontact" label="Bounced"></listitem>
+	     			 		 <listitem value="Spammed" label="Reported Spam"></listitem>
+	     			 		 <listitem value="Unsubscribed" label="Unsubscribed"></listitem>
+			     			 <listitem value="useraddedcontact" label="Manually Added" ></listitem>
+		     			 </listbox>
+     			 
+				 		</h:td>
+				 		<h:td>
+				 		</h:td>
+				 		<h:td align="right">
+				 		<!-- <toolbarbutton id="addManuallyAnchId" image="/images/action_add.gif" sclass="tbbLink"
+							label= "Add Email Address(s) Manually"   style="color:#2886B9;font-weight:bold;text-decoration: underline;"/> -->
+							<toolbarbutton id="addManuallyAnchId" image="/images/add-emailV2.png" sclass="tbbLink"
+							label= "Add To Suppression"  />
+				 		 <!-- <a label="Manual Addition Of Email Ids" id="addManuallyAnchId" style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;"/>
+				 		 <image src="/img/icons/icon_q.png" tooltip="help1,position=overlap_after" />
+				 		 <popup id="help1" width="430px" >
+								<h:table >
+									<h:tr>
+										<h:td align="center">
+											<label  value="Email Addresses added manually will be available in 'Manually Added' section." sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup> -->
+				 		</h:td>
+				 	</h:tr>
+				 	<h:tr height="10"></h:tr>
+				 	<h:tr>
+						<h:td align="left"> 	
+		     			 <bandbox id="actionsBandBoxId" mold="rounded" disabled="true" visible="false" readonly="true" value="Bulk Actions" 
+								style="font-weight:bold;padding:5px; ">
+		     			 	<bandpopup>
+		     			 		<!-- <h:table cellspacing="0" cellpadding="0" width="100%" 	border="0" >
+		     			 			<h:tr height="40">
+		     			 				<h:td width="230">
+		     			 					<label value="Delete Selected:" style="font-size:13px;font-weight:bold;"/>
+		     			 				</h:td>
+		     			 				<h:td width="130" >
+											<button label="Delete" sclass="idle70 greenbtn" id="delBtnId" />
+		     			 				</h:td>
+		     			 			</h:tr>
+		     			 			<h:tr height="40">
+		     			 				<h:td width="230">
+		     			 					<label value="Delete All:" style="font-size:13px;font-weight:bold;"/>
+		     			 				</h:td>
+		     			 				<h:td width="130">
+											<button label="Ok" sclass="idle70 greenbtn" id="delAllBtnId"/>
+		     			 				</h:td>
+		     			 			
+		     			 			</h:tr>
+		     			 			<h:tr bgcolor="#f5f8fb" height="40" >
+										<h:td colspan="3" align="right">
+										<button label="Close" sclass="idle140" id="actionsBndBoxCloseBtnId" onClick="actionsBandBoxId.close()" />
+										 </h:td>
+									</h:tr>
+		     			 			 
+		     			 		</h:table> -->
+		     			 		
+		     			 		<h:table width="100%" cellspacing="0" cellpadding="3">
+					<h:tr>
+						<h:td width="150"> <label  value="Delete Selected: " sclass="boldLabel" /> </h:td>
+						<h:td align="right"> <button id="delBtnId" label="Delete" sclass="idle70 greenbtn"/> </h:td>
+					</h:tr>
+
+					<h:tr> <h:td colspan="2"><h:hr/> </h:td> </h:tr>
+					
+					<h:tr>
+						<h:td width="150"> <label  value="Delete All: " sclass="boldLabel" /> </h:td>
+						<h:td align="right"> <button id="delAllBtnId" label="Ok" sclass="idle70 greenbtn"/> </h:td>
+					</h:tr>
+
+					<h:tr> <h:td colspan="2"><h:hr/> </h:td> </h:tr>
+					
+					<h:tr bgcolor="#f5f8fb">
+						<h:td colspan="2" align="right">
+							<button label="Close" sclass="idle70" id="actionsBndBoxCloseBtnId" onClick="actionsBandBoxId.close()"/>
+						 </h:td>
+					</h:tr>
+				</h:table>
+		     			 		
+		     			 	
+		     			 	</bandpopup>
+     			 
+     					</bandbox>
+     					</h:td>
+				 	</h:tr>
+				 	<h:tr height="10"></h:tr>
+				 
+				 
+				 </h:table>
+				 <!-- <grid id="suppContGridId"   emptyMessage="No contacts Found for Your Search Criteria." width="100%"> -->
+				 <grid id="suppContGridId"   emptyMessage="No email address found in suppression" width="100%">
+					<columns id="suppContColsId" />
+					<rows id="suppContRowsId" >
+					</rows>
+						<!-- <column   width="5%"  style="padding-left:15px;" />
+						<column  width="40%"  style="padding-left:5px;"><label value="Email Id" />
+						      <textbox id="suppLstSearchTbId" value="Search Email..." w:onClick="javascript: if(this.getValue()=='Search Email...') {  this.setValue(''); }" width="250px" /></column> -->
+						<!-- <column   width="35%" style="padding-left:5px;"><label value="Reason" />  </column>
+						<column   width="20%" style="padding-left:5px;"><label value="Action" />  </column> -->
+					<!-- </columns> -->
+					
+				</grid>
+						<separator/>
+				<h:table id="exportAndPaginationTableId" cellspacing="0" cellpadding="0" width="100%">
+						<h:tr bgcolor="#F9F9F9">
+						
+						<h:td>
+							<div id="exportDivId" >
+								<label value="Export as a " />
+								<listbox id="exportFilterLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId" />
+							</div>
+						</h:td>
+						
+						<h:td align="right" width="100">
+							<label value="Items per page:" style="font-size:11px;" />
+						</h:td>
+								
+						<h:td  width="70">
+							<listbox rows="1" mold="select" id="pageSizeLbId"	>
+								<listitem label="5" />
+								<listitem label="10" selected="true"  />
+								<listitem label="15" />
+							</listbox>
+								
+						</h:td>
+						<h:td width="340">
+							<paging id="suppContsPgId" width="340px" detailed="true" pageSize="15" 
+													sclass="contactsViewPaging" style="border:none;" />
+						</h:td>
+						</h:tr>
+					</h:table>
+					
+					<div id="displayBottomMsgDivId" visible="false" >
+					<h:table cellspacing="0" cellpadding="2"
+						align="left"
+						style="font-size: 10px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+						<h:tr>
+							<!-- <h:td>
+								<label value="*"
+									style="font-size:15px;color:red;" />
+							</h:td>
+							<h:td>
+								<label value="*"
+									style="font-size:15px;color:red;" />
+							</h:td> -->
+							<h:td>
+							   <label value="Note:" style="font-weight:bold;"/>
+							</h:td>
+							<h:td align="left">
+							    <!-- <label value="To remove an email id in Reported
+								Spam/Unsubscribed category, please
+								contact support team at
+								support@optculture.com."/> -->
+								<label id="displayBottomMsgLblId"/>
+							</h:td>
+						</h:tr>
+					</h:table>
+					</div>
+					
+		<div id="displayMeaningOfDeleteImageDivId" visible="false" align="right">
+		<h:table cellspacing="0" cellpadding="2" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"> <image src="/img/icons/delete_icon.png"/></h:td>
+						<h:td align="left"  > <label value="- Remove from suppression list" style="font-size:11px;"/> </h:td>
+					</h:tr>
+			</h:table>
+		</div>		
+				
+				
+				<!-- <h:table  cellspacing="0" cellpadding="0" width="100%" 
+						border="0" >
+					<h:tr  bgcolor="#F9F9F9" >
+					
+						<h:td></h:td>
+						<h:td width="340px" >
+							<paging  width="340px" style="border:none;" id="suppContsPgId"
+							 pageSize="10" detailed="true" sclass="contactsViewPaging" />
+						</h:td>
+					</h:tr>
+					
+				</h:table> -->
+			
+		</div>
+	  <!-- <div style="padding-top:20px;padding-left:20px;">
+        <label value="Upload .CSV file containing Email Addresses that you would like to suppress in future campaign."/>
+      </div>
+      
+ 		 <div style="padding-bottom:20px;padding-left:20px;">
+        	<label value="Please Note:" style="font-weight:bold;" />
+        	<label value="The uploaded contacts will be avoided from sending emails to in future."/>
+        </div>
+
+		<div id="suppContDivId" style="padding-left:20px;">
+			<h:br/>
+			<div id="suppressResDivId" visible="false" width="100%"  style="padding-left" >
+				<h:table cellspacing="2" cellpadding="0" width="100%" >
+					<h:tr>
+						<h:td align="center" valign="middle" > 
+							<label value="Suppressed contacts list will be uploaded in a moment. " style="color:#49A5FF;font-family:verdana;font-size:12px;" />
+						</h:td>
+					</h:tr>
+				</h:table>
+			</div> 
+			
+		    <div id="suppressDivId" style="padding-bottom:20px">
+				<h:table>
+					<h:tr>
+						<h:td>
+						
+							<label value="Browse CSV file" sclass="theme-lbHeading"/>
+						
+						</h:td>
+						<h:td>
+							<textbox id="selectedFileTbId"/>
+						
+						</h:td>
+						<h:td>
+							<button label="Browse..." height="28px" sclass="idle140" id="uploadBtnId" upload="true,maxsize=-1" />
+							
+						</h:td>
+						<h:td>
+							<button id="uploadId" sclass="idle140 greenbtn"  label="Upload"></button>
+						
+						</h:td>
+					
+					
+					</h:tr>
+				</h:table>
+			</div>
+		</div> -->
+		 <window id="askForManualAdditionWinId" title="Manual Addition Of Email Ids"
+						border="normal" visible="false" width="400px" height="200px"
+						closable="true"
+						onClose="self.setVisible(false); event.stopPropagation();">
+					<div style="margin:10px 10px 10px 20px;">
+						<h:table>
+							<h:tr>
+								<h:td>
+									<div>
+						 				<label value="Please select one option."/>
+						 			</div>
+						 		</h:td>
+						 	</h:tr>
+						</h:table>
+				        <radiogroup id="manualAdditionChoice"/>
+						<h:table width="100%">						
+						<h:tr height="20" />	 
+						<h:tr>
+						    <h:td>
+								<div style="margin-right:10px;">
+									<radio id="rdoBtn1" label="Add single user email id." radiogroup="manualAdditionChoice" selected="true"/>
+								</div>
+							</h:td>
+							<h:td>
+								<div style="margin-right:10px;">
+                					<radio id="rdoBtn2" label="Add bulk user email id." radiogroup="manualAdditionChoice" />
+								</div>
+							</h:td>
+						</h:tr>						 
+						</h:table> 
+						<h:table width="100%">						
+						<h:tr height="20" />	 
+						<h:tr>
+							<h:td align="left" >
+								<div style="margin-right:10px;">
+									<button id="okBtnId" label="OK" sclass="idle140"/>
+								</div>
+							</h:td>
+						</h:tr>						 
+						</h:table>
+					</div>
+            			
+						
+						
+						
+	</window>
+	<!-- <window id="manualAdditionWinId"
+						border="normal" visible="false" width="650px" height="340px"
+						closable="true" title="Add Manually"
+						onClose="self.setVisible(false); event.stopPropagation();">
+			<radiogroup id="manualAdditionChoice"/>
+			
+			<div style="margin-right:10px;">
+                					   <div>
+                					       <h:table width="100%">
+                					       	<h:tr height="20" />
+                					       	<h:tr>
+                					       		<h:td>
+                					       			<radio id="rdoBtn1" label="Add single user email id:" style="font-weight:bold;" radiogroup="manualAdditionChoice" />
+                					       		</h:td>
+                					       		<h:td>
+                					       			<textbox id="singleUserEmailIdTbId" value="Enter Email Id" width="250px" disabled="true"/>
+                					       			<button label="Add" height="28px" width="80px" sclass="idle140" id="addSingleEmailIdBtnId" disabled="true"/>
+                					       		</h:td>
+                					       	</h:tr>
+                					       </h:table>
+                					   </div>
+			</div>
+			<div style="margin-right:10px;">
+                					   <div>
+                					       <h:table width="100%">
+                					       	<h:tr height="20" />
+                					       	<h:tr>
+                					       		<h:td>
+                					       			<label id="emptyTextBoxLblId" style="color:red"/>
+                					       		</h:td>
+                					       		
+                					       	</h:tr>
+                					       </h:table>
+                					   </div>
+			</div>
+			
+			<div style="margin-right:10px;">
+			<div>
+				<h:table width="100%">
+					<h:tr height="20" />
+					<h:tr>
+						<h:td>
+							<radio id="rdoBtn2"
+								label="Add bulk user email id:" style="font-weight:bold;"
+								radiogroup="manualAdditionChoice" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+                           <div id="bulkAdditionDivId1"
+                					     	style="padding-top:20px;padding-left:20px;">
+                					     	<label
+                					     		value="Upload .CSV file containing Email Addresses that you would like to suppress in future campaign." />
+                		  </div>
+                		  <div id="bulkAdditionDivId2"
+                					     	style="padding-bottom:20px;padding-left:20px;">
+                					     	<label value="Please Note:"
+                					     		style="font-weight:bold;" />
+                					     	<label
+                					     		value="The uploaded contacts will be avoided from sending emails to in future." />
+                					     </div>
+                					      <div id="suppContDivId"
+                					     	 style="padding-left:20px;">
+                					     	<h:br />
+                					     	<div id="suppressResDivId"
+                					     		visible="false" width="100%"
+                					     		style="padding-left">
+                					     		<h:table
+                					     			cellspacing="2" cellpadding="0"
+                					     			width="100%">
+                					     			<h:tr>
+                					     				<h:td
+                					     					align="center" valign="middle">
+                					     					<label
+                					     						value="Suppressed contacts list will be uploaded in a moment. "
+                					     						style="color:#49A5FF;font-family:verdana;font-size:12px;" />
+                					     				</h:td>
+                					     			</h:tr>
+                					     		</h:table>
+                					     	</div>
+
+                					     	<div id="suppressDivId"
+                					     		style="padding-bottom:20px">
+                					     		<h:table>
+                					     			<h:tr>
+                					     				<h:td>
+
+                					     					<label
+                					     						value="Browse CSV file"
+                					     						sclass="theme-lbHeading" />
+
+                					     				</h:td>
+                					     				<h:td>
+                					     					<textbox
+                					     						id="selectedFileTbId" disabled="true"/>
+
+                					     				</h:td>
+                					     				<h:td>
+                					     					<button
+                					     						label="Browse..." height="28px"
+                					     						sclass="idle140" id="uploadBtnId"
+                					     						upload="true,maxsize=-1" disabled="true"/>
+
+                					     				</h:td>
+                					     				<h:td>
+                					     					<button
+                					     						id="uploadId" sclass="idle140 greenbtn"
+                					     						label="Upload" disabled="true">
+                					     					</button>
+
+                					     				</h:td>
+
+
+                					     			</h:tr>
+                					     		</h:table>
+                					     	</div>
+                					     </div>
+						</h:td>
+					</h:tr>
+				</h:table>
+
+			</div>
+			</div>
+	</window> -->
+		
+	<window id="manualAdditionWinId" border="normal" visible="false" width="470px" height="200px" closable="true" title="Add To Suppression" onClose="self.setVisible(false); event.stopPropagation();">
+			<radiogroup id="manualAdditionChoice"/>
+			
+			<h:table cellspacing="0" cellpadding="4" width="100%" height="100%"  bgcolor="#FFFFFF" style="padding:1px;border:0px solid #cccccc;border-radius:5px;">
+			        <h:tr>
+			          <h:td>
+			            <!-- <label value="You can add one or more email addresses to the suppression list:" sclass="theme-lbHeading"/> -->
+			            <label value="You can add one or more email addresses to the suppression list :" />
+			          </h:td>
+			        </h:tr>
+					<h:tr>
+			   			<h:td>
+			   			  <hlayout>
+			   			     <div>
+			   			         <!-- <radio id="rdoBtn1" label="Single email address" style="font-weight:bold;" radiogroup="manualAdditionChoice" selected="true"/> -->
+			   			         <radio id="rdoBtn1" label="Single email address"  radiogroup="manualAdditionChoice" selected="true"/>
+			   			     </div>
+			   			     <div>
+			   			     	<!-- <radio id="rdoBtn2" label="Bulk email addresses" style="font-weight:bold;" radiogroup="manualAdditionChoice" /> -->
+			   			     	<radio id="rdoBtn2" label="Bulk email addresses"  radiogroup="manualAdditionChoice" />
+			   			     </div>
+			   			  </hlayout>
+			   			</h:td>
+					</h:tr>
+					<h:tr>
+			   			<h:td>
+			   			  <hlayout>
+			   			     <div id="singleEmailIdDivId" visible="true">
+			   			        <textbox id="singleUserEmailIdTbId" value="Enter Email Address" width="250px" height="25px"/>
+                			    <button label="Add" height="25px" width="50px" sclass="idle140 greenbtn" id="addSingleEmailIdBtnId"/>
+			   			     </div>
+			   			     <div id="bulkEmailIdDivId" visible="false">
+			   			        <!-- <label value="Browse CSV file" sclass="theme-lbHeading" /> -->
+			   			        <!-- <label value="Browse CSV file"  /> -->
+			   			        <label value="Browse"/>
+			   			        <label value=".CSV" style="font-weight:bold;"/>
+			   			        <label value="file"/>
+			   			        <textbox id="selectedFileTbId" height="25px"/>
+			   			        <!-- <button label="Browse..." height="25px" width="80px"  sclass="idle140" id="uploadBtnId" upload="true,maxsize=-1"/> -->
+			   			        <button label="Browse" height="25px" width="80px"  sclass="idle140" id="uploadBtnId" upload="true,maxsize=-1"/>
+                			    <button id="uploadId" sclass="idle140 greenbtn" label="Upload" width="80px" height="25px"/>
+			   			     </div>
+			   			     <div id="successMsgDivId" visible="false">
+			   			        <!-- <label value="Email Address(s) added successfully! You can view in the manually added section." style="color:#49A5FF;font-family:verdana;font-size:12px;"/> -->
+			   			        <label id="successMsgLblId" style="color:#49A5FF;font-family:verdana;font-size:12px;"/>
+			   			     </div>
+			   			  </hlayout>
+			   			</h:td>
+					</h:tr>
+					<h:tr>
+					   
+					    <h:td >
+					        <div>
+					          <label id="errorMsgLblId" style="color:red;line-height:0px;"/>
+					        </div>
+					        <button id="cancelBtnId"  label="Cancel" height="25px" style="margin-left:367px;"/>
+					    </h:td>
+					</h:tr>
+			</h:table>
+			
+	</window>
+				
+</window>
+		
+		
+		
+</zk>

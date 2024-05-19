@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.AutoEmailClicks"
+		table="auto_email_clicks">
+		<id name="clickId" type="java.lang.Long">
+			<column name="click_id" />
+			<generator class="native" />
+		</id>
+		<property name="eqId" type="java.lang.Long">
+			<column name="eq_id" />
+		</property>
+		<property name="clickUrl" type="java.lang.String">
+			<column name="click_Url" length="255" />
+		</property>
+		<property name="clickCount" type="int">
+			<column name="click_count" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,162 @@
+<zk>
+	<style>
+	
+		.listsLb{
+			color:#073B6F;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+			
+		}
+	</style>
+	<window id="listSegmentWinId" width="100%" apply="org.mq.marketer.campaign.controller.contacts.ListSegmentor"  xmlns:h="http://www.zkoss.org/2005/zk/native">
+		<h:table cellspacing="10" cellpadding="0" width="100%" align="left">
+			<h:tr>
+				<h:td>
+					<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="Select List(s)" style="font-weight:bold;"/>
+						
+						<h:table cellspacing="2" cellpadding="2" width="100%">
+							<h:tr>
+								<h:td width="360">
+								
+									<listbox id="dispMlLBoxId" width="350px" multiple="true" rows="6"  sclass="contactsView" checkmark="true">
+										<listhead style="background-color:#488eb0;">
+											<listheader label="List Name" width="100%" align="left" maxlength="30"/>
+										</listhead>
+										<listitem forEach="${listSegmentWinId$ListSegmentor.mailingLists}" label="${each.listName}" value="${each}"/>
+									</listbox>
+								</h:td>
+								<h:td style="vertical-align: top;">
+									
+									<div id="selectedListsDivId" visible="false" style="padding:10px;" >
+										<label style="color:#09719F;" value="Currently selected  Contact List(s): " />
+										<label value="" id="selMlLblId" sclass="listsLb" style="color:#2886B9;" multiline="true"  />
+									</div>
+								</h:td>
+							</h:tr>
+						</h:table>
+					
+					</groupbox>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<groupbox >
+						<caption label="Action to perform on Selected list(s)" style="font-weight:bold;"/>
+						<!--<label sclass="leftlinks" value="How Do you want to add contacts to the list/s ?"/>
+						-->
+						<radiogroup id="listsTypeRgId" >
+						<radio label="entire list/s" checked="true"/>
+						<hlayout>
+						<radio label="Segment &amp; Save to new list" /><image src="/img/icons/icon_q.png" tooltip="help1"  style="padding-left:20px;padding-top:10px;" />
+						<popup id="help1"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="Segment Your contacts as per the choosen criteria and you can save them by creating a new List. " sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+							</hlayout>
+					</radiogroup>
+						
+					<vbox id="segmentRulesVbId" visible="false" style="padding:30px 30px 0 30px;">
+						<hbox align="center" >
+							<label value="Match "/>
+							<listbox id="segRuleOptionLbId" mold="select"  width="100px" style="margin:0 5px;">
+							<listitem label="Any" selected="true"/><listitem label="All" />
+							</listbox> of the following
+							<space width="50px"/>
+							<!--<toolbarbutton id="addRuleToolbarId" image="/img/icons/add_icon.png" label="Add another rule" sclass="tbbLink" onClick="listSegmentWinId.addRules(null)"/>-->
+						</hbox>
+					</vbox>
+					
+					<toolbarbutton id="addRuleToolbarId" visible="false" 
+						style="font-weight:bold;font-size:13px;margin:10px 0 0 30px;color:#43A0BA;" image="/images/action_add.gif" 
+					 label="Add New rule" sclass="tbbLink" />
+					 
+					</groupbox>
+				</h:td>
+			
+			</h:tr>
+			<h:tr>
+				<h:td align="right">
+					<!--<button label="Segment" onClick="listSegmentWinId.validate()"/>-->
+					<button label="proceed" sclass="idle140 greenbtn" id="segmentBtnId"/>
+				</h:td>
+			</h:tr>
+			</h:table>	
+				
+				<window id="popupWinId" title="List Selection" border="normal" visible="false" width="450px" position="center"
+						 xmlns:h="http://www.zkoss.org/2005/zk/native"  xmlns:w="http://www.zkoss.org/2005/zk/client">
+			<caption>        
+            	<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="popupWinId.setVisible(false)"/>            
+        	</caption>
+        	<h:table cellspacing="10" cellpadding="0" width="100%">
+				<h:tr>
+					<h:td colspan="2">
+		        		<label value="" id="msgLbId" visible="false" style="color:red"/><h:br/>
+	    		    	<label value="Select a list to upload the Segmented contacts"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+		        		<listbox id="mlistLbId" mold="select" w:onSelect="checknew(this.getSelectedIndex())"> 
+		        			<listitem label="New List"/>
+		        			<!-- <listitem forEach="${listSegmentWinId$ListSegmentor.mailingLists}" label="${each.listName}" value="${each}"/> -->
+		        		</listbox>
+		        		<script>
+			        		function checknew(index) {
+			        			var div = document.getElementById('newMlistDivId');
+			        			if(index == 0 ) {
+			        				div.style.display = 'block';
+			        			}
+			        			else {
+			        				div.style.display = 'none';
+			        			}
+			        		}
+			        	</script>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<h:div id="newMlistDivId" style="display:block;">
+							<h:table cellspacing="3" cellpadding="0" width="290px">
+									<h:tr>
+										<h:td>
+											Name:
+										</h:td>
+										<h:td width="2px">
+											<h:span class="astrick">*</h:span>
+										</h:td>
+										<h:td>
+						        			<textbox id="listNameTbId" maxlength="50" cols="30" tooltiptext="Enter a name for new MailingList" width="200px"/>
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td valign="top">
+											Description:
+										</h:td>
+										<h:td width="2px">
+										</h:td>
+										<h:td>
+						        			<textbox id="descTbId" rows="3" maxlength="125" tooltiptext="Enter description for new MailingList" width="200px"/>
+										</h:td>
+									</h:tr>
+								</h:table>
+							</h:div>
+						</h:td>
+					</h:tr>
+				<h:tr>
+					<h:td>
+			        	<!--<button label="Submit" onClick="listSegmentWinId.segment(mlistLbId,listNameTbId.getValue(),descTbId.getValue(),msgLbId)"/>-->
+						<button label="Submit" id="submitBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+        </window>
+		</window>
+</zk>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyProgramTier"
+		table="loyalty_program_tier">
+	
+		<id name="tierId" type="java.lang.Long">
+			<column name="tier_id" />
+			<generator class="native" />
+		</id>
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id" not-null="true"/>
+		</property>
+		
+		<property name="tierType" type="string">
+			<column name="tier_type" not-null="true" length="60"/>
+		</property>
+		
+		<property name="tierName" type="string">
+			<column name="tier_name"  not-null="true" length="60"/>
+		</property>
+		
+		<property name="earnType" type="string">
+			<column name="earn_type" not-null="true" length="60"/>
+		</property>
+		
+		<property name="earnValueType" type="string">
+			<column name="earn_value_type" not-null="true" length="60"/>
+		</property>
+		<property name="earnValue" type="double">
+			<column name="earn_value" not-null="true"/>
+		</property>
+		<property name="earnOnSpentAmount" type="double">
+			<column name="earn_on_spent_amount"/>
+		</property>
+		<property name="issuanceChkEnable" type="java.lang.Boolean" column="issuance_chkenable" />
+		<property name="maxcap" type="double">
+			<column name="max_cap" />
+			</property>
+		<property name="ptsActiveDateType" type="string">
+			<column name="pts_active_date_type"  length="60"/>
+		</property>
+		<property name="ptsActiveDateValue" type="java.lang.Long">
+			<column name="pts_active_date_value" />
+		</property>
+		<property name="convertFromPoints" type="double">
+			<column name="convert_from_points"/>
+		</property>
+		<property name="convertToAmount" type="double">
+			<column name="convert_to_amount"/>
+		</property>
+		<property name="conversionType" type="string">
+			<column name="conversion_type" length="60"/>
+		</property>
+		<!-- <property name="autoConvertFlag" type="char">
+			<column name="auto_convert_flag"/>
+		</property> -->
+		<property name="tierUpgdConstraint" type="string">
+			<column name="tier_upgd_constraint" length="60"/>
+		</property>
+		<property name="tierUpgdConstraintValue" type="double">
+			<column name="tier_upgd_constraint_value"/>
+		</property>
+		<property name="nextTierType" type="string">
+			<column name="next_tier_type"/>
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" not-null="true"/>
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" not-null="true" length="60"/>
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date"/>
+		</property>
+		<property name="modifiedBy" type="string">
+			<column name="modified_by"/>
+		</property>
+		<property name="rewardExpiryDateType" type="string">
+			<column name="reward_expiry_date_type" length="60"/>
+		</property>
+		<property name="rewardExpiryDateValue" type="java.lang.Long">
+			<column name="reward_expiry_date_value"/>
+		</property>
+		<property name="membershipExpiryDateType" type="string">
+			<column name="membership_expiry_date_type" length="60"/>
+		</property>
+		<property name="membershipExpiryDateValue" type="java.lang.Long">
+			<column name="membership_expiry_date_value"/>
+		</property>
+		<property name="activationFlag" type="char">
+			<column name="activation_flag"/>
+		</property>
+		<property name="tierUpgradeCumulativeValue" type="java.lang.Long">
+			<column name="tier_upgrade_cumulative_value"/>
+		</property>
+		<!-- <property name="tierUpgradeCumulativeType" type="string">
+			<column name="tier_upgrade_cumulative_type"/>
+		</property> -->
+		<property name="roundingType" type="string">
+			<column name="rounding_type" length="20" />
+		</property>
+		<property name="disallowActivateAfterStores" type="string">
+		<column name="disallow_activate_after_stores"/>
+		</property>
+		
+    	 <property name="activateAfterDisableAllStore" type="boolean">
+			<column name="activate_after_disable_all_store" default="false"/>
+		</property>
+		<!-- <property name="perkIssuanceType" type="string">
+			<column name="perk_issuance_type" length="20" />
+		</property>
+		<property name="perkIssuanceValue" type="double">
+			<column name="perk_issuance_value"/>
+		</property> -->
+		<!-- <property name="perkIssuanceExpiryCheck" type="boolean">
+			<column name="perk_issuance_expiry_check" default="false"/>
+		</property> -->
+		<property name="perkLimitValue" type="java.lang.Long">
+			<column name="perk_limit_value"/>
+		</property>
+		<property name="perkLimitExpType" type="string">
+			<column name="perk_limit_exp_type" length="20" />
+		</property>
+		<property name="redemptionPercentageLimit" type="double">
+			<column name="redemption_percentage_limit" default="0.0"/>
+		</property>
+		<property name="redemptionValueLimit" type="double">
+			<column name="redemption_value_limit" default="0.0"/>
+		</property>
+		<!-- <property name="valueCode" type="string">
+			<column name="value_code" length="20" />
+		</property> -->
+		<property name="minReceiptValue" type="double">
+			<column name="min_receipt_value"/>
+		</property>
+		<property name="minBalanceValue" type="double">
+			<column name="min_balance_value"/>
+		</property>
+		<property name="crossOverBonus" type="double">
+			<column name="crossover_bonus"/>
+		</property>
+		<property name="redemptionOTPFlag" type="char">
+			<column name="redemption_otp_flag" length="60" default="'N'"/>
+		</property>
+		<property name="otpLimitAmt" type="double">
+     		<column name="otp_limit_amt"/>
+    	</property>
+    	<property name="considerRedeemedAmountFlag" type="char">
+			<column name="consider_redeemed_amount_flag" length="60" default="'N'"/>
+		</property>
+		<property name="partialReversalFlag" type="char">
+			<column name="partial_reversal_flag" default="'N'"/>
+		</property>
+		<property name="multipleTierUpgrdRules" type="text">
+			<column name="multiple_tier_upgrd_rules"  />
+		</property>
+	</class>
+</hibernate-mapping>

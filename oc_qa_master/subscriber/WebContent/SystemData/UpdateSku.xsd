@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="UPDATESKUREQUESTS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UPDATESKUREQUEST" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HEADERINFO">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:long" name="REQUESTID"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="USERDETAILS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="USERNAME"/>
+                    <xs:element type="xs:string" name="ORGID"/>
+                    <xs:element type="xs:string" name="TOKEN"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="SKUINFO">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:long" name="ITEMSID"/>
+                    <xs:element type="xs:byte" name="STORENUMBER"/>
+                    <xs:element type="xs:byte" name="SKU"/>
+                    <xs:element type="xs:string" name="DESCRIPTION"/>
+                    <xs:element type="xs:short" name="LISTPRICE"/>
+                    <xs:element type="xs:byte" name="DCS"/>
+                    <xs:element type="xs:byte" name="CLASSCODE"/>
+                    <xs:element type="xs:byte" name="SUBCLASSCODE"/>
+                    <xs:element type="xs:byte" name="DEPARTMENTCODE"/>
+                    <xs:element type="xs:byte" name="VENDORCODE"/>
+                    <xs:element type="xs:string" name="UDF1"/>
+                    <xs:element type="xs:string" name="UDF2"/>
+                    <xs:element type="xs:string" name="UDF3"/>
+                    <xs:element type="xs:string" name="UDF4"/>
+                    <xs:element type="xs:string" name="UDF5"/>
+                    <xs:element type="xs:string" name="UDF6"/>
+                    <xs:element type="xs:string" name="UDF7"/>
+                    <xs:element type="xs:string" name="UDF8"/>
+                    <xs:element type="xs:string" name="UDF9"/>
+                    <xs:element type="xs:string" name="UDF10"/>
+                    <xs:element type="xs:string" name="UDF11"/>
+                    <xs:element type="xs:string" name="UDF12"/>
+                    <xs:element type="xs:string" name="UDF13"/>
+                    <xs:element type="xs:string" name="UDF14"/>
+                    <xs:element type="xs:string" name="UDF15"/>
+                    <xs:element type="xs:string" name="ITEMCATEGORY"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+
+
+
+

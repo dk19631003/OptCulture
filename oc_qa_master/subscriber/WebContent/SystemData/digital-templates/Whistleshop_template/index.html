@@ -1,0 +1,188 @@
+<html>
+<head>
+	
+	<title>Whistleshop Template</title>
+	
+	<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" >
+	<style type="text/css">
+	.list a {color: #cc0000; text-transform: uppercase; font-family: Arial; font-size: 11px; text-decoration: none;}
+	
+	a { color: #990000; text-decoration: none; }
+	
+hr {height: 1px;
+margin-bottom: 12px;
+color: #DEDEDE;
+background-color: #DEDEDE;
+border: none;}
+
+strong, b { color: #666; }
+
+	</style>
+	
+	
+</head>
+<body marginheight="0" topmargin="0" marginwidth="0" bgcolor="#c5c5c5" leftmargin="0">
+
+<table cellspacing="0" border="0" background="/subscriber/SystemData/digital-templates/Whistleshop_template/images/bg.gif"  bgcolor="#c5c5c5;" cellpadding="0" width="100%">
+	
+	<tr>
+		
+		<td valign="top">
+
+			<table cellspacing="0" border="0" align="center" style="background: #fff; border-right: 1px solid #ccc; border-left: 1px solid #ccc;" cellpadding="0" width="600">
+				<tr>
+					<td valign="top">
+						<!-- header -->
+						<table cellspacing="0" border="0" height="157" cellpadding="0" width="600">
+							<tr>
+								
+								<td class="header-text" height="50" valign="top" style="color: #666; font-family: arial; font-size: 9px; text-transform: uppercase; padding: 0 20px;" width="540" colspan="2">
+									<br><br>Email not looking beautiful? <webversion style="color: #990000; text-decoration: none;">View it in your browser</webversion>
+								</td>
+								
+							</tr>
+							<tr>
+								<td class="main-title" height="13" valign="top" style="padding: 0 20px; font-size: 25px; font-family: Georgia; font-style: italic;" width="600" colspan="2">
+									Your Receipt
+
+									 <a href="#Store.WWW#"><!-- <img align="right" src="/subscriber/SystemData/digital-templates/Whistleshop_template/images/logo_dummy.jpeg"/>--><img align="right" src="/subscriber/SystemData/digital-templates/Whistleshop_template/images/logo_dummy.jpeg" border="0"></a>
+								</td>
+							</tr>
+							<tr>
+								<td height="20" valign="top" width="600" colspan="2">
+									<img src="/subscriber/SystemData/digital-templates/Whistleshop_template/images/breaker.jpg" height="20" alt="" style="border: 0;" width="600">
+								</td>
+							</tr>
+							<tr>
+								<td class="header-bar" valign="top" style="color: #666; font-family: Arial; font-size: 10px; text-transform: uppercase; padding: 0 20px; height: 15px;" width="400" height="15">
+									#Store.Name#, #Store.Street#, #Store.City#, #Store.State#  #Store.Zip#<br>
+
+    #Store.Number#
+								</td>
+								<td class="header-bar" valign="top" style="color: #666; font-family: Arial; font-size: 10px; text-transform: uppercase; padding: 0 20px; height: 15px; text-align: right;" width="200">
+									Contact: <a href="#Store.Email">#Store.Email#</a>
+								</td>
+								<tr>
+									<td height="20" valign="top" width="600" colspan="2">
+										<img src="/subscriber/SystemData/digital-templates/Whistleshop_template/images/breaker.jpg" height="20" alt="" style="border: 0;" width="600" >
+									</td>
+								</tr>
+						</table>
+						<!-- / header -->
+					</td>
+				</tr>
+				<tr>
+					<td>
+					
+
+
+    
+    
+
+					
+						<!-- content -->
+						<table cellspacing="0" border="0" height="870" cellpadding="0" width="600">
+							<tr>
+								<td class="article-title" height="45" valign="top" style="padding: 0 20px; font-family: Georgia; font-size: 20px; font-weight: bold;" width="600" colspan="2">
+									  Receipt ID: #Receipt.ID#<br>
+								</td>
+							</tr>
+							<tr>
+								<td class="content-copy" valign="top" style="padding: 0 20px; color: #666; font-size: 13px; font-family: Arial; line-height: 20px;" colspan="2">
+								
+								
+								
+    Receipt#: #Receipt.Number#<br>
+
+    Date: #Receipt.Date#<br>
+
+    Payment Method: #Receipt.PaymentMethod#    </p>
+
+    </p>
+
+
+    <p>
+
+      <strong>#ShipTo.Name#</strong><br>
+
+      #ShipTo.Street#<br>
+
+      #ShipTo.City#, #ShipTo.State#  #ShipTo.Zip#<br>
+
+    <hr>
+
+    <table>
+
+      <tbody>
+
+      <tr><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;"><strong>Description</strong></td><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;"><strong>Qty</strong></td><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;"><strong>Unit Price</strong></td><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;"><strong>Amount</strong></td></tr>
+
+      ##BEGIN ITEMS## 
+
+      <tr ><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;">#Item.Description#</td><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;">#Item.Quantity#</td><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;">#Item.UnitPrice#</td><td style="border-right: #f5f5f5 1px solid;padding-right: 10px;">#Item.Total#</td></tr>
+
+      ##END ITEMS##
+
+    </tbody>
+
+    </table>
+
+    <hr>
+
+    <table>
+
+      <tbody>
+
+      <tr><td><strong>Payment</strong></td></tr>
+
+      ##BEGIN PAYMENTS## 
+
+      <tr ><td>#Payment.Amount#</td></tr>
+
+      <tr ><td>#Payment.Number#</td></tr>
+
+      <tr ><td>#Payment.Type#</td></tr>
+
+      ##END PAYMENTS##
+
+    </tbody>
+
+    </table>
+
+    <hr>
+
+    <p>
+
+      #Receipt.Message#<br>
+
+      #Receipt.Message2#
+
+    </p>
+
+
+
+   </td>
+   </tr>
+							<tr>
+								<td class="copyright" height="100" align="center" valign="top" style="padding: 0 20px; color: #666; font-family: Arial; font-size: 10px; text-transform: uppercase; line-height: 20px;" width="600" colspan="2">
+									#Receipt.Footer#
+
+      <br><br>
+
+      &copy; #Store.Name# All Rights Reserved
+								</td>
+							</tr>
+						</table>
+						<!-- / end footer -->
+					</td>
+				</tr>
+			</table>
+			
+		</td>
+	
+	</tr>
+	
+</table>
+
+</body>
+</html>

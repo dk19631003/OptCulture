@@ -1,0 +1,84 @@
+<zk>
+	<window width="100%" id="emailClientWinId" apply="org.mq.marketer.campaign.controller.report.ClientUsageController" xmlns:h="native"> 
+
+	<style src="/css/reports.css" />
+	<groupbox sclass="gbStyle" closable="false" >
+				<caption label=" Device Usage Report"  />
+				
+		<div>
+		 	<chart id="mychart1" width="520px" height="300px" style="float: left;margin-right:10px;" 
+		 				showLegend="false" type="pie"  threeD="false" fgAlpha="200" >
+			</chart>
+			
+			<listbox id="emailClientLbId1" emptyMessage="No Records Found..." sclass="contactsView" rows="9"  >
+				<listhead >
+					<listheader label="Device and OS Details"  />
+					<listheader label="Popularity" width="80px" />
+					<listheader label="Subscribers" width="80px" align="center"/>
+				</listhead>
+			</listbox>	
+		</div>
+
+	</groupbox>
+		
+	<groupbox sclass="gbStyle" closable="false" style="margin-top:20px;">
+				<caption label="Email Client Usage Report"  />
+		<div>
+		 	<chart id="mychart2"  width="520px" height="300px" style="float: left;margin-right:10px;" 
+		 		showLegend="false" type="pie" threeD="false" fgAlpha="200" >
+		 	</chart>
+
+		 	<listbox id="emailClientLbId2" emptyMessage="No Records Found..." sclass="contactsView"  rows="9" >
+			
+			<listhead >
+				<listheader label="Email Client Details"  />
+				<listheader label="Popularity" width="80px" />
+				<listheader label="Subscribers" width="80px" align="center"/>
+			</listhead>
+			
+				
+			</listbox>
+			</div> 
+	</groupbox>
+			
+	<groupbox sclass="gbStyle" closable="false" style="margin-top:20px;">
+			<caption label="Browser Usage Report"  />
+		<div height="30px"  >
+			<label value="Note :" style="font-weight:bold;margin-left:10px;" />
+			<label value=" Browser Usage Report gives information on browser being used to open webmail like Gmail, Yahoomail, etc.." />
+		</div>
+		<div>
+		 	<chart id="mychart3"  width="520px" height="300px" style="float: left;margin-right:10px;" 
+		 		showLegend="false" type="pie" threeD="false" fgAlpha="200" >
+		 	</chart>
+
+		 	<listbox id="emailClientLbId3" emptyMessage="No Records Found..." sclass="contactsView"  rows="9" >
+			<listhead >
+				<listheader label="Browser Details"  />
+				<listheader label="Popularity" width="80px" />
+				<listheader label="Subscribers" width="80px" align="center"/>
+			</listhead>
+			</listbox>
+		</div> 
+			
+ 	</groupbox>
+ 	
+
+<!-- 			<h:table style="padding-top:20px;">
+				<h:tr>
+				 	<h:td>
+				<label value="Export as a" /> 
+				<combobox sclass="cb_100w" id="exportCbId"  readonly="true">
+			 	   			<comboitem label=" .csv file " value=".csv" selected="true"/>    
+				</combobox> 
+				<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="clickedExportBtnId"/>
+				 	</h:td>
+				</h:tr>
+			</h:table>
+ -->
+		<div height="30px" style="margin-top:10px;" >
+			<label value="Powered by  "   />
+			<a href="http://user-agent-string.info/" target="_blank">UASparser</a>
+		</div>
+	</window>
+</zk>

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.optculture.model.events.Events"
+		table="events">
+		<id name="eventId" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="long">
+			<column name="user_id" />
+		</property>
+		<property name="eventTitle" type="string">
+			<column name="event_title" />
+		</property>
+		<property name="eventStatus" type="string">
+			<column name="event_status" />
+		</property>
+		<property name="eventStartDate" type="calendar">
+			<column name="event_start_date" />
+		</property>
+		<property name="eventEndDate" type="calendar">
+			<column name="event_end_date" />
+		</property>
+		<property name="subtitle" type="string">
+		<column name="subtitle" length="500" />
+		</property>
+		<property name="description" type="text">
+		<column name="description" />
+		</property>
+		<property name="addressLine1" type="string">
+			<column name="address_line1" length="200"/>
+		</property>
+		<property name="addressLine2" type="string">
+			<column name="address_line2" length="200" />
+		</property>
+		<property name="state" type="string">
+			<column name="state" />
+		</property>
+		<property name="zipCode" type="java.lang.Long">
+			<column name="zip_code" />
+		</property>
+		<property name="store" type="string">
+			<column name="store" />
+		</property>
+		<property name="city" type="string">
+			<column name="city" />
+		</property>
+		<property name="isOneDay" type="boolean">
+			<column name="is_one_day" />
+		</property>
+		<property name="eventCreateDate" type="calendar">
+			<column name="event_create_date" />
+		</property>
+		<property name="dirId" type="string">
+			<column name="dir_id" />
+		</property>
+		<property name="leftLable" type="string">
+			<column name="left_lable" />
+		</property>
+		<property name="leftLableURL" type="string">
+			<column name="left_lable_url" />
+		</property>
+		<property name="rightLable" type="string">
+			<column name="right_lable" />
+		</property>
+		<property name="rightLableURL" type="string">
+			<column name="right_lable_url" />
+		</property>
+		<property name="eventStartDateAPI" type="string">
+			<column name="event_start_date_api" />
+		</property>
+		<property name="eventEndDateAPI" type="string">
+			<column name="event_end_date_api" />
+		</property>
+		
+		
+	</class>
+</hibernate-mapping>

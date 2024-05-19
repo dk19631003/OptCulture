@@ -1,0 +1,28 @@
+<zk>
+	<window id="viewCampWinId" apply="org.mq.marketer.campaign.controller.campaign.ViewCampaignsController" xmlns:h="http://www.zkoss.org/2005/zk/native">
+	<separator/>
+	<h:table cellspacing="0" cellpadding="4" width="99%"  bgcolor="#F4F5F9" style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+	
+		<h:tr>
+			<h:td>
+				<label value="Campaigns by Status" style="font-weight:bold;" />                              
+				<listbox id="campStatusLb" mold="select"  width="100px"  />
+				<button label="Filter" id="submintBtnId" sclass="idle140" style="margin-left:20px;" />
+				<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+			</h:td>
+		
+		</h:tr>
+	
+	</h:table>
+	<separator/>
+	
+	<h:table cellspacing="0" cellpadding="0" align="center"  width="100%">
+		
+		<h:tr>
+			<h:td>
+				<include id="viewCampIncId" src="/zul/campaign/CampaignList.zul" campStatusLb="${campStatusLb}"/>
+			</h:td>
+		</h:tr>
+	</h:table>
+	</window>
+</zk>

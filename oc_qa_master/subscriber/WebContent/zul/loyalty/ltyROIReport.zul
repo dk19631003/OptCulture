@@ -1,0 +1,69 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  apply="org.mq.optculture.controller.loyalty.LtyROIReportsController" xmlns:h="native" xmlns:w="client">
+
+<h:table cellspacing="0" cellpadding="4" width="99%"
+			bgcolor="#F4F5F9"
+			style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+			<h:tr>
+				<h:td>
+					<label value="Search by Value code: " sclass="theme-lbHeading" />
+							<listbox id="searchbyLbId" mold="select" >
+							</listbox>
+        		   	 <!-- <textbox id="searchByValueCodeTbId" visible="true"/> -->
+					<button label="Filter" id="filterBtnId"
+						sclass="idle140" style="margin-left:20px;" />
+					<a label="Reset" id="resetAnchId"
+						style="margin-left:20px;" />
+				</h:td>
+				
+			</h:tr>
+		</h:table>
+	<div  width="100%" style="margin-top:20px">
+		<listbox id="rewardROILbId" emptyMessage="No records  exist.." width="99%"   >
+			<listhead sizable="true"  style="background-color:#488eb0;" menupopup="auto">
+			<listheader label="Value code" />
+			<listheader label="Issued Value" />	
+			<listheader label="Liability"/>		
+			<listheader label="Revenue"  />	
+			</listhead>
+		             		 
+		</listbox>	
+	</div>	
+	<h:table width="100%">
+		<h:tr>
+			<h:td />
+			<h:td  valign="center">
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value=".csv" />   
+			 	   			<comboitem label=".xls " value=".xls" /> 
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file." style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId"  />
+			</h:td >
+			<h:td width="320" align="right">
+	   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+	   		<listbox rows="1" mold="select" id="pageSizeLbId"
+						style="margin-right:30px;">
+						<listitem label="5" selected="true"/>
+						<listitem label="10"  />
+						<listitem label="15" />
+					</listbox>
+		</h:td>
+		<h:td width="300px"  >
+			<paging id="rewardROIPagingId" detailed="true" pageSize="5" width="300px" 
+				class="contactsViewPaging" style="border:none;"/>
+		</h:td>
+		</h:tr>
+		
+		</h:table>
+
+</window>
+</zk>

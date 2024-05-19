@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyThresholdBonus"
+		table="loyalty_threshold_bonus">
+	
+		<id name="thresholdBonusId" type="java.lang.Long">
+			<column name="threshold_bonus_id" />
+			<generator class="native" />
+		</id>
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id" />
+		</property>
+		
+		<property name="extraBonusType" type="string">
+			<column name="extra_bonus_type" />
+		</property>
+		
+		<property name="extraBonusValue" type="double">
+			<column name="extra_bonus_value" />
+		</property>
+		
+		<property name="earnedLevelType" type="string">
+			<column name="earned_level_type" />
+		</property>
+		
+		<property name="earnedLevelValue" type="double">
+			<column name="earned_level_value"/>
+		</property>
+		
+		<property name="thresholdLimit" type="double">
+			<column name="threshold_limit"/>
+		</property>
+		
+		<property name="recurring" type="boolean">
+            <column name="is_recurring" default="0"/>
+        </property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date"/>
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by"/>
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date"/>
+		</property>
+		<property name="modifiedBy" type="string">
+			<column name="modified_by"/>
+		</property>
+		<property name="registrationFlag" type="char">
+			<column name="registration_flag"/>
+		</property>
+		
+		<property name="emailTempId" type="java.lang.Long">
+			<column name="email_temp_id" />
+		</property>
+		
+		<property name="smsTempId" type="java.lang.Long">
+			<column name="sms_temp_id" />
+		</property>
+		
+		<property name="emailExpiryTempId" type="java.lang.Long">
+			<column name="email_expiry_temp_id" />
+		</property>
+		
+		<property name="smsExpiryTempId" type="java.lang.Long">
+			<column name="sms_expiry_temp_id" />
+		</property>
+		
+		<property name="bonusExpiryDateType" type="string">
+			<column name="bonus_expiry_date_type" />
+		</property>
+		
+		<property name="bonusExpiryDateValue" type="java.lang.Long">
+			<column name="bonus_expiry_date_value" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,97 @@
+<zk>
+	<window id="viewSegmentWinId" width="100%" 	apply="org.mq.marketer.campaign.controller.contacts.ViewHomesPassedSegmentsController"  
+	xmlns:h="native" xmlns:c="client">
+
+<style>
+	.dashboardMyLinks {
+		color:#2589BB;
+		font-weight:bold;
+		padding:0 20px;
+		text-decoration:underline;
+		border-left: 1px solid #000000;
+	    border-right: 1px solid #000000;
+	    margin: -3px;
+    }
+     
+     .dashboardMyLinksSelected {
+     	color:#000000;
+     	text-decoration:none;
+		font-weight:bold;
+		padding:0 20px;
+		border-left: 1px solid #000000;
+	    border-right: 1px solid #000000;
+	    margin: -3px;
+     }
+</style>	
+
+	<div style="padding:5px;background-color:#E4EBF5;border-radius:3px;">
+		<label value="BCRM Segment :"></label>
+		<listbox mold="select" id="segmentsLbId" width="200px"></listbox>
+		<space width="20px"/>
+		<label value="Description : "></label>
+		<label value="" maxlength="50" id="descLblId"></label>
+		<space width="50px"/>
+		<a label="View Segment rule " id="viewSegRuleAnchId"></a>
+		<space width="50px"/>
+		<label value="Total Count :"></label>
+		<label id="totCountLblId" ></label>
+		
+		<space width="50px"/>
+		<label value="Total Contact Count :"></label>
+		<label id="totContactCountLblId" ></label>
+		
+		
+	</div>
+
+	
+	<div style="margin:15px 5px;">
+		<label value="Filter From : "  sclass="boldLabel" style="margin-right:20px;"/>
+		<a label="Country" id="countryAId" sclass="dashboardMyLinks"/> 
+		<a label="State" id="stateAId" sclass="dashboardMyLinks"/> 
+		<a label="District" id="districtAId" sclass="dashboardMyLinks"/>
+		<a label="City" id="cityAId" sclass="dashboardMyLinks"/> 
+		<a label="Area" id="areaAId" sclass="dashboardMyLinks"/> 
+		<a label="ZIP" id="zipAId" sclass="dashboardMyLinks"/> 
+		<a label="Street" id="streetAId" sclass="dashboardMyLinks"/> 
+		<a label="Address One" id="addrOneAId" sclass="dashboardMyLinks"/> 
+		<a label="Address Two" id="addrTwoAId" sclass="dashboardMyLinks"/> 
+				 
+	</div>
+				
+
+		<grid id="hGrid" emptyMessage=" no data found..." >
+			<columns>
+				<column width="40px" />
+				<column id="filterOnLblColId" label="Start Name" sort="auto" width="400px"/>
+				<column label="Homes #" align="center"  width="120px" sort="auto" />
+				<column label="% on Total" align="center" width="120px" sort="auto" />
+				<column label="Customers #" align="center"  width="120px" sort="auto" />
+				<column label="Address" sort="auto" />
+				<column label="" width="80px"   align="center"/>
+				
+			</columns>
+			<rows id="gridRowsId">
+				
+			</rows>
+			
+		</grid>
+	
+		
+		
+	<window id="viewSegRuleWinId" visible="false" closable="true" title="Segment Rule" 
+						height="300px" width="450px" onClose="self.setVisible(false);event.stopPropagation();">
+				
+				<div>
+					<label value="Segment Rule is:" /> 
+					<separator/>
+					<label value="" id="segRuleLblId" style="inline:block;word-wrap: break-word;margin:15px 15px;" sclass="listsLb" multiline="true" />
+					
+				</div>
+		</window>
+		
+	</window>
+	
+	
+	
+	
+</zk>

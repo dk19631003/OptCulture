@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.GiftCardsHistory" table="gift_cards_history">
+	  
+        <id name="historyId" type="java.lang.Long" column="history_id">
+            <generator class="native"/>
+        </id>
+        
+        <property name="userId" column="user_id" type="java.lang.Long"/>
+        <property name="giftCardId" column="gift_card_id" type="java.lang.Long"/>
+        <property name="giftProgramId" column="gift_program_id" type="java.lang.Long"/>
+        <property name="giftCardNumber" column="gift_card_number" type="string"/>
+        <property name="transactionType" column="transaction_type" type="string"/>
+        <property name="amountType" column="amount_type" type="string"/>
+        <property name="enteredAmount" column="entered_amount" type="java.lang.Double"/>
+        <property name="giftDifference" column="gift_difference" type="java.lang.Double"/>
+        <property name="giftBalance" column="gift_balance" type="java.lang.Double"/>
+        <property name="transactionDate" column="transaction_date" type="calendar"/>
+        <property name="itemInfo" column="item_info" type="string"/>
+        <property name="giftedToMobile" column="gifted_to_mobile" type="java.lang.Long"/>
+        <property name="giftedToEmail" column="gifted_to_email" type="string"/>
+        <property name="receiptNumber" column="receipt_number" type="string"/>
+        <property name="salesId" column="sales_id" type="java.lang.Long"/>
+        <property name="storeNumber" column="store_number" type="string"/>
+	  
+ </class>
+</hibernate-mapping>

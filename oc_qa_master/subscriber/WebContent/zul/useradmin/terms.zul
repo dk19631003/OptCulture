@@ -1,0 +1,113 @@
+<zk>
+
+    <script type="text/javascript" src="js/quill/quill.js"></script>
+   <style >
+      .redStar{
+      font-size:14px;color:red;
+      }
+      .symbolAnc {
+      color: black;
+      font-size: 20px;
+      text-decoration: none;
+      width: 33px;
+      height:40px;
+      background-image: url("images/subject_symbols.png");
+      display: inline-block;
+      }
+      .z-hlayout-inner {
+      vertical-align:middle;
+      }
+   </style>
+	<window id="faqWin" apply="org.mq.marketer.campaign.controller.useradmin.TermsController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+				  
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+      <caption> <label value="Terms and Conditions"/> </caption>		  
+		<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;" >
+		<h:tr height="20"/>
+		<h:tr >
+		<h:td>
+				<label value="Language :"
+						style="display:inline-block;" />
+		</h:td>
+		<h:td>
+		<hbox>
+				<listbox id="languageTypeLbId" mold="select"
+						style="margin-top:5px;position:relative;">
+				<listitem label="English" value="English" selected="true" >
+				</listitem>
+				<listitem label="Spanish" value="Spanish" >
+				</listitem>
+				</listbox>
+		</hbox>
+		</h:td>
+		</h:tr>
+		<h:tr height="50">
+		<h:td></h:td>
+		<h:td style="margin-top:5px;">
+				<image src="/img/icons/icon_i.png"
+					    style="vertical-align:bottom;" />
+				<label
+					value="please specify your language. "
+					    style="vertical-align:bottom;" sclass="labelPos" />
+		</h:td>
+		</h:tr>
+		<h:tr height="50">
+      <h:td >
+      <label value="Description:" />
+      </h:td>
+      <h:td colspan="2">
+      <html>
+      <body>
+      <div id="quillEditor" style="height:300px;"></div>
+      <div id="counter">0 characters</div>
+      </body>
+      </html>               
+      </h:td>
+      </h:tr>
+      </h:table>
+      <h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+      <h:td colspan="6" style="padding-right:60px;">
+      <div align="right">
+				 	<button label="Save" id="faqSaveBtnId" sclass="idle180 greenbtn" onClick='Clients.evalJavaScript("onclickSave();")' />
+	  </div>
+      </h:td>
+      </h:table>
+      </groupbox>
+      <html>
+      <![CDATA[
+         <script type="text/javascript">
+         	
+         var headerText;
+      	function displayIndivOnKeyup(){
+      	 	   var currentText = jq('$headerId').val();
+      	 	  jq('$headderContentId').text(currentText);
+      	}
+      	
+         	function onclickSave(){
+         		console.log("Hi1");
+         		var quillData = JSON.stringify({'htmlQuill':htmlQuill, 'htmlQuillText':validateQuill});
+         		console.log(zAu.send(new zk.Event(zk.Widget.$('$jsonData'), 'onClickSaveFaqData', quillData)));
+				console.log(quillData);	          
+         	}
+         	
+         	function bodyContent() {
+         		zk.afterMount(function () {
+         		
+         			quill.root.innerHTML = jq('$bodyContentId').val();
+         		 	
+         		});
+         	}
+         	
+         </script>
+         ]]>
+   </html>
+   <div style="display:none">
+			<textbox id="jsonData"></textbox>
+			</div>
+      <div class="splitRight" id="additionalFieldsId">
+		<textbox id="bodyContentId"></textbox>
+		</div>
+	</window>
+</zk>

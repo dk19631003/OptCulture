@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body{margin:0px;}
+-->
+</style>
+</head>
+
+<body>
+<div id='rootDivId' >
+<DIV id='bodyDivId' style="OVERFLOW: auto; BACKGROUND-COLOR: #FFF"  bgColor=#FFF >
+<table id="bodyTableId" align="center" cellpadding="0" cellspacing="0" border="0" width="600px" bgcolor="#1e5054" style="width:600px; background:#1e5054;">
+<tr>
+<td style="padding-bottom:10px;"><div id = "headerDivId">
+<div name="TMCEeditableDiv" id="TMCEEditableDiv1"   ondblclick="loadTinyMCE('TMCEEditableDiv1');" title="Double click here to edit this block" onmouseover="hlBlock('TMCEEditableDiv1');"  onmouseout="restoreBlock('TMCEEditableDiv1');" ><table cellpadding="0" cellspacing="0" border="0" width="600px" style="width:600px;">
+<tr>
+  <td valign="top"><table align="center" border="0" cellspacing="0" cellpadding="0" width="450" style="width:450px; border:0px; ">
+    <tr>
+      <td style="font-family:Arial, Helvetica, sans-serif; font-size:20px; text-align:center; font-weight:bold; color:#FFF;"><img src="logo.gif" width="84" height="38" /></td>
+    </tr>
+    <tr>
+      <td style="font-family:Arial, Helvetica, sans-serif; font-size:20px; text-align:center; font-weight:bold; color:#FFF;">Your Company Name/ Logo</td>
+    </tr>
+    <tr>
+      <td style="font-family:Arial, Helvetica, sans-serif; font-size:13px; text-align:center; color:#FFF; padding-left:5px;">Headline for your Newsletter </td>
+    </tr>
+  </table></td>
+</tr>
+</table></div></div>
+</td></tr>
+<tr>
+<td valign="top"><div id = "greetingsDivId">
+<div name="TMCEeditableDiv" id="TMCEEditableDiv2"   ondblclick="loadTinyMCE('TMCEEditableDiv2');" title="Double click here to edit this block" onmouseover="hlBlock('TMCEEditableDiv2');"  onmouseout="restoreBlock('TMCEEditableDiv2');" ><table cellpadding="0" cellspacing="0" width="600px" border="0" bgcolor="#00a2b0" style="width:600px; background-color:#00a2b0;"><tr>
+<td style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; padding-left:15px; padding-top:10px; font-weight:bold;">Dear Customer Name,</td>
+</tr>
+    <tr>
+      <td style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; padding-left:15px; padding-bottom:10px; padding-right:10px;">To get high readability, it’s advised to start your letter with a short sentence that captures the essence of your note.</td>
+    </tr>
+</table></div></div>
+</td>
+</tr>
+<tr>
+<td valign="top" style="padding-top:10px;">
+<div id = "messageDivId">
+<div name="TMCEeditableDiv" id="TMCEEditableDiv3"   ondblclick="loadTinyMCE('TMCEEditableDiv3');" title="Double click here to edit this block" onmouseover="hlBlock('TMCEEditableDiv3');"  onmouseout="restoreBlock('TMCEEditableDiv3');" ><table cellpadding="0" cellspacing="0" border="0" width="600px" style="width:600px;">
+<tr>
+<td width="280px" valign="top" style="padding-top:10px;"><table cellpadding="0" cellspacing="0" border="0" width="280px" bgcolor="#00a2b0" style="background-color:#00a2b0; width:280px;">
+<tr>
+<td align="center" style="padding-top:15px; padding-bottom:15px;"><img src="working_lady.jpg" width="196" height="157" /></td>
+</tr>
+</table> <table cellpadding="0" cellspacing="0" border="0" width="280px" bgcolor="#00a2b0" style="background-color:#00a2b0; width:280px; margin-top:10px;">
+<tr>
+<td style="padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px; color:#000; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px;">Thank your customer, tell them how valuable they are to you, but don't go overboard. Insincerity is easy to spot.</td>
+</tr>
+</table>
+</td>
+<td width="320px" valign="top" style="padding-left:10px; padding-top:10px;"><table cellpadding="0" cellspacing="0" border="0" width="310px" height="270px" bgcolor="#00a2b0" style="background-color:#00a2b0; width:310px;">
+  <tr>
+    <td style="padding-top:5px; padding-right:10px; padding-left:10px; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; color:#000; font-size:12px; font-weight:bold;">Message Headline</td>
+  </tr>
+  <tr>
+    <td valign="top" style="padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px; color:#000; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px;">To help your readers focus, it’s a good idea to break up the body of the letter into logical topics. This way, the readers can focus on the relevant bits. Always select your words carefully as people normally scan through emails. Keep paragraphs short and snappy and provide a link to your website if you want readers to get further information or further details.</td>
+  </tr>
+</table></td>
+</tr>
+</table></div></div>
+</td>
+</tr>
+<tr>
+  <td valign="top" style="padding-top:10px;"><div id = "reiterateDivId">
+<div name="TMCEeditableDiv" id="TMCEEditableDiv4"   ondblclick="loadTinyMCE('TMCEEditableDiv4');" title="Double click here to edit this block" onmouseover="hlBlock('TMCEEditableDiv4');"  onmouseout="restoreBlock('TMCEEditableDiv4');" ><table cellpadding="0" cellspacing="0" border="0" bgcolor="#00a2b0" width="600px" style="width:600px; background-color:#00a2b0;">
+    <tr>
+      <td style="padding-left:10px; padding-right:10px; padding-top:10px; color:#000; font-family:'Trebuchet MS', Arial; font-size:12px; font-weight:bold;">Sincerely,</td>
+      </tr>
+    <tr>
+      <td style="padding-left:10px; padding-right:10px; padding-top:1px; color:#000; font-family:'Trebuchet MS', Arial; font-size:12px;">Your Name,</td>
+      </tr>
+    <tr>
+      <td style="padding-left:10px; padding-right:10px; padding-top:1px; padding-bottom:10px; color:#000; font-family:'Trebuchet MS', Arial; font-size:12px;">Company Name. </td>
+      </tr>
+    </table></div></div></td>
+</tr>
+</table>
+</DIV>
+<script>
+var headerBlock = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"600px\" style=\"width:600px;\"><tr><td valign=\"top\"><table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"450\" style=\"width:450px; border:0px; \"><tr><td style=\"font-family:Arial, Helvetica, sans-serif; font-size:20px; text-align:center; font-weight:bold; color:#FFF;\"><img src=\"logo.gif\" width=\"84\" height=\"38\" /></td></tr><tr><td style=\"font-family:Arial, Helvetica, sans-serif; font-size:20px; text-align:center; font-weight:bold; color:#FFF;\">Your Company Name/ Logo</td></tr><tr><td style=\"font-family:Arial, Helvetica, sans-serif; font-size:13px; text-align:center; color:#FFF; padding-left:5px;\">Headline for your Newsletter </td></tr></table></td></tr></table>";
+
+var greetingsBlock ="<table cellpadding=\"0\" cellspacing=\"0\" width=\"600px\" border=\"0\" bgcolor=\"#00a2b0\" style=\"width:600px; background-color:#00a2b0;\"><tr><td style=\"font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; padding-left:15px; padding-top:10px; font-weight:bold;\">Dear Customer Name,</td></tr><tr><td style=\"font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; padding-left:15px; padding-bottom:10px; padding-right:10px;\">To get high readability, it’s advised to start your letter with a short sentence that captures the essence of your note.</td></tr></table>";
+
+var messageBlock = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"600px\" style=\"width:600px;\"><tr><td width=\"280px\" valign=\"top\" style=\"padding-top:10px;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"280px\" bgcolor=\"#00a2b0\" style=\"background-color:#00a2b0; width:280px;\"><tr><td align=\"center\" style=\"padding-top:15px; padding-bottom:15px;\"><img src=\"working_lady.jpg\" width=\"196\" height=\"157\" /></td></tr></table> <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"280px\" bgcolor=\"#00a2b0\" style=\"background-color:#00a2b0; width:280px; margin-top:10px;\"><tr><td style=\"padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px; color:#000; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px;\">Thank your customer, tell them how valuable they are to you, but don't go overboard. Insincerity is easy to spot.</td></tr></table></td><td width=\"320px\" valign=\"top\" style=\"padding-left:10px; padding-top:10px;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"310px\" height=\"270px\" bgcolor=\"#00a2b0\" style=\"background-color:#00a2b0; width:310px;\"><tr><td style=\"padding-top:5px; padding-right:10px; padding-left:10px; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; color:#000; font-size:12px; font-weight:bold;\">Message Headline</td></tr><tr><td valign=\"top\" style=\"padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px; color:#000; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px;\">To help your readers focus, it’s a good idea to break up the body of the letter into logical topics. This way, the readers can focus on the relevant bits. Always select your words carefully as people normally scan through emails. Keep paragraphs short and snappy and provide a link to your website if you want readers to get further information or further details.</td></tr></table></td></tr></table>";
+
+var reiterateBlock = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#00a2b0\" width=\"600px\" style=\"width:600px; background-color:#00a2b0;\"><tr><td style=\"padding-left:10px; padding-right:10px; padding-top:10px; color:#000; font-family:'Trebuchet MS', Arial; font-size:12px; font-weight:bold;\">Sincerely,</td></tr><tr><td style=\"padding-left:10px; padding-right:10px; padding-top:1px; color:#000; font-family:'Trebuchet MS', Arial; font-size:12px;\">Your Name,</td></tr><tr><td style=\"padding-left:10px; padding-right:10px; padding-top:1px; padding-bottom:10px; color:#000; font-family:'Trebuchet MS', Arial; font-size:12px;\">Company Name. </td></tr></table>";
+
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="htmlUploadWinId"  apply="org.mq.marketer.campaign.controller.gallery.MyTempUploadHTMLController" xmlns:h="http://www.zkoss.org/2005/zk/native"  xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<style src="/css/editor.css" />
+		
+		<script>
+				function insertPhInHtmlEditor(val, textbox){
+					if(val == 'select') {
+						alert('Select a Place Holder');
+						return;
+					}
+					var ckuuid = textbox.uuid
+					var tb = document.getElementById(ckuuid);
+					if(tb == undefined) return;
+					insertAtCursor(tb, val);
+					//CKEDITOR.instances[ckuuid+'-cnt'].insertText(val);
+				} 
+				
+				function insertCPhInHtmlEditor(val, textbox){
+					if(val == 'cselect') {
+						alert('Select a Promo-code');
+						return;
+					}
+					var ckuuid = textbox.uuid
+					var tb = document.getElementById(ckuuid);
+					if(tb == undefined) return;
+					insertAtCursor(tb, val);
+					//CKEDITOR.instances[ckuuid+'-cnt'].insertText(val);
+				}
+	  </script>
+		
+		
+		
+	<h:table cellspacing="0" cellpadding="2" width="100%" >
+		<h:tr height="50">
+		<h:td valign="top">
+
+			<label value="Create a new email from scratch for this campaign."/>
+		</h:td>
+		<h:td align="left" valign="bottom" width="400">
+			<label value="" id="autoSaveLbId" style = "color:#0063A1;font-weight: bold;" />
+		</h:td>
+		
+		<h:td width="310" valign="bottom" align="right">
+		<div >
+			<!-- <toolbarbutton id="reloadTlbBtnId" label="Reload"  width="80px" sclass="alink"  image="/img/icons/icon_reload_big.png"  style="font-weight: bold;" /> -->
+			<!--  <toolbarbutton label="Preview" width="80px" sclass="alink"  image="/images/icon_preview_big.png"   w:onClick="previewHTML(this.$f('htmlTbId'))" style="font-weight: bold;" />
+			 -->
+			 <toolbarbutton id="htmlPreviewImgId" label="Preview" width="80px" sclass="alink"  image="/images/icon_preview_big.png" style="font-weight: bold;" />
+			 
+			<toolbarbutton id="saveNewBtnId" label="Save" sclass="alink" image="/img/icons/icon_save_big.png" width="80px"/>
+		</div>
+		
+		</h:td>
+		</h:tr>
+	</h:table>
+		
+		<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)"/>
+		</caption>
+		<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+		<iframe id="iframeId" width="100%" height="100%"/>
+		</div>
+	</window>
+	
+		<h:table width="100%">
+			<h:tr>
+				<h:td width="230px" valign="top">
+					<vlayout style="margin-right:10px;">
+						<groupbox closable="false" style="margin-bottom:20px;">
+							<caption  label="Tools"/>
+							
+							<toolbarbutton label="Check for Spam score" visible="false" id="spamScrBtnId" sclass="alink" width="180px" 
+								image="/img/icons/icon_check_spam.png" 	style="font-weight: bold;margin-bottom:10px;"  />
+							<image id="troberImgId" src="/img/theme/throbber.gif" visible="false"/>
+							
+						</groupbox>
+						
+						<groupbox closable="false" style="margin-bottom:20px;">
+							<caption  label="Insert Place Holders"/>
+								<listbox id="phLbId" mold="select" width="150px" onSelect="phTbId.setValue((String)phLbId.getSelectedItem().getValue())" style="font-size:11px;"/>
+								<button label="Insert" w:onClick="insertPhInHtmlEditor(this.$f('phTbId').getValue(),this.$f('htmlTbId'))" sclass="idle70" />					
+								<textbox value="select" id="phTbId" w:onChange="alert(this.getValue());" visible="false"/>
+						</groupbox>
+						
+						<groupbox closable="false"  id ="coupGbId"  style="margin-bottom:20px;">
+							<caption  label="Insert Promotion"/>
+							
+								<listbox id="cphLbId"  mold="select" width="150px" onSelect="cphTbId.setValue((String)cphLbId.getSelectedItem().getValue())" style="font-size:11px;"/>
+								<button label="Insert"  w:onClick="insertCPhInHtmlEditor(this.$f('cphTbId').getValue(),this.$f('htmlTbId'))" sclass="idle70" />				
+								<textbox value="cselect" id="cphTbId" w:onChange="alert(this.getValue());" visible="false"/>
+							
+						</groupbox>
+						
+						<groupbox>
+							<caption  label="Send a Test Email"/>
+								<textbox id="testEmailTbId" value="Email Address..." cols="18"  width="220px" w:onFocus="this.setValue('')"  />
+								<div>
+									<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+									<label value="To Send test mail to multiple Email Ids,give them as comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+								</div>
+							<div align="right" style="padding-top:5px;">
+								<button label="Send"  id="testMailGoBtnId" sclass="idle70" style="margin-left:2px;"/>
+							</div>
+						</groupbox>
+					</vlayout>
+				</h:td>
+				
+				<h:td valign="top"  align="left" bgcolor="#FFFFFF">
+				
+					<groupbox closable="false" >
+						<caption label="Editor"/>
+							<label value="Paste / Edit your HTML code" sclass="theme-lbHeading" style="margin:10px;"/>
+							<textbox width="96%" id="htmlTbId" rows="30" height="400px"  sclass="textBg" style="margin:10px;"/>
+					</groupbox>				    
+				</h:td>
+			</h:tr>
+		</h:table>
+		
+		
+		<div align="right" style="margin-top:10px;">
+			<button id="backBtnId" label="Back" sclass="idle140"/>
+			<button id="nextBtnId" label="Save" sclass="idle140 greenbtn" />
+		</div>
+		
+		<!-- check remove below gridcontent -->
+		<grid style="border:none;" visible="false">
+					<columns>
+						<column align="center" />
+					</columns>
+					<rows>
+						
+						<row visible="false" style="padding-top:8px;"><cell align="left">
+							<label value="Body background color" style="font-size:11px;" /><h:br/>
+							<div align="center" style="padding:8px 0;">
+							<colorbox id="cboxId" width="40px" height="20px" color="#029BCB" >
+							<attribute name="onChange">
+								<![CDATA[ Clients.evalJavaScript("parent.changeBgColor('"+self.getColor()+"');"); ]]>
+							</attribute>
+							</colorbox>
+							
+							<toolbarbutton tooltiptext="Undo" image="/img/theme/undo.png" disabled="false"  style="font-weight: bold;margin-left:15px;"/>
+							<toolbarbutton tooltiptext="Redo" image="/img/theme/redo.png" disabled="true" style="font-weight: bold;"/>
+							</div>
+						
+						</cell></row>
+						
+						<row visible="false"><cell>
+							<toolbarbutton id="addBlockBtnId" class="toolbarBtn" label="Add block" image="/img/icons/add_icon.png" popup="editPopup"/>
+							<menupopup id="editPopup"/>
+							<toolbarbutton id="deleteBlock" class="toolbarBtn" label="Delete" image="/img/icons/delete_icon.png" w:onClick="deleteBlock()"/>					
+						</cell></row>
+						
+					</rows>
+			</grid>
+		<timer id="htmlTimerId" delay="60000" repeats="true">
+		</timer>
+	</window>
+</zk>

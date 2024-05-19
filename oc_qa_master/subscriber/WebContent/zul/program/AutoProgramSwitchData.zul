@@ -1,0 +1,176 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window apply="org.mq.marketer.campaign.controller.program.AutoProgramSwitchDataController" border="normal"
+	xmlns:h="http://www.zkoss.org/2005/zk/native" width="780px" height="450px" xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<!--<tabbox height="449px"  width="779px">
+		<tabs>
+			<tab label="Contact Activity" />
+			<tab label="Contact Data"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<div id="activityCenterDivId">
+					<h:table width="100%" height="97%" >
+						<h:tr>
+							<h:td valign="top">
+								<groupbox width="740px" closable="false" >
+								
+									<caption label="Choose Condition" style="font-weight:bold;"/>
+										<hbox align="center">
+										
+											<label value="Select activity criteria:" style="font-size:13px"/>
+											<space  width="10px"/>
+											<listbox width="100px" mold="select" sclass="ContactsView">
+												<listitem label="Opens" Value="1" selected="true"/>
+												<listitem label="Clicks" value="2"/>
+												<listitem label="Opens And Clicks" value="3" visible="false"/>
+											</listbox>
+										
+										</hbox>
+									
+									
+									<vbox id="switchCondRulesVbId" visible="true" >
+										<hbox align="center">
+											Match <listbox id="switchCondRuleOptionLbId" mold="select"  width="100px">
+											<listitem label="Any" selected="true"/><listitem label="All" />
+											</listbox> of the following
+											<space width="50px"/>
+											<toolbarbutton id="addRuleToolbarId" image="/img/icons/add_icon.png" label="Add another rule" sclass="tbbLink" />
+										</hbox>
+									</vbox>
+								
+								</groupbox>
+									
+							</h:td>
+						</h:tr>
+					</h:table>				
+				
+				
+				
+				</div>
+			
+			</tabpanel>
+			
+			<tabpanel>
+			
+				--><div id="datacenterDivId" height="98%" style="overflow:auto;"> 
+					<h:table width="100%" height="97%" >
+					<h:tr >
+						<h:td valign="top" >
+							
+							<groupbox width="740px" id="dataFilterGbId" closable="false" >
+								
+								<caption>
+									<checkbox label="Apply Filter on Contact 'Data'" id="dataFilterCbId" 
+										checked="false" style="font-weight:bold;font-size:11px;" />
+								</caption>
+								
+								<vbox id="switchCondRulesVbId" visible="true" >
+									<hbox align="center">
+										Match <listbox id="switchCondRuleOptionLbId" mold="select"  width="100px">
+										<listitem label="Any" selected="true"/><listitem label="All" />
+										</listbox> of the following
+										<space width="50px"/>
+										<toolbarbutton id="addRuleToolbarId" image="/img/icons/add_icon.png" label="Add another rule" sclass="tbbLink" />
+									</hbox>
+								</vbox>
+							
+							</groupbox>
+							
+						</h:td>
+					</h:tr>
+					<!--<h:tr>
+						<h:td>
+							<checkbox  label="Apply Filter on Contact 'Activity'" id="activityFilterCbId" checked="false" style="font-weight:bold;font-size:11px;"  />
+						</h:td>
+					</h:tr>
+					
+					--><h:tr>
+						<h:td>
+							<groupbox width="740px" id="activityFilterGbId" closable="false">
+							
+								<caption>
+									<checkbox  label="Apply Filter on Contact 'Activity'" id="activityFilterCbId" 
+										checked="false" style="font-weight:bold;font-size:11px;"  />
+								</caption>
+								<vbox>
+									<hbox align="center">
+									<radiogroup id="reportDateConsRGId">
+										<radio id="prgCreatedDateRBtnId" selected="true" label="From program Created date"/>
+										<radio id="prgModifiedDateRBtnId" label="From Program modified date"/>
+									</radiogroup>
+									</hbox>
+									<vbox id="switchActivityCondRulesVbId" visible="true" >
+										<hbox align="center">
+											Match <listbox id="switchActivityCondRuleOptionLbId" mold="select"  width="100px">
+											<listitem label="Any" selected="true"/><listitem label="All" />
+											</listbox> of the following
+											<space width="50px"/>
+											<toolbarbutton id="addActivityRuleToolbarId" image="/img/icons/add_icon.png" label="Add another rule" sclass="tbbLink" />
+										</hbox>
+										
+									</vbox>
+								
+								</vbox>
+							</groupbox>
+							
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td valign="top">
+							<groupbox width="740px" closable="false">
+							
+								<caption label="Navigate To" style="font-weight:bold;"/>
+									
+									<vbox>
+										<hbox  align="center" style="padding:6px;">
+											<label value="If condition is" style="font-size:13px;"/>
+											<listbox mold="select" id="mode1LbId">
+												<listitem label="true" selected="true"/>
+												<listitem label="false"/>
+											</listbox>
+											<label value="go to "/>
+											<listbox mold="select" id="title1LbId">
+											</listbox>
+											<space width="50px"/>
+											<label value=" Line Text:"/>
+											<textbox id="msgLine1TbId"/>
+										</hbox>
+										<hbox width="" align="center" style="padding:6px;" id="nextLine2HbId">
+											<label value="If condition is" style="font-size:13px;"/>
+											<listbox mold="select" id="mode2LbId">
+												<listitem label="true" selected="true"/>
+												<listitem label="false"/>
+											</listbox>
+											<label value="go to "/>
+											<listbox mold="select" id="title2LbId">
+											</listbox>
+											<space width="50px"/>
+											<label value=" Line Text:"/>
+											<textbox id="msgLine2TbId"/>
+										</hbox>
+										
+									</vbox>
+							
+							
+							</groupbox>
+						
+						
+						
+						</h:td>
+					
+					
+					</h:tr>
+					</h:table>
+				</div>
+				
+			<!--</tabpanel>
+					
+			
+		</tabpanels>
+	</tabbox>
+	
+	
+	--></window>
+
+</zk>

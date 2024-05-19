@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Bakers Dozen Receipt</title>
+	<style type="text/css">
+	
+body {
+	font-family: Arial;
+	font-size: 13px;
+	color: #444;
+}	
+	a:hover {
+		text-decoration: underline !important;
+	}
+	td.promocell p { 
+		color:#e1d8c1;
+		font-size:16px;
+		line-height:26px;
+		font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+		margin-top:0;
+		margin-bottom:0;
+		padding-top:0;
+		padding-bottom:14px;
+		font-weight:normal;
+	}
+	
+	hr {height: 1px;
+margin-bottom: 12px;
+color: #DEDEDE;
+background-color: #DEDEDE;
+border: none;}
+	
+	td.contentblock h4 {
+		color:#444444 !important;
+		font-size:16px;
+		line-height:24px;
+		font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+		margin-top:0;
+		margin-bottom:10px;
+		padding-top:0;
+		padding-bottom:0;
+		font-weight:normal;
+	}
+	
+	table.items td {
+		padding: 10px;
+	}	
+	
+	td.contentblock h4 a {
+		color:#444444;
+		text-decoration:none;
+	}
+	td.contentblock p { 
+	  	color:#888888;
+		font-size:13px;
+		line-height:19px;
+		font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+		margin-top:0;
+		margin-bottom:12px;
+		padding-top:0;
+		padding-bottom:0;
+		font-weight:normal;
+	}
+	td.contentblock p a { 
+	  	color:#3ca7dd;
+		text-decoration:none;
+	}
+	@media only screen and (max-device-width: 480px) {
+	     div[class="header"] {
+	          font-size: 16px !important;
+	     }
+	     table[class="table"], td[class="cell"] {
+	          width: 300px !important;
+	     }
+		table[class="promotable"], td[class="promocell"] {
+	          width: 325px !important;
+	     }
+		td[class="footershow"] {
+	          width: 300px !important;
+	     }
+		table[class="hide"], img[class="hide"], td[class="hide"] {
+	          display: none !important;
+	     }
+	     img[class="divider"] {
+		      height: 1px !important;
+		 }
+		 td[class="logocell"] {
+			padding-top: 15px !important; 
+			padding-left: 15px !important;
+			width: 300px !important;
+		 }
+	     img[id="screenshot"] {
+	          width: 325px !important;
+	          height: 127px !important;
+	     }
+		img[class="galleryimage"] {
+			  width: 53px !important;
+	          height: 53px !important;
+		}
+		p[class="reminder"] {
+			font-size: 11px !important;
+		}
+		h4[class="secondary"] {
+			line-height: 22px !important;
+			margin-bottom: 15px !important;
+			font-size: 18px !important;
+		}
+	
+	}
+	</style>
+</head>
+<body bgcolor="#e4e4e4" topmargin="0" leftmargin="0" style="-webkit-font-smoothing: antialiased;background:#e4e4e4;-webkit-text-size-adjust:none;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#e4e4e4" align="center">
+  <tr>
+    <td bgcolor="#e4e4e4" width="100%"><table width="600" cellpadding="0" cellspacing="0" border="0" align="center" class="table">
+      <tr>
+        <td width="600" class="cell"><table width="600" cellpadding="0" cellspacing="0" border="0" class="table">
+          <tr>
+            <td width="250" bgcolor="#e4e4e4" class="logocell"><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="20" class="hide"><br class="hide">
+              <a href="#Store.WWW#"> <img align="left" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/logo_dummy.jpeg"></a><br>
+              <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="10" class="hide"><br class="hide"></td>
+            <td align="right" width="350" class="hide" style="color:#a6a6a6;font-size:12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;text-shadow: 0 1px 0 #ffffff;" valign="top" bgcolor="#e4e4e4"><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="63"><br>
+              <span>DIGITAL RECEIPT<br>
+              #Store.Name#, #Store.Street#,<br>
+              #Store.City#, #Store.State#  #Store.Zip#<br>
+              #Store.Number#<br>
+              <br></span></td>
+          </tr>
+        </table>
+          <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/widget-hero3.png" label="Hero image" editable="true" width="600" height="253" id="screenshot">
+          <table width="600" cellpadding="25" cellspacing="0" border="0" class="promotable">
+            <tr>
+              <td bgcolor="#456265" width="600" class="promocell"><p>Receipt ID: #Receipt.ID#</p>
+                <p style="font-size: 10px;"> Receipt#: #Receipt.Number#<br>
+                  Date: #Receipt.Date#<br>
+                  Payment Method: #Receipt.PaymentMethod# </p></td>
+            </tr>
+          </table>
+          <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="15" class="divider"><br>
+          <repeater>
+            <layout label="New feature">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td bgcolor="#85bdad" nowrap><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="5" height="1"></td>
+                  <td width="100%" bgcolor="#ffffff"><table width="100%" cellpadding="20" cellspacing="0" border="0">
+                    <tr>
+                      <td bgcolor="#ffffff" class="contentblock"><p> <strong>#ShipTo.Name#</strong><br>
+                        #ShipTo.Street#<br>
+                        #ShipTo.City#, #ShipTo.State#  #ShipTo.Zip#<br>
+                        <hr>
+                        <h4 class="secondary"><strong>Your Itemized Purchase</strong></h4></td>
+                    </tr>
+                  </table></td>
+                </tr>
+              </table>
+              <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="15" class="divider"><br>
+            </layout>
+            <layout label="Article, tip or resource">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td bgcolor="#ef3101" nowrap><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="5" height="1"></td>
+                  <td width="100%" style="padding: 20px;" bgcolor="#ffffff"><table class="items">
+                    <tbody>
+                      <tr style="background: #f5f5f5;">
+                        <td style="width: 117px;padding: 12px;"><strong>Description</strong></td>
+                        <td style="width: 117px;padding: 12px;"><strong>Qty</strong></td>
+                        <td style="width: 117px;padding: 12px;"><strong>Unit Price</strong></td>
+                        <td><strong>Amount</strong></td>
+                      </tr>  
+                    ##BEGIN ITEMS##
+                    <tr >
+                      <td>#Item.Description#</td>
+                      <td>#Item.Quantity#</td>
+                      <td>#Item.UnitPrice#</td>
+                      <td>#Item.Total#</td>
+                    </tr>
+                    ##END ITEMS##
+                    </tbody>
+                    
+                  </table>
+                    <hr>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td><strong>Payment</strong></td>
+                        </tr>    
+                      ##BEGIN PAYMENTS##
+                      <tr >
+                        <td>#Payment.Amount#</td>
+                      </tr>
+                      <tr >
+                        <td>#Payment.Number#</td>
+                      </tr>
+                      <tr >
+                        <td>#Payment.Type#</td>
+                      </tr>
+                      ##END PAYMENTS##
+                      </tbody>
+                      
+                    </table>
+                    <hr>
+                    <p> #Receipt.Message#<br>
+                      #Receipt.Message2# </p></td>
+                </tr>
+              </table>
+              <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="15" class="divider"><br>
+            </layout>
+            <layout label="Gallery highlights">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td bgcolor="#832701" nowrap><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="5" height="1"></td>
+                  <td width="100%" bgcolor="#ffffff"><table width="100%" cellpadding="20" cellspacing="0" border="0">
+                    <tr>
+                      <td bgcolor="#ffffff" class="contentblock"><h4 class="secondary"><strong>You might also be interested in...</strong></h4></td>
+                    </tr>
+                  </table></td>
+                </tr>
+              </table>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td bgcolor="#832701" nowrap><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="5" height="1"></td>
+                  <td bgcolor="#ffffff" nowrap><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="5" height="1"></td>
+                  <td width="100%" bgcolor="#ffffff"><table cellpadding="5" cellspacing="0" border="0">
+                    <tr>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 1"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 2"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 3"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 4"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 5"></td>
+                    </tr>
+                    <tr>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 6"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 7"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 8"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 9"></td>
+                      <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/gallery.png" width="107" height="107" editable="true" class="galleryimage" label="Image 10"></td>
+                    </tr>
+                  </table>
+                    <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="5"><br></td>
+                </tr>
+              </table>
+              <img border="0" src="images/spacer.gif" width="1" height="15" class="divider"><br>
+            </layout>
+            <layout label="Pull quote">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td bgcolor="#85bdad" nowrap><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="5" height="1"></td>
+                  <td width="100%" bgcolor="#ffffff"><table width="100%" cellpadding="20" cellspacing="0" border="0">
+                    <tr>
+                      <td bgcolor="#ffffff" class="contentblock"><p>#Receipt.Footer#</p></td>
+                    </tr>
+                  </table></td>
+                </tr>
+              </table>
+              <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="15" class="divider"><br>
+            </layout>
+          </repeater></td>
+      </tr>
+    </table>
+      <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="25" class="divider"><br>
+      <table width="600" cellpadding="0" align="center" cellspacing="0" border="0" bgcolor="#f2f2f2">
+        <tr>
+          <td><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="30"><br>
+            <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" class="table">
+              <tr>
+                <td width="600" nowrap bgcolor="#f2f2f2" class="cell"><table width="600" cellpadding="0" cellspacing="0" border="0" class="table">
+                  <tr>
+                    <td width="380" valign="top" class="footershow"><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="8"><br>
+                      <p style="color:#a6a6a6;font-size:12px;font-family:Helvetica,Arial,sans-serif;margin-top:0;margin-bottom:15px;padding-top:0;padding-bottom:0;line-height:18px;padding-left:10px;" class="reminder">Thanks for shopping with us, if you have a problem with your order<br> you can reach us on our customer service email <a href="#Store.Email" style="color:#a6a6a6;text-decoration:underline;">#Store.Email#</a>.</p></td>
+                    <td align="right" width="220" style="color:#a6a6a6;font-size:12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;text-shadow: 0 1px 0 #ffffff;" valign="top" class="hide"><img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="10"><br>
+                      <p style="color:#b3b3b3;font-size:11px;line-height:15px;font-family:Helvetica,Arial,sans-serif;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;font-weight:bold;">#Store.Name#, #Store.Street#,<br>
+                        #Store.City#, #Store.State#  #Store.Zip#<br>
+                        #Store.Number#</p></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table>
+            <img border="0" src="/subscriber/SystemData/digital-templates/Bakers_dozen_template/images/spacer.gif" width="1" height="25"><br></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+</body>
+</html>

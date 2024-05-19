@@ -1,0 +1,753 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+    
+	<window id="smsSettigsWinId" border="0" width="100%"
+	apply="org.mq.marketer.campaign.controller.sms.SMSSettingsController"
+	xmlns:h="http://www.zkoss.org/2005/zk/native"
+	xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<script>
+			<![CDATA[
+			
+			function updateCaretPosition(obj1, obj2) {
+			//alert("hai");
+			// get the zk widgets
+			var scriptTB = zk.Widget.$(jq(obj1))
+			var caretPosTB = zk.Widget.$(jq(obj2))
+			
+			// get the js elements
+			var jsScriptTB = document.getElementById(scriptTB.uuid)
+			var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+			
+			// get the caret position
+			var pos = getCaret(jsScriptTB);
+			
+			// set the caret position in the hidden text field
+			jsCaretPosTB.value = pos;
+			
+			// trigger an event to send the caret position to the server
+			if (document.createEvent) {
+			var evt = document.createEvent('HTMLEvents');
+			evt.initEvent( 'blur', false, false);
+			jsCaretPosTB.dispatchEvent(evt);
+			
+			var evt2 = document.createEvent('HTMLEvents');
+			evt2.initEvent( 'change', false, false);
+			jsCaretPosTB.dispatchEvent(evt2);
+			} else if (document.createEventObject) {
+			jsCaretPosTB.fireEvent('onblur');
+			jsCaretPosTB.fireEvent('onchange');
+			}
+			}
+			
+			function getCaret(el) {
+            	
+            	if (el.selectionStart) {
+                    return el.selectionStart;
+                } else if (document.selection) {
+                    el.focus();
+
+                    var r = document.selection.createRange();
+
+                    
+                    if (r == null) {
+                    	
+                        return 0;
+                    }
+
+                    var re = el.createTextRange();
+                    	
+                            rc = re.duplicate();
+                    re.moveToBookmark(r.getBookmark());
+                    rc.setEndPoint('EndToStart', re);
+                    return rc.text.length;
+                }else{
+                	
+                	if(el.value.length > 0) {
+                		
+                		el.selectionStart = el.value.length;
+                		 return el.selectionStart;
+                		
+                	}
+                	
+                }
+                return 0;
+
+
+              
+            }
+			]]>
+			</script>
+	<div>
+		<label value="Mandatory Configurations before getting started with your first SMS Campaign." />
+	</div>
+	
+	<div id="fstDivId"> 
+	<groupbox width="99%" sclass="gbStyle"
+			style="margin-top:10px;" closable="false">
+		<caption>
+			<label value="Basic Settings" />
+		</caption>
+		
+		<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" style="padding-left:20px;">
+
+
+			<h:tr>
+				<h:td valign="bottom" width="160">
+					<label value="Shared short-code:" />
+				</h:td>
+
+				<h:td valign="bottom" >
+					<textbox id="shortCodeTbId" value=""
+						name="shortCodeTb" width="250px" maxlength="100" />
+						
+				</h:td>
+			</h:tr>
+
+			<h:tr>
+				<h:td valign="bottom" width="160">
+					<label value="Message Header:" />
+					<image src="/img/icons/icon_q.png" tooltip="help"  style="padding-left:40px;" />
+						<popup id="help"  width="400px"  style="bgcolor:#CCCCCC" >
+							<h:table   >
+								<h:tr>
+									<h:td>
+										<image src="/img/icons/icon_bulb.png" />
+									</h:td>
+									<h:td>
+										<label value="This will appear in the beginning of text-message of outbound SMS." />
+									</h:td>
+								</h:tr>
+								
+							</h:table>								
+						
+						</popup>
+				</h:td>
+
+				<h:td valign="bottom" colspan="2">
+					<textbox id="senderIdTbId" value=""
+						name="smsNameTb"  width="250px"  maxlength="50" />
+						<popup id="headerHelp"  width="400px"  style="bgcolor:#CCCCCC" >
+								<h:table   >
+									<h:tr>
+										<h:td>
+											<image src="/img/icons/icon_bulb.png" />
+										</h:td>
+										<h:td>
+											<label value="Header can contain characters a-z and numbers 0-9." />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+										</h:td>
+										<h:td>
+											<label value=" No special characters are allowed except ' &amp; -." />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+				</h:td>
+
+			</h:tr>
+			<h:tr >
+				<h:td  width="160">	</h:td>
+				
+				<h:td valign="top"  > 	
+					<image src="/img/icons/icon_i.png"  />	
+					<label	value="Header helps in identifying you as the sender of the SMS and &#x0a; is preferably your company's name."	sclass="labelPos" />
+				</h:td>
+			</h:tr>
+		</h:table>
+		
+		
+		
+	</groupbox>
+	
+	<groupbox width="99%" sclass="gbStyle"
+			style="margin-top:10px;" closable="false">
+		<caption>
+			<label value="Opt-in" />
+		</caption>
+		<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" style="padding-left:20px;">
+		
+		<h:tr>
+			<h:td valign="bottom" width="160">
+				<label value="Opt-in Keyword:" />
+				<image src="/img/icons/icon_q.png" tooltip="help1"  style="padding-left:40px;" />
+						<popup id="help1"  width="400px"  style="bgcolor:#CCCCCC" >
+							<h:table   >
+								<h:tr>
+									<h:td>
+										<image src="/img/icons/icon_bulb.png" />
+									</h:td>
+									<h:td>
+										<label value="Subscribers will send SMS with this keyword to opt-in to your SMS program." />
+									</h:td>
+								</h:tr>
+							</h:table>								
+						
+						</popup>
+						
+						<popup id="optInkeywordHelp"  width="400px"  style="bgcolor:#CCCCCC" >
+								<h:table   >
+									<h:tr>
+										<h:td>
+											<image src="/img/icons/icon_bulb.png" />
+										</h:td>
+										<h:td>
+											<label value="A keyword can contain only alphabets." />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+										</h:td>
+										<h:td>
+											<label value=" Minimum length of keyword string is 4." />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+				
+				
+			</h:td>
+
+			<h:td valign="top" >
+				<textbox id="optInKeywordTbId" value=""
+					name="shortCodeTb" width="250px" maxlength="100" />
+			</h:td>
+		</h:tr>
+					<h:tr>
+	
+			<h:td valign="top" width="160">
+				<label value="Send Welcome Message:" />
+			</h:td>
+			
+			
+			<h:td  valign="top"  colspan="2">
+				<checkbox id="enableChwelcomeChkBox" checked="true"/>
+			</h:td>	
+			
+			</h:tr>
+			
+			
+			
+		<h:tr>
+		<h:td colspan="3"> 
+		<div id="enableWelcomeDivId">
+		<h:table cellspacing="5" cellpadding="5" width="100%"
+			align="left" style="padding-left:20px;">
+			<h:tr> 
+			<h:td valign="top" width="160">
+			<label value="Welcome  Message:" />
+		</h:td>
+
+		<h:td valign="top" width="260">
+		<textbox id="caretPosTB1" visible="false" />
+			<textbox id="welcomeMsgTbId" value=""
+				name="shortCodeTb" width="250px" 
+				style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 				14px;line-height: 1.5em;margin-top:10px;padding-top:25px;"
+				height="160px" multiline="true" 
+				w:onClick="updateCaretPosition('$welcomeMsgTbId', '$caretPosTB1')"
+				w:onChanging="updateCaretPosition('$welcomeMsgTbId', '$caretPosTB1')"
+				w:onFocus="updateCaretPosition('$welcomeMsgTbId', '$caretPosTB1')"  />
+				<label value="" id="welcomeHeaderLblId" style="color:#666666;left:10px;position:relative;top:-185px;"/>
+		</h:td>
+		<h:td valign="top"  >
+			<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" >
+			<h:tr>
+	    		<h:td >
+	    		
+	    		<textbox value="Use Url Shortener"
+					width="300px" id="welcomelinkURLTxtBoxId" />
+				<button id="welcomeinsertLinkBtnId"
+					label="Insert" sclass="idle70" />
+	    		
+	    		</h:td>
+	    		</h:tr>
+	    		<h:tr>
+	    		<h:td>		
+			<a id="checkWelcomeTemplateAnchId"  sclass="tbbLink"
+				label="Check template"
+				style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+			<div id="welcomeMsgTemplateDivId" visible="false"  style="border:1px solid #E1E1E1;">
+			   <html id="welcomeMsgTemplateHtmlId" />
+	    		</div>
+	   		</h:td>
+	   		</h:tr>
+	   		
+	   		</h:table>
+		</h:td>
+		
+		
+		</h:tr>
+		<h:tr>
+			<h:td />
+			<h:td valign="top" 
+				colspan="2">
+				<label value="No. of Characters / Messages :"
+					style="font-weight:bold;" />
+				<textbox id="welcomecharCountTbId" readonly="true"
+					value="0" width="70px" />
+				<label value="(160 Characters per SMS, including header)" />
+			</h:td>
+		</h:tr>
+</h:table>
+</div>
+</h:td>
+		
+		</h:tr>
+		
+		
+		
+		<h:tr heirht="10"  />
+		<h:tr>
+		<h:td valign="top" width="160">
+		
+		<label value="Opt-in List:" />
+		<image src="/img/icons/icon_q.png" tooltip="help2"  style="padding-left:40px;" />
+				<popup id="help2"  width="400px"  style="bgcolor:#CCCCCC" >
+					<h:table   >
+						<h:tr>
+							<h:td>
+								<image src="/img/icons/icon_bulb.png" />
+							</h:td>
+							<h:td>
+								<label value="All SMS opt-in contacts will be added in this list." />
+							</h:td>
+						</h:tr>
+					</h:table>								
+				
+				</popup>
+		
+			</h:td>
+			
+			<h:td valign="top" width="260">
+			
+			<listbox id="selListLbId"  width="250px"  mold="select">
+			<listitem label="Select a List"  selected="true" />
+		</listbox>
+		</h:td>
+		<h:td valign="top">
+		<a id="createNewListAnchId"  sclass="tbbLink"
+			label="Create New List"
+			style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+		</h:td>
+		
+		<!--<h:td valign="top" >
+	</h:td>	
+	
+	--></h:tr>
+	
+	
+		
+	</h:table>
+	</groupbox>
+	<groupbox width="99%" sclass="gbStyle"
+			style="margin-top:10px;" closable="false">
+		<caption>
+			<label value="Invite Opt-ins" />
+		</caption>
+	<h:table>
+	<h:tr>
+	
+		<h:td valign="top" width="160">
+			<label value="Send Opt-in Confirmation Message :" />
+		</h:td>
+		
+		
+		<h:td  valign="top"  colspan="2">
+			<checkbox id="enableOptInChkBox" checked="true"/>
+		</h:td>	
+		
+		</h:tr>
+		<h:tr>
+			<h:td colspan="3">
+				<div id="enableOptinDivId">
+					<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" style="padding-left:20px;">
+					<h:tr>
+						<h:td valign="top" width="160">
+						<label value="Source:" />
+					</h:td>
+					
+					
+					<h:td  valign="top"  colspan="2">
+					
+						<checkbox label="Manual Upload" value="1" id="enableManualChkBox" />
+						<checkbox label="Web-Form" value="2" id="enableWebFormChkBox" />
+						<checkbox label="POS" value="4" id="enablePOSChkBox" />
+						
+					</h:td>	
+					</h:tr>
+					<h:tr>
+					<h:td valign="top" width="160">
+						<label value="Message inviting opt-ins :(Include your opt-in keyword in this message)" />
+					</h:td>
+		
+					<h:td valign="top" width="260" >
+					<textbox id="caretPosTB2" visible="false" />
+						<textbox id="optInMsgTbId" value=""
+							name="shortCodeTb" width="250px" 
+							style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 				14px;line-height: 1.5em;margin-top:10px;padding-top:25px;"
+							multiline="true" height="160px" 
+							w:onClick="updateCaretPosition('$optInMsgTbId', '$caretPosTB2')"
+									w:onChanging="updateCaretPosition('$optInMsgTbId', '$caretPosTB2')"
+									w:onFocus="updateCaretPosition('$optInMsgTbId', '$caretPosTB2')" />
+						<label value="" id="optinHeaderLblId" style="color:#666666;left:10px;position:relative;top:-185px;"/>
+							
+						
+					</h:td>
+					<h:td valign="top">
+					<h:table cellspacing="5" cellpadding="5" width="100%"
+						align="left" >
+					
+		     		<h:tr>
+		     		<h:td>
+						<textbox value="Use Url Shortener"
+							width="300px" id="linkURLTxtBoxId" />
+						<button id="insertLinkBtnId"
+							label="Insert" sclass="idle70" />
+					</h:td>
+					</h:tr>
+					<h:tr>
+					<h:td>
+						<a id="checkTemplateAnchId"  sclass="tbbLink"
+							label="Check template"
+							style="color:#2886B9;font-weight:bold;text-decoration: underline;valign:top;" />
+							
+						<div id="optInMsgTemplateDivId" visible="false"  style="border:1px solid #E1E1E1;">
+						   <html id="optInMsgTemplateHtmlId" />
+			     		</div>
+		     		</h:td>
+		     		</h:tr>
+					</h:table>
+					</h:td>
+					
+					</h:tr>
+					
+					<!-- <h:tr >
+					<h:td  width="160">	</h:td>
+					
+					<h:td valign="top"  colspan="2"> 	
+						<image src="/img/icons/icon_i.png"  />	
+						<label	value="Include your opt-in keyword in this message."	sclass="labelPos" />
+					</h:td>
+				</h:tr> -->
+				<h:tr>
+					<h:td />
+					<h:td valign="top" 
+						colspan="2">
+						<label value="No. of Characters / Messages :"
+							style="font-weight:bold;" />
+						<textbox id="charCountTbId" readonly="true"
+							value="0" width="70px" />
+						<label value="(160 Characters per SMS, including header)" />
+					</h:td>
+				</h:tr>	
+							
+				</h:table>
+			
+			</div>
+		</h:td>
+		
+		</h:tr>
+	
+	</h:table>
+	</groupbox>
+	<separator/>
+	
+	<div align="right" style="margin-right:10px;">
+		
+			<button id="continueBtnId" label="Continue"
+				sclass="idle140 greenbtn" />
+
+	</div>
+
+</div>
+
+<div visible="false" id="secondDivId">
+
+	<groupbox width="99%" sclass="gbStyle"
+	style="margin-top:10px;" closable="false">
+	<caption>
+	<label value="Opt-out" />
+	</caption>
+	<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" style="padding-left:20px;">
+	
+	<h:tr>
+		<h:td valign="bottom" width="175">
+			<label value="Opt-out Keyword:" />
+			<image src="/img/icons/icon_q.png" tooltip="help3"  style="padding-left:40px;" />
+					<popup id="help3"  width="400px"  style="bgcolor:#CCCCCC" >
+						<h:table   >
+							<h:tr>
+								<h:td>
+									<image src="/img/icons/icon_bulb.png" />
+								</h:td>
+								<h:td>
+									<label value="Subscribers will send SMS with this keyword to opt-out of your SMS program." />
+								</h:td>
+							</h:tr>
+						</h:table>								
+					
+					</popup>
+			<popup id="optOutkeywordHelp"  width="400px"  style="bgcolor:#CCCCCC" >
+								<h:table   >
+									<h:tr>
+										<h:td>
+											<image src="/img/icons/icon_bulb.png" />
+										</h:td>
+										<h:td>
+											<label value="A keyword can contain only alphabets." />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+										</h:td>
+										<h:td>
+											<label value=" Minimum length of keyword string is 4." />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+				
+			
+		</h:td>
+
+		<h:td valign="top" colspan="2" >
+			<textbox id="optOutKeywordTbId" value=""
+				name="shortCodeTb" width="250px" maxlength="100" />
+		</h:td>
+	</h:tr>
+	
+	<h:tr >
+		<h:td valign="top" width="175">
+		<label value=" Enable Unsubscribe Message :" />
+	</h:td>
+	
+	
+		<h:td  valign="top" colspan="2">
+		<checkbox id="enableUnSubswelcomeChkBox" checked="true" />
+	</h:td>	
+	
+	</h:tr>
+	
+	<h:tr>
+		<h:td colspan="3">
+			<div id="unsubscribDivId">
+				<h:table>
+					<h:tr>
+						<h:td valign="top" width="175">
+			<label value="Unsubscribe Confirmation:" />
+		</h:td>
+
+		<h:td valign="top" width="260">
+		<textbox id="caretPosTB3" visible="false" />
+			<textbox id="unsubConfirmMsgTbId" value=""
+				name="shortCodeTb" 
+				style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 				14px;line-height: 1.5em;margin-top:10px;padding-top:25px;"
+				width="250px" height="160px" multiline="true" w:onClick="updateCaretPosition('$unsubConfirmMsgTbId', '$caretPosTB3')"
+				w:onChanging="updateCaretPosition('$unsubConfirmMsgTbId', '$caretPosTB3')"
+				w:onFocus="updateCaretPosition('$unsubConfirmMsgTbId', '$caretPosTB3')" />
+				<label value="optout" id="optoutHeaderLblId" style="color:#666666;left:10px;position:relative;top:-185px;"/>
+		</h:td>
+		<h:td valign="top"  >
+			<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" >
+			<h:tr>
+	    		<h:td>
+	    		
+	    		<textbox value="Use Url Shortener"
+					width="300px" id="optoutlinkURLTxtBoxId" />
+				<button id="optoutinsertLinkBtnId"
+					label="Insert" sclass="idle70" />
+	    		
+	    		</h:td>
+	    		</h:tr>
+	    		<h:tr>
+	    		<h:td>
+		
+			<a id="checkOptoutTemplateAnchId"  sclass="tbbLink"
+				label="Check template"
+				style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+				<div id="optOutMsgTemplateDivId" visible="false"  style="border:1px solid #E1E1E1;">
+					   <html id="optoutMsgTemplateHtmlId" />
+	     		</div>
+	     		</h:td>
+	     		</h:tr>
+	     		</h:table>
+	     		</h:td>
+		     	
+					</h:tr>
+				
+				
+		
+		<h:tr>
+			<h:td />
+			<h:td valign="top" 
+				colspan="2">
+				<label value="No. of Characters / Messages :"
+					style="font-weight:bold;" />
+				<textbox id="optoutcharCountTbId" readonly="true"
+					value="0" width="70px" />
+				<label value="(160 Characters per SMS, including header)" />
+			</h:td>
+		</h:tr>
+				
+				</h:table>
+			
+			</div>
+		
+		</h:td>
+	
+	</h:tr>
+			
+		
+		<h:tr height="10" />
+		
+		
+		
+	</h:table>
+	</groupbox>
+	
+	<groupbox width="99%" sclass="gbStyle"
+	style="margin-top:10px;" closable="false">
+	<caption>
+	<label value="Help" />
+	</caption>
+	<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" style="padding-left:20px;">
+	
+	<h:tr>
+		<h:td valign="bottom" width="175">
+			<label value="Help Keyword:" />
+			<image src="/img/icons/icon_q.png" tooltip="help4"  style="padding-left:40px;" />
+					<popup id="help4"  width="400px"  style="bgcolor:#CCCCCC" >
+						<h:table   >
+							<h:tr>
+								<h:td>
+									<image src="/img/icons/icon_bulb.png" />
+								</h:td>
+								<h:td>
+									<label value="Subscribers can send SMS with this keyword to receive customer support information." />
+								</h:td>
+							</h:tr>
+						</h:table>								
+					
+					</popup>
+			
+			
+		</h:td>
+
+		<h:td valign="top" colspan="2">
+			<textbox id="helpKeywordTbId" value=""
+				name="shortCodeTb" width="250px" maxlength="100" />
+				<popup id="helpkeywordHelp"  width="400px"  style="bgcolor:#CCCCCC" >
+								<h:table   >
+									<h:tr>
+										<h:td>
+											<image src="/img/icons/icon_bulb.png" />
+										</h:td>
+										<h:td>
+											<label value="A keyword can contain only alphabets." />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+										</h:td>
+										<h:td>
+											<label value=" Minimum length of keyword string is 4." />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+				
+		</h:td>
+	</h:tr>
+	
+	<h:tr>
+		<h:td valign="top" width="175">
+			<label value="Help Message:" />
+		</h:td>
+
+		<h:td valign="top" width="260">
+		<textbox id="caretPosTB4" visible="false" />
+			<textbox id="helpMsgTbId" value=""
+				name="shortCodeTb"
+				style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 				14px;line-height: 1.5em;margin-top:10px;padding-top:25px;"
+				 width="250px" height="160px" multiline="true" w:onClick="updateCaretPosition('$helpMsgTbId', '$caretPosTB4')"
+				w:onChanging="updateCaretPosition('$helpMsgTbId', '$caretPosTB4')"
+				w:onFocus="updateCaretPosition('$helpMsgTbId', '$caretPosTB4')"/>
+				<label value="" id="helpHeaderLblId" style="color:#666666;left:10px;position:relative;top:-185px;"/>
+		</h:td>
+		<h:td valign="top"  >
+			<h:table cellspacing="5" cellpadding="5" width="100%"
+				align="left" >
+			<h:tr>
+	    		<h:td>
+	    		
+	    		<textbox value="Use Url Shortener"
+					width="300px" id="helplinkURLTxtBoxId" />
+				<button id="helpinsertLinkBtnId"
+					label="Insert" sclass="idle70" />
+	    		
+	    		</h:td>
+	    		</h:tr>
+	    		<h:tr>
+	    		<h:td>	
+			<a id="checkhelpTemplateAnchId"  sclass="tbbLink"
+				label="Check template"
+				style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+				<div id="helpMsgTemplateDivId" visible="false"  style="border:1px solid #E1E1E1;">
+					   <html id="helpMsgTemplateHtmlId" />
+		     		</div>
+		</h:td>
+		</h:tr>
+		</h:table>
+		</h:td>
+		</h:tr>
+		<h:tr>
+			<h:td />
+			<h:td valign="top" 
+				colspan="2">
+				<label value="No. of Characters / Messages"
+					style="font-weight:bold;" />
+				<textbox id="helpcharCountTbId" readonly="true"
+					value="0" width="70px" />
+				<label value="(160 Characters per SMS, including header)" />
+			</h:td>
+		</h:tr>
+		
+	</h:table>
+	</groupbox>
+	<separator/>
+	
+		<div align="right" style="margin-right:10px;">
+			<button id="backBtnId" label="Back" sclass="idle140" />
+			<button id="confirmBtn1Id" label="Confirm"
+				sclass="idle140 greenbtn" />
+
+	</div>
+
+	
+	
+
+</div>
+
+</window>
+</zk>	

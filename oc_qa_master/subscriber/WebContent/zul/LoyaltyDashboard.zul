@@ -1,0 +1,273 @@
+<zk>
+	<window width="100%" xmlns:h="native" apply="org.mq.marketer.campaign.controller.LoyaltyDashboardController">
+	
+		
+		<h:table width="100%"><h:tr>
+		<h:td width="55%">
+		
+		<groupbox closable="false">
+			<caption label="Activity" />
+		 	<div  style="padding-left:10px;">
+			
+			<hbox align="center" style="margin:5px;">
+				<label value="Time period:"  sclass="boldLabel"/>
+				<a label="1d" id="actOneDayAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="1w" id="actOneWeekAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="1m" id="actOneMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="3m" id="actThreeMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="6m" id="actSixMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="1y" id="actOneYrAId" sclass="dashboardMyLinks"/> 
+				 
+				<checkbox id="compToPastChkBxId" label="Compare to past" 
+					style="font-weight:bold;margin-left:10px;display:inline-block;"/>
+			</hbox>
+			<hbox align="center">	
+				<label value="From: " />
+				 <datebox id="activityFilterStartDtBxId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no future" readonly="true"/> <space width="5px"/>
+				<label value="To: " style="margin-left:5px;"/>
+				 <datebox id="activityFilterEndDtBxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			
+				<div id="compareToDivId" style="display:inline" visible="false">	
+					<label value="( Compared to : " style="margin-left:10px;" sclass="boldLabel" />
+					<label id="pastStartAndEndDateLblId" value="" /> 
+					<label value=" )" sclass="boldLabel" />
+				</div>
+			</hbox>
+
+			<h:br/>
+			<h:table class="tableBoldData">
+			  
+			  <h:tr height="45" valign="top">
+			  	<h:td width="180"><label value="Loyalty Enrollments : "></label> </h:td>  
+			  	<h:td width="130">
+			  		<label id="loyaltyOptinsLblId" /><h:br/>
+			  		<label id="loyaltyOptinsPersentLblId" value="" style="font-size:10px;color:#999;"/>
+			  		<label  value="% of Total Shoppers" style="font-size:9px;color:#999;"/>
+			  	</h:td>
+			  	<h:td>
+			  		<div id="pastDatesRevDivId" sclass="compareUp" visible="false">
+			  			( <label id="pastDatesRevLblId"  sclass="compareArrow"/> ) 	
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+			  
+			  <h:tr height="40" valign="top">
+			  	<h:td ><label value="Visits from Loyalty Members : "/></h:td>  
+			  	<h:td >
+			  		<label id="loyaltyShoppersLblId" value="0"/> <h:br/>
+			  		<label id="loyaltyShoppersPersentLblId"  style="font-size:10px;color:#999;"/>
+			  		<label  value="% of Total Shoppers" style="font-size:9px;color:#999;"/>
+			  	</h:td>
+			  	<h:td>
+			  		<div id="loyaltyShoppersCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="loyaltyShoppersCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+
+			<!--   <h:tr height="40" valign="top">
+			  	<h:td ><label value="Gift-card Shoppers : "/></h:td>  
+			  	<h:td >
+			  		<label id="giftcardShoppersLblId" value="1000"/> <h:br/>
+			  		<label id="giftcardShoppersPersentLblId"  style="font-size:10px;color:#999;"/>
+			  		<label  value="% of Total Shoppers" style="font-size:9px;color:#999;"/>
+			  	</h:td>
+			  	<h:td>
+			  		<div id="giftcardShoppersCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="giftcardShoppersCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr> -->
+
+			  <h:tr height="40" valign="top">
+			  	<h:td ><label value="Revenue from Loyalty-Members : "/></h:td>  
+			  	<h:td >
+			  		<label id="loyaltyRevenueLblId" value="0"/> <h:br/>
+			  		<label id="loyaltyRevenuePersentLblId" value="0" style="font-size:10px;color:#999;"/>
+			  		<label  value="% of Total Revenue" style="font-size:9px;color:#999;"/>
+			  	</h:td>
+			  	<h:td>
+			  		<div id="loyaltyRevenueCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="loyaltyRevenueCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+
+			 <!--  <h:tr height="40" valign="top">
+			  	<h:td ><label value="Revenue from Gift-Cards : "/></h:td>  
+			  	<h:td >
+			  		<label id="giftcardRevenueLblId" value="1000"/> <h:br/>
+			  		<label id="giftcardRevenuePersentLblId" value="0" style="font-size:10px;color:#999;"/>
+			  		<label  value="% of Total Shoppers" style="font-size:9px;color:#999;"/>
+			  	</h:td>
+			  	<h:td>
+			  		<div id="giftcardRevenueCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="giftcardRevenueCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr> -->
+
+			  <h:tr height="40" valign="top">
+			  	<h:td ><label value="No. of Loyalty Redemptions : "/></h:td>  
+			  	<h:td >
+			  		<label id="noofRedemptionsLblId" value="0"/> 
+			  	</h:td>
+			  	<h:td>
+			  		<div id="noOfRedemptionsCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="noOfRedemptionsCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+			  <h:tr height="40" valign="top">
+			  	<h:td ><label value="Points Issued in Loyalty : "/></h:td>  
+			  	<h:td >
+			  		<label id="noofPointIssuancesLblId" value="0"/> 
+			  	</h:td>
+			  	<h:td>
+			  		<div id="noOfPointIssuancesCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="noOfPointIssuancesCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+			   <h:tr height="40" valign="top">
+			  	<h:td ><label value="Amount Issued in Loyalty : "/></h:td>  
+			  	<h:td >
+			  		<label id="noofIssuancesLblId" value="0"/> 
+			  	</h:td>
+			  	<h:td>
+			  		<div id="noOfIssuancesCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="noOfIssuancesCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+			  
+			   <h:tr height="40" valign="top">
+			  	<h:td ><label value="Points Redeemed in Loyalty : "/></h:td>  
+			  	<h:td >
+			  		<label id="pointsReedemedLblId" value="0"/> 
+			  	</h:td>
+			  	<h:td>
+			  		<div id="pointsReedemedCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="pointsReedemedCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+
+			  <h:tr height="40" valign="top">
+			  	<h:td ><label value="Amount Redeemed in Loyalty : "/></h:td>  
+			  	<h:td >
+			  		<label id="amountReedemedLblId" value="0"/> 
+			  	</h:td>
+			  	<h:td>
+			  		<div id="amountReedemedCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="amountReedemedCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+
+			 <h:tr height="40" valign="top">
+			  	<h:td ><label value="Gift-Card Issuances : "/></h:td>  
+			  	<h:td >
+			  		<label id="giftCardISSLblId" value="0"/> 
+			  	</h:td>
+			  	<h:td>
+			  		<div id="giftCardIssCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="giftCardIssCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+			  
+			    <h:tr height="40" valign="top">
+			  	<h:td ><label value="Revenue from Gift-Cards : "/></h:td>  
+			  	<h:td >
+			  		<label id="giftcardRevenueLblId" value="0"/> <h:br/>
+			  		<label id="giftcardRevenuePersentLblId" value="0" style="font-size:10px;color:#999;"/>
+			  		<label  value="% of Total Revenue" style="font-size:9px;color:#999;"/>
+			  	</h:td>
+			  	<h:td>
+			  		<div id="giftcardRevenueCompDivId" sclass="compareDown" visible="false">
+			  			( <label id="giftcardRevenueCompLblId"  sclass="compareArrow"/> ) 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+			
+			</h:table> 
+			</div> 
+		</groupbox>
+		
+		</h:td>
+		<h:td width="5"/>
+		<h:td valign="top">
+		
+		<groupbox closable="false">
+			<caption label="Trends"> </caption>
+			<div  style="padding:15px;">
+			<hbox style="margin-bottom:10px">
+				<label value="Time Period : "/>
+				<a label="Last Week" id="trendsLstWeekAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="Last Month" id="trendsLstMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="Last 3 Months" id="trendsLstThreeMnthsAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="Last 6 Months" id="trendsLastSixMonthsAId" sclass="dashboardMyLinks"/>  
+			</hbox>
+			
+				<label value="Start Date : " /><datebox id="trendsStartDateId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no future" readonly="true" />
+				<label value="End Date : " /><datebox id="trendsEndDateId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no future" readonly="true"/>
+			
+			<h:br/><h:br/>
+			<h:table class="tableBoldData">
+			  
+			  <h:tr height="40" valign="top">
+			  	<h:td width="230">
+			  		<label value="Top Loyalty Enrolling Store : " /></h:td>  
+			  		<h:td><label value="" id="topLoyaltyOptinLocationLblId" /></h:td> 
+			  	</h:tr>
+			  <h:tr height="40" valign="top">
+			  	<h:td>
+			  		<label value="Top Gift-Issuing Store : " /></h:td>  
+			  		<h:td><label value="" id="topLoyaltyOptinEmpIDLblId" /></h:td> 
+			  	</h:tr>
+			  <h:tr height="40" valign="top" style="display:none">
+			  	<h:td >
+			  		<label value="Avg. Spending by Loyalty Shopper : " /></h:td>  
+			  		<h:td>
+			  		<label value="$ 100" id="avgSpendingsByLoyaltyShopperLblId" />	<h:br/>
+			  		<label id="avgSpendingsByLoyaltyShopperPersentLblId" value="0" style="font-size:10px;color:#999;"/>
+			  		<label  value=" % more than Non-Loyalty Shoppers." style="font-size:10px;color:#999;"/>
+			  		</h:td> 
+			  	</h:tr>
+			
+			</h:table>    
+			</div>
+		</groupbox>
+		
+		<separator />
+		<groupbox closable="false" visible="false" >
+			<caption label="Loyalty"/>
+				
+				<div sclass="linksDiv">
+					<image src="img/optDash/OptIntel_reports_icn.png" align="left"  />
+					 <a id="viewEmailAId" label="Loyalty Reports"  />
+					 <label value="View, detailed reports on your Loyalty Program." />
+				</div>
+				
+			</groupbox>
+		
+		</h:td>
+		</h:tr>
+
+		</h:table>
+		
+		<window id="viewLogsWinId" visible="false" width="500px"  border="normal"  closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<grid id="viewLogsGridId">
+				<columns>
+					<column label="File Name"></column>
+					<column label="File Type"></column>
+					<column label="Time Of Fetch"></column>	
+				</columns>
+			</grid>
+			<button id="closeInnerWinBtnId" label="Close" />
+		</window>
+	
+	</window>
+</zk>

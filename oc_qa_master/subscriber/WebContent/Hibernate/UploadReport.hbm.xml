@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 2:15:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UploadReport"
+		table="upload_report">
+		<id name="uploadReportId" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<property name="fileName" type="string" column="filename"
+			length="250" not-null="true" />
+		<property name="uploadedTo" type="string" column="uploaded_to"
+			length="50" />
+		<property name="module" type="string" column="module"
+			length="50" />
+		<property name="date" type="calendar" column="date" />
+		<property name="report" type="text" column="report" />
+		<property name="status" type="string" column="status"
+			length="30" />
+	</class>
+</hibernate-mapping>

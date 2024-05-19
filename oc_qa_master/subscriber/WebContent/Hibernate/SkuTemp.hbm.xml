@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SKUTemp"
+		table="sku_temp">
+		<id name="skuTempId" type="java.lang.Long" column="sku_temp_id">
+			<generator class="native" />
+		</id>
+		<property name="skuAttribute" type="string" >
+			<column name="sku_attribute"  />
+		</property>
+		<property name="skuValue" type="string" >
+			<column name="sku_value"  />
+		</property>
+		
+    	<property name="Program" type="string">
+      		<column name="program"/>	
+    	</property>
+    	<property name="tierNum" type="string">
+      		<column name="tier_num"/>	
+    	</property>
+    	
+    	<property name="CardSetNum" type="string">
+      		<column name="CardSet_Num"/>	
+    	</property>
+    	
+		<property name="userId" type="long" >
+			<column name="user_id"  />
+		</property>
+		
+		<property name="couponId" type="long">
+      		<column name="coupon_id"/>
+    	</property>
+    	<property name="discount" type="double" >
+			<column name="discount"  />
+		</property>
+		
+		<property name="discountType" type="string">
+      		<column name="discount_type"/>
+    	</property>
+    	<property name="totPurchaseAmount" type="long" >
+			<column name="total_purchase_amt"  />
+		</property>
+    	
+		<property name="ownerId" type="java.lang.Long" >
+			<column name="owner_id"  />
+		</property>
+		
+		<property name="maxDiscount" type="double">
+			<column name="max_discount" />
+		</property>
+		<property name="quantity" type="string">
+			<column name="quantity"  />
+		</property>
+		<property name="limitQuantity" type="string">
+			<column name="limit_quantity"  />
+		</property>
+		<property name="itemPrice" type="double">
+			<column name="itemPrice"  />
+		</property>
+		<property name="itemPriceCriteria" type="string">
+			<column name="itemPriceCriteria"  />
+		</property>
+		<property name="noOfEligibleItems" type="string">
+			<column name="no_of_eligile_items"  />
+		</property>
+		<property name="eliRule" type="string">
+			<column name="eli_rule"  />
+		</property>
+	</class>
+</hibernate-mapping>

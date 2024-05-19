@@ -1,0 +1,309 @@
+<zk>
+	<style>
+		.listsLb{
+			color:#073B6F;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+			//padding-left:20px;
+		}
+		.heading{
+			color:#000;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+		}
+
+		div.z-listbox.contactsView tr.z-list-item-seld {
+			background-color:#99C9DF;
+		}
+		div.z-listbox.contactsView {
+			border:1px solid #d9d9d9;
+		}
+	</style>
+	<window id="uploadConWinId" width="100%" apply="org.mq.marketer.campaign.controller.contacts.UploadContactController"
+				 xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:h="native">
+	<script type="text/javascript">
+		<![CDATA[
+			function getSelectedListInfo(listbox, label) {
+				var selItems = listbox.getSelectedItems();
+				var selNames = '';
+				if(selItems.length == 0) {
+					zk.Widget.$("$selectListDivId").hide(); 
+				}else {
+					zk.Widget.$("$selectListDivId").show(); 
+				}
+					
+				for(i = 0;i < selItems.length; i++) {
+					if(selNames.length != 0) selNames = selNames + ', ';
+					selNames = selNames + selItems[i].getLabel();
+				}
+				label.setValue(selNames);
+			}
+		]]>
+		</script>
+		
+		<tabbox  width="99%" id="viewTabboxId" >
+		  <tabs>
+				<tab  label="Add to Existing List(s)" id="selListTbbId" selected="true"/>
+		  		<tab label="Create New List" id="newListTbbId"/>
+		  </tabs>
+	  	  <tabpanels>
+			<tabpanel>
+			
+			
+			<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+				<caption label="Select List(s)"  />
+				
+				
+				<div id="existsDivId" >
+					<h:table  cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td width="360">
+								<listbox id="mListLbId" width="350px" multiple="true" checkmark="true" rows="6" w:onSelect="getSelectedListInfo(this,this.$f('selectedListsLbId'))" sclass="contactsView">
+									<listhead style="background-color:#488eb0;">
+										<listheader label="List Name" width="100%" align="left" maxlength="30"/>
+									</listhead>
+									<!--<listitem forEach="${uploadConWinId$UploadContactController.mailingLists}" value="${each}" style="line-height:22px;">
+										<listcell  label="${each.listName}" tooltiptext="${each.listName}">
+										</listcell>
+									</listitem>
+								--></listbox>
+							</h:td>
+							<h:td style="vertical-align: top;">
+							<div style="padding:10px;" id="selectListDivId" visible="false">
+								<label style="color:#09719F;" value="Currently selected  Contact List(s): " />
+								<label value="" id="selectedListsLbId" style="color:#2886B9;" sclass="listsLb" multiline="true"  />
+							</div>
+							</h:td>
+						</h:tr>
+					</h:table>
+				</div>
+			</groupbox>
+			<groupbox sclass="gbStyle" closable="false" style="padding:15px 10px">
+				<caption label="Add Contacts"  />
+				
+				<radiogroup id="optnRbId" orient="vertical">
+					<!-- 
+						<radio label="Add Manually" selected="true"/>
+						<radio label="Import from files (type.csv)"/> -->
+						
+						<radio label="Import from files (type.csv)" selected="true"/>
+						<radio label="Add Manually" />
+					
+				</radiogroup>
+			</groupbox>
+			
+			</tabpanel>
+			<tabpanel>
+			
+			
+				<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+				<caption label="Create list"  />
+				
+				<div id="newDivId" width="100%" > 
+					<h:table cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td width="200" >
+								<label value="List Name :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="newMlNameTbId" width="270px" maxlength="50" cols="30"/>
+							</h:td>	
+						</h:tr>
+						<h:tr>
+							<h:td valign="top">
+								<label value="Description :" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="newMlDescTbId" rows="5" width="270px" maxlength="125" height="100px"/>
+							</h:td>	
+						</h:tr>	
+						<h:tr>
+							<h:td >
+								<label value="Is POS List :" visible="false"/>
+							</h:td>
+							
+							<h:td >
+								
+								<checkbox id="posTypeChkBox" visible="false"/>
+								
+							</h:td>	
+						</h:tr>
+					</h:table>
+				</div>
+				</groupbox>
+				
+				
+				<groupbox sclass="gbStyle" closable="false" style="padding:15px 10px">
+				<caption label="Add Contacts"  />
+				
+				<radiogroup id="newListoptnRbId" orient="vertical">
+					
+						<!-- <radio label="Add Manually"  selected="true"/>
+						<radio label="Import from files (type.csv)"/> -->
+						<radio label="Import from files (type.csv)" selected="true"/>
+					    <radio label="Add Manually"  />
+				</radiogroup>
+				</groupbox>
+				
+				
+				
+				
+				<div id="listManagementOptionsDivId" visible="false">
+				<groupbox sclass="gbStyle" closable="false" style="padding:15px 10px">
+					<caption label="Opt-in Preference" />
+					<div id="confirmOptDiv" visible="false" >
+					
+						<h:table>
+							<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Double Opt-in email:" />
+								</h:td>
+								
+								<h:td style="padding-left:40px;">
+									<checkbox id="doubleOptInCbId"  checked="false" style="padding-right:0px;" />
+									</h:td>
+							</h:tr>
+							</h:table>
+							
+						 	<div id="doubleOptLtDiv" width="100%" visible="false" style="z-index: 0;">
+		          				<h:table cellspacing="0" width="100%" cellpadding="0">
+		          				<h:tr>
+		          					<h:td width="200" style="padding:10px 0px 10px; 3px;">
+		          					
+		          						<label value="Opt-in Email:" />
+		          					</h:td>
+		          					
+		          					<h:td  valign="top"  style="padding:10px 0px 10px 40px;">
+										
+										
+										<listbox id="optInEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Select  Message">
+										   
+										 </listitem>
+										
+										</listbox>
+																			
+										<image id="imagePreviewId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="previewBtnId" sclass="idle140"/>
+										<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="editMsgBtnId" sclass="idle140"/>
+										<a label="Add New Message" visible="false" style="color:#43A0BA;margin-left:10px;" id="addNewBtnId" sclass="idle140"/>
+					        		</h:td>
+					        	</h:tr>
+					        	<h:tr>
+				            	<h:td width="200"></h:td>
+				            	<h:td >
+				            		<hlayout visible="false" style="padding:10px 0px 10px 40px;">
+				            		
+				            		<label value="Text:" style="padding:0px 10px 0px 0px;"  />	            	
+				            	  <div width="90%" height="200px" style="overflow:auto;border:1px solid #e1e1e1;" > 
+								     <html id="welcomeHTMl"  ></html>
+									</div>
+				            		
+				            		</hlayout>
+								</h:td>
+								</h:tr>
+								</h:table>
+					
+	         				</div>   
+					</div>
+					
+					
+					
+					<div id="confirmParentalConsentDiv" visible="false" >
+					
+						<h:table>
+							<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Parental Consent email:" />
+								</h:td>
+								
+								<h:td style="padding-left:40px;">
+									<checkbox id="parentalConsentCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+							</h:tr>
+						</h:table>
+							
+						 	<div id="ConsentDiv" width="100%" visible="false" style="z-index: 0;">
+		          				<h:table cellspacing="0" width="100%" cellpadding="0">
+		          				<h:tr>
+		          					<h:td width="200" style="padding:10px 0px 10px; 3px;">
+		          					
+		          						<label value="Parental Consent Email Message:" />
+		          					</h:td>
+		          					
+		          					<h:td  valign="top"  style="padding:10px 0px 10px 40px;">
+										
+										
+										
+										<listbox id="consentEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Default  Message">
+										   
+										 </listitem>
+										
+										</listbox>
+										<a label="Add New Message" visible="false" style="color:#43A0BA;margin-left:10px;" id="addNewConsentBtnId" sclass="idle140"/>
+										
+										<image src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="parentalPreviewBtnId" sclass="idle140"/>
+										<a label="Edit Message" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="parentalEditMsgBtnId" sclass="idle140"/>
+										
+					        		</h:td>
+					        	</h:tr>
+					        	<h:tr>
+				            	<h:td width="200"></h:td>
+				            	<h:td >
+				            		
+								</h:td>
+								</h:tr>
+								</h:table>
+					
+	         				</div>   
+					</div>
+					
+					
+					<checkbox id="purgeCbId" label=" Purge the contents after upload" checked="true" visible="false"></checkbox>
+				
+				<h:br/></groupbox>
+	             </div>
+			
+			
+			</tabpanel>
+			
+			</tabpanels>
+			</tabbox>
+		
+				           
+			<h:table width="100%">
+				<h:tr>
+					<h:td  align="right">
+						<button label="Proceed" id="nextBtnId" sclass="idle140 greenbtn"/>
+					</h:td>
+				</h:tr>
+		</h:table>
+		
+		
+	<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+		</caption>
+		<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+		<iframe id="html" width="100%" height="100%"/>
+		</div>
+	</window>
+		
+		
+		
+	</window>	
+		
+		
+		<style>
+			.contactsView div.z-listbox-body .z-list-cell {
+				line-height:25px;
+			}
+		</style>
+	
+	
+</zk>

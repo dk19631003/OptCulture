@@ -1,0 +1,60 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="autoProgramTargetTimerEvantWinId" apply="org.mq.marketer.campaign.controller.program.AutoProgramTargetTimerEventController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native" width="520px" height="300px" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+		<div id="centerDivId" height="300px"> 
+			<h:table width="100%" height="100%" >
+			<h:tbody>
+			
+			<h:tr>
+				<h:td style="padding:20px; background-color: #F4F8FC;">
+					<label width="150px" style="font-family:arial;font-size:12px;" multiline="true">
+							->This component acts as a Timer which allows the contact to move further only if the 
+							  target time has reached. 
+							
+							->The Date box allows to set the target date and time.
+							
+						</label>
+				</h:td>
+			</h:tr>
+			<h:tr >
+				<h:td valign="top">
+					
+					<!--<label value="Email Campaigns:"/>
+					<label value="Wait For:" style="font-weight:bold;"/>
+					<listbox id="LbId" rows="5" mold="select"  
+					  sclass="contactsView" width="100px" >
+					  
+					  <listitem  forEach="${autoProgramElapseTimerEvantWinId$AutoProgramElapseTimerEventController.elapseDays}" 
+					  	label="${each.}" value="${each}" style="line-height:22px;">
+					  	
+						</listitem>
+					  
+					  
+					  
+					  </listbox>
+					  <label value="Days" style="font-weight:bold;"/>
+				-->
+				<label value="Target Time:"/>
+				<datebox id="targettimeDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox"  constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy HH:mm"/>
+				
+				</h:td>
+			</h:tr>
+			
+			</h:tbody>
+			</h:table>
+		</div>
+		
+		
+		<!-- <h:hr/>
+		<div id="bottomDivId" align="right" height="60px" >
+			<button label="Cancel" width="80px" onClick="propertiesWinId.setVisible(false);" />
+			<button label="Save" width="80px" />
+		</div> -->
+		
+		
+		
+		
+	</window>
+</zk>

@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.Users" table="users" lazy="false"> 
+		<id name="userId" type="java.lang.Long" column="user_id">
+			<generator class="native" />
+		</id>
+		<property name="mqsId" type="string" column="mqs_id"
+			length="20" />
+		<property name="userName" type="string" column="username"
+			length="400" unique-key="Unique_username" lazy="false" />
+		<property name="password" type="string" column="password"
+			length="256" />
+		<property name="emailId" type="string" column="emailId"
+			length="60" />
+		<property name="firstName" type="string" column="first_name"
+			length="50" />
+		<property name="lastName" type="string" column="last_name"
+			length="75" />
+		<property name="companyName" type="string" column="company_name"
+			length="100" />
+		<property name="createdDate" type="calendar"
+			column="created_date" />
+		<property name="addressOne" type="string" column="address_one"
+			length="55" />
+		<property name="addressTwo" type="string" column="address_two"
+			length="55" />
+		<property name="city" type="string" column="city" length="55" />
+		<property name="state" type="string" column="state" length="45" />
+		<property name="country" type="string" column="country"
+			length="45" />
+		<property name="pinCode" type="string" column="pin_code"
+			length="20" />
+		<property name="phone" type="string" column="phone" length="30" />
+		<!-- <property name="vmta" type="string" column="vmta" length="100" /> -->
+		<many-to-one name="vmta" class="org.mq.marketer.campaign.beans.Vmta" foreign-key="id" fetch="select" >
+   			<column name="vmta" />
+  		</many-to-one>
+		<property name="enabled" type="boolean" column="enabled" />
+		<property name="emailCount" type="java.lang.Integer" column="email_count"  />
+		<property name="usedEmailCount" type="java.lang.Integer" column="used_email_count"  />
+		
+		<property name="clientTimeZone" type="string" column="client_time_zone"/>
+		<property name="smsCount" type="java.lang.Integer" >
+			<column name="sms_count" default="0" />
+			</property>
+		<property name="allowBothDiscounts" type="boolean">
+			<column name="allow_both_discounts" default="false"  />
+		</property>
+		
+		<property name="usedSmsCount" type="java.lang.Integer" >
+			<column name="used_sms_count" default="0" />
+			</property>
+		<property name="packageStartDate" type="calendar" column="package_start_date" />
+		<property name="packageExpiryDate" type="calendar" column="package_expiry_date" />
+		<property name="userActivitySettings" type="string" column="user_activity_settings" />
+		<property name="footerEditor" type="java.lang.Byte" column="footer_editor"/>
+		
+		<set name="userDomains" table="users_domains" >
+			<key column="user_id" />
+			<many-to-many class="org.mq.marketer.campaign.beans.UsersDomains" column="domain_id" /> 
+		</set>
+		<property name="ignoretrxUpOnExtraction" type="boolean" >
+			<column name="ignore_trx_upon_extraction" default="true" />
+		</property>
+		
+		<many-to-one name="userOrganization"
+			class="org.mq.marketer.campaign.beans.UserOrganization" foreign-key="orgId"
+			fetch="select" >
+			<column name="user_organization" />
+		</many-to-one>
+		
+		<property name="accountType" type="string" >
+			<column name="account_type" length="100" />
+		</property>
+		
+		<many-to-one name="parentUser" class="org.mq.marketer.campaign.beans.Users" lazy="false"  column="parent_user_id" />
+		<property name="excludeDiscPerc" type="double">
+			<column name="exclude_disc_perc" default="0"/>
+		</property>
+		
+		<property name="token" type="string" unique="true">
+			<column name="token" length="100" />
+		</property>
+		<property name="CIMProfileId" type="string" unique="true">
+			<column name="cim_profile_id" length="20" />
+		</property>
+		
+		<set name="roles" table="users_roles" >
+			<key column="user_id" />
+			<many-to-many class="org.mq.marketer.campaign.beans.SecRoles" column="role_id" />
+		</set>
+		
+		<property name="digitalReceiptExtraction" type="boolean" >
+			<column name="digital_receipt_extraction" default="false" />
+		</property>
+		
+          <property name="showOnlyHighestDiscReceiptDC" type="boolean" >
+			<column name="show_only_highest_disc_receiptDC" default="true" />
+		</property> 
+		<property name="showOnlyHighestLtyDC" type="boolean" >
+			<column name="show_only_highest_ltyDC" default="false" />
+		</property> 
+		<property name="enableLoyaltyExtraction" type="boolean" >
+			<column name="enable_loyalty_extraction" default="false" />
+		</property>
+		<!-- <property name="enrollAllRequests" type="boolean" >
+			<column name="enroll_all_requests" default="false" />
+		</property> -->
+		<property name="enrollFromDR" type="boolean" >
+			<column name="enroll_from_DR" default="false" />
+		</property>
+		<property name="issuanceFromDR" type="boolean" >
+			<column name="issuance_from_DR" default="false" />
+		</property>
+		<property name="returnFromDR" type="boolean" >
+			<column name="return_from_DR" default="false" />
+		</property>
+		<property name="performRedeemedAmountReversal" type="boolean" >
+			<column name="perform_redeemed_amount_reversal" default="false" />
+		</property>
+		<property name="redemptionFromDR" type="boolean" >
+			<column name="redemption_from_DR" default="false" />
+		</property>
+		<property name="redeemTender" type="string" >
+			<column name="redeem_tender" length="100" />
+		</property>
+		<property name="nonInventoryItem" type="string" >
+			<column name="non_inventory_item" length="100" />
+		</property>
+		<property name="excludeDiscountedItem" type="boolean" >
+			<column name="exclude_discounted_item" default="false" />
+		</property>
+		<property name="excludeGiftRedemption" type="boolean" >
+			<column name="exclude_gift_redemption" default="false" />
+		</property>
+		
+		<property name="enablePromoRedemption" type="boolean" >
+			<column name="enable_promo_redemption" default="false" />
+		</property>
+		<property name="itemNoteUsed" type="string" >
+			<column name="item_note_used" length="100" />
+		</property>
+		<property name="receiptNoteUsed" type="string" >
+			<column name="receipt_note_used" length="100" />
+		</property>
+		<property name="itemInfo" type="string" >
+			<column name="item_info" length="100" />
+		</property>
+		<property name="cardInfo" type="string" >
+			<column name="card_info" length="100" default="'BillToInfo1'"/>
+		</property>
+		<!-- <property name="transactionalMsgChk" type="boolean" >
+			<column name="transactional_msg_chk" default="false" />
+		</property> -->
+		<property name="MsgChkType" type="string" >
+			<column name="msg_chk_type" length="100" />
+		</property>
+		<property name="userSMSTool" type="string" column="user_sms_tool" length="100" />
+	<!-- <property name="countryCarrier" type="java.lang.Byte" column="country_carrier"  /> -->
+	<property name="countryCarrier" type="java.lang.Short" column="country_carrier"  />
+		<!-- <property name="countryCode" type="string" column="country_code" length="100" /> -->
+	<property name="subscriptionEnable" type="boolean">
+			<column name="subscription_enabled" default="false"  />
+		</property>
+		
+		<property name="countryType" type="string" >
+			<column name="country_type" length="100" />
+		</property>
+		
+		<property name="enableSMS" type="boolean">
+			<column name="enable_SMS" default="false"  />
+		</property>
+		
+		<!-- APP-4288 -->
+		<property name="enableWA" type="boolean">
+			<column name="enable_WA" default="false"  />
+		</property>
+		
+		<property name="enableSmartEReceipt" type="boolean">
+			<column name="enable_smart_ereceipt" default="false"  />
+		</property>
+		
+		<property name="considerSMSSettings" type="boolean">
+			<column name="consider_SMS_settings" default="false"  />
+		</property>
+		
+		<property name="lastLoggedInTime" type="calendar">
+			<column name="last_logged_in_time"  />
+		</property>
+		<property name="mandatoryUpdatePwdOn" type="calendar">
+			<column name="mandatory_update_pwd_on"  />
+		</property>
+		
+		<property name="optInMedium" type="java.lang.Byte" column="optin_medium"/>
+		
+		<property name="optinRoute" type="string" >
+			<column name="optin_route" length="100" />
+		</property>
+		
+		<property name="optinMobileByDefault" type="boolean" >
+			<column name="optin_mobile_by_default" default="false" />
+		</property>
+		
+		<property name="weeklyReportEmailId" type="string" >
+			<column name="weekly_report_email_id"  />
+		</property>
+		
+		<property name="campExpEmailId" type="string" >
+			<column name="camp_exp_email_id" length="150" />
+		</property>
+		
+		<property name="weeklyReportTime" type="time"
+			column="weekly_report_time" />
+		
+		<property name="weeklyReportDay" type="java.lang.Integer" >
+			<column name="weekly_report_day" default="0" />
+		</property>	
+		
+		<property name="enableUnsublink" type="boolean" >
+			<column name="enable_unsub_link" default="false" />
+		</property>
+		
+		<property name="unsuburl" type="string" >
+			<column name="unsub_url" />
+		</property>
+		
+		<property name="weeklyReportTypeEmail" type="boolean" >
+			<column name="weekly_report_type_email" default="false"/>
+		</property>
+		
+		<property name="weeklyReportTypeSMS" type="boolean" >
+			<column name="weekly_report_type_sms" default="false"/>
+		</property>
+		
+		
+		<!-- loyaltyServicetype column is added in 2.4.11 -->	
+		<property name="loyaltyServicetype" type="string" >
+			<column name="loyalty_service_type"/>
+		</property>		
+		<property name="POSVersion" type="string" >
+			<column name="POS_version"/>
+		</property>	
+		
+		
+		<property name="zoneWise" type="boolean" >
+			<column name="zone_wise" default="false"/>
+		</property>
+		
+		<property name="specificDir" type="boolean">
+			<column name="is_specific_dir" default="false"  />
+		</property>
+		
+		<property name="newPlugin" type="boolean" >
+			<column name="new_plugin" default="false"/>
+		</property>	
+		<property name="validateItemsInReturnTrx" type="boolean" >
+			<column name="validate_items_in_return_trx" default="false" />
+		</property>
+		<property name="ignorePointsRedemption" type="boolean">
+			<column name="ignore_points_redemption" default="true"  />
+		</property>
+		<property name="contractStores" type="string" column="contract_stores"
+			length="50" />
+		<property name="contractContacts" type="string" column="contract_contacts"
+			length="50" />
+		<property name="contractSMSAdded" type="string" column="contract_sms_added"
+			length="50" />
+		<property name="contractEReceiptsRestricted" type="string" column="contract_e_receipt_restricted"
+			length="50" />
+		<property name="redeemTenderDispLabel" type="string" column="redeem_tender_dispLabel"
+			 />
+		<property name="receiptOnSMS" type="boolean">
+			<column name="receipt_on_sms" default="false"/>
+		</property>
+		<property name="sendExpiryInfo" type="boolean">
+			<column name="send_expiry_info" default="false"/>
+		</property>
+		<property name="ignoreissuanceOnRedemption" type="boolean">
+			<column name="ignore_issuance_on_redemption" default="false"/>
+		</property>
+		<property name="selectedExpiryInfoType" type="string">
+			<column name="selected_expiry_info_type" />
+		</property>
+<property name="DRSMSContent" type="string" column="DR_SMS_content"
+			length="1000" />
+			<property name="DRSMSTempRegID" type="string" column="DR_SMS_tempRegID"
+			length="50" />
+			<property name="DRSMSSenderID" type="string" column="DRSMSSenderID"
+			length="50" />
+			<property name="redemptionAsDiscount" type="boolean">
+			<column name="redemption_as_discount" default="false"/>
+		</property>
+		
+		<property name="receiptOnWA" type="boolean">
+			<column name="receipt_on_WA" default="false"/>
+		</property>
+			<property name="WAAPIKey" type="string" column="WA_API_key"
+			length="50" />
+			<property name="WAAPIEndPointURL" type="string" column="WA_API_endpoint_URL" length="400" />
+			<property name="WATemplateID" type="string" column="WA_template_id"
+			length="50" />
+			<property name="WAUserID" type="string" column="WA_user_id"
+			length="50" />
+			<property name="WAJSONTemplate" type="string" column="WA_JSON_Template"
+			length="2000" />
+		<property name="enableNPS" type="boolean">
+			<column name="enable_NPS" default="false"/>
+			</property>
+			
+			<property name="NPSProductKey" type="string" column="NPS_product_key"
+			length="500" />
+			<property name="NPSEndPointURL" type="string" column="NPS_endpoint_URL"
+			length="500" />
+			<property name="NPSJSONTemplate" type="string" column="NPS_JSON_template"
+			length="500" />
+			<property name="NPSCookie" type="string" column="NPS_cookie"
+			length="500" />
+			
+		<property name="coOnWA" type="boolean">	<!-- app-3784  -->
+			<column name="co_on_WA" default="false"/>
+		</property>
+		<property name="confirmOrderJSONTemplate" type="string" column="confirmOrder_JSON_Template" length="1000" />
+		<property name="coCookie" type="string" column="co_cookie" length="1000" />
+		<property name="enableClickHouseDBFlag" type="boolean">
+			<column name="enable_clickhouse_DB_Flag" default="false"/>
+		</property>
+		<property name="QRCodeHTMLTemplate" type="string" column="QRCode_HTML_Template" length="2000" />
+		<property name="QRCodeToURL" type="string" column="QRCode_ToURL" length="500" />
+		<property name="OneQRCodeHtml" type="string" column="OneQRCodeHtml" length="2000" />
+		<property name="giftCardProgram" type="boolean">
+			<column name="gift_card_program" default="false"/>
+		</property>
+		<!-- APP-4657 -->
+		<property name="allowIssuanceOnOfferItem" type="boolean">
+			<column name="allow_issuance_on_offeritem" default="false"/>
+		</property>
+		<property name="enableEmail" type="boolean">
+			<column name="enable_email" default="false"/>
+		</property>
+		
+	</class>
+</hibernate-mapping>

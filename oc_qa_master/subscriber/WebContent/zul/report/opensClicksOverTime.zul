@@ -1,0 +1,76 @@
+<zk>
+	<style src="/css/reports.css" />
+	<window id="openClickWinId" width="100%" border="0" apply="org.mq.marketer.campaign.controller.report.OpensClicksOverTimeController" xmlns:h="native">
+		<groupbox sclass="gbStyle" closable="false"  >
+				<caption label="Opens and Clicks Over Time"  />
+		<h:table width="100%" cellpadding="2" cellspacing="2"  style="margin:3px">
+			<h:tr valign="bottom">
+		    	<h:td align="left">
+		    		<!--  <listbox id="timeOptionLbId" mold="select" onSelect="selectOption((String)self.getSelectedItem().getValue())">-->
+		    		<listbox id="timeOptionLbId" emptyMessage="No Records Found..." mold="select">	
+		    			<listitem label="Consolidated" value="0" selected="true"/>
+		    			<listitem label="Selected Date" value="1"/>
+		    			<listitem label="Between Dates" value="2"/>
+		    		</listbox>
+		    	</h:td>
+		    	<h:td class="subpagehead"   align="left">
+		    		<hbox align="center" >
+			    		<div id="startDivId" class="lefttext" visible="false">
+				    		<label id="date1LblId" value="Selected Date" />
+				    		<datebox id="datebox1Id" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+			    		</div>
+			    		<div id="endDivId" class="lefttext" visible="false">
+				    		<label id="date2LblId" value="To: " style="padding-left:10px;"/>
+				    		<datebox id="datebox2Id" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+			    		</div>
+		    		</hbox>
+		    	</h:td>
+		    	<h:td align="right" width="160">
+		    		<button label="Apply" sclass="idle140" id="refreshBtnId"/>
+		    	</h:td>
+		    	
+		    	
+			</h:tr>
+			</h:table>
+			
+			<h:table cellspacing="0" cellpadding="2" align="right" >
+				<h:tr>
+				<h:td align="right">
+				
+				<div style="height:10px;width:8px;background-color:#FF8282;"/></h:td>
+				<h:td align="left" style="padding-right:10px;">
+				<label value="Opens"/></h:td>
+				<h:td>
+				<div style="height:10px;width:8px;background-color:#8A8AFF;"/></h:td>
+				<h:td>
+				<label value="Clicks" /></h:td>
+				</h:tr>
+			</h:table>
+			<chart id="opensClicksChartId" width="650"  showTooltiptext="true" showLegend="false" height="300" orient="vertical" paneColor="#FFFFFF" type="line" threeD="false" fgAlpha="255" xAxis="Hours" yAxis="No. of Opens, Clicks" />
+		
+		
+		 <listbox id="opensClicksRateLbId" emptyMessage="No Records Found..." sclass="contactsView" width="99%"  >
+			<listhead style="background-color:#488eb0;">
+				<listheader label="Hour (range)" width="20%" align="center"/>
+				<listheader label="Unique Opens for hour" width="20%" align="center"/>
+				<listheader label="Total Opens for hour" width="20%" align="center"/>
+				<listheader label="Unique Clicks for hour" width="20%" align="center"/>
+				<listheader label="Total Clicks for hour" width="20%" align="center"/>
+			</listhead>
+		 </listbox>
+ 			
+ 			<h:table style="padding-top:20px;">
+ 				<h:tr>
+ 				 	<h:td>
+ 				 	<label value="Export as a" /> 
+				<combobox  id="exportCbId" readonly="true" sclass="cb_100w">
+			 	  		<comboitem label=" .csv file" value="csv" />    
+				</combobox> 
+				
+				<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportLblId" />
+ 				 	</h:td>
+ 				</h:tr>
+			</h:table>
+			</groupbox>
+	</window>
+</zk>

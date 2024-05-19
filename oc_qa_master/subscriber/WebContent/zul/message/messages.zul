@@ -1,0 +1,39 @@
+<zk>
+<window border="0" apply="org.mq.marketer.campaign.controller.message.MessagesController" xmlns:h="native">
+	
+	
+	<hlayout>
+
+	<div width="150px;">
+	
+					<div style="color:#000;cursor:pointer;" >
+						<image src="/img/icons/messages.gif"/>
+						<label value="Messages " style="color:black;cursor:pointer;font-weight:bold;"  id="inLblId"/>
+						[ <label value="0" id="unreadLblId" /> 	]
+		           </div>
+		           <separator/>
+		           <hlayout>
+						<image src="/img/icons/recyclebin.gif" />				
+						<label value="Trash" id="trashLblId" style="color:black;cursor:pointer;" />
+					</hlayout>
+	
+	</div>	
+	<vlayout>
+		<panel width="800px" border="normal"  sclass="messageBodyPanel1">
+			<panelchildren style="overflow:auto;"  id="msgPanelId">
+				<include id="msgsIncId" src="zul/message/inbox.zul" msgsLblId="msgsLblId" />		
+			</panelchildren>
+		</panel>
+		
+		<panel border="normal" title=" Message" height="211px" sclass="messageBodyPanel1">
+			<panelchildren style="padding:5px;overflow:auto;">
+				<label id="msgsLblId" value="" multiline="true" sclass="messagesLbl"/>
+			</panelchildren>
+		</panel>
+	</vlayout>
+	
+	</hlayout>
+	
+		
+</window>
+</zk>

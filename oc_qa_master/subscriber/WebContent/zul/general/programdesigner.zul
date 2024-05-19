@@ -1,0 +1,998 @@
+<zk>
+<style src="/css/campaign.css"/>
+<!-- <style src="/css/theme.css" /> -->   
+	<window id="programdesignerWinId"  droppable="canvas2"   
+		
+		apply="org.mq.marketer.campaign.controller.program.ProgramDesignerController" 
+		
+	xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%"   xmlns:w="http://www.zkoss.org/2005/zk/client"
+	style=" min-width:920px; min-height:650px">
+	
+	<window id="propertiesWinId"  border="normal" mode="overlapped" visible="false" position="center" width="800px" height="650px" 
+			closable="true" onClose="self.setVisible(false); event.stopPropagation();">
+			
+		<caption label="Properties" />
+		<div id="topDivId" height="95px" >
+			<h:table width="100%" height="100%" border="0">
+			<h:tbody>
+			<h:tr style="vertical-align:top;text-align:left;">
+				<h:td style="color: darkgray; text-align:right;" width="20%">
+				<label id="titleLblId" value="Stage Title :" />
+				</h:td>
+				<h:td style="color: darkgray;">
+				<textbox id="titleTbId" width="150px" maxlength="25" />
+				</h:td>
+			</h:tr>
+			
+			<h:tr style="height:20px;vertical-align:top; text-align:left;">
+				<h:td style="color: darkgray; text-align:right;" >
+				<label id="messageLblId" value="Message :" />
+				</h:td>
+				
+				<h:td style="color: darkgray;">
+				<textbox id="messageTbId" width="250px" maxlength="25" rows="2"  height="62px"/>
+				</h:td>
+			</h:tr>
+			
+			</h:tbody>
+			</h:table>
+		</div>
+		
+		
+		<h:hr/>
+		<include id="centerIncId" height="440px" src="" /> 
+		<h:hr/>
+		<div id="bottomDivId" align="right" height="70px" >
+			<button label="Cancel" sclass="idle136" onClick="propertiesWinId.setVisible(false);event.stopPropagation();" />
+			<button id="propertySaveBtnId" label="Save" sclass="idle56" />
+			
+		</div>
+		
+	</window>
+	
+	<window id="saveAsForAdminWinId" border="normal" title="Copy Program" visible="false" position="center" width="300px" height="150px" 
+			closable="true" onClose="self.setVisible(false); event.stopPropagation();">
+			
+			How Do you want to save the program?
+			<button label="Save As Template" id="adminSaveAsTempBtnId"/>
+			<button label="Save As Program" id="adminSaveProgBtnId"/>
+			
+			
+			
+	</window>
+	<window id="copyOfProgWinId" border="normal" title="Copy Program" visible="false" position="center" width="300px" height="150px" 
+			closable="true" onClose="self.setVisible(false); event.stopPropagation();">
+		
+		Provide Program Name
+        <textbox id="copyProgNameTbId" value=""/> 
+		<button label="Copy"  id="CopyProgBtnId" />
+
+	
+	
+	</window>	
+		
+	<script type="text/javascript" src="js/jquery.disable.text.select.js"></script>
+    <script type="text/javascript" src="js/jquery.disable.text.select.pack.js"></script>
+ 
+ 	<script><![CDATA[
+		function disableCompTextSelection() {
+			$('.disableSelection').disableTextSelect();
+		}
+	]]></script>
+	
+		<label id="shapeDataLb" visible="false" />
+		<label id="selectedShapeDataLb" visible="false" />
+		<label id="menuNavPageTbId" visible="false"/>
+		<label id="tempLblId" value="" visible="false"/>
+	<script defer="true"><![CDATA[
+			mode="to-select";
+			//mode="to-draw";
+			
+			// predefined shapes
+			frame = new zkforge.canvas.Rectangle(0,0,0,0).setDrawingType("stroke");
+			drws = jq.evalJSON(this.$f('shapeDataLb').getValue());
+			// cache
+			cvs2 = this.$f('cvs2');
+			//cvs1 = this.$f('centerDiv');
+			cvsPos = getElementPos(cvs2.$n());
+			
+			// global state
+			start = {x:0, y:0};
+			last = {x:0, y:0};
+			
+			text = new zkforge.canvas.Text("ZK not just UI", 0, 0);
+			text.setDrawingType("stroke");
+			text.setFont("30px sans serif");
+			text.setAlpha(100.0);
+			
+			sindex = 1;
+			shape = drws[1];
+			shape.state.alfa = 100;
+			
+			path2 = new zkforge.canvas.Path();
+			
+				zk.Widget.$(jq('$menuNavPageTbId')[0]).fire('onChange',{value:'menuNameLi'},{toServer:true},0);
+				
+				zk.Widget.$(jq('$tempLblId')[0]).fire('onChange',{value:'testing'},{toServer:true},0);
+				
+				
+				
+		]]></script>
+			
+		<!--<zscript><![CDATA[
+			//import org.zkforge.canvas.Path;
+			//import java.util.*;
+			//import org.zkoss.zul.Window;
+			//import org.mq.marketer.campaign.controller.program.ProgramEnum;
+			
+			//Path prevPath;
+			//int globalzindex = 10;
+
+			/*Window rightWinId;
+			Window leftWinId;
+			Window topWinId;
+			Window bottomWinId;*/
+			
+			/*boolean rightLineType;
+			boolean leftLineType;
+			boolean topLineType;
+			boolean bottomLineType;*/
+			
+			/*public void menuEventHandler(Event event) {
+			
+				System.out.println("event="+event);
+				System.out.println("event Obj="+event.getTarget().getParent().getAttribute("winObj"));
+				System.out.println("Label ="+((Menuitem)event.getTarget()).getLabel());
+				System.out.println("ID ="+event.getTarget().getParent().getId());
+				
+				Window tempWin = (Window)event.getTarget().getParent().getAttribute("winObj");
+				String miLabelStr = ((Menuitem)event.getTarget()).getLabel();
+				
+				if(miLabelStr.equalsIgnoreCase("Remove")) {
+					removeWindowComponent(tempWin);
+				}
+				else if(miLabelStr.equalsIgnoreCase("Properties")) {
+					
+				}
+				
+			} // menuEventHandler*/
+			
+			
+			/*public void removeWindowComponent(Window tempWin) {
+				
+				Label fromNextLbl = (Label)tempWin.getFellow("nextCompLblId");
+				Label fromPrevLbl = (Label)tempWin.getFellow("prevCompLblId");
+				
+			} // removeWindowComponent*/
+			
+			
+			/*public void drop(Event event) {
+				System.out.println("event="+event);
+				DropEvent dropEvent = ((DropEvent) event);
+				Component dragged = dropEvent.getDragged();
+				
+				System.out.println(event.getTarget() +"  Dragged="+dragged+"  globalzindex="+globalzindex+" "+dropEvent.getX()+","+ dropEvent.getY() );
+				
+				//centerWin
+				if (dragged instanceof Image) {
+					// new object
+					Image img = (Image) dragged;
+					globalzindex++;
+					
+					Window obj = createNewComp(img);
+					obj.setStyle("position:absolute;padding:1px");
+					obj.setTop(dropEvent.getY() + "px");
+					obj.setLeft(dropEvent.getX() + "px");
+					obj.setZindex(globalzindex);*/
+					
+			/*		String bgImagePath= img.getSrc().replace("/program/tb_","/program/draw_");
+					
+					Window obj; // = (Window) Executions.createComponents("zul/general/programcomponent.zul", centerDiv, null);
+					Div tempDiv; // = (Div)obj.getFellow("imageDiv");
+					
+					if(bgImagePath.contains("/program/draw_event_")) {
+						obj = (Window) Executions.createComponents("zul/general/eventcomponent.zul", centerDiv, null);
+						tempDiv = (Div)obj.getFellow("imageDiv");
+					}
+					else if(bgImagePath.contains("/program/draw_activities_")) {
+						obj = (Window) Executions.createComponents("zul/general/activitycomponent.zul", centerDiv, null);
+						tempDiv = (Div)obj.getFellow("imageDiv");
+					}
+					else if(bgImagePath.contains("/program/draw_switches_")) {
+						obj = (Window) Executions.createComponents("zul/general/switchcomponent.zul", centerDiv, null);
+						tempDiv = (Div)obj.getFellow("imageDiv");
+					}
+
+					obj.setId("temp"+globalzindex);
+					obj.setContext("editPopup");
+
+					Image image = (Image)obj.getFellow("image");
+					image.setVisible(false);
+					image.setSrc(bgImagePath);
+
+					System.out.println("bgImagePath="+bgImagePath);
+					
+					
+					tempDiv.setStyle("background:url("+bgImagePath.substring(1)+");background-repeat:no-repeat; ");
+					obj.setStyle("position:absolute;padding:1px");
+					obj.setTop(dropEvent.getY() + "px");
+					obj.setLeft(dropEvent.getX() + "px");
+					obj.setZindex(globalzindex++);
+					
+					
+					Path p = new Path().moveTo(dropEvent.getX(),dropEvent.getY()).lineTo(100,100);
+					//p.transform(new java.awt.geom.AffineTransform(data[3]/1000,0,0,data[4]/1000,data[1],data[2]));
+					prevPath = p;
+					org.zkforge.canvas.Shape s = p;
+					s.setDrawingType(org.zkforge.canvas.Drawable.DrawingType.STROKE);
+					s.setStrokeStyle("#000000");
+					s.setFillStyle("#000000");
+					s.setAlpha(100);
+					centerDiv.add(s);
+					*/	
+				/*} 
+				else {
+					Window obj = (Window) dragged;
+					globalzindex++;
+					System.out.println("Obj Top="+obj.getTop() +" Left="+obj.getLeft()+" Obj="+obj.getUuid());
+					
+					//obj.setDraggable("false");
+					
+					obj.setTop(dropEvent.getY() + "px");
+					obj.setLeft(dropEvent.getX() + "px");
+					obj.setZindex(globalzindex);
+					Clients.evalJavaScript("showPrevNode();");*/
+				/*	
+					//prevPath.moveTo(dropEvent.getX(),dropEvent.getY()).lineTo(100,100).closePath();
+					
+					for (int i = 0; i < centerDiv.size(); i++) {
+						System.out.println(i+" = "+centerDiv.get(i));
+						prevPath = (Path)centerDiv.get(i);
+					}	
+					
+					centerDiv.remove(prevPath);
+					prevPath = new Path().moveTo(dropEvent.getX(),dropEvent.getY()).lineTo(100,dropEvent.getY()).lineTo(100,100); 
+					prevPath.setDrawingType(org.zkforge.canvas.Drawable.DrawingType.STROKE);
+					prevPath.setStrokeStyle("#000000");
+					prevPath.setFillStyle("#000000");
+					prevPath.setAlpha(100);
+					centerDiv.add(prevPath);
+					
+					List children = centerDiv.getChildren();
+					for (int i = 0; i < children.size(); i++) {
+						System.out.println(i+" = "+children.get(i));
+					}
+					
+					*/
+				//}
+				
+				
+			//}
+			
+			
+			
+			
+			
+			/*private Window createNewComp(Image img) {
+				
+				// new object
+				String bgImagePath= img.getSrc().replace("/program/tb_","/program/draw_");
+				
+				Window obj;
+				Div tempDiv;
+				
+				String enumName;
+				
+				Map myMap = new HashMap();
+				//myMap.put("lineWindows", "asdasda.....");
+				
+				if(bgImagePath.contains("/program/draw_event_")) {
+					
+					obj = (Window) Executions.createComponents("zul/general/eventcomponent.zul", centerDiv, null);
+					
+					//obj.setId("event_"+globalzindex+"w");
+					tempDiv = (Div)obj.getFellow("imageDiv");
+					Label tempLabel = (Label) obj.getFellow("titleLblId");
+					
+					if(bgImagePath.contains("_cust_activated.")) {
+						tempLabel.setValue("Customer Activated");
+						enumName=ProgramEnum.EVENT_CUST_ACTIVATED.name();
+					}
+					else if(bgImagePath.contains("_cust_deactivated.")) {
+						tempLabel.setValue("Customer Deactivated");
+						enumName=ProgramEnum.EVENT_CUST_DEACTIVATED.name();
+					}
+					else if(bgImagePath.contains("_scheduled_filter.")) {
+						tempLabel.setValue("Scheduled Filter");
+						enumName=ProgramEnum.EVENT_SCHEDULED_FILTER.name();
+					}
+					else if(bgImagePath.contains("_custom_event.")) {
+						tempLabel.setValue("Custom Event");
+						enumName=ProgramEnum.EVENT_CUSTOM_EVENT.name();
+					}
+					else if(bgImagePath.contains("_elapse_timer.")) {
+						tempLabel.setValue("Elapse Timer");
+						enumName=ProgramEnum.EVENT_ELAPSE_TIMER.name();
+					}
+					else if(bgImagePath.contains("_target_timer.")) {
+						tempLabel.setValue("Target Timer");
+						enumName=ProgramEnum.EVENT_TARGET_TIMER.name();
+					}
+					else if(bgImagePath.contains("_end.")) {
+						tempLabel.setValue("End Event");
+						enumName=ProgramEnum.EVENT_END.name();
+					}
+				}
+				else if(bgImagePath.contains("/program/draw_activities_")) {
+					obj = (Window) Executions.createComponents("zul/general/activitycomponent.zul", centerDiv, null);
+					//obj.setId("activity_"+globalzindex+"w");
+					tempDiv = (Div)obj.getFellow("imageDiv");
+					Label titleLabel = (Label) obj.getFellow("titleLblId");
+					Label messageLabel = (Label) obj.getFellow("activityMessageLblId");
+					Label footerLabel = (Label) obj.getFellow("activityFooterLblId");
+					
+					if(bgImagePath.contains("_send_email_campaign.")) {
+						titleLabel.setValue("Send Email");
+						messageLabel.setValue("Send Email Campaign");
+						footerLabel.setValue("Select Campaign");
+						footerLabel.setVisible(true);
+						enumName=ProgramEnum.ACTIVITY_SEND_EMAIL.name();
+					}
+					else if(bgImagePath.contains("_send_sms_message.")) {
+						titleLabel.setValue("Send SMS");
+						messageLabel.setValue("Send SMS");
+						enumName=ProgramEnum.ACTIVITY_SEND_SMS.name();
+					}
+					else if(bgImagePath.contains("_set_data.")) {
+						titleLabel.setValue("Set Data");
+						messageLabel.setValue("Set Data");
+						enumName=ProgramEnum.ACTIVITY_SET_DATA.name();
+					}
+				}
+				else if(bgImagePath.contains("/program/draw_switches_")) {
+					obj = (Window) Executions.createComponents("zul/general/switchcomponent.zul", centerDiv, myMap);
+					//obj.setId("switch_"+globalzindex+"w");
+					tempDiv = (Div)obj.getFellow("imageDiv");
+					
+					if(bgImagePath.contains("_allocation.")) {
+						enumName=ProgramEnum.SWITCH_ALLOCATION.name();
+					}
+					else if(bgImagePath.contains("_data.")) {
+						enumName=ProgramEnum.SWITCH_DATA.name();
+					}
+				} 
+
+				// Menupopup tempMPobj = (Menupopup) Executions.createComponents("zul/general/popupcomponent.zul", obj, null);
+				
+				obj.setId(enumName+"-"+globalzindex+"w");
+				// tempMPobj.setAttribute("winObj",obj);
+				// tempMPobj.setId("menu_"+obj.getId());
+				// obj.setContext(tempMPobj);
+
+				/*Image image = (Image)obj.getFellow("image");
+				image.setVisible(false);
+				image.setSrc(bgImagePath);
+				*/
+
+				/*System.out.println("bgImagePath="+bgImagePath);
+				tempDiv.setStyle("background:url("+bgImagePath.substring(1)+");background-repeat:no-repeat; ");
+				
+				return obj;
+				
+			} //createNewComp*/
+			
+			/*public void setDrawMode(int mode) {
+				
+				List children = centerDiv.getChildren();
+				if(mode==0) {
+					
+					//modeLblId.setValue("Drag");
+					for (int i = 0; i < children.size(); i++) {
+						((Window) children.get(i)).setDraggable("canvas2");
+					}
+					//win.setDroppable("false");
+				}
+				else {
+					//modeLblId.setValue("Line");
+					// Clients.evalJavaScript("mode = \"to-draw\"");
+					for (int i = 0; i < children.size(); i++) {
+						((Window) children.get(i)).setDraggable("false");
+					}
+					//win.setDroppable("canvas2");
+				}
+				
+				for (int i = 0; i < centerDiv.size(); i++) {
+				
+					System.out.println(">>>>>>>>>>>>>>> FN="+ centerDiv.get(i).getTextAlign());
+				} // for i
+
+			} // set Mode*/
+			
+		]]></zscript>
+			
+			-->
+			
+			
+			
+			
+			
+			
+			
+			<h:table width="100%"  border="0" cellspacing="0px" >
+			<h:tbody>
+			
+			<!--
+			<h:tr style="background-color: #6297AF; height: 28px;"  >
+				<h:td style="color: white; text-align:left;" width="400px" colspan="2">
+					<label value="Program Designer" style="padding-left:5px;font-weight:bold;"/>
+				</h:td>
+			</h:tr>
+			-->
+
+			<h:tr  >
+				<h:td  colspan="2">
+				<div id="programSettingsDivId">
+				<h:table  border="0" cellspacing="0" cellpadding="3" bgcolor="#eeeeff" width="100%"
+					style="padding:3px;border-radius:5px;">
+				 <h:body >
+				 <h:tr>
+				 
+					 <h:td width="110" align="right">
+						 	<label value="*" sclass="redStar"/>
+						 	<label value="Program Name :"/>
+					</h:td>
+					
+					<h:td width="240">
+					 	<textbox id="programNameTbId" value=""  maxlength="50" cols="32"/>
+					</h:td>
+
+					<h:td width="310">
+						<label value="Description :"/>
+				 		<button id="programSettingsBtnId22" visible="false" label="Program Settings" width="400px" w:onClick=" jq(this.$f('programSettingsWinId')).slideToggle(1000);" />
+						<textbox id="programDescTbId" cols="32" />
+						
+					</h:td>
+				 	
+				 	<h:td  align="right">
+						<label value="Last Modified: "/> 
+						<label value="2011-06-26 12:45 PM IST" id="lastModifiedDateLbl" style="padding-right:5px;"/>
+						<button label="Save Template" id="saveAsTemplateBtnId" />
+				 	</h:td>
+				 </h:tr>
+				 
+				 <h:tr bgcolor="#FFFFFF">
+				 
+				 	<h:td align="right">
+				  		<label value="*" sclass="redStar"/>	<label value="Mailing List(s):"/>
+				 	</h:td>
+				 	
+					<h:td>
+						<bandbox id="mailingListBandBoxId" mold="rounded" readonly="true" width="230px" value="-- Select List(s) --">
+						
+						<bandpopup >
+						
+						<h:table cellspacing="0" cellpadding="0">
+						<h:tr >
+						<h:td style="padding: 5px; ">
+						<listbox id="programMlListLbId" rows="5" multiple="true" sclass="contactsView" 
+							width="300px"  checkmark="true" >
+							
+							<listitem forEach="${programdesignerWinId$ProgramDesignerController.mailingLists}" 
+							label="${each.listName}" value="${each}" style="line-height:22px;" />
+						
+						</listbox>
+						
+						</h:td></h:tr>
+						
+						
+						<h:tr >
+						<h:td align="right">
+						 <button label="Close" id="applyMlSettingsBtnId" />
+						</h:td></h:tr>
+						
+						</h:table>
+						
+						</bandpopup>
+						</bandbox>				 		
+				 	</h:td>
+
+					<h:td valign="top" colspan="2" align="right">
+						
+				 		<button label="Close" id="cancelProgramBtnId" />
+						<button label="Save As..." id="saveCopyOfProgBtnId"/>
+						<button label="Save Program" id="saveProgramBtnId" />
+						
+				 	</h:td>
+				 </h:tr>
+				 
+				 </h:body>
+				</h:table>
+				</div>
+				</h:td>
+			</h:tr>
+			
+			
+			</h:tbody>
+			</h:table>
+		<borderlayout width="920px" height="610px" id="borderLayoutId">
+		
+<!-- 			<north border="normal" title="" size="93px" flex="false" splittable="false" collapsible="false">
+				
+			</north>
+ -->			
+			
+			<west border="0" title="" autoscroll="false" size="152px" flex="true" splittable="false" collapsible="false">
+			<vbox>
+				<hbox align="left" style="margin-right:5px; border:#CDE3FA 1px solid; ">
+					<toolbarbutton id="arrowTbBtnId" image="img/program/arrow.jpg" />
+					<toolbarbutton id="connectorTbBtnId" image="img/program/connector.jpg" />
+					<toolbarbutton id="deleteLinesBtnId" image="img/program/delete_connector.jpg" />
+					<!--<label id="modeLblId" value="" />
+				--></hbox>
+				<listbox sclass="contactsView">
+					<listhead>
+					<listheader label="Events"></listheader>
+					</listhead>
+					<listitem forEach="/img/program/tb_event_cust_activated.jpg,
+									   /img/program/tb_event_cust_deactivated.jpg,
+									   /img/program/tb_event_scheduled_filter.jpg,
+									   /img/program/tb_event_custom_event.jpg,
+									   /img/program/tb_event_elapse_timer.jpg,
+									   /img/program/tb_event_target_timer.jpg,
+									   /img/program/tb_event_end.jpg">
+					<listcell style="padding:0px;">
+						<image src="${each}" draggable="canvas2"  />
+					</listcell>
+				</listitem>
+			</listbox>
+
+			<separator orient="horizontal" bar="true" height="1px"/>
+
+			<listbox sclass="contactsView">
+				<listhead>
+				<listheader label="Activities"></listheader>
+				</listhead>
+				<listitem forEach="/img/program/tb_activities_send_email_campaign.jpg,
+								   /img/program/tb_activities_send_sms_message.jpg,
+								   /img/program/tb_activities_set_data.jpg">
+					<listcell style="padding:0px;">
+						<image src="${each}" draggable="canvas2" />
+					</listcell>
+				</listitem>
+			</listbox>
+			
+			<separator orient="horizontal" bar="true" height="1px"/>
+			
+			<listbox sclass="contactsView">
+				<listhead>
+				<listheader label="Switches"></listheader>
+				</listhead>
+				<listitem forEach="/img/program/tb_switches_data.jpg,
+								   /img/program/tb_switches_allocation.jpg">
+					<listcell style="padding:0px;">
+						<image src="${each}" draggable="canvas2" />
+					</listcell>
+				</listitem>
+			</listbox>
+			
+			<separator orient="horizontal" bar="true" height="1px"/>
+			
+			
+					
+			</vbox>
+			
+			</west>
+						
+			<center  id="centerPanel" autoscroll="false" >
+			<div id="centerPanelDiv" width="100%" height="100%" >
+				
+			<!-- <canvas id="centerDiv" width="820px" onClick="freeSelection(self)" style="position:absoulte;top:50px;left:50px;background:url(img/program/canvas_bg_test.png)" height="520px" /> -->
+				
+			<canvas id="cvs2" width="100%" height="100%" style="position:absolute; left:1px; top:1px; z-index:1; background-image:url(img/program/canvas_bg_test.png);" />
+		
+	 		<canvas id="centerDiv" width="100%" height="100%" style="position:absolute; left:1px; top:1px; z-index:2" />
+			
+		</div>
+				
+	<attribute w:name="onMouseDown"><![CDATA[
+
+			/*
+			// To Disable the text selection
+			
+			//Internet Explorer:
+			if (document.all)
+			document.onselectstart =
+			 function () { return false; };
+			
+			//Netscape 4:
+			if (document.layers) {
+			document.captureEvents(Event.MOUSEDOWN);
+			document.onmousedown =
+			 function (evt) { return false; };
+			}
+			
+			//Netscape 6:
+			document.onmousedown = function () { return false; };
+		
+			*/
+		
+		    
+		    mode = "to-draw";
+		
+		    cvsPos = getElementPos(cvs2.$n());
+		    
+		    this.$f('logTb').setValue('Mouse Down '+mode+' LBClick='+isLeftClick(event));
+		    if(isLeftClick(event)==false) return;
+		    if(mode == "to-draw") {
+				mode = "drawing";
+				
+				var pos = getMousePos(event, cvsPos);
+				start.x = pos.x;
+				start.y = pos.y;
+				
+		/*		
+				sindex = this.$f('shapeBox', true).getSelectedIndex();
+				shape = drws[sindex];
+				
+				// get drawing state
+				fillType = this.$f('fillTypeBox', true).getSelectedIndex();
+				strokeType = this.$f('strokeTypeBox', true).getSelectedIndex();
+				
+				shape.state.dwtp = getDrawingType(fillType, strokeType);
+				shape.state.fil = this.$f('fillColorBox', true)._currColor.getHex();
+				shape.state.strk = this.$f('strokeColorBox', true)._currColor.getHex();
+				shape.state.alfa = this.$f('alphaSlider', true).getCurpos()/100; 
+		*/		
+				
+				
+				sindex = 1;
+				shape = drws[sindex];
+				
+				// get drawing state
+				fillType = 0;
+				strokeType = 1;
+				
+				shape.state.dwtp = getDrawingType(fillType, strokeType);
+				shape.state.fil = "#000000";
+				shape.state.strk = "#000000";
+				shape.state.alfa = 100;
+				//alert("MouseDown="+sindex+"  "+shape.objtp);
+				shape.state.lnw = 2;
+				
+				// prepare shape
+				if(shape.objtp == "rect"){
+					shape.obj.x = start.x;
+					shape.obj.y = start.y;
+				} else {
+					path2._copyObj(shape);
+					path2._copyState(shape);
+				}
+				
+			}
+			if(mode == "to-select") {
+				mode = "selecting";
+				
+				var pos = getMousePos(event, cvsPos);
+				start.x = pos.x;
+				start.y = pos.y;
+				//frame.setPos(start.x, start.y);
+				
+				this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n----------------------- in to-select shape x='+pos.x +'   shape y='+pos.y);
+				
+				zAu.send(new zk.Event(zk.Widget.$(this), 'onSelect', [start.x-1, start.y-1, pos.x+1, pos.y+1] ));
+		/*		
+				this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n====After Event=====');
+				setTimeout('dummyWait('+this+')',5000);
+				alert('After Method');
+				this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n'+this.$f('selectedShapeDataLb'));
+				
+				this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n'+this.$f('selectedShapeDataLb').getValue());
+				
+				var selecteddrws = jq.evalJSON(this.$f('selectedShapeDataLb').getValue());
+				this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n Selected shape='+selecteddrws);
+				shape = selecteddrws[0];
+				
+				this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n>>>>>>>>>>>>>>asdfasdfadsf = '+ shape.objtp);
+				//shape = cvs2.get(0);
+		//		alert(cvs2.size()+"=Size :: shape x="+shape.obj.x +"   shape y="+shape.obj.y);
+				shape.state.dwtp = "stroke";
+				shape.state.alfa = 100;
+				mode="drawing";
+		*/
+			}
+		]]></attribute>
+
+		<attribute w:name="onMouseMove"><![CDATA[
+		    //this.$f('logTb').setValue("Mouse Move "+mode);
+			if(mode == "to-text") {
+				var pos = getMousePos(event, cvsPos);
+				
+				// redraw if 
+				if(sigDiff(pos, last)) {
+					last.x = pos.x;
+					last.y = pos.y;
+				
+					cvs2.clear();
+					cvs2.add(text.setPos(pos.x,pos.y));
+				}
+			}
+			if(mode == "drawing") {
+				var pos = getMousePos(event, cvsPos);
+				var size = {x: pos.x - start.x, y: pos.y - start.y};
+				
+				if(sigDiff(pos, last)) {
+					last.x = pos.x;
+					last.y = pos.y;
+					
+					if(shape.objtp == "rect"){
+		//				shape.obj.w = size.x;
+		//				shape.obj.h = size.y;
+						
+						shape.obj.x = pos.x;
+						shape.obj.y = pos.y;
+						shape.obj.w = 100;
+						shape.obj.h = 100;
+						
+						cvs2.clear();
+						cvs2.add(shape);
+					} 
+					else {
+						 transformPath(shape, path2, size.x/1000, size.y/1000, start.x, start.y);
+						// transformPath(shape, path2, 1, 1, pos.x-start.x, pos.y-start.y);
+						//transformPath(shape, path2, 100, 100, pos.x, pos.y);
+						
+						cvs2.clear();
+						cvs2.add(path2);
+					}
+				}
+				
+			}
+			if(mode == "selecting") {
+				var pos = getMousePos(event, cvsPos);
+				
+				if(sigDiff(pos, last)) {
+					last.x = pos.x;
+					last.y = pos.y;
+					
+					
+					//cvs2.clear();
+					//cvs2.add(frame.setSize(pos.x - start.x, pos.y - start.y));
+				}
+			}
+		]]></attribute>
+
+		<attribute w:name="onMouseUp"><![CDATA[
+	
+//	alert("onMouseUp mode="+mode);
+
+  
+ 
+
+	this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n'+ 'onMouseUp mode='+mode);
+//	var tempdiv= jq('$centerDiv')[0];
+// var elems = tempdiv.getElementsByTagName("div");
+ 
+	this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n'+ 'onMouseUp mode='+mode +' elems=');
+	
+	if(mode == "drawing") {
+		mode = "to-draw";
+		cvs2.clear();
+		// send shape param to server
+		var pos = getMousePos(event, cvsPos);
+		//alert('event obj='+zk.Widget.$(jq('$centerDiv')[0]).getId());
+		
+		//zAu.send(new zk.Event(zk.Widget.$(jq('$centerDiv')[0]), 'onSelect',
+		//		[sindex, start.x, start.y, pos.x-start.x, pos.y-start.y, shape.state.alfa]));
+		
+		zAu.send(new zk.Event(zk.Widget.$(jq('$centerDiv')[0]), 'onSelect',
+				[start.x, start.y, pos.x, pos.y]));
+		
+		//zAu.send(new zk.Event(zk.Widget.$(this), 'onAddShape', [sindex, pos.x, pos.y, 100, 100, shape.state.alfa]));
+	}
+	if(mode == "selecting") {
+		mode = "to-select";
+		return;
+		cvs2.clear();
+		
+		// send selected region param to server
+		var pos = getMousePos(event, cvsPos);
+//		alert("Selected="+start.x+", "+ start.y+",   "+  pos.x+", "+  pos.y);
+		this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n'+
+				"Selected="+start.x+", "+ start.y+",   "+  pos.x+", "+  pos.y);
+		
+		zAu.send(new zk.Event(zk.Widget.$(this), 'onSelect', [start.x, start.y, pos.x, pos.y] ));
+		
+		this.$f('logTb').setValue(this.$f('logTb').getValue()+'\n'+
+				"After event ="+start.x+", "+ start.y+",   "+  pos.x+", "+  pos.y);
+	}
+	
+]]></attribute>
+
+		<attribute w:name="onMouseOut"><![CDATA[
+	// cancels current action except to-text
+	if(!zk.ie){
+		cvs2.clear();
+		if(mode == "selecting") mode = "to-select";
+		if(mode == "drawing") mode = "to-draw";
+	}
+]]></attribute>
+				
+				
+	</center>
+	<south>
+	<textbox id="logTb" width="100%"  rows="4" value="Initilized...."/>
+	</south>					
+</borderlayout>
+		
+<script><![CDATA[
+		function getMousePos(e, refPos) {
+			var pos = {x:0, y:0};
+			if (!refPos) var refPos = {x:0, y:0};
+			if (!e) var e = window.event;
+			if (e.pageX || e.pageY) {
+				pos.x = e.pageX - refPos.x;
+				pos.y = e.pageY - refPos.y;
+			} else if (e.clientX || e.clientY) {
+				pos.x = e.clientX + document.body.scrollLeft
+					+ document.documentElement.scrollLeft - refPos.x;;
+				pos.y = e.clientY + document.body.scrollTop
+					+ document.documentElement.scrollTop - refPos.y;;
+			}
+			return pos;
+		}
+		function getElementPos(elem) {
+			var pos = {x:0, y:0};
+			while(elem != null) {
+				pos.x += elem.offsetLeft;
+				pos.y += elem.offsetTop;
+				elem = elem.offsetParent;
+			}
+			return pos;
+		}
+		function getDrawingType(f,s){
+			switch((f>0)*2 + (s>0)){
+			case 0:
+				return "none";
+			case 1:
+				return "stroke";
+			case 2:
+				return "fill";
+			case 3:
+				return "both";
+			}
+		}
+		function transformPath(p1,p2,a,b,dx,dy){
+			var sg1 = p1.obj.sg;
+			var sg2 = p2.obj.sg;
+			//alert("sg2.length="+sg2[4].dt.length);
+			for(var i=sg2.length;i--;){
+				for(var j=sg2[i].dt.length/2;j--;){
+					sg2[i].dt[2*j]   = a*sg1[i].dt[2*j]   + dx;
+					sg2[i].dt[2*j+1] = b*sg1[i].dt[2*j+1] + dy;
+				}
+			}
+		}
+		function sigDiff(pos1, pos2){
+			// return true if two points are at least 4 pixel away
+			return (Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y + pos2.y) > 3);
+		}
+		function createComponent(dragged) {
+			alert("in crecomp");
+			var pos = getMousePos(event, cvsPos);
+    		zAu.send(new zk.Event(zk.Widget.$(this), 'onAddShape',
+    				[sindex, start.x, start.y, pos.x-start.x, pos.y-start.y, shape.state.alfa]));
+		}
+		
+		function setShape(shapeStr) {
+			//alert("Got SHAPE called ");
+			var tempShapeStr = zk.Widget.$(jq('$selectedShapeDataLb')[0]).getValue();
+			//alert("Got SHAPE "+tempShapeStr);
+			//var tempLbl = jq(this.$f('selectedShapeDataLb'));
+			selecteddrws = jq.evalJSON(tempShapeStr);
+			//alert("SET SHAPE "+selecteddrws);
+			shape = selecteddrws[0];
+			//alert("SET SHAPE "+shape);
+			shape.state.dwtp = "stroke";
+			shape.state.alfa = 100;
+			mode="drawing";
+			
+			if(shape.objtp == "rect"){
+			
+			}
+			else {
+			path2._copyObj(shape);
+			path2._copyState(shape);
+			}
+		}
+		
+		function isLeftClick(e) {
+			//alert("EE="+navigator.appVersion);
+			 if (parseInt(navigator.appVersion)>3) {
+			  var clickType=1;
+			  if (navigator.appName=="Netscape") clickType=e.which;
+			  else clickType=event.button;
+			  if (clickType==1) {
+				  return true;
+				  self.status='Left button!';
+			  }
+			  else {
+				  return false;
+				  //if (clickType!=1) self.status='Right button!';
+			  }
+			 }
+		}
+			
+		function dummyWait(obj) {
+			obj.$f('logTb').setValue(obj.$f('logTb').getValue()+'\n INDM'+obj.$f('selectedShapeDataLb'));
+			
+			obj.$f('logTb').setValue(obj.$f('logTb').getValue()+'\n INDM'+obj.$f('selectedShapeDataLb').getValue());
+			alert('test');
+			return;
+		}
+		
+		
+
+	]]></script>
+	
+	
+	
+	<!--<window id="programSettingsWinId" mode="overlapped" position="center,top" title="Program Settings" border="normal"
+			 onClose="self.setVisible(false); event.stopPropagation();" height="300px" width="600px" style="display:none;">
+			<h:table width="100%" >
+				<h:tr>
+				
+					<h:td colspan="2" width="80%">
+					
+						<label id="errorMsgLblId" value="" style="font-weight:12px;font-color:red"/>
+					</h:td>
+				
+				</h:tr>
+			
+			
+				<h:tr>
+					<h:td>
+						<label value="Program Name:"/>
+					</h:td>
+					<h:td>
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					<h:td>
+						<textbox id="programNameTbId" value="" constraint="no empty: Please specify program name"/>
+						<label value="" id="nameStatusLblId"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2">
+						<label value="Program Description:"/>
+					</h:td>
+					<h:td>
+						<textbox id="programDescTbId" rows="5" cols="40" value=""/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<label value="Mailing List(s):"/>
+					</h:td>
+					<h:td>
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					<h:td>
+						<listbox id="programMlListLbId" mold="select" rows="4" multiple="true" sclass="contactsView" checkmark="true">
+							<listitem forEach="${programdesignerWinId$ProgramDesignerController.mailingLists}" 
+							label="${each.listName}" value="${each}" />
+						
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td align="right" colspan="3">
+						<button id="saveProgramSettingsBtnId" label="Apply Changes"/>
+					</h:td>
+					
+				</h:tr>
+			</h:table>
+		
+	
+	</window>		
+	--></window>
+</zk>

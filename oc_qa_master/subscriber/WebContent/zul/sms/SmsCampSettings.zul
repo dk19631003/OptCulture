@@ -1,0 +1,1397 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style src="/css/campaign.css" />
+	<style>
+		.listsLb{
+			color:#073B6F;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+			//padding-left:20px;
+		}
+		.heading{
+			color:#000;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+		}
+
+		div.z-listbox.contactsView tr.z-list-item-seld {
+			background-color:#99C9DF;
+		}
+		div.z-listbox.contactsView {
+			border:1px solid #d9d9d9;
+		}
+	</style>
+
+
+	<window id="smsCampSettigsWinId" border="0" width="100%"
+		apply="org.mq.marketer.campaign.controller.sms.SmsCampSettingsController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<script>
+			<![CDATA[
+			
+			function updateCaretPosition() {
+			//alert("hai");
+			// get the zk widgets
+			var scriptTB = zk.Widget.$(jq('$SMSMsgTbId'))
+			var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+			
+			// get the js elements
+			var jsScriptTB = document.getElementById(scriptTB.uuid)
+			var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+			
+			// get the caret position
+			var pos = getCaret(jsScriptTB);
+			
+			// set the caret position in the hidden text field
+			jsCaretPosTB.value = pos;
+			
+			// trigger an event to send the caret position to the server
+			if (document.createEvent) {
+			var evt = document.createEvent('HTMLEvents');
+			evt.initEvent( 'blur', false, false);
+			jsCaretPosTB.dispatchEvent(evt);
+			
+			var evt2 = document.createEvent('HTMLEvents');
+			evt2.initEvent( 'change', false, false);
+			jsCaretPosTB.dispatchEvent(evt2);
+			} else if (document.createEventObject) {
+			jsCaretPosTB.fireEvent('onblur');
+			jsCaretPosTB.fireEvent('onchange');
+			}
+			}
+			
+			 function getCaret(el) {
+             	
+             	if (el.selectionStart) {
+                     return el.selectionStart;
+                 } else if (document.selection) {
+                     el.focus();
+
+                     var r = document.selection.createRange();
+
+                     
+                     if (r == null) {
+                     	
+                         return 0;
+                     }
+
+                     var re = el.createTextRange();
+                     	
+                             rc = re.duplicate();
+                     re.moveToBookmark(r.getBookmark());
+                     rc.setEndPoint('EndToStart', re);
+                     return rc.text.length;
+                 }else{
+                 	
+                 	if(el.value.length > 0) {
+                 		
+                 		//el.selectionStart = el.value.length;
+                 		 return el.selectionStart;
+                 			
+                 	}
+                 	
+                 }
+                 return 0;
+
+
+               
+             }
+             
+             
+             
+            function updateTranTemCaretPosition() {
+				//var scriptTB1 = zk.Widget.$(jq(jq('$transTempContentTxtBxId')))
+				var scriptTB1 = zk.Widget.$(jq('$transTempContentTxtBxId'))
+				//alert('transTempContentTxtBxId object id is ::'+scriptTB1);
+				//var caretPosTB1 = zk.Widget.$(jq(jq('$transCaretPosTB')))
+				var caretPosTB1 = zk.Widget.$(jq('$transCaretPosTB'))
+				
+				// get the js elements
+				var jsScriptTB1 = document.getElementById(scriptTB1.uuid)
+            	//alert('hai 123'+jsScriptTB.value);
+				var jsCaretPosTB1 = document.getElementById(caretPosTB1.uuid)
+			
+				// get the caret position
+				var pos = getCaret(jsScriptTB1);
+				//alert('position value is ::'+pos);
+				// set the caret position in the hidden text field
+				jsCaretPosTB1.value = pos;
+			
+				// trigger an event to send the caret position to the server
+				if (document.createEvent) {
+					var evt = document.createEvent('HTMLEvents');
+					evt.initEvent( 'blur', false, false);
+					jsCaretPosTB1.dispatchEvent(evt);
+			
+					var evt2 = document.createEvent('HTMLEvents');
+					evt2.initEvent( 'change', false, false);
+					jsCaretPosTB1.dispatchEvent(evt2);
+				} else if (document.createEventObject) {
+					jsCaretPosTB1.fireEvent('onblur');
+					jsCaretPosTB1.fireEvent('onchange');
+				}
+			}
+            
+            function getSelectedListInfo(listbox, label) {
+				var selItems = listbox.getSelectedItems();
+				var selNames = '';
+				if(selItems.length == 0) {
+					zk.Widget.$("$selectedListDivId").hide(); 
+				}else {
+					zk.Widget.$("$selectedListDivId").show(); 
+				}
+					
+				for(i = 0;i < selItems.length; i++) {
+					if(selNames.length != 0) selNames = selNames + ', ';
+					selNames = selNames + selItems[i].getLabel();
+				}
+				label.setValue(selNames);
+			}
+             
+             
+             
+             
+			]]>
+			</script>
+
+		
+		<script type="text/javascript">
+			
+			<![CDATA[
+
+			function changeStep(inNum, isNext) {
+
+			var inA = zk.Widget.$('$step'+inNum+'AId'); var inClass =
+			inA.getSclass(); if(isNext==false && inClass !=
+			'req_step_completed') { return; }
+
+			for(var i=1; i<=3; i++ ) { var currA =
+			zk.Widget.$('$step'+i+'AId');
+
+
+			var currASclass = currA.getSclass();
+
+			if(currASclass == 'req_step_current') {
+
+			inA.setSclass('req_step_current');
+			currA.setSclass('req_step_completed'); break; } } // for
+
+			zk.Widget.$('$step1DivId').setVisible(false);
+			zk.Widget.$('$step2DivId').setVisible(false);
+			zk.Widget.$('$step3DivId').setVisible(false);
+
+
+			zk.Widget.$('$step'+inNum+'DivId').setVisible(true);
+
+			parent.window.scrollTo(0,0); };
+
+			]]>
+			
+	</script>
+		
+<!-- 		   <style>
+                		.z-listheader-img{
+      background-image: none;
+       width: 0px;
+       height: 0px;
+    }
+    div.z-listbox-header{
+        overflow: visible;
+
+    }
+                Changes 2.5.4.0
+                
+                </style>
+ -->
+		<div id="navDivId" visible="false"  style="margin-bottom:15px;" >
+
+			<a id="step1AId" sclass="req_step_current"
+				w:onClick="changeStep(1, false);">
+				<label value="1"
+					style="color:#222222;padding-right:12px;" />
+				<label value="Create Campaign" />
+			</a>
+
+			<a id="step2AId" sclass="req_step_incomplete"
+				w:onClick="changeStep(2, false);">
+				<label value="2"
+					style="color:#222222;padding-right:12px;" />
+				<label value="Choose Recipients" />
+			</a>
+
+			<a id="step3AId" sclass="req_step_incomplete"
+				w:onClick="changeStep(3, false);">
+				<label value="3"
+					style="color:#222222;padding-right:12px;" />
+				<label value="Review &amp; Schedule" />
+			</a>
+		</div>
+
+
+		<div id="step1DivId">
+
+			<div>
+				<label
+					value="Set your preferences for the new SMS campaign." />
+			</div>
+			<groupbox width="99%" sclass="gbStyle"
+				style="margin-top:10px;" closable="false">
+				<caption label="Configure Campaign" />
+
+				<h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+
+					<h:tr>
+						<h:td valign="bottom" width="150">
+							<label value="Sender ID:" />
+							<label value="*" sclass="redStar" />
+						</h:td>
+
+						<h:td valign="bottom" colspan="2">
+							<textbox id="senderIdTbId" value=""
+								name="smsNameTb" width="250px" maxlength="100" /> <image src="/img/icons/icon_q.png" tooltiptext="Sender Id for promotional SMS is auto-generated based on TRAI guidelines."  style="padding-left:40px;" id="autoSenIdImg" visible="false"/>
+						</h:td>
+						
+						
+						<h:td>
+							<div id="multipleSenderIdDivId"
+								visible="false">
+								<label
+									value="Select SenderId of Your Choice:"
+									style="" sclass="" />
+								<listbox id="multipleSenderIdsLbId"
+									rows="1" mold="select" style="position:relative;" width="200px"
+									visible="true" />
+							</div>
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td valign="bottom" width="150">
+							<label value="Campaign Name:" />
+							<label value="*" sclass="redStar" />
+						</h:td>
+
+						<h:td valign="bottom" colspan="2">
+							<textbox id="smsCampNameTbId" value=""
+								name="smsNameTb" width="250px" maxlength="100" />
+							<label value="" id="smsCampNameStatusLblId" />
+						</h:td>
+
+					</h:tr>
+					<h:tr height="18">
+						<h:td></h:td>
+
+						<h:td colspan="2" valign="center"
+							style="padding-top:2px;">
+							<image src="/img/icons/icon_i.png"
+								style="vertical-align:bottom;" />
+							<label
+								value="Campaign name is only for your reference and will not appear in the sent SMS. "
+								style="vertical-align:bottom;" sclass="labelPos" />
+						</h:td>
+
+
+
+					</h:tr>
+					
+					<h:tr height="50">
+					<h:td valign="bottom" width="150">
+						<label value="Campaign Category:"/>
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					
+					<h:td valign="bottom" colspan="2">
+						<listbox  id="categoryLbId"  rows="1" mold="select" style="position:relative;" width="200px">
+						
+						<listitem label="Select Category" selected="true" ></listitem>
+						</listbox>
+						
+							<image src="/img/icons/icon_q.png" tooltip="help2"  style="padding-left:40px;" id="helpImgId" visible="false"/>
+						<popup id="help2"  width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="You need to enable subscriber preference center for this setting" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+						
+					</h:td>
+				</h:tr>
+					
+					
+					
+					<div id="campTypeDiv">
+					<h:tr height="18" id="campTypeRow">
+						<h:td valign="top" width="150">
+							<label value="Campaign Type:" />
+							<label value="*" sclass="redStar" />
+						</h:td>
+
+						<h:td >
+							<radiogroup id="msgTypeRgId" >
+							<!-- 	
+								<radio id="transactionalMsgTypeRId" label="Transactional Message"  radiogroup="msgTypeRgId"/>
+								<radio id="outBoundMsgTypeRId" label="Outbound Message" radiogroup="msgTypeRgId" selected="true" />
+								
+								<radio id="twoWayMsgTypeRId" label="2-Way Messaging" radiogroup="msgTypeRgId"/>
+							-->	
+							</radiogroup>
+
+						</h:td>
+
+					</h:tr>
+					</div>
+					
+				 <div id="optInDiv" visible="false">
+					<h:tr height="18">
+						<h:td valign="top" width="150">
+							<div id="sendCampLblDivId"  >
+							<label value="Send Campaign To:" />
+							<label value="*" sclass="redStar" />
+							</div>
+						</h:td>
+
+						<h:td >
+							<radiogroup id="sendTypeRgId" >
+								
+								<radio id="entireListRId" label="All Contacts"	selected="true"  />
+								<radio id="optInRId" label="Opted-In SMS Contacts" />
+							</radiogroup>
+
+
+						</h:td>
+
+					</h:tr>
+					</div>
+					<h:tr>
+						<h:td valign="top" width="150">
+							
+						</h:td>
+
+						<h:td >
+							<label id="optInTextDispLblId" style="font-weight:bold;color:#2886B9" />
+							 
+						</h:td>
+
+					</h:tr>
+
+
+				</h:table>
+
+			</groupbox>
+
+			<div id="outBoundMsgDivId">
+				<groupbox width="99%" sclass="gbStyle"
+					style="margin-top:10px;" closable="false">
+					<caption label="Create SMS" />
+					<h:table cellspacing="5" cellpadding="5" border="0"
+						align="left" style="padding-left:20px;">
+						<h:tr>
+						
+						<h:td colspan="3" style="padding-left:0px;">
+								<div id="tranSactinalMsgDivId" visible="false">
+									<h:table >
+										<h:tr>
+										 	<h:td style="margin-top:15px;">
+											   <label value="Select a Template" />
+											</h:td>
+											<h:td>
+												<combobox id="transTempCmbBxId"  readonly="true" width="375px" style="margin-left:15px;"/>
+											</h:td>
+											<h:td>	
+												<label value="or"/>
+											</h:td>
+											<h:td>
+												<toolbarbutton id="editNewTempTBId"  image="/images/Edit_icn.png" sclass="tbbLink"
+													label="Edit Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;width:100px;"/>
+											</h:td>
+											<h:td>
+												<toolbarbutton id="addNewTempTBId"  image="/images/action_add.gif" sclass="tbbLink"
+													label="Add New Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;width:125px;"/>
+											</h:td>
+										</h:tr>
+									
+									</h:table>
+								</div>
+						</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td valign="top" style="margin-top:15px;" width="100px">
+								<label value="Message: "/>
+
+							</h:td>
+							<h:td valign="top" width="375">
+								<textbox id="caretPosTB" visible="false" />
+								<textbox id="SMSMsgTbId" width="350px"
+									rows="12" height="165px" maxlength="800"
+									style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 				14px;line-height: 1.5em;margin-top:10px;padding-bottom:25px;padding-top:25px;" w:onClick="updateCaretPosition()"  
+								 	w:onChanging="updateCaretPosition()" w:onFocus="updateCaretPosition()"
+									name="SMSMsgTbId" context="editPopup" />
+
+								<label value="" id="headerLblId" style="color:#666666;left:10px;position:relative;top:-210px;"/>
+							<label value="Reply STOP 2 Optout" id="optOutLblId" style="color:#666666;left:10px;position:relative;top:-18px;"/>
+
+							</h:td>
+							<h:td rowspan="2" valign="top">
+								<div id="outBoundedDivId" >
+								
+									<h:table cellspacing="5" cellpadding="5" border="0" width="100%">
+										<h:tr>
+											<h:td>
+												<listbox
+													id="insertMergetagsLbId" mold="select" width="200px">
+													<listitem
+														label="Insert Merge Tags" selected="true" />
+												</listbox>
+											</h:td>
+										</h:tr>
+	
+										<h:tr>
+											<h:td >
+												<listbox 
+													id="insertCouponLbId" mold="select" width="200px">
+													<listitem
+														label="Insert Discount Code" selected="true" />
+												</listbox> <label value="or" /> 
+												<toolbarbutton id="addNewCouponTBId"  image="/images/action_add.gif" sclass="tbbLink"
+													label="Add Discount Code"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+											</h:td>
+	
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<listbox id="insertBarcodeLbId" mold="select" width="200px">
+													<listitem label="Insert Barcode as Url" selected="true" />
+												</listbox> <label value="or" />
+												<toolbarbutton id="addNewBarcodeTBId" image="/images/action_add.gif" sclass="tbbLink"
+													label="Add Barcode" style="color:#2886B9;font-weight:bold;text-decoration:underline;" />
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<div id="insertKeywrdDivId" visible="false">
+												<listbox
+													id="insertKeywordLbId" mold="select" width="200px">
+													<listitem
+														label="Insert Keyword" selected="true" />
+												</listbox> <label value="or" />
+												<toolbarbutton id="addNewKeywrdTBId" image="/images/action_add.gif" sclass="tbbLink"
+													label="Add Keyword"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+												</div>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<textbox
+													value="Use Url Shortener" width="300px" id="linkURLTxtBoxId" />
+												<button id="insertLinkBtnId"
+													label="Insert" sclass="idle70" />
+	
+											</h:td>
+										</h:tr>
+	
+									</h:table>
+
+								</div>
+
+
+							</h:td>
+
+						</h:tr>
+						<h:tr>
+							<h:td />
+							<h:td valign="top"
+								 colspan="2" >
+								<label value="No. of Characters / Messages :"
+									style="font-weight:bold;" />
+								<textbox id="charCountTbId"
+									readonly="true" value="0" width="70px" />
+								<label value="(160 Characters per SMS)" />
+							</h:td>
+						</h:tr>
+						<h:tr height="20" />
+						<h:tr>
+							<h:td valign="top">
+								<label value="Send a Test SMS:" />
+							</h:td>
+							<h:td valign="top" colspan="2">
+
+								<textbox value="Enter Mobile Number(s)..."
+									id="mblNoTxtBoxId" width="280px" />
+								<button sclass="idle70"
+									id="sendTestSmsBtnId" label="Send" style="margin-left:5px;" />
+							</h:td>
+
+						</h:tr>
+						<h:tr height="18">
+							<h:td></h:td>
+
+							<h:td valign="center"
+								style="padding-top:2px;" colspan="2">
+								<image src="/img/icons/icon_i.png"
+									style="vertical-align:bottom;" />
+								<label
+									value="To send test SMS to multiple mobile numbers, give them as comma separated values."
+									style="vertical-align:bottom;" sclass="labelPos" />
+							</h:td>
+
+						</h:tr>
+						<h:tr height="20" />
+
+
+					</h:table>
+					<h:table>
+					<h:tr>
+											<h:td valign="top">
+											<div id="approveTemplateDivId" visible="false">
+											<h:table>
+											<h:tr>
+											<h:td>
+												<label value="Template Registered ID" />
+											</h:td>
+											<h:td>
+												<textbox width="300px" id="templateIdTxtBoxId" />
+											</h:td>
+											</h:tr>
+											</h:table>
+											</div>
+											</h:td>
+							</h:tr>
+					</h:table>
+
+				</groupbox>
+
+			</div>
+			
+			
+			
+			<div id="buttonsDiv1Id" style="padding-top:10px;"
+			visible="true" align="right">
+			
+			
+			<button id="saveAsDraftStep1BtnId" label="Save As Draft" sclass="idle140" />
+			<space />
+			
+				<button label="Back" id="step1BackBtnId" sclass="idle140" visible="false"/>
+					<space/>
+				<button label="Save" sclass="idle140 greenbtn" id="gotoStep2BtnId"/>
+					
+		</div>
+
+		</div>
+		<div id="step2DivId" visible="false">
+
+
+			<label
+				value="Select contact list(s) or segment of list(s) to choose recipients for this campaign." />
+			<groupbox sclass="gbStyle" closable="false"
+				style="padding:15px 10px">
+				<caption label="Select List(s) / Segment(s)" />
+				<radiogroup id="configurelistRgId" />
+				<radio label="Selected List(s)"
+					radiogroup="configurelistRgId" selected="true" />
+				<radio label="Selected Segment(s)"
+					radiogroup="configurelistRgId" />
+
+
+				<div id="mlDivId">
+
+					<h:table cellspacing="10" cellpadding="0"
+						width="100%">
+						<h:tr>
+							<h:td width="260" valign="top">
+								<!-- <listbox id="dispMlListsLBoxId"
+									width="260px" checkmark="true" multiple="true" rows="8"
+									sclass="contactsView" >
+									
+										<listhead>
+	                           <listheader label=""  style="width: 260px;">
+	              			<textbox id="searchBoxIdforlist" placeholder="Search List"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }" width="200px" /> </listheader>
+			
+	              			     </listhead> -->
+	              			     <listbox id="dispMlListsLBoxId" width="260px" multiple="true" checkmark="true" rows="6" w:onSelect="getSelectedListInfo(this,this.$f('selMlLblId'))" sclass="contactsView">
+									<listhead style="background-color:#488eb0;">
+										<listheader label="List Name" width="100%" align="left" maxlength="30"/>
+									</listhead>
+	              			       <auxhead id="listFilterAhId">
+               <auxheader style="width: 260px;">
+                <menupopup id="testId" sclass="myfilter" />
+                <toolbarbutton context="testId" tooltiptext="filters|cs" visible="false"/>
+                <textbox sclass="filterSearchVal"  placeholder="Search List" width="200px" />
+               </auxheader>
+               </auxhead>
+									</listbox>
+									
+							</h:td>
+
+							<h:td style="vertical-align: top;">
+								<div style="padding:10px;"
+									id="selectedListDivId">
+									<label
+										value="Currently selected Contact List(s) : "
+										style="color:#09719F;font-size:13px;" />
+									<label value="" id="selMlLblId"
+										style="color:#2886B9;word-wrap: break-word;" sclass="listsLb"
+										multiline="true" />
+								</div>
+							</h:td>
+
+						</h:tr>
+						<h:tr height="10" />
+						<h:tr>
+							<h:td colspan="2">
+								<image src="/img/icons/icon_i.png" />
+
+								<label
+									value="You can send your  sms campaign  to multiple mailing lists at a time. " />
+							</h:td>
+						</h:tr>
+					</h:table>
+
+
+				</div>
+
+				<div id="segDivId" visible="false">
+
+
+					<h:table cellspacing="5" cellpadding="5" width="100%">
+						<h:tr>
+							<h:td>
+								<listbox id="dispsegmentsLbId"
+									width="260px" checkmark="true" multiple="true" rows="8"
+									sclass="contactsView" >
+									<listhead>
+					<!-- <listheader label="" style="width: 260px;">
+	              			<textbox id="searchBoxId" placeholder="Search Segment"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }" width="200px" /> </listheader> -->
+								    </listhead>
+								       <auxhead id="segmentListFilterAhId">
+               <auxheader style="width: 260px;">
+                <menupopup id="testId1" sclass="myfilter" />
+                <toolbarbutton context="testId1" tooltiptext="filters|cs" visible="false"/>
+                <textbox sclass="filterSearchVal"  placeholder="Search Segment" width="200px"/>
+               </auxheader>
+               </auxhead>
+									</listbox>
+
+							</h:td>
+							<h:td valign="top">
+								<div style="padding:10px;"
+									id="dispRuleDivId" visible="false">
+									<label
+										value="Currently selected Segment Rule : "
+										style="color:#09719F;font-size:13px;" />
+									<label value="" id="selRuleLblId"
+										style="color:#2886B9;word-wrap: break-word;" sclass="listsLb"
+										multiline="true" />
+									<separator />
+									<label value="On the List :"
+										style="color:#09719F;font-size:13px;" />
+									<label value=""
+										id="selRuleListLblId"
+										style="color:#2886B9;word-wrap: break-word;" sclass="listsLb"
+										multiline="true" />
+								</div>
+
+							</h:td>
+						</h:tr>
+						<h:tr height="10" />
+						<h:tr>
+							<h:td colspan="2"
+								style="padding:10px 0px;">
+								<div id="createNewSegDivId"
+									visible="false">
+									<label
+										value="if you want to create a new Segment Rule " />
+									<a id="createNewSegAnchId"
+										label="Click Here" />
+								</div>
+							</h:td>
+						</h:tr>
+					</h:table>
+
+				</div>
+			</groupbox>
+			<div id="buttonsDiv2Id" style="padding-top:10px;"
+			visible="true" align="right">
+			
+			<button label="Back" id="backStep1ButtonId" sclass="idle140"
+				/>
+			<space />
+			<button id="saveAsDraftStep2BtnId" label="Save As Draft" sclass="idle140" />
+			<space />
+			<button id="gotoStep3BtnId" label="Next"
+				sclass="idle140 greenbtn" style="margin-right:10px;" />
+					
+		</div>
+
+		</div>
+
+		<div id="step3DivId" visible="false">
+		
+			<label value="Review Campaign Details and Schedule it. " />
+			<groupbox sclass="gbStyle" style="margin-top:10px;"
+				closable="false">
+				<caption label="Submitted SMS Content"	>
+				</caption>
+				<h:table width="100%" cellspacing="5" cellpadding="5">
+					<h:tr>
+						<h:td  width="170">
+							<label value="Sender ID : " />
+						</h:td>
+						<h:td>
+							<label id="senderIdLblId" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+
+							<label value="Campaign Name :" />
+						</h:td>
+						<h:td valign="top">
+							<label id="campNameLblId" />
+						</h:td>
+					</h:tr>
+					
+					<h:tr >
+					<h:td >
+						<label value="Campaign Category:" id="categoryLblId"  />
+					</h:td>
+					
+					<h:td>
+							<label id="categoryNameLblId"  sclass="label13px"/>
+						</h:td>
+						</h:tr>
+					
+					
+					
+					<div id="finalCampaignType">	
+					<h:tr>
+						<h:td>
+							<label value="Campaign Type :" />
+						</h:td>
+						<h:td valign="top">
+							<label id="campTypeLblId" />
+						</h:td>
+					</h:tr>
+					</div>
+				</h:table>
+			</groupbox>
+
+
+			<groupbox sclass="gbStyle" style="margin-top:10px;"
+				closable="false">
+				<caption label="Submitted SMS Content"
+					style="font-weight:bold;">
+				</caption>
+				<h:table width="100%" cellspacing="5" cellpadding="5">
+					<h:tr>
+						<h:td valign="top" width="170">
+							<label value="Message: " />
+						</h:td>
+						<h:td>
+							<image src="/img/theme/preview_icon.png"
+								id="msgPreviewImgId" tooltiptext="Preview" sclass="previewImp" />
+							<image src="/img/icons/small_edit_icon.png"
+								id="editMsgImgId" tooltiptext="Edit"
+								style="cursor:pointer" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td valign="top">
+
+							<label value="Selected Contact List(s):" id="recipentsSourceLblId" />
+						</h:td>
+						<h:td >
+							<div id="listNamesDivId"
+								style="float:left; padding:0 8px;" />
+							<image src="/img/icons/small_edit_icon.png"
+								id="editSmsListImgId" tooltiptext="Edit"
+								style="cursor:pointer" />
+						</h:td>
+					</h:tr>
+					<h:tr >
+					<h:td colspan = "3">
+					    <!-- <label value="Included PromoCodes in this campaign : " />
+					    <space width="18px"/>
+					    <label id="listOfIncludedPromoCodes"/> -->
+					    <div id="includedPromoCodesDivId" width="100%" height="25px" />
+						<space /><space/>
+ 					</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td valign="top">
+							<label value="Send a Test SMS   :" />
+						</h:td>
+						<h:td >
+							<textbox id="testSMSTbId"
+								value="Enter Mobile Number(s)...">
+							</textbox>
+							<button label="Send" id="okBtnId"
+								sclass="idle70" />
+							<div>
+								<image src="/img/icons/icon_i.png"
+									style="vertical-align:bottom;" />
+								<label
+									value="To send test SMS to multiple mobile numbers, give them as comma (,) separated."
+									style="vertical-align:bottom;" sclass="labelPos" />
+							</div>
+
+						</h:td>
+					</h:tr>
+				</h:table>
+			</groupbox>
+
+		
+		<groupbox sclass="gbStyle" style="margin-top:10px;"
+			closable="false">
+			<caption label="SMS Scheduling Options"
+				style="font-weight:bold;">
+			</caption>
+			<radiogroup id="scheduleRgId" />
+			<h:table cellspacing="5" cellpadding="5" width="100%">
+
+				<h:tr height="40">
+					<h:td width="170">
+					<hlayout valign="middle">
+						<radio label="Choose date &amp; Time" selected="true" radiogroup="scheduleRgId" id="prtDateRadioId" />
+						<image src="/img/icons/icon_q.png" tooltiptext="Select the date &amp; time and click on Select button to schedule the campaign."
+						style="cursor: help;" id="chooseDateTimeImgId" />
+					</hlayout>
+					</h:td>
+
+					<h:td>
+						<div id="prtDtDivId" width="100%">
+							<datebox id="prtDtBxId"
+							use="org.mq.marketer.campaign.custom.MyDatebox"
+							constraint="no past" readonly="true" cols="18"
+							format="MMM dd, yyyy HH:mm" />
+												
+							<button label="Select" id="prtDtBtnId"
+								sclass="idle70" />
+						</div>
+					</h:td>
+				</h:tr>
+			</h:table>
+			<h:table cellspacing="5" cellpadding="5" width="100%">
+
+				<h:tr height="40">
+					<h:td width="170">
+						<radio label="Send Periodically"
+							id="sendPeriodicallyId" radiogroup="scheduleRgId" />
+					</h:td>
+
+					<h:td>
+						<div id="frqDivId" visible="false"
+							width="100%">
+							Start Date
+							<datebox id="startDtBxId"
+								use="org.mq.marketer.campaign.custom.MyDatebox"
+								constraint="no past" readonly="true" cols="18"
+								format="MMM dd, yyyy HH:mm" style="padding-right:15px;" />
+							End Date
+							<datebox id="endDtBxId"
+								use="org.mq.marketer.campaign.custom.MyDatebox"
+								constraint="no past" readonly="true" cols="18"
+								format="MMM dd, yyyy HH:mm" style="padding-right:15px;" />
+							Frequency
+							<listbox mold="select" id="frqLbId"
+								sclass="fieldLB" width="125px">
+								<listitem label="Every Day" value="5"
+									onCreate="self.setAttribute(&quot;step&quot;,1)"
+									selected="true">
+								</listitem>
+								<listitem label="Every Week" value="5"
+									onCreate="self.setAttribute(&quot;step&quot;,7)">
+								</listitem>
+								<listitem label="Every Fortnight"
+									value="5" onCreate="self.setAttribute(&quot;step&quot;,14)">
+								</listitem>
+								<listitem label="Every Month" value="2"
+									onCreate="self.setAttribute(&quot;step&quot;,1)">
+								</listitem>
+								<listitem label="Every Year" value="1"
+									onCreate="self.setAttribute(&quot;step&quot;,1)">
+								</listitem>
+							</listbox>
+							<button label="Select" id="frqBtnId"
+								sclass="idle70" />
+
+						</div>
+					</h:td>
+				</h:tr>
+			</h:table>
+
+			<label id="schErrorLblId" sclass="errorCss" />
+			<grid id="schedGrdId" fixedLayout="true" visible="false" >
+				<columns>
+					<column label="" width="40px" />
+					<column label="Scheduled Date" width="25%" />
+					<column label="Status" align="center" width="20%" />
+					<column label="Actions" align="center" />
+				</columns>
+				<rows id="schedGrdRowsId" />
+			</grid>
+		
+		
+		
+		<!-- ########################################## -->
+		<separator/>
+		<label value="Upcoming Schedule" style = "font-weight:bold;margin-left: 30px;"></label>
+		<separator/>
+		<!-- <div width="57%"> -->
+		<h:table width="58%"><h:tr>
+		<h:td>
+		<listbox id="activeCampaingsListlbId" 
+			sclass="contactsView" multiple="true"   style="margin-left: 30px;"  >
+				
+				<listhead sizable="false" style="background-color:#488eb0; margin-left: 30px;" >
+					<listheader label="" visible="false" />
+					<listheader label="Upcoming Scheduled Date"    align="center"  maxlength="40" width="45%"  />
+					<listheader label="Status"   align="center"  />
+					<listheader label="Action"  align="center"  />
+				</listhead>
+		</listbox>
+		</h:td>
+		</h:tr></h:table>
+		<!-- </div> -->
+			<separator/>
+		<separator/>
+		
+		<div id="campaignActiveTillDivId" visible="false" >
+		<h:table>
+			<h:tr>
+				<h:td>
+					<label value="This campaign is scheduled till "
+						
+						style="margin-left: 30px;">
+					</label>
+				</h:td>
+				<h:td>
+					<label  id="campActiveTillDateLbId" 
+						style="margin-left: 2px;">
+					</label>
+					<label id="calenderLbId" visible="false"></label>
+				</h:td>
+				<h:td>
+					<label value="with" 
+						style="margin-left: 2px;">
+					</label>
+				</h:td>
+				<h:td>
+					<label id="numOfTimeCampActiveLbId" 
+						style="margin-left: 2px;">
+					</label>
+				</h:td>
+				<h:td>
+					<a label="View All Upcoming Schedules"
+						id="viewAllActiveSchedAnchId"
+						style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-left:30px;" />
+						
+				</h:td>
+			</h:tr>
+		</h:table>
+		</div>	
+		
+		
+		
+		<h:br></h:br>
+		<h:br></h:br>
+		<separator/>
+		<label value="Last Schedule" style = "font-weight:bold;margin-left: 30px;"></label>
+		<separator/>
+		<h:table width="58%"><h:tr>
+		<h:td>
+			<listbox id="sentCampaingsListlbId" 
+			sclass="contactsView" multiple="true" mold="paging" width="96%"  style="margin-left: 30px;" >
+				<listhead sizable="false" style="background-color:#488eb0;" >
+					<listheader label="Date" visible="false" />
+					<listheader label="Last Scheduled Date"   align="center"/>
+					<listheader label="Status" align="center" />
+				</listhead>
+			</listbox>
+		</h:td>
+		</h:tr></h:table>
+		<separator/>
+		<separator/>
+		<div id="campaignSentDivId" visible="false"  >
+		<label value="This campaign was first scheduled on"
+			style="margin-left: 30px;">
+		</label>
+		<label id="campaignSentLbId"></label>
+		<a label="View All Archived Schedules"  visible="false"
+			id="viewAllArchivedSchedAnchId"
+			style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-left:106px;" />
+		</div>
+		
+		<h:br></h:br>
+		<h:br></h:br>
+		<separator/>
+		<h:br></h:br>
+		<h:br></h:br>
+		<separator/>
+		
+		
+		
+		
+		
+		</groupbox>
+		
+		
+		<!-- #######################################33 -->
+		
+		
+		
+		
+		<div id="buttonsDiv4Id" style="padding-top:10px;"
+			visible="true" align="right">
+			
+			<button label="Back" id="backButtonId" sclass="idle140"
+				visible="false" />
+			<space />
+			<button id="saveAsDraftBtnId" label="Save As Draft" sclass="idle140" />
+			<space />
+			<button id="goToNextBtnId" label="Schedule"
+				sclass="idle140 greenbtn" style="margin-right:10px;" />
+					
+		</div>
+		
+		</div>
+		
+		
+		
+		<window id="previewWin" title="Preview" border="normal"
+			mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close"
+					onClick="previewWin.setVisible(false)" />
+			</caption>
+			<div id="contentDivId" width="750px" height="500px"
+				style="overflow:auto">
+				<html id="html" />
+			</div>
+		</window>
+		
+		<window id="resendOptionWinId" width="400px" title="Resend" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton image="img/icons/close_blue.gif" onClick="resendOptionWinId.setVisible(false)"/>
+			</caption>
+			
+			<h:table cellpadding="2" cellspacing="2">
+			
+				<h:tr>
+					<h:td colspan="2">
+						<label id="errMsgLblId" style="color:red;font-size:10px" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td style="padding:5px">
+						<label value="Select Date"/>
+						<datebox id="resendOptionDbId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no past:Past dates are not allowed" readonly="true" cols="18" format="MMM dd, yyyy HH:mm"/>
+					</h:td>
+					<h:td style="padding:5px">
+						<label value="Resend for contacts who have "/>
+						<listbox id="resendOptionLbId" mold="select">
+							<listitem label="not opened" selected="true" value="1"/>
+							<listitem label="not clicked any URLs" value="2"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2">
+						<button sclass="idle70" label="Submit" id="resendBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+	</window>
+	<window id="resendEditorWinId" width="900px" title="Use different content" border="normal" 
+			mode="overlapped" visible="false" position="center,top" style="overflow:auto;">
+		<caption>
+			<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="resendEditorWinId.setVisible(false)"/>
+		</caption>
+		<include id="resendIncId" />
+	</window>
+	
+	
+
+	
+	<window id="createTransTempWinId" width="800px" border="normal" 
+			mode="overlapped" visible="false" position="center" style="overflow:auto;">
+			<caption>
+				<toolbarbutton label="Close" onClick="createTransTempWinId.setVisible(false);event.stopPropagation();" />
+			</caption>
+			<h:table>
+				<h:tr>
+					<h:td>
+						<label value="Template Name:"/>
+					</h:td>
+					<h:td colspan="2">
+						<textbox id="transTempNameTxtBxId"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="3">
+					
+				
+					
+						<textbox id="transCaretPosTB" visible="false" />
+						<textbox id="transTempContentTxtBxId" width="350px"
+							rows="12" height="165px" maxlength="800"
+							style="font-family: Arial,Helvetica,sans-serif;font-size:
+			 				14px;line-height: 1.5em;margin-top:10px;padding-bottom:25px;padding-top:25px;" w:onClick="updateTranTemCaretPosition()"  
+						 	w:onChanging="updateTranTemCaretPosition()" w:onFocus="updateTranTemCaretPosition()"
+							name="transTempContentTxtBxId" context="editPopup" />
+					</h:td>
+					
+					
+					<h:td rowspan="2" valign="top">
+								<div id="outBoundedDivId_createNewTx" >
+								
+									<h:table cellspacing="5" cellpadding="5" border="0" width="100%">
+										<h:tr>
+											<h:td>
+												<listbox
+													id="insertMergetagsLbId_createNewTx" mold="select" width="200px">
+													<listitem
+														label="Insert Merge Tags" selected="true" />
+												</listbox>
+											</h:td>
+										</h:tr>
+	
+										<h:tr>
+											<h:td >
+												<listbox 
+													id="insertCouponLbId_createNewTx" mold="select" width="200px">
+													<listitem
+														label="Insert Discount Code" selected="true" />
+												</listbox> <label value="or" /> 
+												<toolbarbutton id="addNewCouponTBId_createNewTx"  image="/images/action_add.gif" sclass="tbbLink"
+													label="Add Discount Code"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+											</h:td>
+	
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<listbox id="insertBarcodeLbId_createNewTx" mold="select" width="200px">
+													<listitem label="Insert Barcode as Url" selected="true" />
+												</listbox> <label value="or" />
+												<toolbarbutton id="addNewBarcodeTBId_createNewTx" image="/images/action_add.gif" sclass="tbbLink"
+													label="Add Barcode" style="color:#2886B9;font-weight:bold;text-decoration:underline;" />
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<div id="insertKeywrdDivId_createNewTx" visible="false">
+												<listbox
+													id="insertKeywordLbId_createNewTx" mold="select" width="200px">
+													<listitem
+														label="Insert Keyword" selected="true" />
+												</listbox> <label value="or" />
+												<toolbarbutton id="addNewKeywrdTBId_createNewTx" image="/images/action_add.gif" sclass="tbbLink"
+													label="Add Keyword"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+												</div>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<textbox
+													placeholder="Use Url Shortener" width="300px" id="linkURLTxtBoxId_createNewTx" />
+												<button id="insertLinkBtnIdCreateNewTx"
+													label="Insert" sclass="idle70" />
+	
+											</h:td>
+										</h:tr>
+	
+									</h:table>
+
+								</div>
+
+
+							</h:td>
+					
+					
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<label value="Character Count:"/>
+					</h:td>
+					<h:td >
+						<textbox id="transTempCharCountTxtBxId" readonly="true" value="0" width="70px" />
+					</h:td>
+					<h:td >
+						<label value="(160 Character per SMS)"/>
+					</h:td>
+						<textbox id="transTempEditId" readonly="true" visible="false"/>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2" align="right">
+						<button id="transTempSaveBtnId" label="Submit" sclass="idle70" />
+					</h:td>
+					<h:td  align="left">
+						<button id="transTempCancelBtnId" label="Cancel"  
+						 />
+					</h:td>
+				</h:tr>
+				
+			
+			</h:table>
+		
+	</window>
+	
+		<window id="viewSegRuleWinId" title="Segment Rule" border="normal"	 mode="overlapped" visible="false" position="center" width="670px" >
+				<label value="Segment Rule is:" /> 
+				<separator/>
+				<label value="" id="segRuleLblId" style="inline:block;word-wrap: break-word;margin:15px 15px;" sclass="listsLb" multiline="true" />
+				<separator />
+				<separator />
+				<separator />
+				<div align="center">
+				<button label="Close" sclass="idle70" onClick="viewSegRuleWinId.setVisible(false)"  />
+				</div>
+		</window>
+		
+
+
+	
+	<window id="viewAllActiveSchedulesWinId"  title="All Upcoming Schedules " closable="false" 
+			visible="false" border="normal" width="750px" height="400px"  style="overflow:auto;" position="center" top="45px"
+					 xmlns:h="http://www.zkoss.org/2005/zk/native"
+			  xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<radiogroup id="alertsTypeRgId" />
+		<separator/>
+		<h:table width="100%" cellspacing="0" cellpadding="0">
+			<h:tr>
+				<h:td colspan="2">
+					<label id="msgLblId"
+						value="Below is a list of all the active schedules of this sms campaign:" style="padding-left:10px;"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+			<h:td>
+			<separator/>
+			
+		<bandbox id="campActionsBandBoxId" buttonVisible="false" mold="rounded" disabled="true" readonly="true" width="200px" value="Bulk Action" 
+			style="font-weight:bold;padding:10px; ">
+						
+			<bandpopup>
+						
+				<h:table width="100%" cellspacing="0" cellpadding="3">
+					<h:tr>
+						<h:td width="150"> <label  value="Delete Selected: " sclass="boldLabel" /> </h:td>
+						<h:td align="right"> <button id="delSelectedId" label="Delete" sclass="idle70 greenbtn"/> </h:td>
+					</h:tr>
+
+					<h:tr> <h:td colspan="2"><h:hr/> </h:td> </h:tr>
+					
+					<h:tr bgcolor="#f5f8fb">
+						<h:td colspan="2" align="right">
+							<button label="Close" sclass="idle70" onClick="campActionsBandBoxId.close();"/>
+						 </h:td>
+					</h:tr>
+				</h:table>
+			</bandpopup>
+		</bandbox>
+										
+			</h:td>
+			</h:tr>
+
+			</h:table>
+			<separator/>
+			
+			
+			<listbox id="campListlbId"  width="100%"  style="align:center;" checkmark="true" multiple="true" sclass="contactsView" 
+				rows="5"  >
+				
+				<listhead sizable="true" style="background-color:#488eb0;" >
+					
+ 					<listheader label="" width="30px" align="center"/>
+					<listheader label="Upcoming Scheduled Date"   align="center" style="padding-left:10px;" maxlength="40"/>
+					<listheader label="Status" align="center" width="200px"/>
+					<listheader label="Action" align="center" width="200px"/>
+
+				</listhead>
+			</listbox>
+			
+			<separator/>
+			<div width="99%" align="left">
+			<a label="View More Schedules" 
+						id="viewMoreActiveSchedAnchId"
+						style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-left:20px; " />
+			<label id="noRecordsActiveLbId" value="No more schedules found." style="color: rgb(00, 00, 00); font-weight: bold;  margin-left: 20px;"></label>
+			</div>
+			<separator/>
+			<separator/>
+			<label id="bulkDeleteLbId" visible="false" style="color:#2886B9;font-weight:bold;margin-left:30px;"></label>
+			<separator/>
+			<separator/>
+			<div width="97%" align="right">
+		<!-- 	<label id="noRecordsActiveLbId" value="No more records found."></label> -->
+					<button label="OK" id="submitBtnId"
+						sclass="idle70 greenbtn" />
+			</div>
+	</window>
+	
+	
+	<window id="viewAllArchivedSchedulesWinId"  title="All Archived Schedules " closable="false" 
+			visible="false" border="normal" width="750px" height="365px"  style="overflow:auto;" position="center" top="45px"
+					 xmlns:h="http://www.zkoss.org/2005/zk/native"
+			  xmlns:w="http://www.zkoss.org/2005/zk/client">
+	
+		<radiogroup id="alertsTypeRgId" />	
+		<separator/>
+		<separator/>
+		<h:table width="100%" cellspacing="0" cellpadding="0">
+			<h:tr>
+				<h:td colspan="2">
+					<label id="msgLblId"
+						value="Below is a list of all the archived schedules of this sms campaign:"  style="padding-left:10px;"/>
+				</h:td>
+			</h:tr>
+			</h:table>
+			<separator/>
+			<listbox id="campListlbId"   width="100%"  style="align:center;" 
+			 checkmark="true" multiple="true" sclass="contactsView" rows="5"  >
+				<listhead sizable="true" style="background-color:#488eb0;" >
+ 					<listheader label="" align="center" visible="true"/>
+					<listheader label="Sent Date"   align="center" />
+					<listheader label="Status" align="center" />
+				</listhead>
+			</listbox>
+			<separator/>
+			<separator/>
+			 <div width="99%" align="left"> 
+			<a label="View More Schedules" 
+						id="viewMoreArchievedSchedAnchId"
+						style="color:#2886B9;font-weight:bold;text-decoration: underline; margin-left: 20px;"   />
+			<label id="noRecordsArchivedLbId" value="No more schedules found." style="color: rgb(00, 00, 00); font-weight: bold;  margin-left: 20px;"></label>
+			</div>
+			
+			<separator/>
+			<separator/>
+			<label id="bulkDeleteLbId" visible="false" style="color:#2886B9;font-weight:bold;margin-left:30px;"></label>
+			<separator/>
+			<separator/>
+			<separator/>
+			<separator/>
+			<div width="97%" align="right">
+				<!-- <label id="noRecordsArchivedLbId" value="No more records found."></label> -->
+					<button label="OK" id="submitBtnId"
+						sclass="idle70 greenbtn" />
+			</div>
+	</window>
+
+	</window>
+
+
+
+</zk>
