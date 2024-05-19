@@ -1,0 +1,17 @@
+{
+    "files.exclude": {
+        "**/.git": false,
+        "**/.svn": false,
+        "**/.hg": false,
+        "**/CVS": false,
+        "**/.DS_Store": false,
+        "**/Thumbs.db": false,
+        "*.*": false,
+        "**/.*": false,
+        "**/target/": false,
+        "node_modules": false,
+        "webpack/": false
+    },
+    "explorerExclude.backup": {},
+    "java.configuration.updateBuildConfiguration": "interactive"
+}

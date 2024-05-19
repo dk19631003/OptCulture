@@ -1,0 +1,41 @@
+@use "vuetify/styles" as * with (
+  $body-font-family: "Poppins",
+);// Write your overrides
+
+:root{
+--text-color-receipts : #7f7f97;
+}
+.wr-text-h1 {
+  font-size: 1rem !important;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--text-color-receipts);
+}
+
+.wr-text-h2 {
+  font-size: 0.875rem !important;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.wr-text-h3 {
+  font-size: 0.75rem !important;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.wr-text-h4 {
+  font-size: 0.625rem !important;
+  font-weight: 300;
+  line-height: normal;
+}
+
+.dashed-line {
+  border-top: 1px dashed gray;
+}
+.heading-1{
+  font-size: 1.06rem !important;
+}
+.heading-2{
+  font-size: 1.375rem !important;
+}

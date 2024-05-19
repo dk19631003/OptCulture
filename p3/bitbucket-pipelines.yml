@@ -1,0 +1,71 @@
+# bitbucket-pipelines.yml
+
+image: atlassian/default-image:4
+
+pipelines:
+  branches:
+    master:
+      - parallel:
+        - step:
+            caches:
+            - node
+            name: Build Frontend
+            script:
+              - cd frontend  
+              - export BITBUCKET_COMMIT_SHORT=$(echo $BITBUCKET_COMMIT | cut -c1-5)
+              - npm version 3.0.$BITBUCKET_BUILD_NUMBER-$BITBUCKET_COMMIT_SHORT
+              - npm install
+              - npm run build
+              - scp -r -F ~/.ssh/config dist/* optculture@test.optculture.app:/var/www/html/ebill/
+            artifacts:
+              - dist/**
+        - step:
+            name: Build Shared libs and backend
+            caches:
+              - maven
+            # services:
+            #   - maven  
+            script:
+              - apt-get update && apt-get install -y openjdk-17-jdk-headless maven
+              - mvn -version
+              - cd shared
+              - mvn install
+              - cd ../backend
+              - mvn package
+              - scp -F ~/.ssh/config target/Platform-*.jar optculture@test.optculture.app:/opt/
+            artifacts:
+              - target/Platform*.jar
+
+    release/prod:
+          - step:
+              name: Build Frontend for PROD
+              caches:
+                - node
+              script:
+                - cd frontend
+                - export BITBUCKET_COMMIT_SHORT=$(echo $BITBUCKET_COMMIT | cut -c1-5)
+                - npm version 3.0.$BITBUCKET_BUILD_NUMBER-$BITBUCKET_COMMIT_SHORT
+                - npm install
+                - npm run build
+                - zip -r ebill.zip dist/*
+              artifacts:
+                - frontend/ebill.zip
+          - step:
+              name: Build Shared libs and Backend for PROD
+              caches:
+                - maven
+              script:
+                - apt-get update && apt-get install -y openjdk-17-jdk-headless maven
+                - mvn -version
+                - cd shared
+                - mvn install
+                - cd ../backend
+                - mvn package
+              artifacts:
+                - backend/target/Platform*.jar
+          - step:
+              name: Deployment to PROD server
+              trigger: manual
+              script:
+                - scp -F ~/.ssh/config backend/target/Platform* optculture@ftp.optculture.app:/tmp/p3_build_files/
+                - scp -F ~/.ssh/config frontend/ebil* optculture@ftp.optculture.app:/tmp/p3_build_files/

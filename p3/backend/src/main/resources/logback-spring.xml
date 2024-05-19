@@ -1,0 +1,18 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- Application-specific log settings go here -->
+    <logger name="com.optculture" level="DEBUG" />
+    
+    <!-- Log to console -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%logger - %M:%L] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Set root logger level to INFO and its only appender to STDOUT -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

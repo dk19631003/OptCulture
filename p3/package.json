@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@vuesimple/vs-accordion": "^3.0.5"
+  }
+}
