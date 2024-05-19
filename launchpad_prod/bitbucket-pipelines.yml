@@ -1,0 +1,35 @@
+#  Template maven-build
+
+#  This template allows you to test and build your Java project with Maven.
+#  The workflow allows running tests, code checkstyle and security scans on the default branch.
+
+# Prerequisites: pom.xml and appropriate project structure should exist in the repository.
+
+
+image: atlassian/default-image:4
+
+pipelines:
+  default:
+    - step:
+        name: Build Shared libs and backend
+        caches:
+          - maven
+        script:
+          - apt-get -qq update && apt-get -qq install -y openjdk-17-jdk-headless maven
+          - mvn -version
+          - cd .. && git clone git@bitbucket.org:oc_dev/p3.git
+          - cd p3/shared/ && mvn install
+          - cd $BITBUCKET_CLONE_DIR
+          - mvn package
+          - scp -F ~/.ssh/config target/launchpad-*.jar optculture@test.optculture.app:/opt/
+        artifacts:
+          - target/launchpad*.jar
+        after-script:
+              # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
+            - pipe: atlassian/checkstyle-report:0.3.0
+    - step:
+          name: Security Scan
+          script:
+            # Run a security scan for sensitive data.
+            # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
+            - pipe: atlassian/git-secrets-scan:0.5.1
