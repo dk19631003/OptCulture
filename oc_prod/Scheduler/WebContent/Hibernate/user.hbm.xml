@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.Users" table="users" lazy="false" >
+    <id name="userId" type="java.lang.Long" column="user_id">
+      <generator class="native"/>
+    </id>
+	<property name="mqsId" type="string" column="mqs_id" length="20" />
+    <property name="userName" type="string" column="username" length="400" unique-key="Unique_username"/>
+    <property name="password" type="string" column="password" length="256" />
+    <property name="emailId" type="string" column="emailId"  length="60"/>
+	<property name="firstName" type="string" column="first_name" length="50" />
+	<property name="lastName" type="string" column="last_name" length="75" />
+	<property name="companyName" type="string" column="company_name" length="100" />
+    <property name="createdDate" type="timestamp" column="created_date"/>
+	<property name="addressOne" type="string" column="address_one" length="55" />
+	<property name="addressTwo" type="string" column="address_two" length="55" />
+	<property name="city" type="string" column="city" length="55" />
+	<property name="state" type="string" column="state" length="45" />
+	<property name="country" type="string" column="country" length="45" />
+	<property name="pinCode" type="string" column="pin_code" length="20" />
+	<property name="phone" type="string" column="phone" length="30" />
+	<property name="enabled" type="boolean" column="enabled" />
+	<!-- <property name="vmta" type="java.lang.Long" column="vmta" length="100"/> -->
+	<property name="emailCount" type="java.lang.Integer" column="email_count" />
+	<property name="usedEmailCount" type="java.lang.Integer" column="used_email_count" />
+	<property name="smsCount" type="java.lang.Integer" column="sms_count" />
+	<property name="usedSmsCount" type="java.lang.Integer" column="used_sms_count" />
+<property name="packageStartDate" type="calendar" column="package_start_date" />
+	<property name="packageExpiryDate" type="calendar" column="package_expiry_date"/>
+<property name="footerEditor" type="java.lang.Byte" column="footer_editor"/>
+
+<property name="clientTimeZone" type="string" column="client_time_zone"/>
+
+<set name="userDomains" table="users_domains" >
+			<key column="user_id" />
+			<many-to-many class="org.mq.captiway.scheduler.beans.UsersDomains" column="domain_id" /> 
+		</set>
+		
+		
+		<many-to-one name="userOrganization"
+			class="org.mq.captiway.scheduler.beans.UserOrganization" foreign-key="orgId"
+			fetch="select" lazy="false">
+			<column name="user_organization" />
+		</many-to-one>
+		
+		<property name="accountType" type="string" >
+			<column name="account_type" length="100" />
+		</property>
+		
+		<many-to-one name="parentUser" class="org.mq.captiway.scheduler.beans.Users" lazy="false" column="parent_user_id" />
+		
+	<property name="userSMSTool" type="string" column="user_sms_tool" length="100" />
+	<!-- <property name="countryCarrier" type="java.lang.Byte" column="country_carrier"  /> -->
+	 <property name="countryCarrier" type="java.lang.Short" column="country_carrier"  /> 
+	<property name="subscriptionEnable" type="boolean">
+			<column name="subscription_enabled" default="false"  />
+	</property>
+	<property name="MsgChkType" type="string" >
+			<column name="msg_chk_type" length="100" />
+	</property>
+	
+	<property name="token" type="string" unique="true">
+			<column name="token" length="100" />
+		</property>
+	<property name="countryType" type="string" >
+		<column name="country_type" length="100" />
+	</property>
+	<property name="digitalReceiptExtraction" type="boolean" >
+		<column name="digital_receipt_extraction" default="false" />
+	</property>
+	<property name="enableLoyaltyExtraction" type="boolean" >
+			<column name="enable_loyalty_extraction" default="false" />
+		</property>
+		
+	<property name="enrollFromDR" type="boolean" >
+			<column name="enroll_from_DR" default="false" />
+	</property>
+	<property name="issuanceFromDR" type="boolean" >
+			<column name="issuance_from_DR" default="false" />
+	</property>
+	<property name="returnFromDR" type="boolean" >
+			<column name="return_from_DR" default="false" />
+	</property>
+	<property name="performRedeemedAmountReversal" type="boolean" >
+			<column name="perform_redeemed_amount_reversal" default="false" />
+	</property>
+	<property name="redemptionFromDR" type="boolean" >
+			<column name="redemption_from_DR" default="false" />
+	</property>
+	<property name="redeemTender" type="string" >
+			<column name="redeem_tender" length="100" />
+	</property>
+	<property name="nonInventoryItem" type="string" >
+			<column name="non_inventory_item" length="100" />
+	</property>
+	<property name="enablePromoRedemption" type="boolean" >
+			<column name="enable_promo_redemption" default="false" />
+		</property>
+		<property name="itemNoteUsed" type="string" >
+			<column name="item_note_used" length="100" />
+		</property>
+		<property name="receiptNoteUsed" type="string" >
+			<column name="receipt_note_used" length="100" />
+		</property>
+		<property name="itemInfo" type="string" >
+			<column name="item_info" length="100" />
+		</property>
+		<property name="cardInfo" type="string" >
+			<column name="card_info" length="100" default="'BillToInfo1'"/>
+		</property>
+	<property name="considerSMSSettings" type="boolean">
+		<column name="consider_SMS_settings" default="false"  />
+	</property>
+	<property name="enableSMS" type="boolean">
+		<column name="enable_SMS" default="false"  />
+	</property>
+
+	<property name="lastLoggedInTime" type="calendar">
+		<column name="last_logged_in_time"  />
+	</property>
+	
+	<property name="optInMedium" type="java.lang.Byte" column="optin_medium"/>
+	
+	<property name="optinRoute" type="string" >
+			<column name="optin_route" length="100" />
+		</property>
+	<property name="optinMobileByDefault" type="boolean" >
+			<column name="optin_mobile_by_default" default="false" />
+		</property>
+		<property name="weeklyReportEmailId" type="string" >
+			<column name="weekly_report_email_id"  />
+		</property>
+		<property name="campExpEmailId" type="string" >
+			<column name="camp_exp_email_id" length="150" />
+		</property>
+		
+		<property name="weeklyReportTime" type="time"
+			column="weekly_report_time" />
+		
+		<property name="weeklyReportDay" type="java.lang.Integer" >
+			<column name="weekly_report_day" default="0" />
+		</property>
+		
+		<property name="weeklyReportTypeEmail" type="boolean" >
+			<column name="weekly_report_type_email" default="false"/>
+		</property>
+		
+		<property name="weeklyReportTypeSMS" type="boolean" >
+			<column name="weekly_report_type_sms" default="false"/>
+		</property>
+		
+		<property name="specificDir" type="boolean">
+			<column name="is_specific_dir" default="false"  />
+		</property>
+		<property name="validateItemsInReturnTrx" type="boolean" >
+			<column name="validate_items_in_return_trx" default="false" />
+		</property>
+		<property name="ignorePointsRedemption" type="boolean">
+			<column name="ignore_points_redemption" default="true"  />
+		</property>
+		<property name="contractStores" type="string" column="contract_stores"
+			length="50" />
+		<property name="contractContacts" type="string" column="contract_contacts"
+			length="50" />
+		<property name="contractSMSAdded" type="string" column="contract_sms_added"
+			length="50" />
+		<property name="contractEReceiptsRestricted" type="string" column="contract_e_receipt_restricted"
+			length="50" />
+		<property name="receiptOnSMS" type="boolean">
+			<column name="receipt_on_sms" default="false"/>
+		</property>
+	<many-to-one name="vmta" class="org.mq.captiway.scheduler.beans.Vmta"
+		foreign-key="id" fetch="select">
+		<column name="vmta" />
+	</many-to-one>
+	  </class>
+</hibernate-mapping>
+

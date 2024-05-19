@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:53:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SegmentRules"
+		table="segment_rules">
+		<id name="segRuleId" type="java.lang.Long" column="seg_rule_id">
+			<generator class="native" />
+		</id>
+		<property name="segRuleName" type="string" column="seg_rule_name" />
+		<property name="description" type="string" column="description" />
+		
+		<!--<many-to-one name="mailingList"
+			class="org.mq.marketer.campaign.beans.MailingList"
+			foreign-key="mlsegmentRuleId" fetch="select">
+			<column name="ml_list_id" />
+		</many-to-one>
+		
+		-->
+		
+		<property name="listId" type="java.lang.Long"  column="ml_list_id" />
+		<property name="lastRefreshedOn" type="calendar"
+			column="last_refreshed_on" />
+		<property name="createdDate" type="calendar"
+		column="created_date" />
+		<property name="modifiedDate" type="calendar"
+		column="modified_date" />
+		<property name="size"  type="long">
+			<column name= "size" default="0" />
+		</property>
+		<property name="totSize"  type="long">
+			<column name= "tot_size" default="0" />
+		</property>
+		<property name="totMobileSize"  type="long">
+			<column name= "tot_mobile_size" default="0" />
+		</property>
+		
+		<set name="sharedToDomain" table="segments_domains" >
+			<key column="seg_rule_id" />
+			<many-to-many class="org.mq.marketer.campaign.beans.UsersDomains" column="domain_id" />
+		</set>
+		
+		
+		<!--<set name="sharedToDomain" table=""
+			 inverse="true">
+			<key column="seg_rule_id" />
+			<many-to-many
+				class="org.mq.marketer.campaign.beans.UsersDomains"
+				column="domain_id" />
+		</set>
+			
+		
+		
+		--><property name="segRule" type="text"  column="seg_rule" />
+		<property name="segmentType" type="string"  column="seg_type" />
+		<property name="segmentMlistIdsStr" type="string" >
+		<column name= "segment_mlist_ids" length="500" />
+		</property>
+		<property name="emailSegQuery" type="text" column="seg_query" />
+		<property name="mobileSegQuery" type="text" column="mobile_seg_query" />
+		<property name="totSegQuery" type="text" column="tot_seg_query" />
+		<property name="segRuleToView" type="text" column="seg_rule_to_view" />
+		<property name="userId" type="java.lang.Long" column="user_id" />
+		
+	</class>
+</hibernate-mapping>
+

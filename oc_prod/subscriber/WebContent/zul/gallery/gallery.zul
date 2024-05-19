@@ -1,0 +1,301 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+ <!--<style>
+.z-button .z-button-tl, .z-button .z-button-tr,
+ .z-button .z-button-bl, .z-button .z-button-br,
+.z-button .z-button-tm, .z-button .z-button-bm,
+ .z-button .z-button-cl, .z-button .z-button-cr, .z-button .z-button-cm {
+    background-image:none;
+}
+</style> 
+
+-->
+<window id="galleryWinId" border="0" apply="org.mq.marketer.campaign.controller.gallery.GalleryController" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%" xmlns:w="http://www.zkoss.org/2005/zk/client">
+	
+	<window id="newGallerySubWinId" visible="false" position="center" onClose="self.setVisible(false); event.stopPropagation();"  
+				  		 width="500px" height="220px"  title="" closable="true" >
+		  	<div id="changeImgNameDivId" visible="false">
+			  	<h:table border="0"  >
+			  			<h:tr height="25px;">
+			  				<h:td align="center" colspan="2">Image name contains special characters. Please change the name. Characters allowed are '&amp;', '+', '-', '=', '@', '_' and spaces.</h:td>
+			  		
+			  			</h:tr>
+			  			<h:tr>
+							<h:td align="center" colspan="2">
+								<h:div><label id="chngImgNameErrorMsgLblId" style="color:red" /></h:div>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td >Current Image Name:</h:td>
+							<h:td style="padding-bottom:10px;"><textbox id="oldimgNameTxtboxId" readonly="true"/><label id="oldExtLblId" style="padding-left:10px;" /></h:td>
+						
+						</h:tr>
+						<h:tr style="padding-top:10px;">
+							<h:td >Change Image Name:</h:td>
+							<h:td ><textbox id="changeImgNameTxtboxId" /><label id="newExtLblId" style="padding-left:10px;" /></h:td>
+							
+						</h:tr>
+						<h:tr>
+							<h:td  valign="middle" align="center" colspan="2" style="padding-left:125px; padding-top:10px;">
+								<button  label="OK" width="100px" id="newGalsubWinokBtnId" />
+							</h:td>
+						</h:tr>
+				</h:table>
+			</div>
+			
+			<div visible="false" id="createFolderDivId">
+				<h:table border="0" width="75%" cellspacing="10px;" align="center" >
+					<h:tr height="20px;">
+			  				<h:td></h:td><h:td></h:td>
+			  			</h:tr>
+					<h:tr>
+						
+						<h:td align="center" colspan="2">  
+							<h:div ><label value="" id="folderErrorMsgLblId" style="color:red;"/></h:div>
+						</h:td>
+					
+					</h:tr>
+					<h:tr>
+						<h:td width="200px" align="right">Folder Name:</h:td>
+						<h:td > <textbox id="newFolderTbId" value=" " maxlength="20"/></h:td>
+					</h:tr>
+					
+					
+					<h:tr>
+						<h:td align="right">
+							<button sclass="idle70 greenbtn" label="Add Folder" id="okBtnId" />
+						</h:td>
+						<h:td align="left">
+							<button  label="Cancel" sclass="idle" id="modifyCancelBtnId" onClick="newGallerySubWinId.setVisible(false)"/>
+						</h:td>
+					</h:tr>	
+					
+					
+				</h:table>
+			</div>
+			
+			
+			<!--  <div id="createFolderDivId" visible="false" >
+				<h:table cellspacing="10px" cellpadding="0"  width="100%" height="10%">
+					<h:tr>
+		     			<h:td width="200">Folder Name:</h:td>
+						<h:td width="350"> <textbox id="newFolderTbId" value=" " maxlength="20"/></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td align="center" colspan="2"> 
+							<image src="/img/icons/addfolder-but.jpg" id="okBtnId" />
+							<image src="/img/icons/cancel-but.jpg" id="cancelBtnId" onClick="newGallerySubWinId.setVisible(false)"/>
+		     			 </h:td>
+					</h:tr>
+			    </h:table> 
+			</div>-->
+			
+	</window>
+	
+	
+	<!-- <h:table cellspacing="0" cellpadding="2" width="100%" >
+		<h:tr >
+		<h:td valign="bottom">
+
+			<label value="You can create image folders and upload images to  them."/><h:br/>
+			<label value="Saved images can be used in your email campaigns." />
+		</h:td>
+		
+		<h:td width="310" align="right" vailgn="bottom">
+				<toolbarbutton id="createFoldTBarBtnId" label="New Folder"    image="/images/new_folder_Library.png"    />
+				<toolbarbutton id="viewAllImageTbarBtnId" label="View all images"   	image="/images/view_all_img.png"     />				
+		</h:td>
+		</h:tr>
+	</h:table> -->
+	
+	
+	<h:table cellspacing="0" cellpadding="2" width="100%" border="0">
+		<h:tr >
+		<h:td  align="left" >
+
+			<label value="You can create image folders and upload images to them. Saved images can be used in your email campaigns." /><h:br/>
+		</h:td>
+		<h:td width="310" align="right" vailgn="bottom">
+				<toolbarbutton id="createFoldTBarBtnId" label="New Folder"    image="/images/new_folder_Library.png"    />
+				<toolbarbutton id="viewAllImageTbarBtnId" label="View all images"   	image="/images/view_all_img.png"     />				
+		</h:td>
+		</h:tr>
+	</h:table> 
+	
+
+	
+	<h:table cellspacing="0" cellpadding="2" width="100%" >
+	<h:tr >
+	<h:td>
+	                    <div style="text-align:left;">
+							<label value="Search :"  sclass="theme-lbHeading"/>
+							<textbox id="searchBox" value="Enter Image Name"  width="150px" style="color:grey;font-style:italic;font-size:12px;" 
+						w:onClick="javascript: if(this.getValue()=='Enter Image Name') {  this.setValue(''); }" 
+						w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Image Name'); }" focus="false" />
+						<label value="  Image not found" style="color:red;font-size:12" id="searchId" visible="False"/>
+							
+						</div>
+	                 
+</h:td>
+</h:tr>
+</h:table>
+	         
+	
+	
+	
+	<h:table width="100%">
+		<h:tr>
+			<h:td  width="240px" valign="top">
+				<groupbox height="350px" closable="false">
+					<caption label="Folders"  />
+					<div id="galleryListLbIdDivId">
+						<listbox id="galleryListLbId" sclass="templateList" height="320px;">
+							 <listitem forEach="${galleryWinId$GalleryController.galleryList}" value="${each}" >
+								<listcell label="${each}"  />
+							 </listitem>
+						</listbox>
+					</div>	
+				</groupbox>
+			</h:td>
+			
+			<h:td valign="top">
+				<groupbox closable="false"  height="350px">
+					<caption label="Images" />
+					<div id="imagesDivId" width="100%" height="320px" style="overflow:auto;"  />
+				</groupbox>
+			</h:td>
+		</h:tr>
+		
+		<h:tr>
+		<h:td></h:td>
+			<h:td  align="right">
+				<div id="folderOpnDivId">
+				
+					<h:table>
+						<h:tr>
+							<!--<h:td>
+							
+							 <fileupload image="/images/upload-btn.png" id="fileUploadId"
+						 tooltiptext="Upload Images"/>
+							
+								<button id="uploadImgFileId"  tooltiptext="Upload Images" 
+									image="/images/upload-btn.png" hoverImage="/images/hover-uploadbtn.png"  />
+							</h:td>
+							-->
+							<h:td> 	
+								<button id="uploadImgBtnId" sclass="idle greenbtn" label="Upload Images" 
+								  upload="true,maxsize=-1,multiple=true" height="28px" />
+							
+							</h:td>
+							
+							<h:td>
+								<button id="folderDeleteImgId" sclass="idle" label="Delete Folder" style="margin-right: 0px;" />
+							</h:td>
+							
+							<h:td>
+							<button id="clearAllImgsId" sclass="idle" label="Clear All Images"/>
+							</h:td>
+						</h:tr>
+					</h:table>
+				</div>
+			</h:td>
+		</h:tr>
+		
+	</h:table>
+	<script>
+		 function onImgMouseOver(thisObj) {
+	      	
+	      	thisObj.setStyle('margin:1px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;border:#E1E1E1 1px solid;');
+			var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+			var delId = 'del_' + vboxId;
+		
+			thisObj.$f(delId).setVisible(true); 
+			thisObj.$f(zoomId).setVisible(true);
+			
+	      } 
+      
+	      function onImgMouseOut(thisObj) {
+	      
+	      	thisObj.setStyle('margin:2px;padding-left:20px;padding-top:20px;padding-right:20px;padding-bottom:5px;float:left;');
+	      	
+	      	var vboxExtIdArr = thisObj.getId().split('_');
+			vboxExtIdArr.getChildren
+			var vboxId = vboxExtIdArr[1];
+			var zoomId = 'zoom_' + vboxId;
+			var delId = 'del_' + vboxId;
+			
+	      	thisObj.$f(delId).setVisible(false); 
+			thisObj.$f(zoomId).setVisible(false);
+	     
+	      } 
+
+			var visible = false;
+		
+			function viewFold(btn) {
+				if(!visible) {
+					
+					jq(btn.$f('createFolderId')).hide().slideDown();
+					visible = true;
+				}else { 
+			  			jq(btn.$f('createFolderId')).show().slideUp();
+			   			visible = false;
+				}
+		  	}
+    </script>
+    
+    <window id="multipleUploadWinId" title="Information" 
+						 visible="false" width="360px" height="150px"
+						closable="true"
+						onClose="self.setVisible(false); event.stopPropagation();" >
+					<div style="margin:10px 10px 10px 20px;">
+					
+						<h:table width="100%">
+							<h:tr  valign="top">
+								<!-- <h:td align="center"> -->
+								<h:td style="height:100%" align="left">
+								       <image src="/images/Info-icon.png" />
+								</h:td>
+								<h:td style="height:100%" align="left">
+						 				<!-- <label value="Image(s) uploaded successfully."/> -->
+						 				<label id="successMsgLblId" />
+						 		</h:td>
+						 	</h:tr>
+						</h:table>
+						 
+						<h:table width="100%">						
+						<h:tr height="20" />	 
+						<h:tr>
+							<h:td align="center" >
+								<div style="margin-right:10px;margin-left:20px;">
+									<button id="uploadMoreBtnId" sclass="idle greenbtn"  label="Upload More Images"  
+									upload="true,maxsize=-1,multiple=true" height="28px"/>
+									<button label="No Thanks" id="okBtnId" />
+								</div>
+							</h:td>
+						</h:tr>						 
+						</h:table> 
+					</div>
+            			
+						
+						
+						
+	</window>
+	
+	<window id="errowWinId" title="Error" 
+						border="normal" visible="false" width="400px" height="150px"
+						closable="true"
+						onClose="self.setVisible(false); event.stopPropagation();">
+						<h:br/>
+						<label id="imgNameId"/> cannot be uploaded.<h:br/> Reason : Size should not exceed 1 MB.<h:br/> Here is our article on how to reduce image size: 
+							  <a href='https://goo.gl/gjySuC' target="_blank"> https://goo.gl/gjySuC</a>
+						
+						
+						
+	</window>
+	
+</window>
+</zk>

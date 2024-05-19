@@ -1,0 +1,31 @@
+<zk>
+<window id="trashWinId" border="0" apply="org.mq.marketer.campaign.controller.message.TrashController">
+
+		<listbox id="trashmsgslbId" width="100%" sclass="messageLb" style="align:center"  
+								checkmark="true" multiple="true"    rows="8" >
+			<listhead sizable="false">
+			<listheader label=""  width="30px"/>
+				<listheader label="Module"  width="25%"/>
+				<listheader label="Subject"  width="50%" maxlength="50"/>
+				<listheader label="Date"  width="25%" />
+			</listhead>
+		
+			</listbox>
+			
+			<div>
+			<toolbarbutton label="Move to Inbox" id="moveToInboxTbarBtnId"/>
+				<space/>
+				<toolbarbutton label="Delete" id="deleteBtnId"/>
+			</div>
+			
+			<div>
+				<label id="totalMsgsLblId" />
+			</div>
+
+			
+			<div sclass="contactsView">
+				<paging id="messagesPagingId" pageSize="10" width="99%" class="contactsViewPaging"  />
+			</div>
+			
+</window>				
+</zk>

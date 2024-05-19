@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.NotSentToContacts"
+		table="not_sent_to_conatcts">
+		<id name="notSentId" type="java.lang.Long" column="not_sent_id">
+			<generator class="native" />
+		</id>
+		
+		
+		<property name="sentId" type="java.lang.Long">
+			<column name="sent_id"  />
+		</property>
+		
+		
+		<property name="crId" type="java.lang.Long">
+			<column name="cr_id" />
+		</property>
+		
+		<!--<one-to-one name="custFieldData" class="org.mq.captiway.scheduler.beans.CustomFieldData" property-ref="emailId" cascade="all"/>
+			
+
+		
+	-->
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,246 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style dynamic="true">
+		.z-grid {
+			margin: 5px;
+		}
+		.red.z-row > td.z-row-inner {
+		background: #E8C2C1;
+		}
+		.blue.z-row > td.z-row-inner {
+		background: #C1E0E8;
+		}
+		.gray.z-row > td.z-row-inner {
+		background: #D6D6D6;
+		}
+		.yellow.z-row > td.z-row-inner {
+		background: #E8E7C1;
+		}
+		.green.z-row > td.z-row-inner {
+		background: #CDE8C1;
+		}
+		tr.z-row .z-detail-outer {
+		background: none;
+		}
+		tr.z-row td.z-row-inner {
+		 border-left-width: 0;
+		 border-right-width: 1;
+		 border-top-width: 1;
+		 border-color: lightgray;
+		}
+		.z-column .z-column-cnt {
+			padding: 2px;
+			font-weight: bold;
+		}
+		.z-detail-faker > td > div {
+			padding-bottom: 5px;
+		}
+		tr.z-row.last td:first-child {
+			background: #F1EFC6;
+		}
+		tr.z-row.last td:first-child span {
+			font-weight: bold;
+			color: #06488E;
+		}
+		
+		.link {
+			font-size:10px;
+		}
+				
+	</style>
+<window id="recentAct" border="0" apply="org.mq.marketer.campaign.controller.UserRecentActivities" xmlns:h="http://www.w3.org/1999/xhtml"  xmlns:w="http://www.zkoss.org/2005/zk/client" >
+<script type="text/javascript">
+		       <![CDATA[
+			
+		    	function selAllSettingsGrid_old(grid) {
+		    		
+		    		var iterator = grid.getBodyWidgetIterator();
+	    			while(iterator.hasNext()) {
+		    			
+	    				var row = iterator.next();
+		    			if(row != undefined) {
+	    					
+		    				//alert(row.getChildAt(1).isChecked())
+	    					var innerIterator =  zk.Widget.$(jq(row.getChildAt(0).getChildAt(0))).getBodyWidgetIterator();
+	    					
+		    				while(innerIterator.hasNext()) {
+	    						var innerRow = innerIterator.next();
+				    			if(innerRow != undefined) {
+				    				
+					    			innerRow.getChildAt(0).setChecked(row.getChildAt(1).isChecked());
+					    			//innerRow.getChildAt(0).fire('onCheck',{value:row.getChildAt(1).isChecked()},{toServer:true},0);
+					    			zAu.send(new zk.Event(zk.Widget.$(innerRow.getChildAt(0)), 'onCheck',row.getChildAt(1).isChecked()));
+				    			}
+	    					} // while
+		    			
+		    			} // if
+		    		} //while
+		    	} // fn.
+		    	
+		    	
+		    	function selAllSettingsGrid(checkbox) {
+		    		
+		    		var row = checkbox.parent;
+		    		
+		    		recurseCheck(zk.Widget.$(jq(row.getChildAt(0).getChildAt(0))), checkbox.isChecked());
+		    		return;
+		    		
+		    		
+		    		var innerIterator =  zk.Widget.$(jq(row.getChildAt(0).getChildAt(0))).getBodyWidgetIterator();
+		    		//var innerIterator2 =  zk.Widget.$(jq(innerIterator.next().getChildAt(0).getChildAt(0))).getBodyWidgetIterator();
+		    		
+		    		//alert('2 ' + innerIterator2);
+		    		
+		    		while(innerIterator.hasNext()) {
+						var innerRow = innerIterator.next();
+		    			if(innerRow != undefined) {
+		    				
+		    				if(zk.Widget.$(jq(innerRow.getChildAt(0).getChildAt(0))) != undefined) {
+		    				    alert('inner ');
+		    				    continue;
+		    				}
+		    				
+			    			innerRow.getChildAt(0).setChecked(row.getChildAt(1).isChecked());
+			    			//innerRow.getChildAt(0).fire('onCheck',{value:row.getChildAt(1).isChecked()},{toServer:true},0);
+			    			zAu.send(new zk.Event(zk.Widget.$(innerRow.getChildAt(0)), 'onCheck',row.getChildAt(1).isChecked()));
+		    			}
+					} // while
+		    		
+					return;
+					
+		    		var iterator = grid.getBodyWidgetIterator();
+	    			while(iterator.hasNext()) {
+		    			
+	    				var row = iterator.next();
+		    			if(row != undefined) {
+	    					
+		    				//alert(row.getChildAt(1).isChecked())
+	    					var innerIterator =  zk.Widget.$(jq(row.getChildAt(0).getChildAt(0))).getBodyWidgetIterator();
+	    					
+		    				while(innerIterator.hasNext()) {
+	    						var innerRow = innerIterator.next();
+				    			if(innerRow != undefined) {
+				    				
+					    			innerRow.getChildAt(0).setChecked(row.getChildAt(1).isChecked());
+					    			//innerRow.getChildAt(0).fire('onCheck',{value:row.getChildAt(1).isChecked()},{toServer:true},0);
+					    			zAu.send(new zk.Event(zk.Widget.$(innerRow.getChildAt(0)), 'onCheck',row.getChildAt(1).isChecked()));
+				    			}
+	    					} // while
+		    			
+		    			} // if
+		    		} //while
+		    	} // fn.
+		    	
+		    	
+		    	
+		    	
+		    	function recurseCheck(grid, isCheck) {
+		    		var innerIterator =  grid.getBodyWidgetIterator();
+					var tempGrid;
+		    		var i=0;
+		    		while(innerIterator.hasNext()) {
+						var innerRow = innerIterator.next();
+		    			if(innerRow != undefined) {
+		    				i= innerRow.nChildren - 1;
+		    				while(i>0) {
+		    					if(innerRow.getChildAt(i) == undefined) continue;
+		    					if(innerRow.getChildAt(i).className == 'zul.wgt.Checkbox') {
+		    						innerRow.getChildAt(i).setChecked(isCheck);
+		    						break;
+		    					}
+		    					i--;
+		    				}
+		    				//alert('children size :'+innerRow.nChildren);
+		    				//alert('innercheck :'+innerRow.getChildAt(1).className);
+		    				//innerRow.getChildAt(1).setChecked(isCheck);
+		    				tempGrid = zk.Widget.$(jq(innerRow.getChildAt(0).getChildAt(0)));
+		    				if(tempGrid != undefined) {
+		    				    recurseCheck(tempGrid, isCheck);
+		    				    continue;
+		    				}
+		    				
+			    			innerRow.getChildAt(0).setChecked(isCheck);
+			    			//innerRow.getChildAt(0).fire('onCheck',{value:row.getChildAt(1).isChecked()},{toServer:true},0);
+			    			zAu.send(new zk.Event(zk.Widget.$(innerRow.getChildAt(0)), 'onCheck',isCheck));
+		    			}
+					} // while
+		    		
+		    	}
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	function selAllViewActivity(select, grid) {
+		    			iterator = grid.getBodyWidgetIterator();
+		    			while(iterator.hasNext()) {
+			    			var row = iterator.next();
+			    			if(row != undefined) {
+				    			row.getChildAt(0).setChecked(select.isChecked());
+				    			zAu.send(new zk.Event(zk.Widget.$(row.getChildAt(0)), 'onCheck',select.isChecked()));
+			    			} // if
+			    		} // while
+		    	} // fn.
+		    	
+		    	
+		    	
+		    	]]>
+		    </script>
+	<tabbox width="100%">
+		<tabs>
+			<tab label="View Activities" />
+			<tab label="Edit Settings" />
+		</tabs>
+		
+		<tabpanels>
+			<tabpanel>
+			
+			
+				<h:table cellspacing="2" cellpadding="0" width="100%" >
+					<h:tr>
+						<h:td>
+							 <grid id="recentActGrdId" width="99%" style="align:center" sclass="contactsView" height="300px">
+								<columns sizable="false">
+										<column width="4%" align="center">
+											<checkbox id="checkAllActCbId"  w:onCheck="selAllViewActivity(this,this.$f('recentActGrdId'))" />
+										</column>
+										<column label="Module" sort="auto" width="20%" style="padding-left:15px;"/>
+										<column label="Description" sort="auto" width="55%"/>
+										<column label="Date" sort="auto" width="21%" align="center"/>
+								</columns>
+							</grid>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td align="right">
+							<div  visible="false" >
+								<a label="Click Here..." id="moreActivityLink" />
+								<label value=" to view more activities." />
+							</div>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+							<button label="Delete Selected" sclass="idle140 greenbtn" id="delButtonId" />
+						</h:td>
+					</h:tr>
+					
+				</h:table>
+			</tabpanel>
+			<tabpanel >
+				<grid id="userActGrdId" fixedLayout="true" >
+						<columns>
+							<column label=""  width="5%"/>
+							<!-- <column width="5%" style="padding-left:15px;" align="center">
+							</column> -->
+							<column label="Module" width="95%"/>
+						</columns>
+					<rows id="userActGrdRowsId"   />
+				</grid>
+				<button label="Save Settings" sclass = "idle140 greenbtn" id="saveBtnId" />
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+</window>
+</zk>

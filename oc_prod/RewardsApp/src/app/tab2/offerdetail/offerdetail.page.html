@@ -1,0 +1,92 @@
+
+
+<ion-content forceOverscroll="false">
+  <ng-container *ngIf="offerDetail">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent">
+    <div class="colorClass ht32">
+        <ion-toolbar color="#ffe000">
+            <ion-buttons slot="start" >
+                <ion-button  (click)="backButtonEvent()">
+                  <ion-icon mode="md" color="light" slot="icon-only" name="arrow-back"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+        <ion-item lines="none"  class="mr-right-5 mr-left-5 color-background">
+          <ion-label  text-wrap class="title topbottom0">
+            {{'OfferDetail' | translate}} 
+          </ion-label>
+        </ion-item>
+        <ion-grid class="mr-right-5 mr-left-5">
+          <ion-row>
+              <ion-col >
+                   <ion-card class="border-radius" (click)="goToBrowser(offerDetail.bannerUrlRedirect)">
+                       <img  src="{{offerDetail.bannerImage}}">
+                   </ion-card>  
+              </ion-col>
+          </ion-row>
+       </ion-grid>
+      </div>
+    <div class="mr-right-5 mr-left-5 top125" >
+      <!-- <ion-card class="imgHeight border-radius">  
+          <img  *ngIf="offerDetail" src="{{offerDetail.ImagePath}}"  style="width:100%">
+       </ion-card> -->
+
+       <ion-grid>
+        <ion-row>
+          <ion-col >
+             <ion-label class="header20 bold">  {{offerDetail.offerHeading}} </ion-label>
+          </ion-col>
+        </ion-row>
+         <!-- <ion-row>
+             <ion-col >
+                <ion-label class="header20 bold">  {{offerDetail.name}} </ion-label>
+            </ion-col>
+            </ion-row> -->
+       </ion-grid>
+    
+       <div >
+    
+            <!-- <ion-list-header>
+               <ion-label class="headerText bold navy">{{'CouponCode' | translate}}</ion-label>
+           </ion-list-header> -->
+           <ion-grid>
+               <ion-row (click)="copyToClipboard(offerDetail.couponCode)">
+                   <ion-col size="1.5" class="col1">
+                         <div class="couponcode ">
+                              <div class="white"></div>
+                         </div>
+                   </ion-col>
+                     <ion-col size="8" class="col2">
+                     <div class="couponcode dottedlines">
+                     <ion-item lines="none" class="color-background">
+                         <ion-label class="textCenter couponText bold">
+                             {{offerDetail.couponCode}}
+                         </ion-label>
+                     </ion-item>
+                     </div>
+                     </ion-col>
+               </ion-row>
+           </ion-grid>
+           
+            <div class="mr-right-5 mr-left-5" *ngIf="offerDetail.couponCode">
+               <!-- <ngx-barcode [bc-value]="offerDetail.couponCode" [bc-width]="2"  [bc-height]="height" ></ngx-barcode> -->
+            </div>
+                     
+            </div>
+       <ion-grid>
+         <ion-row>
+             <ion-col>
+                <div *ngIf="offerDetail.offerDescription" [innerHTML]="offerDetail.offerDescription | keepHtml:'html'"></div>
+             </ion-col>
+         </ion-row>
+       </ion-grid>
+      </div>
+
+    </ion-col>
+    <ion-col class="bgimage "></ion-col>
+    </ion-row>
+    </ion-grid>
+  </ng-container>
+</ion-content>

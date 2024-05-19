@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.CampaignSchedule"
+		table="campaign_schedule">
+		
+		<id name="csId" type="java.lang.Long">
+			<column name="cs_id" unique="true"/>
+		</id>
+		<property name="crId" type="java.lang.Long">
+			<column name="cr_id"/>
+		</property>
+		<property name="campaignId" type="java.lang.Long">
+			<column name="campaign_id"/>
+		</property>
+		<property name="parentId" type="java.lang.Long">
+			<column name="parent_id"/>
+		</property>
+		<property name="criteria" type="byte">
+			<column name="criteria"/>
+		</property>
+		<property name="scheduledDate" type="calendar">
+			<column name="scheduled_date" />
+		</property>
+		<property name="status" type="byte">
+			<column name="status" />
+		</property>
+		<property name="resendLevel" type="byte">
+			<column name="resend_level" default="0"/>
+		</property>
+		<many-to-one name="emailContent"
+			class="org.mq.marketer.campaign.beans.EmailContent" foreign-key="content_id"
+			fetch="select" cascade="all" lazy="false">
+			<column name="content_id" />
+		</many-to-one>
+		
+		<many-to-one name="user"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="user_id"
+			fetch="select"  lazy="false">
+			<column name="user_id" />
+		</many-to-one>
+		
+	</class>
+</hibernate-mapping>

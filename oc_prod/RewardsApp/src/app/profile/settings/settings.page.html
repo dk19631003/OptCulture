@@ -1,0 +1,79 @@
+
+
+<ion-content padding dir="{{textDir}}">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 ">
+  <div>
+      <ion-toolbar>
+          <ion-buttons slot="start" >
+              <ion-button  (click)="backButtonEvent()">
+                <ion-icon mode="md" color="dark" slot="icon-only" name="arrow-back"></ion-icon>
+              </ion-button>
+          </ion-buttons>
+      </ion-toolbar>
+      <ion-item lines="none"  >
+            <ion-label text-wrap class="titleText">
+             {{'Settings' | translate }} 
+            </ion-label>
+          </ion-item>
+  </div>
+<ion-list>
+  <ion-list-header>
+      <ion-label class="headerText bold">{{ 'CommunicationPreferences' | translate }}</ion-label>
+    </ion-list-header>
+  <ion-item>
+    <ion-label class="textFont">{{ 'PushNotifications' | translate}}</ion-label>
+    <ion-checkbox slot="end" color="dark" class="checkbox-icon" mode="ios" [(ngModel)]="pushNotifications" (ngModelChange)="callUpdate('push')"></ion-checkbox>
+  </ion-item>
+
+  <ion-item>
+    <ion-label class="textFont">{{ 'SMSNotifications' | translate}} </ion-label>
+    <ion-checkbox slot="end" color="dark" class="checkbox-icon" mode="ios" [(ngModel)]="smsNotifications" (ngModelChange)="callUpdate('sms')"></ion-checkbox>
+  </ion-item>
+
+  <ion-item>
+    <ion-label class="textFont">{{ 'EmailNotifications' | translate}}</ion-label>
+    <ion-checkbox slot="end" mode="ios" color="dark" class="checkbox-icon" [(ngModel)]="emailNotifications" (ngModelChange)="callUpdate('email')"></ion-checkbox>
+  </ion-item>
+
+  <ion-list-header>
+      <ion-label class="headerText bold">{{ 'AppPreferences' | translate }}</ion-label>
+    </ion-list-header>
+
+    <ion-item>
+        <ion-label class="textFont">{{'EnableTouchId' | translate}} </ion-label>
+        <ion-checkbox slot="end" mode="ios" color="dark" class="checkbox-icon" [(ngModel)]="isFingerPrintAvailable" (ngModelChange)="fingerPrintChange(isFingerPrintAvailable)"></ion-checkbox>
+    </ion-item>
+
+  
+    <ion-item lines="inset">
+        <ion-label class="textFont">{{'Language' | translate}} </ion-label>
+        <ion-select class="textFont colorCheck" mode="ios" [(ngModel)]="langauage" [interfaceOptions]="customPopoverOptions"  interface="popover" (ngModelChange)="setLanguage(langauage)">
+          <ion-select-option class="textFont" mode="md" value="en"  selected="true">English</ion-select-option>
+          <ion-select-option class="textFont" mode="md" value="ar" >{{'Arabic' | translate}} </ion-select-option>
+        </ion-select>
+    </ion-item>
+    <ion-list-header>
+        <ion-label class="headerText bold">{{ 'Help' | translate }} </ion-label>
+    </ion-list-header>
+    <ion-item (click)="navigateToSupport()"> 
+        <ion-icon slot="end" class="checkbox-icon" mode="md" color="dark" name="arrow-forward"></ion-icon>
+        <ion-label class="textFont">{{'HelpAndSupport' | translate}} </ion-label>
+    </ion-item>
+</ion-list>
+<br/><br/>
+
+<ion-row>
+  <ion-col size="7">
+
+  </ion-col>
+  <ion-col size="5" class="fontsmaller textCenter">
+      Version {{version}}
+  </ion-col>
+</ion-row>
+</ion-col>
+<ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>

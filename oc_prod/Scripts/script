@@ -1,0 +1,38 @@
+ Task is we have optsyn record ,some time what happen some recorde will be deleted autometically ,than we want to know reason ,why that particular record deleted?
+ solution:
+ ->For this i create a tigger as before_delete on that appropriate table(opt_sync_data).
+ 
+ ->for trigger we required  another tmep table so i create one table as opt_sync_data_audit.
+
+ ->than i wait for  any optsyn recorde deleted.
+ -> if record is deleted  that recorde is stored in temp table(opt_sync_data_audit) or not.
+
+
+
+note 
+Trigger definition
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `optculture_2_0_app_CC`.`opt_sync_data_BEFORE_DELETE` BEFORE DELETE ON `opt_sync_data` FOR EACH ROW
+BEGIN
+insert into opt_sync_data_audit(plugin_id,user_id,action_time,action)
+values(old.opt_sync_id,old.user_id,CURRENT_TIME,'DELETE');
+END
+
+
+
+Table def:
+   opt_sync_data_audit
+col:pulgin_id
+    user_id
+    action_time
+    action     
+
+
+CREATE TABLE `opt_sync_data_audit` (
+  `plugin_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  `action_time` datetime DEFAULT NULL,
+  `action` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`plugin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+

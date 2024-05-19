@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.Schedule"
+		table="schedule">
+		<id name="scheduleId" type="java.lang.Long">
+			<column name="schedule_id" />
+			<generator class="native" />
+		</id>
+		<many-to-one name="campaign"
+			class="org.mq.marketer.campaign.beans.Campaigns" cascade="delete"
+			foreign-key="campaign_recurrence" fetch="select">
+			<column name="campaign_id" not-null="true"
+				unique-key="Unique_Recurrence" />
+		</many-to-one>
+		<property name="frequencyType" type="string">
+			<column name="frequency_type" length="30" />
+		</property>
+		<property name="frequency" type="string">
+			<column name="frequency" length="30" />
+		</property>
+		<property name="startDate" type="calendar">
+			<column name="start_date" />
+		</property>
+		<property name="endDate" type="calendar">
+			<column name="end_date" />
+		</property>
+		<property name="day" type="int">
+			<column name="day" />
+		</property>
+	</class>
+</hibernate-mapping>

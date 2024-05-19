@@ -1,0 +1,181 @@
+<zk>
+	<window id="addContWinId" width="100%"  apply="org.mq.marketer.campaign.controller.contacts.AddSingleController"  xmlns:h="native" xmlns:w="http://www.zkoss.org/2005/zk/client">
+ 
+	    <h:table cellspacing="2" cellpadding="2" width="100%" >
+	    	<h:tr >
+	    		<h:td  >
+						<label value="Manual Upload" sclass="theme-lbHeading"/>
+				</h:td>
+	    	</h:tr>
+	    </h:table>
+	    
+	    <div style="height:20px;margin: 10px 0;background-color: #F6F7F9;padding:7px;border: 1px solid #CCCCCC;">
+	  		<label value="Selected List Name(s) :" style="color:#09719F;"/>
+			<label  id="listNameLabeId"  multiline="true" style="color:#2886B9;font-family:verdena,Arial,Sans-serif;font-weight:bold;"/>
+		</div>
+		<div style="height:20px;margin: 10px 0;padding:7px;">
+			<label value="Please enter the contact details by filling the following form."/>
+		</div>
+		
+	    
+	    	<!-- <div id="userSettingDivId" width="100%" visible="true"> -->
+	    	<!--
+	    <groupbox closable="false">
+	    
+			<caption label="Contact Fields" style="padding:0px 4px;font-size:12px;" />
+		  </groupbox>	
+			-->
+			<div width="55%" align="right">
+			 	<a label="Show all" id="showAllAnchorId" visible="false"  style="padding:0px 4px;font-size:12px;color:#2886B9;font-weight:bold;" />
+			</div>
+				
+			<grid fixedLayout="true" >		
+	
+	       		<columns>
+	           		<column  width="15%" align="right" style="border:none" />
+	           		<column  width="30%" align="center" style="border:none" />
+	           		<column   align="left" style="border:none" />
+	       		</columns>
+	
+	       		<rows id="rowsId">
+	       		
+	         			<row height="35px" id="fNameRowId" visible="true" >
+	               		<label value="First Name  :"/>
+	               		<textbox id="firstNameTbId" cols="25" maxlength="50" tabindex="1" />
+	               		<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="fNameRowId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           	 	</row>
+	           	 	
+	           		<row height="35px" id="lNameRowId" visible="true">
+	              			<label value="Last Name  :"/>
+	              		 	<textbox id="lastNameTbId" cols="25" maxlength="50" tabindex="2"/>
+	              		 	<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="lNameRowId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           		
+	           		<row height="35px" visible="true">
+	           			<label value="Email  :" />
+	               		<!-- <div><label style="color:red;" value=" * " /><space/><label value="Email  :" /></div> -->
+	               		<textbox  id="emailTBoxId" cols="25" maxlength="50"   tabindex="3" />
+	               		<label id="statusLabelId" value=""/>
+	           		</row>
+	           		
+	          			 <row height="35px" visible="true">
+	               		<label value="Phone Number  :"/>
+	               		<longbox  id="mPhoneIBoxId" cols="25" maxlength="20" tabindex="4"/>
+	               		<label />
+	           		</row >
+	           		
+	           		<row height="35px" id="aOneRId" visible="true" >
+	              			<label value="Address One  :"/>
+	                   	<textbox id="addOneTBoxId" cols="25"  maxlength="50" tabindex="5"/>
+	                   	<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="aOneRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           	
+	           		<row height="35px" id="aTwoRId" visible="true" >
+	           			<label value="Address Two  :" />
+	                 		<textbox id="addTwoTBoxId"  cols="25"  maxlength="50" tabindex="6"/>
+	                  	 	<a label="Hide"  style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="aTwoRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           	
+	          			<row height="35px" id="cityRId" visible="true">
+	          				<label value="City  :"/>
+	          			
+	                 	  	<textbox id="cityTBoxId"  cols="25"  maxlength="50" tabindex="7"/>
+	                   	<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="cityRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           	
+	           		<row height="35px" id="stateRId" visible="true" >
+	           			<label value="State :"/>
+	                   	<textbox id="stateTBoxId" cols="25"  maxlength="50" tabindex="8" />
+	                   	<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="stateRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           	
+	           		<row height="35px" id="countryRId" visible="true" >
+	           			<label value="Country  :"/>
+	                   	<textbox id="countryTBoxId" cols="25"  maxlength="50" tabindex="9"/>
+	                   	<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="countryRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           	
+	           		<row height="35px" id="pinRId" visible="true">
+	           			<label value="Zip Code  :"/>
+	                   	<intbox id="pinTBoxId" cols="25"  maxlength="8" tabindex="10"/>
+	                  		<!--<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="HideFold(pinRId)"/>-->
+	           			<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="pinRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           		
+	           		
+	           		<row height="35px" id="genderRId" visible="true">
+	           			<label value="Gender  :"/>
+	           			<listbox id="gendarListBxId" width="230px" mold="select">
+	           				<listitem label="--Select--" selected="true"/>
+	           				<listitem label="Male"/>
+	           				<listitem label="Female"/>
+	           			</listbox>
+	                   <a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="genderRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           		
+	           		<row height="35px" id="birthDayRId" visible="true">
+	           			<label value="Birthday  :"/>
+	                   	<datebox id="birthDayDateBoxId" use="org.mq.marketer.campaign.custom.MyDatebox" width="200px"/>
+	           			<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="birthDayRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           		
+	           		<row height="35px" id="anniversaryRId" visible="true">
+	           			<label value="Anniversary  :"/>
+	                   	<datebox id="anniversaryDateBoxId" use="org.mq.marketer.campaign.custom.MyDatebox" width="200px"/>
+	           			<a label="Hide" style="color:#2886B9;font-size:12px;font-weight:bold;" onClick="anniversaryRId.setVisible(false);showAllAnchorId.setVisible(true);"/>
+	           		</row>
+	           		
+	           		
+	           		
+	       		</rows>
+	    	</grid>
+	    	
+			<label value="Custom Fields" id="custFieldLabelId" visible="false" sclass="theme-lbHeading" />
+	
+			<separator/>
+				
+			<div id="cfDivId" width="100%" visible="false">
+				<grid fixedLayout="true">	
+					
+	       			<columns>
+	           			<column  width="15%" align="right" style="border:none" />
+	           			<column  width="30%" align="center" style="border:none" />
+	           			<column   align="left" style="border:none" />
+	       			</columns>
+	       			
+	       			<rows id="custGridRowsId" />
+	       		</grid>
+			</div>
+		
+	  
+	
+	    <separator/>
+	    	
+	   	<div id="addCustDivId" width="100%" visible="false">
+	   		<div style="margin-left:300px;">
+	   			<toolbarbutton id="addNewCustFieldTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add a Custom Field"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	   		</div>
+	       	<grid width="850px" id="custFieldsGbId" visible="false" >
+						
+				<columns>
+					<column  width="200px" align="right" label="Custom Field Name" />
+					<column width="350px" align="left" label="Data Type" />
+					<column width="200px" label="Default Value" align="center"/>
+					<column  label="" align="left" /> 
+				</columns>
+				
+				<rows id="custFieldRowsId"></rows>
+			</grid>
+	  	</div>
+			
+	   	<div style="text-align: right;margin: 10px">
+			<button id="doneBtnId" visible="true" label="Save" sclass="idle140  greenbtn"/>
+			<button id="submitBtnId"  width="240px;" label="Save and Add More Contact" sclass="idle180 greenbtn" />
+	 			<button label="Back" id="backBtnId" sclass="idle140"/>
+			
+	   	</div>
+    	
+    
+	</window>
+</zk>

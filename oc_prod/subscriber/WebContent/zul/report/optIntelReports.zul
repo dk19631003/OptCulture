@@ -1,0 +1,235 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="optIntelWinId" border="0"   apply="org.mq.marketer.campaign.controller.report.OptIntelReportsController" 	xmlns:h="native" xmlns:w="client" width="100%">
+		<style>
+		
+		
+		.hoverlistheader > .z-column-cnt{ 
+
+         cursor: pointer;
+        }
+		
+		</style>
+	<!--<div> <label  value="Promotional Redemption" style="font-weight:bold"/></div>
+	--><!-- <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+                 <h:td>
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="memberPerPageLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="promoCodePagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		</h:tr>
+	</h:table> -->
+	<!-- <grid emptyMessage="No Data available" >
+		<columns>
+			<column label="Promo code" />
+			<column label="Revenue"/>
+			<column label="No. Of Customers"/>
+		</columns>
+		<rows  id="promoCodeRowsId" />
+	
+	</grid> -->
+	<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+		<h:tr bgcolor="#F4F5F9">
+			<h:td>
+				<label value="Date" sclass="theme-lbHeading"/>
+							<space/>
+							<label value="From"/>
+							<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							format="dd-MMM-yyyy" constraint="no future"/><space/>
+							<label value="To "/>
+							<datebox id="toDateboxId" readonly="true"
+							use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy"/>
+			</h:td>
+			
+			<h:td>
+				<button label="Get Reports" sclass="idle140 greenbtn" id="getBetweenDatesBtnId"/>
+				<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+			</h:td>
+		</h:tr>
+	</h:table>
+	
+	<h:div style="padding:15px 0 5px 5px;"><label value="Promotions Redemptions" id="promoID" style="font-weight:bold;"/></h:div> 
+	<grid id="promotionRedmGridId" emptyMessage="No Data available" >
+		<columns>
+			<column label="Promotion" id="sortbyPromotion" sclass="hoverlistheader"/>
+			<column label="Revenue" id="sortbyRevenue" sclass="hoverlistheader"/>
+			<column label="No. Of Redemptions" id="sortbyNoOfRedemptions" sclass="hoverlistheader"/>
+			<column label="Sales Date" visible="false"/>
+		</columns>
+		<rows  id="promotionRedmRowsId" />
+	
+	</grid>
+	<div id="pagingPromoDivId">
+	    <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+		        <h:td align="left">
+							<div id="exportPromoDivId" >
+								<label value="Export as a " />
+								<listbox id="exportFilterPromoLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<label value=".file" />
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnPromoId" />
+							</div>
+				</h:td>
+		
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="memberPerPagePromoLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="promoPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		</h:tr>
+		</h:table>
+	</div>
+	
+	<grid id="promotionRedmDetailGridId" visible="false" emptyMessage="No Data available" >
+		<columns>
+			<column label="Store"/>
+			<column label="Revenue" />
+			<column label="No. Of Redemptions" />
+			<column label="Sales Date" visible="false"/>
+		</columns>
+		<rows  id="promotionRedmDetailRowsId" />
+	
+	</grid>
+	<div id="pagingPromoDetailDivId" visible="false">
+	    <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+		        <h:td align="left">
+							<div id="exportPromoDetailDivId" >
+								<label value="Export as a " />
+								<listbox id="exportFilterPromoDetailLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<label value=".file" />
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnPromoDetailId" />
+							</div>
+				</h:td>
+		
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="memberPerPagePromoDetailLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="promoDetailPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		</h:tr>
+		</h:table>
+	</div>
+	<h:div style="padding:15px 0 5px 5px;"><label value="Store Redemptions" id="storeID" style="font-weight:bold;"/></h:div> 
+	<grid id="storeRedmGridId" emptyMessage="No Data available" >
+		<columns>
+			<column label="Store"  id="sortbyStore" sclass="hoverlistheader" />
+			<column label="Revenue" id="sortbyStoreRevenue" sclass="hoverlistheader"/>
+			<column label="No. Of Redemptions" id="sortbyStoreNoOfRedemptions" sclass="hoverlistheader"/>
+			<column label="Sales Date" visible="false"/>
+		</columns>
+		<rows  id="storeRedmRowsId" />
+	
+	</grid>
+	<div id="pagingStoreDivId">
+	    <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+		        <h:td align="left">
+							<div id="exportStoreDivId" >
+								<label value="Export as a " />
+								<listbox id="exportFilterStoreoLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<label value=".file" />
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnStoreId" />
+							</div>
+				</h:td>
+		
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="memberPerPageStoreLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="storePagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		</h:tr>
+		</h:table>
+	</div>
+	
+	
+	
+	<grid id="storeRedmDetailGridId" visible="false" emptyMessage="No Data available" >
+		<columns>
+			<column label="Promotion" />
+			<column label="Revenue"/>
+			<column label="No. Of Redemptions"/>
+			<column label="Sales Date" visible="false"/>
+		</columns>
+		<rows  id="storeRedmDetailRowsId" />
+	
+	</grid>
+	
+	<div id="pagingStoreDetailDivId" visible="false">
+	    <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+		        <h:td align="left">
+							<div id="exportStoreDetailDivId" >
+								<label value="Export as a " />
+								<listbox id="exportFilterStoreDetailLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<label value=".file" />
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnStoreDetailId" />
+							</div>
+				</h:td>
+		
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="memberPerPageStoreDetailLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="storeDetailPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		</h:tr>
+		</h:table>
+	</div>
+	<div id="backToOverviewDivId" visible="false">
+	    <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+				<h:td align="right">
+			   		<button  label="Back" sclass="idle140" id="backBtnId" />
+				</h:td>
+				
+		</h:tr>
+		</h:table>
+	</div>
+
+
+</window>
+</zk>

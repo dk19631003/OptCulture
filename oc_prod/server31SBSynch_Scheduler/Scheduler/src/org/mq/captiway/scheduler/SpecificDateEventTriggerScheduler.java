@@ -1,0 +1,510 @@
+package org.mq.captiway.scheduler;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
+import java.util.TimerTask;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.captiway.scheduler.beans.ContactSpecificDateEvents;
+import org.mq.captiway.scheduler.beans.EventTrigger;
+import org.mq.captiway.scheduler.beans.EventTriggerEvents;
+import org.mq.captiway.scheduler.beans.MailingList;
+import org.mq.captiway.scheduler.beans.Users;
+import org.mq.captiway.scheduler.dao.ContactSpecificDateEventsDao;
+import org.mq.captiway.scheduler.dao.ContactSpecificDateEventsDaoForDML;
+import org.mq.captiway.scheduler.dao.EventTriggerDao;
+import org.mq.captiway.scheduler.dao.EventTriggerDaoForDML;
+import org.mq.captiway.scheduler.utility.Constants;
+import org.mq.captiway.scheduler.utility.MyCalendar;
+import org.mq.captiway.scheduler.utility.PropertyUtil;
+import org.mq.captiway.scheduler.utility.TriggerQueryGenerator;
+import org.mq.captiway.scheduler.utility.Utility;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+/**
+ * 
+ * @author proumya
+ * Job is to run for every one hour and check for the date specific EventTriggers.
+ */
+public class SpecificDateEventTriggerScheduler extends TimerTask  implements ApplicationContextAware {
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SCHEDULER_LOGGER);
+	
+	private ApplicationContext applicationContext;
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
+	
+	private EventTriggerDao eventTriggerDao;
+	private EventTriggerDaoForDML eventTriggerDaoForDML;
+	private PMTAQueue pmtaQueue ;
+	private SMSQueue smsQueue;
+	private ContactSpecificDateEventsDao contactSpecificDateEventsDao;
+	private ContactSpecificDateEventsDaoForDML contactSpecificDateEventsDaoForDML;
+	
+//	private EventTriggerScheduler eventTriggerScheduler;
+	private static final String COMMA = Constants.DELIMETER_COMMA;
+	
+	public SpecificDateEventTriggerScheduler() {
+		
+	
+		
+	}
+	
+	
+	@Override
+	public void run() {
+
+		MyCalendar myCal = new MyCalendar();
+		eventTriggerDao = (EventTriggerDao)applicationContext.getBean("eventTriggerDao");
+		eventTriggerDaoForDML = (EventTriggerDaoForDML)applicationContext.getBean("eventTriggerDaoForDML");
+		pmtaQueue = (PMTAQueue)applicationContext.getBean("pmtaQueue");
+		smsQueue = (SMSQueue)applicationContext.getBean("smsQueue");
+		contactSpecificDateEventsDao = (ContactSpecificDateEventsDao)applicationContext.getBean("contactSpecificDateEventsDao");
+		contactSpecificDateEventsDaoForDML = (ContactSpecificDateEventsDaoForDML)applicationContext.getBean("contactSpecificDateEventsDaoForDML");
+		
+		List<EventTrigger> activeTriggerList = eventTriggerDao.findAllActiveTriggerList(myCal.toString(), true);
+		if(activeTriggerList == null) {
+			
+			logger.info("no Active triggers found");
+			return;
+		}
+		
+		//logger.info("got an active trigger >>>>>>>>>"+activeTriggerList.size());
+		
+		List<EventTrigger> activeTriggersListOfActionEmail = new ArrayList<EventTrigger>();
+		List<EventTrigger> activeTriggersListOfActionSMS = new ArrayList<EventTrigger>();
+
+		for (EventTrigger eventTrigger : activeTriggerList) {
+			
+			if( (eventTrigger.getTrType().intValue() & Constants.ET_TYPE_ON_CONTACT_DATE ) <= 0) continue;
+			
+			try {
+				Users etOwner = eventTrigger.getUsers();
+				if(etOwner == null || etOwner.getClientTimeZone() == null) {
+					
+					logger.debug("No user / time zone found for user "+etOwner.getUserId()+ " For trigger "+eventTrigger.getTriggerName());
+					continue;
+					
+				}
+				
+				Set<MailingList> mlSet = eventTrigger.getMailingLists();
+				
+				
+				if(mlSet == null) {
+					
+					logger.debug("No lists are configured to this trigger");
+					continue;
+				}
+				
+				//if the contacts(event's corresponding) are not 
+				//belongs to the trigger configured list then no need to consider that event.
+
+				long mlbits = Utility.getMlsBit(mlSet);
+				
+				if(mlbits <= 0) {
+					
+					logger.debug("no mlbits are found for this trigger");
+					continue;
+				}
+				
+				//byte eventStatus = 0; 
+				
+				/*if( (optionsFlag & Constants.ET_SEND_CAMPAIGN_FLAG ) == Constants.ET_SEND_CAMPAIGN_FLAG){
+					eventStatus +=  Constants.ET_TRIGGER_EVENTS_SEND_EMAIL_CAMPAIGN_FLAG;
+				}
+				
+				if( (optionsFlag & Constants.ET_SEND_SMS_CAMPAIGN_FLAG) == Constants.ET_SEND_SMS_CAMPAIGN_FLAG) {
+					eventStatus +=  Constants.ET_TRIGGER_EVENTS_SEND_SMS_CAMPAIGN_FLAG;
+				}*/
+				
+				long optionsFlag = eventTrigger.getOptionsFlag();
+				
+				byte eventEmailStatus = Constants.ET_EMAIL_STATUS_NO_ACTION;
+				byte eventSMSStatus = Constants.ET_SMS_STATUS_NO_ACTION;
+				
+				if( (optionsFlag & Constants.ET_SEND_CAMPAIGN_FLAG ) == Constants.ET_SEND_CAMPAIGN_FLAG){
+					eventEmailStatus +=  Constants.ET_EMAIL_STATUS_ACTIVE;
+				}
+				
+				if( (optionsFlag & Constants.ET_SEND_SMS_CAMPAIGN_FLAG) == Constants.ET_SEND_SMS_CAMPAIGN_FLAG) {
+					eventSMSStatus +=  Constants.ET_SMS_STATUS_ACTIVE;
+				}
+				
+				
+				String inputStr = eventTrigger.getInputStr();
+				String[] tokenArr = inputStr.split("\\|");
+				
+				String qry = "INSERT IGNORE INTO temp_contact_specific_date_events " +
+								"( event_trigger_id,trigger_type, created_time, event_time, user_id, email_status,sms_status," +
+								" event_category, source_id, contact_id, tr_condition ) (SELECT "+eventTrigger.getId().longValue() +
+								COMMA+eventTrigger.getTrType().intValue()+COMMA+"'"+myCal.toString()+"'"+COMMA+tokenArr[0]+COMMA+
+								eventTrigger.getUsers().getUserId().longValue()+COMMA+eventEmailStatus+COMMA+eventSMSStatus+COMMA+"'"+Constants.POS_MAPPING_TYPE_CONTACTS+"'"+
+								", c.cid, c.cid,'"+inputStr+"' FROM contacts c WHERE c.user_id="+
+								eventTrigger.getUsers().getUserId().longValue()+
+								 " AND (c.mlbits&"+mlbits+")>0   "+
+								 TriggerQueryGenerator.getTriggerTimeDiffCond(eventTrigger, tokenArr[0], (tokenArr.length>1))+ ")";
+				logger.info("temp_contact_specific_date_events qry1 ::"+qry);
+				
+				int count;
+				try {
+					count = eventTriggerDaoForDML.executeJDBCInsertQuery(qry);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					continue;
+				}
+				
+				qry = " DELETE t FROM  temp_contact_specific_date_events AS t, contact_specific_date_events AS c	" +
+						"WHERE t.event_trigger_id=c.event_trigger_id AND c.source_id=t.source_id AND c.contact_id=t.contact_id  AND date(t.event_time)=date(c.event_time)  " +
+						"AND DATEDIFF(now(), DATE_ADD(c.created_time, INTERVAL 1 DAY) ) < 0 "+
+						TriggerQueryGenerator.getTriggerTimeDiffCond(eventTrigger, "t.event_time", (tokenArr.length>1));
+						
+				
+				logger.info("DELETE t FROM  temp_contact_specific_date_events qry2 ::"+qry);
+				
+				count = eventTriggerDaoForDML.executeJdbcUpdateQuery(qry);
+				
+				
+				
+				 qry = "INSERT IGNORE INTO contact_specific_date_events " +
+							"( event_trigger_id,trigger_type, created_time, event_time, user_id, email_status, sms_status, " +
+							" event_category, source_id, contact_id, tr_condition ) (SELECT event_trigger_id,trigger_type, " +
+							" created_time, event_time, user_id, email_status,sms_status, event_category, source_id, contact_id," +
+							" tr_condition FROM temp_contact_specific_date_events)";
+					
+				 logger.info("qry 3::"+qry);
+				 count = eventTriggerDaoForDML.executeJdbcUpdateQuery(qry);
+				 
+				 qry = "DELETE FROM temp_contact_specific_date_events";
+				 
+				 logger.info("qry 4::"+qry);
+				 
+				 count = eventTriggerDaoForDML.executeJdbcUpdateQuery(qry);
+			/*	String qry = " SELECT DISTINCT c.cid FROM contacts c WHERE c.user_id="+
+								eventTrigger.getUsers().getUserId().longValue()+
+							 " AND (c.mlbits&"+mlbits+")>0   "+
+							 TriggerQueryGenerator.getTriggerTimeDiffCond(eventTrigger, tokenArr[0], (tokenArr.length>1) );
+				*/
+				
+				
+				//int count = eventTriggerDao.findEventsCount(qry);
+				
+				//logger.info("qry ::"+qry);
+				
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				if(logger.isErrorEnabled()) logger.error("exception ",e);
+				continue;
+			}
+		
+			
+		}//for
+		
+		//
+		int size = 500;
+		for (EventTrigger eventTrigger : activeTriggerList) {
+			//to justify how many events have passed 
+			//active/paused status and in running now,so that eligible for submitters(PMTA/SMS) 
+			int totalRunningCount = 0;
+			if( (eventTrigger.getTrType().intValue() & Constants.ET_TYPE_ON_CONTACT_DATE ) <= 0) continue;
+			
+			Users etOwner = eventTrigger.getUsers();
+			if(etOwner == null || etOwner.getClientTimeZone() == null) {
+				
+				logger.debug("No user / time zone found for user "+etOwner.getUserId()+ " For trigger "+eventTrigger.getTriggerName());
+				continue;
+				
+			}
+			
+			//String etOwnerTimeZone = etOwner.getClientTimeZone();
+			
+			
+			
+			String inputStr = eventTrigger.getInputStr();
+			String[] tokenArr = inputStr.split("\\|");
+			
+			String qry = "SELECT Distinct event_id FROM contact_specific_date_events WHERE user_id="+eventTrigger.getUsers().getUserId().longValue()+"" +
+						" AND event_trigger_id="+eventTrigger.getId().longValue()+
+						TriggerQueryGenerator.getTriggerTimeDiffCond(eventTrigger, "event_time", (tokenArr.length>1))+" " +
+						" AND (email_status="+Constants.ET_EMAIL_STATUS_ACTIVE+" OR "+"sms_status="+Constants.ET_SMS_STATUS_ACTIVE+")";
+
+			int count = contactSpecificDateEventsDao.findEventsCount(qry);
+			
+			
+			int triggerOptionsFlag = eventTrigger.getOptionsFlag();
+			
+			//if(count > 0) {//need to analyse how many are to be paused 
+				
+
+				String selectQry = "SELECT * FROM contact_specific_date_events WHERE user_id="+eventTrigger.getUsers().getUserId().longValue()+"" +
+									" AND event_trigger_id="+eventTrigger.getId().longValue()+
+									TriggerQueryGenerator.getTriggerTimeDiffCond(eventTrigger, "event_time", (tokenArr.length>1))+" " +
+									" AND (email_status="+Constants.ET_EMAIL_STATUS_ACTIVE+" OR "+"sms_status="+Constants.ET_SMS_STATUS_ACTIVE+")";
+
+				List<ContactSpecificDateEvents> eventsList = null;
+				List<ContactSpecificDateEvents> activeEventsList = new ArrayList<ContactSpecificDateEvents>();
+				List<ContactSpecificDateEvents> pausedEventsList = new ArrayList<ContactSpecificDateEvents>();
+				
+				for(int i=0;i < count; i+=size) {//as this is about the count,events may add at times
+					
+					//TODO need to avoid RowMapper
+					eventsList = contactSpecificDateEventsDao.findAllActiveEvents(selectQry, i, size);
+					
+					if(eventsList == null) continue;//need to reassign the size and count values					
+					
+					
+					for (ContactSpecificDateEvents contactDateEvents : eventsList) {
+						
+						byte eventEmailStatus = contactDateEvents.getEmailStatus();
+						byte eventSmsStatus = contactDateEvents.getSmsStatus();
+						String daysFlag =  eventTrigger.getTargetDaysFlag();
+						
+						if( daysFlag != null) {
+							
+							Calendar currentDate = Calendar.getInstance();
+							
+							
+							//to convert into client time zone
+							String serverTimeZoneVal = PropertyUtil.getPropertyValueFromDB(Constants.SERVER_TIMEZONE_VALUE);
+							int serverTimeZoneValInt = Integer.parseInt(serverTimeZoneVal);
+							String timezoneDiffrenceMinutes = etOwner.getClientTimeZone();
+							int timezoneDiffrenceMinutesInt = 0;
+							
+							if(timezoneDiffrenceMinutes != null)  timezoneDiffrenceMinutesInt = Integer.parseInt(timezoneDiffrenceMinutes);
+							
+							timezoneDiffrenceMinutesInt = timezoneDiffrenceMinutesInt-serverTimeZoneValInt;
+							
+							//boolean isMinus = (timezoneDiffrenceMinutesInt < 0);
+							
+							currentDate.add(Calendar.MINUTE, timezoneDiffrenceMinutesInt);
+							
+							int dayOfWeek = currentDate.get(Calendar.DAY_OF_WEEK);
+							
+							if(daysFlag.contains(dayOfWeek+Constants.STRING_NILL)) {
+								
+								contactDateEvents.setEmailStatus( (eventEmailStatus & 
+										Constants.ET_EMAIL_STATUS_ACTIVE) == Constants.ET_EMAIL_STATUS_ACTIVE? Constants.ET_EMAIL_STATUS_RUNNING : eventEmailStatus );
+								
+								
+								contactDateEvents.setSmsStatus( (eventSmsStatus & 
+										Constants.ET_SMS_STATUS_ACTIVE) == Constants.ET_SMS_STATUS_ACTIVE ? Constants.ET_SMS_STATUS_RUNNING : eventSmsStatus );
+								
+								activeEventsList.add(contactDateEvents);
+								totalRunningCount++;
+							}
+							
+							else{
+								
+								contactDateEvents.setEmailStatus( (eventEmailStatus & 
+										Constants.ET_EMAIL_STATUS_ACTIVE) == Constants.ET_EMAIL_STATUS_ACTIVE ? Constants.ET_EMAIL_STATUS_PAUSED: eventEmailStatus );
+								
+								
+								contactDateEvents.setSmsStatus( (eventSmsStatus & 
+										Constants.ET_SMS_STATUS_ACTIVE) == Constants.ET_SMS_STATUS_ACTIVE ? Constants.ET_SMS_STATUS_PAUSED : eventSmsStatus );
+								
+								pausedEventsList.add(contactDateEvents);
+								
+							}
+							
+						}else{
+							
+							contactDateEvents.setEmailStatus( (eventEmailStatus & 
+									Constants.ET_EMAIL_STATUS_ACTIVE) == Constants.ET_EMAIL_STATUS_ACTIVE? Constants.ET_EMAIL_STATUS_RUNNING : eventEmailStatus );
+							
+							
+							contactDateEvents.setSmsStatus( (eventSmsStatus & 
+									Constants.ET_SMS_STATUS_ACTIVE) == Constants.ET_SMS_STATUS_ACTIVE ? Constants.ET_SMS_STATUS_RUNNING : eventSmsStatus );
+							
+							activeEventsList.add(contactDateEvents);
+							totalRunningCount++;
+							
+						}
+						
+						
+						
+					}//for
+					
+					if(activeEventsList.size() > 0) {
+						
+						//contactSpecificDateEventsDao.saveByCollection(activeEventsList);
+						contactSpecificDateEventsDaoForDML.saveByCollection(activeEventsList);
+						activeEventsList.clear();
+					}
+					if(pausedEventsList.size() > 0) {
+						
+						//contactSpecificDateEventsDao.saveByCollection(pausedEventsList);
+						contactSpecificDateEventsDaoForDML.saveByCollection(pausedEventsList);
+						pausedEventsList.clear();
+						
+					}
+					
+					eventsList=null;
+					
+					
+				}//end for total count
+				
+				//check for the paused events which are matched for the target date condition
+				if(eventTrigger.getTargetDaysFlag() != null) {
+					
+					String pausedCountQry = "SELECT Distinct event_id FROM contact_specific_date_events WHERE user_id="+eventTrigger.getUsers().getUserId().longValue()+"" +
+											" AND event_trigger_id="+eventTrigger.getId().longValue()+
+											" AND (email_status="+Constants.ET_EMAIL_STATUS_PAUSED+" OR "+"sms_status="+Constants.ET_SMS_STATUS_PAUSED+")";
+
+					
+					int pausedCount = contactSpecificDateEventsDao.findEventsCount(pausedCountQry);
+					
+					if(pausedCount > 0) {
+						eventsList = null;
+						activeEventsList = new ArrayList<ContactSpecificDateEvents>();
+						String pausedQry = " SELECT * FROM contact_specific_date_events WHERE user_id="+eventTrigger.getUsers().getUserId().longValue()+"" +
+											" AND event_trigger_id="+eventTrigger.getId().longValue()+
+											" AND (email_status="+Constants.ET_EMAIL_STATUS_PAUSED+" OR "+
+											" sms_status="+Constants.ET_EMAIL_STATUS_PAUSED+")" ;
+								
+						
+						for(int i=0;i < pausedCount; i+=size) {//as this is about the count,events may add at times
+							
+							//TODO need to avoid RowMapper
+							eventsList = contactSpecificDateEventsDao.findAllActiveEvents(pausedQry, i, size);
+							
+
+							if(eventsList == null) continue;//need to reassign the size and count values					
+							
+							for (ContactSpecificDateEvents contactDateEvents : eventsList) {
+								
+								byte eventEmailStatus = contactDateEvents.getEmailStatus();
+								byte eventSmsStatus = contactDateEvents.getSmsStatus();
+								String daysFlag =  eventTrigger.getTargetDaysFlag();
+							
+								
+								//Calendar currentDate = Calendar.getInstance();
+								//to convert into client time zone
+								Calendar currentDate = Calendar.getInstance();
+								
+								
+								
+								String serverTimeZoneVal = PropertyUtil.getPropertyValueFromDB(Constants.SERVER_TIMEZONE_VALUE);
+								int serverTimeZoneValInt = Integer.parseInt(serverTimeZoneVal);
+								String timezoneDiffrenceMinutes = etOwner.getClientTimeZone();
+								int timezoneDiffrenceMinutesInt = 0;
+								
+								if(timezoneDiffrenceMinutes != null)  timezoneDiffrenceMinutesInt = Integer.parseInt(timezoneDiffrenceMinutes);
+								
+								timezoneDiffrenceMinutesInt = timezoneDiffrenceMinutesInt-serverTimeZoneValInt;
+								
+								//boolean isMinus = (timezoneDiffrenceMinutesInt < 0);
+								
+								currentDate.add(Calendar.MINUTE, timezoneDiffrenceMinutesInt);
+								
+								
+								
+								int dayOfWeek = currentDate.get(Calendar.DAY_OF_WEEK);
+								
+								//logger.info("daysFlag ::"+daysFlag+ " current day ::"+dayOfWeek);
+								
+								if(daysFlag.contains(dayOfWeek+Constants.STRING_NILL)) {
+									
+									//logger.info("Email status ::"+contactDateEvents.getEmailStatus() + "sms status ::"+contactDateEvents.getSmsStatus());
+									
+									contactDateEvents.setEmailStatus( (eventEmailStatus & 
+											Constants.ET_EMAIL_STATUS_PAUSED) == Constants.ET_EMAIL_STATUS_PAUSED ? Constants.ET_EMAIL_STATUS_RUNNING : eventEmailStatus );
+									
+									
+									contactDateEvents.setSmsStatus( (eventSmsStatus & 
+											Constants.ET_SMS_STATUS_PAUSED) == Constants.ET_SMS_STATUS_PAUSED ? Constants.ET_SMS_STATUS_RUNNING : eventSmsStatus );
+									
+									activeEventsList.add(contactDateEvents);
+									totalRunningCount++;
+									
+								}//if
+							
+							}//for
+							
+							if(activeEventsList.size() > 0) {
+								
+								//contactSpecificDateEventsDao.saveByCollection(activeEventsList);
+								contactSpecificDateEventsDaoForDML.saveByCollection(activeEventsList);
+								activeEventsList.clear();
+								
+							}//if
+							
+							eventsList = null;
+							
+						}//for
+						
+						
+					}//only if paused events exist
+					
+					
+				}//if
+				
+				if(totalRunningCount == 0) {
+					
+					String runningCountQry  = "SELECT Distinct event_id FROM contact_specific_date_events WHERE user_id="+eventTrigger.getUsers().getUserId().longValue()+"" +
+												" AND event_trigger_id="+eventTrigger.getId().longValue()+
+												" AND (email_status="+Constants.ET_EMAIL_STATUS_RUNNING+" OR "+"sms_status="+Constants.ET_SMS_STATUS_RUNNING+")";
+
+					
+					totalRunningCount = contactSpecificDateEventsDao.findEventsCount(runningCountQry);
+					
+					
+				}
+				
+				
+				
+				if(totalRunningCount > 0) {
+					if( (triggerOptionsFlag & Constants.ET_SEND_CAMPAIGN_FLAG) == Constants.ET_SEND_CAMPAIGN_FLAG) {
+						
+						activeTriggersListOfActionEmail.add(eventTrigger);
+						
+					}//if
+					if( (triggerOptionsFlag & Constants.ET_SEND_SMS_CAMPAIGN_FLAG) == Constants.ET_SEND_SMS_CAMPAIGN_FLAG ) {
+						
+						activeTriggersListOfActionSMS.add(eventTrigger);
+					}
+					
+				}//if
+				
+			//}//if
+			
+		}//for
+		
+		
+		
+		if(activeTriggersListOfActionEmail.size() > 0) {
+			
+			pmtaQueue.addCollection(activeTriggersListOfActionEmail);
+			
+			if(pmtaQueue.getQueueSize() > 0 ) {
+				
+				PmtaMailmergeSubmitter.startPmtaMailmergeSubmitter(applicationContext);
+				
+			}//if
+			
+		}//if
+		
+		if(activeTriggersListOfActionSMS.size() > 0) {
+			
+			smsQueue.addCollection(activeTriggersListOfActionSMS);
+			
+			if(smsQueue.getQueueSize() > 0) {
+				
+				SMSCampaignSubmitter.startSMSCampaignSubmitter(applicationContext);
+				
+			}//if
+			
+		}//if
+		
+		
+		
+	}//end of run()
+	
+	
+	
+	
+
+}//class end

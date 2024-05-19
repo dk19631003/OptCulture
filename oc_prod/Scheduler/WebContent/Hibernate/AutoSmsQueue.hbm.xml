@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.AutoSmsQueue"
+		table="auto_sms_queue">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="message" type="text">
+			<column name="message"/>
+		</property>
+		<property name="type" type="string">
+			<column name="type" length="30" not-null="true" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" not-null="true" />
+		</property>
+		<property name="toMobileNo" type="string">
+			<column name="to_Mobile_No" />
+		</property>
+		<property name="accountType" type="string">
+			<column name="account_type" length="30" not-null="true" />
+		</property>
+		<property name="senderId" type="string">
+			<column name="sender_id" not-null="true" />
+		</property>
+		<property name="userId" type="java.lang.Long" column="user_id" />
+		<property name="sentDate" type="calendar">
+			<column name="sent_date" />
+		</property>
+		<property name="contactId" type="java.lang.Long">
+			<column name="contact_id"  />
+		</property>
+		<property name="messageId" type="string" column="message_id" length="100" />
+		<property name="dlrStatus" type="string">
+			<column name="dlr_status" />
+		</property>
+
+		<property name="loyaltyId" type="java.lang.Long">
+			<column name="loyalty_id"  />
+		</property>
+		<property name="clicks" type="int">
+			<column name="clicks" default="0"/>
+		</property>
+		<property name="templateRegisteredId" type="string">
+			<column name="template_registered_id" />
+		</property>
+	</class>
+</hibernate-mapping>

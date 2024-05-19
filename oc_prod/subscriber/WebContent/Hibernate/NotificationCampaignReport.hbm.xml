@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.NotificationCampaignReport"
+		table="notification_campaign_report">
+		<id name="notificationCrId" type="java.lang.Long">
+			<column name="notification_cr_id" />
+			<generator class="native" />
+		</id>
+		<property name="notificationCampaignName" type="string">
+			<column name="notification_campaign_name" not-null="true" length="100" />
+		</property>
+		<property name="sentDate" type="calendar">
+			<column name="sent_date" />
+		</property>
+		<property name="notificationContent" type="text">
+			<column name="notification_Content" not-null="true" />
+		</property>
+		
+		<property name="notificationHeaderContent" type="string">
+			<column name="notification_Header" length="255" />
+		</property>
+		
+		<property name="notificationUrl" type="string">
+			<column name="notification_url" length="100" />
+		</property>
+		
+		<property name="notificationLogoImage" type="text">
+			<column name="notification_Logo_Image"/>
+		</property>
+		
+		<property name="notificationBannerImage" type="text">
+			<column name="notification_Banner_Image"/>
+		</property>
+		
+		<property name="configured" type="long">
+			<column name="configured" />
+		</property>
+		
+		<property name="suppressedCount" type="long">
+			<column name="suppressed_count" />
+		</property>
+		
+		<property name="sent" type="long">
+			<column name="sent" />
+		</property>
+		<property name="opens" type="int">
+			<column name="opens" />
+		</property>
+		<property name="clicks" type="int">
+			<column name="clicks" />
+		</property>
+		<property name="unsubscribes" type="int">
+			<column name="unsubscribes" />
+		</property>
+		<property name="bounces" type="int">
+			<column name="bounces" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="100" />
+		</property>
+		
+		<property name="sourceType" type="string">
+			<column name="source_type" length="100" />
+		</property>
+		
+		<property name="preferenceCount" type="int" >
+			<column name="preference_count"  default="0"/>
+		</property>
+		
+		<property name="creditsCount" type="int" >
+			<column name="credits_count"  default="0"/>
+		</property>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id"  />
+		</property>
+
+	</class>
+</hibernate-mapping>

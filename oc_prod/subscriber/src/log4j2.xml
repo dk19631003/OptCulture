@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF" name="subscriber" monitorInterval="120">
+
+<!-- Properties -->
+<properties>
+<property name="catalina.home">/optdata/ocapp/tomcat</property>
+<Property name="LOG_PATTERN">%-5p %d{dd-MM HH:mm:ss,SSS}  [%t] [%C-%M::%L] - %m%n</Property>
+<Property name="PERF_LOG_PATTERN">%-5p [%d{yyyy-MM-dd HH:mm:ss,SSS}] %m%n</Property>
+</properties>
+ 
+<!-- appenders -->
+<appenders>
+<!-- Console appender -->
+<Console name="stdout" target="SYSTEM_OUT">
+	<PatternLayout pattern="${LOG_PATTERN}" />
+</Console>
+<!-- Rolling file appender -->
+<RollingFile name="logfile" filePermissions="rwxrwxrwx">
+	<fileName>${catalina.home}/logs/subscriber/subscriber.log</fileName>
+	<filePattern>${catalina.home}/logs/subscriber/$${date:yyyy-MM}/subscriber-%d{MM-dd-yyyy}-%i.log.gz</filePattern>
+     <PatternLayout pattern="${LOG_PATTERN}" />
+    <Policies>
+    	<!-- <TimeBasedTriggeringPolicy interval="1" modulate="true"/> -->
+        <SizeBasedTriggeringPolicy size="50 MB"/>
+    </Policies>
+    <DefaultRolloverStrategy max="300" />
+    <!-- <DefaultRolloverStrategy max="10"/> -->
+</RollingFile>
+
+<!-- newly added for performance measure-->
+<RollingFile name="performancelogfile" filePermissions="rwxrwxrwx">
+	<fileName>${catalina.home}/logs/subscriber/performance.log</fileName>
+	<filePattern>${catalina.home}/logs/subscriber/$${date:yyyy-MM}/performance-%d{MM-dd-yyyy}-%i.log.gz</filePattern>
+    <PatternLayout pattern="${PERF_LOG_PATTERN}" /> 
+    
+    <Policies>
+    	<!-- <TimeBasedTriggeringPolicy interval="1" modulate="true"/> -->
+        <SizeBasedTriggeringPolicy size="50 MB"/>
+    </Policies>
+	<DefaultRolloverStrategy max="100" />
+    <!-- <DefaultRolloverStrategy max="10"/> -->
+</RollingFile>
+
+    <!-- <RollingFile name="jsonlogfile" filePermissions="rwxrwxrwx">
+        <fileName>${catalina.home}/logs/subscriber/subscriber.log.json</fileName>
+        <filePattern>${catalina.home}/logs/subscriber/$${date:yyyy-MM}/subscriber-%d{MM-dd-yyyy}-%i.json.gz</filePattern>
+        <JSONLayout compact="true" eventEol="true" properties="true" locationInfo="true" complete="false">
+        	<KeyValuePair key="datetime_human" value="$${date:dd MMM yyyy HH:mm:ss,SSS}"/>
+        </JSONLayout>
+        <Policies>
+            <SizeBasedTriggeringPolicy size="50 MB"/>
+        </Policies>
+        <DefaultRolloverStrategy max="100" />
+    </RollingFile> -->
+
+</appenders>
+
+<!-- loggers to capture messages from the classes -->
+<loggers>
+<logger name="subscriber" level="DEBUG" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<!-- new -->
+<logger name="performance" level="DEBUG" additivity="false"><appender-ref ref="performancelogfile"/></logger>
+<logger name="org.hibernate" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger> 
+<logger name="org.springframework" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.impl.NewPooledConnection" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.impl.AbstractPoolBackedDataSource" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.impl.DefaultConnectionTester" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.management.DynamicPooledDataSourceManagerMBean" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.C3P0Registry" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.log.MLog" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.management.ActiveManagementCoordinator" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.async.ThreadPoolAsynchronousRunner" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.params.DefaultHttpParams" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.HttpClient" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.HttpMethodBase" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.HttpConnection" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.HttpParser" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.HeaderElement" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.Wire" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.methods.PostMethod" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.commons.httpclient.methods.EntityEnclosingMethod" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="org.apache.catalina.session.ManagerBase" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.resourcepool.BasicResourcePool" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.stmt.GooGooStatementCache" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<logger name="com.mchange.v2.c3p0.impl.NewProxyConnection" level="WARN" additivity="false"><appender-ref ref="logfile"/><!-- <AppenderRef ref="jsonlogfile"/> --></logger>
+<!-- Root logger -->
+<root level="DEBUG">
+<appender-ref ref="stdout"/>
+<appender-ref ref="logfile"/>
+<!-- <AppenderRef ref="jsonlogfile"/> -->
+
+</root>
+</loggers>
+</configuration>

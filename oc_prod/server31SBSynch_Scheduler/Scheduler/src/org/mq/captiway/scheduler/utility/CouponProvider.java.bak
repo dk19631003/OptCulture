@@ -1,0 +1,313 @@
+package org.mq.captiway.scheduler.utility;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Vector;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.captiway.scheduler.beans.CouponCodes;
+import org.mq.captiway.scheduler.beans.Coupons;
+import org.mq.captiway.scheduler.dao.CouponCodesDao;
+import org.mq.captiway.scheduler.dao.CouponsDao;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+import org.springframework.context.ApplicationContext;
+
+public class CouponProvider {
+
+	
+    private Hashtable<String, Queue<CouponCodes>> couponCodesMap = null;
+    
+    private Vector<CouponCodes> usedCouponCodesVec = new Vector<CouponCodes>();
+	
+    public synchronized void addCouponCodeToVec(CouponCodes cc) {
+    	usedCouponCodesVec.add(cc);
+    	flushCouponCodesToDB(false);
+    } //
+	
+    private static final  Logger logger = LogManager.getLogger(Constants.SCHEDULER_LOGGER); 
+	
+	
+	/*
+	 * public class SingletonDemo {
+        private static volatile SingletonDemo instance = null;
+ 
+        private SingletonDemo() {       }
+ 
+        public static SingletonDemo getInstance() {
+                if (instance == null) {
+                        synchronized (SingletonDemo .class){
+                                if (instance == null) {
+                                        instance = new SingletonDemo ();
+                                }
+                      }
+                }
+                return instance;
+        }
+}
+
+	 */
+	private ApplicationContext context;
+	private CouponCodesDao couponCodesDao;
+	private CouponsDao couponsDao;
+	
+	private CouponProvider(ApplicationContext context) {
+		
+		//logger.debug("context is ::"+context);
+		this.context = context;
+		couponCodesDao = (CouponCodesDao)context.getBean("couponCodesDao");
+		
+		couponsDao = (CouponsDao)context.getBean("couponsDao");
+		
+		
+		if(couponSet == null) {
+			
+			couponSet = new HashSet<String>();
+		}
+		
+		
+	}
+	
+	private CouponProvider(CouponCodesDao couponCodesDao) {
+		
+		this.couponCodesDao = couponCodesDao;
+		
+		if(couponSet == null) {
+			
+			couponSet = new HashSet<String>();
+		}
+		
+		
+	}
+	
+	
+	public  Set<String> couponSet = null;
+	private static CouponProvider couponProvider;
+	
+	 public static synchronized CouponProvider getCouponProviderInstance(ApplicationContext context, CouponCodesDao couponCodesDao) {
+		 
+         if (couponProvider == null) {
+                 
+        	 if(context != null) {
+        		 
+        		 couponProvider = new CouponProvider(context);
+        		 
+        	 }else{
+        		 
+        		 couponProvider = new CouponProvider(couponCodesDao);
+        	 }
+        	 
+           }
+         
+         return couponProvider;
+	 }
+	 
+	 public synchronized void flushCouponCodesToDB(boolean flushFlag) {
+		 
+		 
+	    	if(usedCouponCodesVec==null || usedCouponCodesVec.isEmpty()) return;
+	    	
+			if(flushFlag==true || usedCouponCodesVec.size()>100) {
+				couponCodesDao.saveByCollection(usedCouponCodesVec);
+				usedCouponCodesVec.clear();
+			} // if
+	    }
+
+	    
+	    
+		public synchronized String  getNextCouponCode(String tempStr, String campaignName, String campaignType, 
+												String issuedTo, Long sentId, String smsContent,Long contactId) {
+			try {
+				
+				if(couponCodesMap==null) couponCodesMap = new Hashtable<String, Queue<CouponCodes>>();
+				
+				
+				try {
+					if(couponCodesDao == null)couponCodesDao = (CouponCodesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.COUPONCODES_DAO);
+					if(couponsDao == null) couponsDao = (CouponsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.COUPONS_DAO);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					throw new BaseServiceException("no dao found with id ::"+OCConstants.COUPONCODES_DAO);
+				}
+				
+				Queue<CouponCodes> phCouponCodeQue = couponCodesMap.get(tempStr);
+				
+				if(phCouponCodeQue==null || phCouponCodeQue.size() == 0) {
+					//fillCouponCodes();
+					
+					//before filling the queue of coupcode let it be flushed for DB sake
+					flushCouponCodesToDB(true);
+					
+					try {
+						
+						if(couponSet == null || couponSet.size() == 0) {
+							
+							if(logger.isDebugEnabled()) logger.debug("no  Promo-code set found with  Promo-code place holder:source request is wrong");
+							return null;
+							
+						}
+						
+						for (String eachPh : couponSet) {
+							
+							if(eachPh.startsWith("CC_")) {
+							
+								if(logger.isDebugEnabled()) logger.debug("Filling  Promo-codes ::"+eachPh);
+								try {
+									
+									Queue<CouponCodes> tempQue = null;
+									tempQue = couponCodesMap.get(eachPh);
+									
+									if(tempQue!=null && !tempQue.isEmpty()) {
+										continue; // skip if it is not Empty
+									}
+									
+									String[] strArr = eachPh.split("_");
+									
+									if(logger.isDebugEnabled()) logger.debug("Filling  Promo-code with Id = "+strArr[1]);
+									//TODO need to handle this exception
+									
+									List<CouponCodes> couponCodesList = couponCodesDao.getInventoryCouponCodesByCouponId(Long.parseLong(strArr[1].trim()));
+									if(couponCodesList!=null && couponCodesList.size() > 0) {
+										if(logger.isDebugEnabled()) logger.debug("=============== couponCodesList=="+couponCodesList.size());
+									}
+									else {
+										if(logger.isDebugEnabled()) logger.debug("=============== No  Promo-codes found for the Coupons Id=="+strArr[1]);
+										
+										// TODO handle single type of Coupons
+										Coupons coupon = couponsDao.findById(Long.parseLong(strArr[1].trim()));
+										if(coupon==null || coupon.getAutoIncrCheck()==false) {
+											continue;
+										}
+										else if(coupon!=null && 
+												coupon.getCouponGeneratedType().equals(Constants.COUP_GENT_TYPE_MULTIPLE) &&
+												coupon.getAutoIncrCheck()==true) { // CC Multi Type Auto 
+											
+											Long cqty = coupon.getTotalQty();
+											if(cqty==null) cqty = new Long(0);
+											
+											coupon.setTotalQty(new Long(cqty.longValue()+1000));
+											couponsDao.saveOrUpdate(coupon);
+											
+											CouponCodesUtility ccu = new CouponCodesUtility(context, coupon);
+											ccu.start();
+											if(logger.isDebugEnabled()) logger.debug("Waiting to create the 1000  Promo-codes...");
+											ccu.join();
+											if(logger.isDebugEnabled()) logger.debug("Created 1000  Promo-codes.");
+											
+											couponCodesList = couponCodesDao.getInventoryCouponCodesByCouponId(coupon.getCouponId());
+											
+										}
+										else if(coupon!=null && coupon.getAutoIncrCheck()==true) { // CC Single Type Auto 
+											couponCodesList = new ArrayList<CouponCodes>();
+											CouponCodes tempCC = null;
+											
+											for (int i = 0; i < 1000; i++) {
+												tempCC = new CouponCodes();
+												tempCC.setOrgId(coupon.getOrgId());
+												tempCC.setCouponId(coupon);
+												tempCC.setCouponCode(coupon.getCouponCode()); // Set the Coupon code from Coupon
+												couponCodesList.add(tempCC);
+											} // for i
+										} // else
+										
+									} // else
+									
+									if(couponCodesList!=null && !couponCodesList.isEmpty()) {
+										
+										tempQue = new PriorityQueue<CouponCodes>();
+										tempQue.addAll(couponCodesList);
+										
+										couponCodesMap.put(eachPh, tempQue);
+										
+									} // if
+								} catch (Exception e) {
+									logger.error("Exception ::::",e);
+								}
+								
+							} // if
+							
+						} // for eachPh
+						
+						//if(logger.isDebugEnabled()) logger.debug("After filling the  Promo-code, provider.Map ="+couponCodesMap);
+						
+					} catch (Exception e) {
+						logger.error("** Error in filling the  Promo-codes",e);
+					}
+					
+					phCouponCodeQue = couponCodesMap.get(tempStr);
+					if(phCouponCodeQue==null) {
+						return null;
+					} // if
+				} // outer if
+				/*
+				 * tempCC.setCampaignName(campaignName);
+					tempCC.setSentId(sentId.longValue());
+					tempCC.setCampaignType(type);
+					tempCC.setIssuedTo(issuedTo);
+					tempCC.setIssuedOn(Calendar.getInstance());
+					tempCC.setStatus(Constants.COUP_GENT_CODE_STATUS_ACTIVE);
+					couponCodesDao.saveOrUpdate(tempCC);
+				 */
+				CouponCodes tempCC = phCouponCodeQue.poll();
+				tempCC.setCampaignName(campaignName);
+				tempCC.setCampaignType(campaignType);
+				tempCC.setIssuedTo(issuedTo);
+				tempCC.setStatus(Constants.COUP_GENT_CODE_STATUS_ACTIVE);
+				tempCC.setSentId(sentId);
+				tempCC.setIssuedOn(Calendar.getInstance());
+				tempCC.setContactId(contactId);
+				addCouponCodeToVec(tempCC);
+				
+				//for sms barcode
+				logger.info("sms ph tempstr: "+tempStr);
+				Coupons coupon = tempCC.getCouponId();
+				
+				String appShortUrl = PropertyUtil.getPropertyValue(Constants.APP_SHORTNER_URL).trim();
+				String barcodePh = appShortUrl+"["+tempStr+"]";
+				
+				if(smsContent != null && smsContent.contains(barcodePh) && campaignType != null && campaignType.trim().equals(Constants.COUP_GENT_CAMPAIGN_TYPE_SMS) 
+						&& coupon != null && coupon.getEnableBarcode()){
+				logger.info("Campaign type : "+campaignType.trim());
+					if(tempCC.getCouponCode() != null && tempCC.getCouponCode().trim().length() > 0){
+						
+						if(coupon.getBarcodeType().trim().equals("LN")){
+						
+							return "L"+tempCC.getCouponCode().trim();
+						}
+						else if(coupon.getBarcodeType().trim().equals("QR")){
+							
+							return "Q"+tempCC.getCouponCode().trim();
+						}
+						else if(coupon.getBarcodeType().trim().equals("DM")){
+							
+							return "D"+tempCC.getCouponCode().trim();
+						}
+						else if(coupon.getBarcodeType().trim().equals("AZ")){
+							
+							return "A"+tempCC.getCouponCode().trim();
+						}
+						
+					}
+					
+				}
+				//for sms bracode
+				
+				return tempCC.getCouponCode();
+				
+			} catch (Exception e) {
+				logger.error("Exception ::::", e);
+			}
+			
+			return null;
+		}
+	
+	
+}

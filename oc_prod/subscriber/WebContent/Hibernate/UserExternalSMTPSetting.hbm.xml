@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserExternalSMTPSettings" table="user_external_smtp_settings">
+		
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<many-to-one name="users"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false" >
+			<column name="user_id" />
+		</many-to-one>
+		<property name="externalSMTP" type="string" column="external_SMTP"
+			length="256" />
+		<property name="userName" type="string" column="username"
+			length="64" unique-key="Unique_username" />
+		<property name="password" type="string" column="password"
+			length="256" />
+		<property name="emailId" type="string" column="emailId"
+			length="60" />
+		<property name="createdDate" type="calendar">  <column name="Created_date" /> </property>
+		<property name="enabled" type="boolean" column="enabled" />
+		<property name="emailCount" type="java.lang.Integer" column="email_count"  />
+		<property name="usedEmailCount" type="java.lang.Integer" column="used_email_count"  />
+		<property name="freeUser" type="boolean" column="is_free_user" />
+	</class>
+</hibernate-mapping>
+

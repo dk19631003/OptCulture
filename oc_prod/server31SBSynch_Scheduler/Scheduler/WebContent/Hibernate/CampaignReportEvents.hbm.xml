@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.CampaignReportEvents" table="campaign_report_events">
+    <id name="eventId" type="java.lang.Long" >
+      <column name="event_id" />
+       <generator class="native"/> 
+    </id>
+   
+	
+    <property name="requestedAction" type="string">
+      <column name="requested_action" length="100"/>
+    </property>
+    
+	<property name="cId" type="long">
+      <column name="cid" />
+    </property>
+	<property name="unSubId" type="long">
+      <column name="un_sub_id" />
+    </property>
+	    
+    <property name="url" type="string">
+      <column name="url" length="100"/>
+    </property>
+    
+     <property name="userAgent" type="string">
+      <column name="userAgent" length="100"/>
+    </property>
+    
+    <property name="sentId" type="long">
+      <column name="sent_id" />
+    </property>
+    <property name="userId" type="long">
+      <column name="user_id" />
+    </property>
+    <property name="crId" type="long">
+      <column name="cr_id" />
+    </property>
+    
+    <property name="requestTime" type="calendar">
+      <column name="request_time"/>
+    </property>
+    
+ </class>
+</hibernate-mapping>

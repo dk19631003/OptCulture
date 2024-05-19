@@ -1,0 +1,217 @@
+<?taglib uri="http://www.zkoss.org/zkspring/security" prefix="sec"?>
+<zk>
+
+	<style>
+		.hovergridcolumn > div.z-column-cnt { color: #FFFFFF;
+		font-weight: bold; cursor: pointer; }
+
+	</style>
+	<window id="notificationCampReportsWinId" style="margin-top:10px;" apply="org.mq.marketer.campaign.controller.report.NotificationCampaignReports" 
+		xmlns:h="http://www.zkoss.org/2005/zk/native"  xmlns:w="client" width="100%" >
+		
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+		<h:tr bgcolor="#F4F5F9">
+			<h:td>
+				<label value="Source Type:" visible="false"    sclass="theme-lbHeading"/>
+					<!-- <listbox id="sourceTypeLbId" rows="1" mold="select" onSelect="reportsWinId.getCampaignBySource((String)self.getSelectedItem().getValue())">-->
+					<listbox id="sourceTypeLbId" rows="1" mold="select" visible="false">
+						<listitem label="One Off" selected="true" value="NotificationCampaignSchedule"/>
+						<listitem label="--All--"  value="--All--" visible="false"/>
+						<listitem label="Event Trigger" value="EventTrigger" visible="false"/>
+						<listitem visible="false" label="Marketing Program" value="MarketingProgram" />
+					</listbox>
+			
+			</h:td>
+			<h:td>
+				<label value="Date" sclass="theme-lbHeading"/>
+							<space/>
+							<label value="From"/>
+							<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							format="dd-MMM-yyyy" constraint="no future"/><space/>
+							<label value="To "/>
+							<datebox id="toDateboxId" readonly="true"
+							use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy"/>
+							<!-- <button label="Get" onClick="reportsWinId.getCampaignReports()" /> -->
+							<!--<button label="Get" sclass="idle56" id="getBitweenDatesBtnId" />
+			
+			--></h:td>
+			<h:td>
+				<label id="filterLabelId" value="Filter notification By" sclass="theme-lbHeading" />
+				<listbox mold="select" rows="1" id="emailFilterLbId">
+					<listitem label="--All--" selected="true" />
+					<listitem label="notification Name contains" />
+					<listitem label="notification Name is" />
+				</listbox>
+				<listbox id="notificationCampaignListLbId"  rows="1" mold="select" width="150px" visible="false"/>
+				<textbox id="searchTbId" value="notification Name..." visible="false" width="150px"/>
+			</h:td>
+			<h:td>
+				<button label="Get Reports" sclass="idle140 greenbtn" id="getBitweenDatesBtnId"/>
+				<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+			</h:td>
+		
+		
+		</h:tr>
+		
+	
+	</h:table>
+	
+	
+	<h:table cellspacing="0" cellpadding="0" width="100%">
+	<h:tr height="10" />
+	<h:tr>
+		<h:td width="500px">
+			<label id="userOrgLblId" value="User Organization ID:" sclass="theme-lbHeading" visible="false"/>
+			<listbox id="userOrgLbId" width="200px" mold="select" visible="false"/>
+		</h:td>
+		<h:td width="500px" >
+			<label id="userNameLblId" value="User Name :" sclass="theme-lbHeading" visible="false"/>
+			<listbox id="userNameLbId" width="200px" mold="select"  visible="false">
+				<listitem label="--All--" selected="true"/>
+			</listbox>
+		</h:td>
+		<!-- <h:td align="left"  width="1000px">
+			<label value="Users : " id="usersLblId"  visible="false"/>
+			<listbox id="userListLbId" rows="1" mold="select" width="175px"  visible="false" onSelect="reportsWinId.getCampaignsByUser(self.getSelectedItem().getValue(),sourceTypeLbId.getSelectedItem().getLabel())">
+			<listbox id="userListLbId" rows="1" mold="select" width="175px"  visible="false" >
+				<listitem label="All"/>
+				
+			
+			</listbox>
+		</h:td> -->
+		<h:td >
+		<paging id="campRepListTopPagingId" detailed="true" pageSize="10" width="280px" 
+			class="contactsViewPaging" style="border:none;"/>
+	</h:td>
+	</h:tr>
+	</h:table>
+
+		
+						 <zscript>
+			public void changeVisibility (int col, boolean show) {
+			Column c = (Column)reportGridId.getColumns().getFirstChild();
+			for (int i = 1;i != col;i ++)
+				c = (Column)c.getNextSibling();
+			c.setVisible(show);
+		}
+		</zscript>
+		<label id="notificationCampNamelbId" sclass="theme-lbHeading " />
+		<menupopup id="aMenu">
+			<menuitem label="Date Sent" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(1, self.checked)" />
+			 <menuitem label="notification Name" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(2, self.checked)" />
+			<menuitem label="List(s)" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(3, self.checked)" />
+			<menuitem label="Sent" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(4, self.checked)" />
+			<menuitem label="Unique Clicks %" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(5, self.checked)" />
+			<menuitem label="Failed" checked="true" checkmark="true" autocheck="true" onClick="changeVisibility(6, self.checked)" />
+			<menuitem label="Source Type" checked="false" checkmark="true" autocheck="true" onClick="changeVisibility(7, self.checked)" /> 
+		</menupopup>
+		<grid id="reportGridId" mold="paging"  emptyMessage="No Records Found..."  >
+			<columns sizable="true" menupopup="aMenu" >
+				<column label="Date Sent" id="sortbyDateSent" sclass="hovergridcolumn" width="140px" />
+				<column label="notification Name" id="sortbyNotificationName" sclass="hovergridcolumn" width="250px"/>
+				<column label="List(s)/Segment(s)" width="120px"/>
+				<column label="Sent"   />
+				<column label="Unique Clicks %"   />
+				<column label="Delievred"  />
+				<column label="Failed"  />
+			</columns>
+		</grid>
+		
+		<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+			<h:tr bgcolor="#F9F9F9" >
+				
+				<h:td align="right">
+		   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+		   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+					<listitem label="5" selected="true" />
+					<listitem label="10"/>
+					<listitem label="15"/>
+				</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="campRepListBottomPagingId" detailed="true" pageSize="10" width="280px" 
+						class="contactsViewPaging" style="border:none;"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+			<h:td  valign="center">
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file." style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId"  />
+				
+				
+				
+				
+		</h:td >
+		</h:tr>
+			
+		</h:table>	
+		
+		<h:table cellpadding="0" cellspacing="0" width="100%"  >
+		
+		<!-- <h:tr>
+			<h:td>
+				<label id="msgLblId" value=" " style="position:relative;left:10px;font-size:11px;color:#10418c;"/>
+			</h:td>
+		</h:tr>
+ -->		
+		<h:tr>
+			<h:td>
+				<separator></separator>
+				
+
+					<!-- <toolbarbutton label=" Consolidated Metrics" sclass="theme-lbHeading" onClick="reportsWinId.getConsolidatedReport();"/>
+			  <toolbarbutton label="View Consolidated Metrics" style="font-size:11px;font-weight:bold;color:#10418c;" disabled="true" id="consolidateMetricsToolbarBtnId"/>
+				<label value=" (shows count of all reports including campaign reports generated from Event triggers)"></label> -->
+				
+				<separator/>
+				</h:td>
+		</h:tr>
+	</h:table>
+			
+			
+		
+		<h:table cellpadding="1" cellspacing="1" width="98%" align="center" >
+		
+		<h:tr>
+			<h:td>
+				<label id="msgLblId" value=" " style="position:relative;left:10px;font-size:11px;color:#10418c;"/>
+			</h:td>
+		</h:tr>
+		
+	</h:table>
+	
+	<window id="custExport" title="Select Fields to Export" border="normal"  width="450px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="650px" style="margin:15px;">
+					<checkbox label="notification Name" sclass="custCheck"/>
+				</div>			
+
+	<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td ><a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />   <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+	</window>
+	
+	</window>
+	
+</zk>

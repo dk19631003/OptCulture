@@ -1,0 +1,52 @@
+
+  
+.red
+{
+    color: #da3535;
+}
+
+img {
+    border-radius: 50%;
+    height: 125px;
+    width: 125px;
+  }
+
+  .pdtop50{
+      padding-top:60px;
+  }
+
+  .profilebutton {
+    z-index: 2;
+    position: absolute;
+    left: 58%;
+    margin-top: 19%;
+    margin: auto;
+    background: white;
+    border-radius: 50%;
+    --padding-start: 6px;
+    --padding-end: 6px;
+  }
+
+  ion-icon {
+	
+    .red {
+      color: red;
+    }
+}
+.inputScrollContainer{
+    height: auto;
+}
+.ion-text-wrap.sc-ion-label-md-h, [text-wrap].sc-ion-label-md-h {
+      line-height: 0.9; 
+}
+
+.left{
+  text-align: left;
+}
+
+.right{
+  text-align: right;
+}
+.hidestyle{
+  display: none;
+}

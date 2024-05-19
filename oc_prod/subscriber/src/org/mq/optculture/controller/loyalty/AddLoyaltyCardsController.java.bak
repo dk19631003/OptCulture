@@ -1,0 +1,483 @@
+package org.mq.optculture.controller.loyalty;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.LoyaltyCardSet;
+import org.mq.marketer.campaign.beans.LoyaltyProgram;
+import org.mq.marketer.campaign.beans.LoyaltyProgramTier;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageListEnum;
+import org.mq.marketer.campaign.general.PageUtil;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.Redirect;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.business.helper.LoyaltyProgramHelper;
+import org.mq.optculture.business.loyalty.LoyaltyProgramService;
+import org.mq.optculture.data.dao.JdbcResultsetHandler;
+import org.mq.optculture.utils.OCConstants;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zul.A;
+import org.zkoss.zul.Filedownload;
+import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Radio;
+import org.zkoss.zul.Radiogroup;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
+import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
+
+public class AddLoyaltyCardsController extends GenericForwardComposer {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	private Long userId;
+	private Rows cardSetRowsId;
+	private Textbox cardSetNameTbId, quantityNameTbId;
+	private Listbox genTypeLbId, statusLbId,exportWinId$statusLbId, selTierLbId;
+	private Window exportWinId;
+	private Radiogroup ltyCardTypeRadioGrId, tierAssignmentRadioGrId;
+	private Radio autoAssignRadioId, linkTierRadioId;
+	TimeZone clientTimeZone ;
+
+	public AddLoyaltyCardsController() {
+		userId = GetUser.getUserObj().getUserId();
+		session = Sessions.getCurrent();
+		Utility.ltyBreadCrumbFrom(3, OCConstants.LOYALTY_SERVICE_TYPE_SBTOOC.equalsIgnoreCase(GetUser.getUserObj().getloyaltyServicetype()));
+	}//AddLoyaltyCardsController()
+
+	@Override
+	public void doAfterCompose(Component comp) throws Exception {
+		super.doAfterCompose(comp);
+		String style = "font-weight:bold;font-size:15px;color:#313031;font-family:Arial,Helvetica,sans-serif;align:left";
+		PageUtil.setHeader("Create Loyalty Program (Step 3 of 6)","",style,true);
+		clientTimeZone =(TimeZone)Sessions.getCurrent().getAttribute("clientTimeZone");
+		Long prgmId = (Long) session.getAttribute("programId");
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		LoyaltyProgram prgmObj = ltyPrgmSevice.getProgmObj(prgmId);
+		if(prgmObj.getTierEnableFlag() == OCConstants.FLAG_YES) {
+			setTiersList(prgmObj.getNoOfTiers());
+		}
+		autoAssignRadioId.setDisabled(false);
+		linkTierRadioId.setDisabled(false);
+		List<LoyaltyCardSet> list = ltyPrgmSevice.getCardsetList(prgmId);
+		if(list != null ) {
+			redrawCardSetList(list);
+		}
+	}//doAfterCompose()
+
+	private void setTiersList(int noOfTiers) {
+		for(int i=1 ; i <= noOfTiers ; i++){
+			Listitem li = new Listitem("Tier "+i , i);
+			li.setParent(selTierLbId);
+		}
+	}
+
+	private void redrawCardSetList(List<LoyaltyCardSet> cardSetList) {
+		Components.removeAllChildren(cardSetRowsId);
+		for (LoyaltyCardSet loyaltyCardSet : cardSetList) {
+			Row row = new Row();
+
+			row.appendChild(new Label(loyaltyCardSet.getCardSetName()));
+			row.appendChild(new Label(loyaltyCardSet.getQuantity().toString()));
+			row.appendChild(new Label(loyaltyCardSet.getCardSetType().toString()));
+			row.appendChild(new Label(loyaltyCardSet.getGenerationType()));
+			
+			if(loyaltyCardSet.getStatus().equalsIgnoreCase("Processing")){
+				Hbox hbox = new Hbox();
+				Label lb = new Label(loyaltyCardSet.getStatus());
+				lb.setStyle("margin-right:5px;");
+				hbox.appendChild(lb);
+				A a = new A("Refresh");
+				a.addEventListener("onClick", this);
+				a.setAttribute("type","refresh");
+				hbox.appendChild(a);
+				row.appendChild(hbox);
+			}else {
+				row.appendChild(new Label(loyaltyCardSet.getStatus()));
+			}
+			
+			if(loyaltyCardSet.getLinkedTierLevel() > 0){
+				row.appendChild(new Label("Tier "+loyaltyCardSet.getLinkedTierLevel()));
+			}
+			else{
+				row.appendChild(new Label("Automatic"));
+			}
+			
+			Hbox hbox = new Hbox();
+			String src = "";
+			String toolTipTxtStr = "";
+			String type = "";
+			if(loyaltyCardSet.getStatus().equalsIgnoreCase(OCConstants.LOYALTY_CARDSET_STATUS_ACTIVE)) {
+				src = "/img/pause_icn.png";
+				toolTipTxtStr  = "Suspend";
+				type = "Suspend";
+			}
+			else if(loyaltyCardSet.getStatus().equalsIgnoreCase(OCConstants.LOYALTY_CARDSET_STATUS_SUSPENDED)) {
+				src = "/img/play_icn.png";
+				toolTipTxtStr = "Activate";
+				type = "Activate";
+			}
+
+			Image editImg = new Image(src);
+			editImg.setTooltiptext(toolTipTxtStr);
+			editImg.setStyle("cursor:pointer;margin-right:5px;");
+			editImg.addEventListener("onClick", this);
+			editImg.setAttribute("type", type);
+			editImg.setParent(hbox);
+
+			if (loyaltyCardSet.getStatus().equalsIgnoreCase(OCConstants.LOYALTY_CARDSET_STATUS_ACTIVE) ||
+					loyaltyCardSet.getStatus().equalsIgnoreCase(OCConstants.LOYALTY_CARDSET_STATUS_SUSPENDED)) {
+				Image exportImg = new Image("/images/loyalty/export.png");
+				exportImg.setTooltiptext("Export");
+				exportImg.setStyle("cursor:pointer;margin-right:5px;");
+				exportImg.addEventListener("onClick", this);
+				exportImg.setAttribute("type", "export");
+				exportImg.setParent(hbox);
+			}
+			hbox.setParent(row);
+
+			row.setValue(loyaltyCardSet);
+			row.setParent(cardSetRowsId);
+		}
+	}//redrawCardSetList()
+
+	public void onClick$addBtnId() {
+		//Check for concurrent card generation on organisation
+		Long prgmId = (Long) session.getAttribute("programId");
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		if(!validateFields()){
+			return;
+		}
+
+		String cardSetName = cardSetNameTbId.getValue().trim();
+		String quantity = quantityNameTbId.getValue().trim();
+		String genTyp = genTypeLbId.getSelectedItem().getValue().toString();
+		String cardsetType = "";
+		int linkedTierLevel = 0;
+		if(ltyCardTypeRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase(OCConstants.LOYALTY_CARDSET_TYPE_PHYSICAL)) {
+			cardsetType = OCConstants.LOYALTY_CARDSET_TYPE_PHYSICAL;
+			linkedTierLevel = Integer.parseInt(selTierLbId.getSelectedItem().getValue().toString());
+		}
+		else if(ltyCardTypeRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase(OCConstants.LOYALTY_CARDSET_TYPE_VIRTUAL)) {
+			cardsetType = OCConstants.LOYALTY_CARDSET_TYPE_VIRTUAL;
+		}
+		String status = statusLbId.getSelectedItem().getValue().toString();
+		char migrationFlag = OCConstants.FLAG_NO;
+		LoyaltyProgram prgmObj = ltyPrgmSevice.getProgmObj(prgmId);
+		String draftStatus = "";
+		if (prgmObj.getStatus().equalsIgnoreCase(OCConstants.LOYALTY_PROGRAM_STATUS_DRAFT)) {
+			// set draft status for 3rd step 
+			draftStatus = prgmObj.getDraftStatus();
+			String[] draftList = draftStatus.split(Constants.ADDR_COL_DELIMETER);
+			draftList[2] = OCConstants.LOYALTY_DRAFT_STATUS_COMPLETE;
+			draftStatus = "";
+			for (String eachStr : draftList) {
+
+				if (draftStatus.isEmpty()) {
+					draftStatus = eachStr;
+				} else {
+					draftStatus += Constants.ADDR_COL_DELIMETER + eachStr;
+				}
+			}
+
+			prgmObj.setDraftStatus(draftStatus);
+			ltyPrgmSevice.savePrgmObj(prgmObj);
+
+		}
+		ltyPrgmSevice.onAddCardSet(cardSetName,quantity,cardsetType,genTyp,status,migrationFlag,prgmId,userId,linkedTierLevel,OCConstants.LOYALTY_CARD_GENERATION_TYPE_SYSTEM);
+
+		List<LoyaltyCardSet> list = ltyPrgmSevice.getCardsetList(prgmId);
+		MessageUtil.setMessage("Card-set added successfully.", "color:blue", "TOP");
+		redrawCardSetList(list);
+		cardSetNameTbId.setValue("");
+		quantityNameTbId.setValue("");
+		genTypeLbId.setSelectedIndex(0);
+		ltyCardTypeRadioGrId.setSelectedIndex(0);
+		statusLbId.setSelectedIndex(0);
+		onCheck$ltyCardTypeRadioGrId();
+		
+	}//onClick$addBtnId()
+	
+	public void onCheck$ltyCardTypeRadioGrId() {
+		if(ltyCardTypeRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase("Physical")) {
+			autoAssignRadioId.setSelected(true);
+			linkTierRadioId.setSelected(false);
+			autoAssignRadioId.setDisabled(false);
+			linkTierRadioId.setDisabled(false);
+			selTierLbId.setDisabled(true);
+			selTierLbId.setSelectedIndex(0);
+			onCheck$tierAssignmentRadioGrId();
+		}
+		else if(ltyCardTypeRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase("Virtual")) {
+			autoAssignRadioId.setSelected(true);
+			linkTierRadioId.setSelected(false);
+			autoAssignRadioId.setDisabled(true);
+			linkTierRadioId.setDisabled(true);
+			selTierLbId.setDisabled(true);
+			selTierLbId.setSelectedIndex(0);
+		}
+	}//onCheck$ltyCardTypeRadioGrId()
+	
+	public void onCheck$tierAssignmentRadioGrId() {
+		if(tierAssignmentRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase("auto")) {
+			selTierLbId.setDisabled(true);
+			selTierLbId.setSelectedIndex(0);
+		}
+		else if(tierAssignmentRadioGrId.getSelectedItem().getValue().toString().equalsIgnoreCase("link")) {
+			Long prgmId = (Long) session.getAttribute("programId");
+			LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+			LoyaltyProgram prgmObj = ltyPrgmSevice.getProgmObj(prgmId);
+			if(prgmObj.getTierEnableFlag() == OCConstants.FLAG_NO) {
+				MessageUtil.setMessage("Card-set cannot be linked to a particular tier level as the program is a non-tiered program.", "color:red", "TOP");
+				autoAssignRadioId.setSelected(true);
+				linkTierRadioId.setSelected(false);
+				return;
+			}
+			selTierLbId.setDisabled(false);
+			selTierLbId.setSelectedIndex(0);
+		}
+	}//onCheck$tierAssignmentRadioGrId()
+
+	private boolean validateFields() {
+		if(cardSetNameTbId.getValue() == null || cardSetNameTbId.getValue().trim().length() == 0) {
+			MessageUtil.setMessage("Card set name cannot be empty.", "color:red", "TOP");
+			cardSetNameTbId.setFocus(true);
+			return false;
+		}else if(!Utility.validateBy(Constants.LTY_NAME_PATTERN,cardSetNameTbId.getValue())) {
+			MessageUtil.setMessage("Enter valid card-set name.","color:red");
+			return false;
+		}
+		if(cardSetNameTbId.getValue().trim().length() > 60) {
+			MessageUtil.setMessage("Card-set name exceeds the maximum characters limit.", "color:red", "TOP");
+			return false;
+		}
+
+		Long prgmId = (Long) session.getAttribute("programId");
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		List<LoyaltyCardSet> cardList=ltyPrgmSevice.getCardsetList(prgmId);
+		if(cardList != null) {
+			for(LoyaltyCardSet loyaltyCardSet:cardList) {
+				if(loyaltyCardSet.getCardSetName().equalsIgnoreCase(cardSetNameTbId.getValue().trim())) {
+					MessageUtil.setMessage("Card-set name already exists.", "color:red", "TOP");
+					return false;
+				}
+			}
+		}
+
+		if(!checkIfNumber(quantityNameTbId.getValue().trim())) {
+			MessageUtil.setMessage("Please provide number value for quantity.", "red");
+			return false;
+		}
+
+		if(quantityNameTbId.getValue() == null || quantityNameTbId.getValue().trim().length() == 0 || Long.parseLong(quantityNameTbId.getValue().trim()) <= 0){
+			MessageUtil.setMessage("Quantity cannot be empty or zero.", "color:red", "TOP");
+			return false;
+		}
+		if(quantityNameTbId.getValue().trim().length() > 60) {
+			MessageUtil.setMessage("Quantity value exceeds the maximum characters limit.", "color:red", "TOP");
+			return false;
+		}
+		if(LoyaltyProgramHelper.anotherCardGeneration(prgmId)){
+			MessageUtil.setMessage("Card generation is already underway by another user. Please try again after some time.", "color:blue", "TOP");
+			return false;
+		}
+		return true;
+	}//validateFields()
+
+	public boolean checkIfNumber(String in) {
+		try {
+			Long.parseLong(in);
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+		return true;
+	}// checkIfNumber()
+
+	public void onClick$previousBtnId() {
+		Redirect.goTo(PageListEnum.LOYALTY_RULES);
+	}//onClick$previousBtnId()
+
+	public void onClick$nextBtnId() {
+		if(OCConstants.LOYALTY_SERVICE_TYPE_SBTOOC.equalsIgnoreCase(GetUser.getUserObj().getloyaltyServicetype())){
+			Redirect.goTo(PageListEnum.LOYALTY_AUTO_COMMUNICATION);
+		}else{
+			Redirect.goTo(PageListEnum.LOYALTY_ADDITIONAL_SETTINGS);
+		}
+	}//onClick$nextBtnId()
+
+	@Override
+	public void onEvent(Event event) throws Exception {
+		super.onEvent(event);
+
+		Long prgmId = (Long) session.getAttribute("programId");
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		if(event.getTarget() instanceof Image){
+			Image img = (Image)event.getTarget();
+			Row tempRow = ((Row)((Hbox)img.getParent()).getParent());
+
+			String evtType = (String)img.getAttribute("type");
+			LoyaltyCardSet  loyaltyCardSet = (LoyaltyCardSet)tempRow.getValue();
+
+			if("Suspend".equalsIgnoreCase(evtType)) {
+				loyaltyCardSet.setStatus(OCConstants.LOYALTY_CARDSET_STATUS_SUSPENDED);
+				ltyPrgmSevice.saveCardSetObj(loyaltyCardSet);
+				List<LoyaltyCardSet> list = ltyPrgmSevice.getCardsetList(prgmId);
+				redrawCardSetList(list);
+			}
+			else if("Activate".equalsIgnoreCase(evtType)) {
+				loyaltyCardSet.setStatus(OCConstants.LOYALTY_CARDSET_STATUS_ACTIVE);
+				ltyPrgmSevice.saveCardSetObj(loyaltyCardSet);
+				List<LoyaltyCardSet> list = ltyPrgmSevice.getCardsetList(prgmId);
+				redrawCardSetList(list);
+			}
+			else if ("export".equalsIgnoreCase(evtType)) {
+
+				export(loyaltyCardSet);
+
+			}
+		}else if(event.getTarget() instanceof A) {
+			A a = (A)event.getTarget();
+			String evtType = (String)a.getAttribute("type");
+			if("Refresh".equalsIgnoreCase(evtType)) {
+				List<LoyaltyCardSet> list = ltyPrgmSevice.getCardsetList(prgmId);
+				redrawCardSetList(list);
+			}
+		}
+	}//onEvent()
+
+	private void export(LoyaltyCardSet loyaltyCardSet) {
+		exportWinId.setAttribute("loyaltyCardSet", loyaltyCardSet);
+		exportWinId.setVisible(true);
+		exportWinId.setPosition("center");
+		exportWinId.doHighlighted();
+	}//export()
+
+	public void onClick$exportBtnId$exportWinId() {
+
+		LoyaltyCardSet loyaltyCardSet = (LoyaltyCardSet) exportWinId.getAttribute("loyaltyCardSet");
+		String cardIdStr=loyaltyCardSet.getCardSetId().toString();
+		Listitem li=exportWinId$statusLbId.getSelectedItem();
+		String status=li.getValue().toString();
+		LoyaltyProgramService ltyPrgmSevice = new LoyaltyProgramService();
+		long size = ltyPrgmSevice.getCardsCount(cardIdStr,status); 
+		logger.info("total size is  ::"+size);
+		if(size == 0l){
+			MessageUtil.setMessage("No Cards exists.","color:red","TOP");
+			return;
+		}
+
+		JdbcResultsetHandler jdbcResultSetHandler = null;
+		try {
+
+			String userName = GetUser.getUserName();
+			String usersParentDirectory = (String)PropertyUtil.getPropertyValue("usersParentDirectory");
+			String exportDir = usersParentDirectory + "/" + userName + "/Export/Cards" ;
+			File downloadDir = new File(exportDir);
+
+			StringBuffer sb = null;
+			if(downloadDir.exists()){
+				try {
+					FileUtils.deleteDirectory(downloadDir);
+					logger.debug(downloadDir.getName() + " is deleted");
+				} catch (Exception e) {
+					logger.error("Exception ::" , e);
+					logger.debug(downloadDir.getName() + " is not deleted");
+				}
+			}
+			if(!downloadDir.exists()){
+				downloadDir.mkdirs();
+			}
+
+			String filePath = exportDir  + File.separator+  "LoyaltyCards_" +	MyCalendar.calendarToString(Calendar.getInstance(), MyCalendar.FORMAT_YEARTOSEC, clientTimeZone);
+
+			filePath = filePath + ".csv";
+			logger.debug("Download File path : " + filePath);
+			File file = new File(filePath);
+			BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+			bw.write("\"Card Number\",\"Card Pin\",\"Status\",\r\n");
+
+			jdbcResultSetHandler = new JdbcResultsetHandler();
+
+			String sqlqry = "";
+
+			if(status==null || status.trim().equalsIgnoreCase("All")) {
+				sqlqry = "select card_number,card_pin,status from loyalty_cards where card_set_id in ("+cardIdStr+")";
+			}else if(status != null && status.trim().equalsIgnoreCase("Registered")) {
+				sqlqry = "select card_number,card_pin,status from loyalty_cards where card_set_id in ("+cardIdStr+") and registered_flag = '"+OCConstants.FLAG_YES+"' ";
+			}
+			else{
+				sqlqry = "select card_number,card_pin,status from loyalty_cards where card_set_id in ("+cardIdStr+") and status ='"+status.trim()+"' ";
+			}
+
+			jdbcResultSetHandler.executeStmt(sqlqry);
+
+			List<String> recordList = jdbcResultSetHandler.getRecords();
+			if(recordList == null) {
+				logger.debug("Error getting from jdbcResulSetHandler  ...");
+			}
+			logger.info("record list is "+recordList.size());
+			int countingCount = recordList.size();
+
+			while(countingCount <= size ){
+				sb = new StringBuffer();
+
+				for (String eachRecord : recordList) {
+
+					logger.info("eachRecord"+eachRecord);
+					String[] strArr = eachRecord.split(";");
+					sb.append("\"");sb.append(strArr[0].replace("card_number=", ""));sb.append("\",");
+					sb.append("\"");sb.append(strArr[1].replace("card_pin=", ""));sb.append("\",");
+					sb.append("\"");sb.append(strArr[2].replace("status=", ""));sb.append("\"");
+					sb.append("\r\n");
+
+				}
+
+				bw.write(sb.toString());
+				sb = null;
+				System.gc();
+				recordList = jdbcResultSetHandler.getRecords();
+				if(recordList == null) break;
+				countingCount += recordList != null ?recordList.size() :0;
+				logger.info("countingCount"+countingCount);
+			}
+
+			bw.flush();
+			bw.close();
+			Filedownload.save(file, "text/plain");
+
+		} catch (Exception e) {
+			logger.error("Error  :: ",e);
+		}finally{
+			jdbcResultSetHandler.destroy();
+		}
+		exportWinId$statusLbId.setSelectedIndex(0);
+		exportWinId.setVisible(false);
+	}//onClick$exportBtnId$exportWinId()
+
+	public void onClick$cancelBtnId$exportWinId() {
+		exportWinId$statusLbId.setSelectedIndex(0);
+		exportWinId.setVisible(false);
+	}//onClick$cancelBtnId$exportWinId()
+
+
+}
+
+

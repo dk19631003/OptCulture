@@ -1,0 +1,68 @@
+<ion-content>
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent">
+        <ion-toolbar>
+          <ion-buttons slot="start" >
+            <ion-button  (click)="backButtonEvent()">
+              <ion-icon mode="md" color="dark" slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        </ion-toolbar>
+        <ion-item lines="none"  >
+          <ion-label text-wrap class="titleText">
+            View Rewards Status
+          </ion-label>
+        </ion-item>
+        <ion-list class="padding10">
+        <ion-row *ngIf="nudgetsResponse && nudgets.length>0">
+          <ion-col>
+            <ion-text>Loyalty balance is {{points}} points and Value is {{currencyvalue}} USD   </ion-text> <br/>
+            <ion-text>Cumulative loyalty points earned to date is {{totalPoints}} points </ion-text>  <br/>
+          </ion-col>
+        </ion-row>
+        <ng-container>
+        <ion-row *ngFor="let nudget of nudgets">
+          <ion-col size="10">
+              <ion-label class="headerText bold navy"> {{nudget.COUPONNAME}}</ion-label>
+              <br/>
+              <ion-text class="notificationText">
+                  {{nudget.DESCRIPTION}}
+              </ion-text>
+              <br/> <ion-text class="themetextcolor"><b>{{nudget.NUDGEDESCRIPTION}}</b></ion-text>
+          </ion-col>
+          <!-- <ion-grid>
+            <ion-row (click)="copyToClipboard(nudget.COUPONCODE)">
+                <ion-col size="1.5" class="col1">
+                      <div class="couponcode ">
+                           <div class="white"></div>
+                      </div>
+                </ion-col>
+                  <ion-col size="8" class="col2">
+                  <div class="couponcode dottedlines">
+                  <ion-item lines="none" class="color-background">
+                      <ion-label class="textCenter couponText bold">
+                          {{nudget.COUPONCODE}}
+                      </ion-label>
+                  </ion-item>
+                 
+                  </div>
+                  </ion-col>
+            </ion-row>
+        </ion-grid> -->
+            <ion-item class="line wd100" lines="full">
+              </ion-item>
+        </ion-row>
+      </ng-container>
+
+      <ion-row *ngIf="nudgetsResponse && nudgets.length==0" class="mrtop40 ">
+        <ion-col class="textCenter"> 
+          <ion-text class="headerText"> <b>Sorry No Rewards Statuses available</b> </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-list>
+</ion-col>
+<ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>

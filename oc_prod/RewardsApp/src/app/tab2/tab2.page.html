@@ -1,0 +1,73 @@
+
+
+<ion-content forceOverscroll="false">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent">
+    <div class="colorClass ht25 posrelative">
+        <ion-grid class="ht100">
+            <ion-row >
+              <ion-col>
+                  <ion-item lines="none"  class="mr-right-5 mr-left-5 color-background">
+                      <ion-label  text-wrap class="title">
+                          {{ 'offers' | translate }}
+                      </ion-label>
+                    </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row >
+              <ion-col class="pad5">
+  
+              </ion-col>
+            </ion-row>
+            <ion-row class="posabsolute wd100">
+              <ion-col size="1">
+  
+              </ion-col>
+              <ion-col class="textCenter col1 " size="5">
+                  <ion-button  fill="clear" [ngClass]="{'borderleft': textDir == 'rtl'}" class="col1 text_transform mr0 wd100" (click)="goTofilter()">
+                      <ion-icon slot="start"   src="assets/images/filter.svg"></ion-icon>
+                      <ion-text class="filterText">  {{'FilterBy' | translate }} </ion-text>
+                 </ion-button> 
+              </ion-col>
+              <ion-col class="textCenter col2" size="5">
+                  <ion-button  fill="clear" [ngClass]="{'borderleft': textDir == 'ltr'}" class="text_transform  mr0 wd100" (click)="goTOSort()">
+                      <ion-icon slot="start"   src="assets/images/sortby.svg"></ion-icon>
+                      <ion-text class="filterText">{{'SortBy' | translate }} </ion-text>
+                 </ion-button> 
+              </ion-col>
+              <ion-col size="1">
+  
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+    
+    </div>
+
+  <div *ngIf="!coupons " class="center">
+     <b> {{ 'SorryNoOffersAvailable' | translate }} </b>
+  </div>
+
+ 
+
+  <ion-list mode="md" *ngFor="let coupon of allOffers" class="mr-right-5 mr-left-5">
+      <ion-label class="textFont">{{coupon.name}}</ion-label>
+   
+        <div *ngIf="coupon.bannerImage" >
+            <ion-card class="imgHeight border-radius" (click)="gotoOfferDetail(coupon)">  
+              <img  src="{{coupon.bannerImage}}"  style="width:100%"/>
+             </ion-card>
+        </div>
+  </ion-list>
+
+  <!-- <ion-infinite-scroll  threshold="150px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="{{loadDatamsg}}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll> -->
+  </ion-col>
+  <ion-col *ngIf="!ismobile" class="bgimage "></ion-col>
+  </ion-row>
+  </ion-grid>
+</ion-content>

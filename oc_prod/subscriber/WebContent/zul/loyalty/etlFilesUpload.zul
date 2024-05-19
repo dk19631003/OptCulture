@@ -1,0 +1,109 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<style>
+ 	 .myLinks {
+		color:#2589BB;
+		font-weight:bold;
+		padding:0 15px;
+     }
+   
+	
+     .boldLabel {
+    	 font-weight:bold;
+     }
+     
+         
+     .compareUp span{
+     	color:#4C9625;
+     	font-weight:bold;
+     }
+     
+     .compareDown span{
+     	color:#CF1D0B;
+     	font-weight:bold;
+     }
+     
+	table.tableBoldData td span{
+	 font-weight:bold;
+	}
+	
+	.word-wrap {
+word-wrap: break-word;
+	
+</style>
+
+
+
+<window xmlns:h="native" xmlns:w="client" width="100%" apply="org.mq.optculture.controller.loyalty.ETLFilesUploadController">
+	
+		<div id="fileUploadDivId" style="padding-top:10px;"  >
+		
+	    <div  align="right" style="margin:10px;padding:5px 20px;background-color:#E4EBF5;">
+	    	<label value="Logs Information Within :" sclass="myLinks"/>
+	    	 <listbox id="defaultDatesId"  mold="select" style="position:relative;" sclass="myLinks">
+	    	   <listitem label="Today" selected="true" />
+	    	   <listitem label="One Week" />
+		       <listitem label="Last 30 Days" />
+		       <listitem label="Custom Dates"  />
+		     </listbox>
+		 
+	    
+		         <div id="datesDivId"   visible="false" style="float:none;padding:5px;" >
+	                <label value="From Date"  id="fromDateId" sclass="myLinks"/>
+	                   <datebox id="fromDateboxId"  readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+					   format="dd-MMM-yyyy" constraint="no future" />
+		  		    <label value="To Date"    sclass="myLinks"/> 
+		  			    <datebox id="toDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+						 format="dd-MMM-yyyy" constraint="no future" />
+				 </div> 
+				 <div align="right" style="float:none;padding:5px;">  
+		  	 		<a label="View Logs" id="viewLogsAId"  sclass="myLinks" />
+		  	     </div>
+	    </div>	   
+		
+			<div style="padding-top:10px;">
+				<label value="Please upload the "/>
+				<label value=".XML/ZIP " style="font-weight:bold;"/>
+				<label value=" file."/>
+			</div>
+			<h:table cellspacing="0" cellpadding="0">
+					<h:tr>
+						<h:td>
+							<label value="Browse .XML/ZIP file" sclass="theme-lbHeading"/>
+						</h:td>
+						<h:td style="padding-left:10px;">
+							<textbox id="selectedFileTbId"/>
+						</h:td>
+						
+						<h:td style="padding-left:10px;">
+							<button id="uploadBtnId" sclass="idle greenbtn" upload="true" label="Browse" height="28px" width="140px"></button>
+						</h:td>
+						
+						<h:td style="padding-left:10px;">
+							<button id="cancelBtnId" sclass="idle140" label="Cancel"></button>
+						</h:td>
+					</h:tr>
+					<h:tr >
+				</h:tr>
+					
+					<h:tr height="50"></h:tr>
+					</h:table>
+			
+			</div>
+		<separator height="15px"/>	
+	 
+			<window id="viewFileLogsWinId" title="View Logs" visible="false" width="1200px"  border="normal"  closable="true"  sizable="true"
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<grid id="viewLogsGridId" height="350px" >
+				<columns>
+					<column label="File Name"></column>
+					<column label="Time Of Upload"></column>	
+				</columns>
+			</grid>
+		</window>
+	
+			
+	
+</window>
+</zk>

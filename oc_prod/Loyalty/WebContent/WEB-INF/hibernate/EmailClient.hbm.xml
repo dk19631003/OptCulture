@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 18:15:04 PM  -->
+<hibernate-mapping>
+	<class name="org.mq.loyality.common.hbmbean.EmailClient"
+		table="email_clients">
+		<id name="emailClientId" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="emailClient" type="string">
+			<column name="email_client" length="50" not-null="true" />
+		</property>
+		<property name="userAgent" type="string">
+			<column name="user_agent" length="50"/>
+		</property>
+		<property name="uaDispValue" type="string">
+			<column name="ua_disp_value" length="50"/>
+		</property>
+		<property name="userAgentStr" type="string">
+			<column name="user_agent_str" />
+		</property>
+	</class>
+</hibernate-mapping>

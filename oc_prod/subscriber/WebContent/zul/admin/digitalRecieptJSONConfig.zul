@@ -1,0 +1,57 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window title="New Page Title" border="normal" apply="org.mq.marketer.campaign.controller.admin.DigiRcptJSONConfigController" xmlns:h="native">
+	
+	  <h:table width="100%">
+		       <h:tr>
+		       			
+		       			<h:td>
+					     			<label value="Selected Templates : " />  <label id="selectedTemplateLblId" /> <h:br/>
+					  	   			<label value="Please configure the template place holders with the request json keys,
+					  	   			Please provide complete path of the json element " />
+		       			</h:td>
+		       </h:tr>
+		      
+		       	<h:tr>
+		       			<h:td>
+		       			
+		       				 <h:table>
+		       				
+		       				  <h:tr> 
+		       				  		<h:td> 
+		       				   	   				<listbox mold="select" id="digiRcptSettingLstId1"></listbox>
+		       				    	</h:td>  
+		       				    	<h:td>
+		       				    				<label value="JSON Key Field : "/><textbox id="jsonKeyFieldTbxId"></textbox>
+		       				    	</h:td>
+		       				    	<h:td> <button label="Add Field" id="addFieldBtnId" /></h:td>
+		       			     </h:tr>
+		       			     </h:table>
+		       			  </h:td>  </h:tr> 
+		       			     
+		       	  <h:tr>
+		       		  	<h:td >
+		       			    	
+				       			     <grid id="templateAndJSONMappingGridId"  emptyMessage="No Template Field mappings">
+				       			     	<columns>
+				       			     		<column>Template Field</column>
+				       			     		<column>JSON Field Key</column>
+				       			     		<column>Options</column>
+				       			     	</columns>
+				       			     	<rows>
+				       			     		
+				       			     	</rows>
+				       			     </grid>
+				       			     
+		       			  </h:td>
+		       			</h:tr>	
+		       			
+		       			<h:tr>
+		       				<h:td>
+		       					<button id="submitBtnid" label="Save Configuration" />
+		       				</h:td>
+		       			</h:tr>
+	               </h:table>		   
+	   
+</window>
+</zk>

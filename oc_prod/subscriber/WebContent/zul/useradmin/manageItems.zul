@@ -1,0 +1,350 @@
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.useradmin.ManageItemsController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">				  
+	<tabbox id="itemsTabBoxId" >
+			<tabs>
+				<tab label="Items/SKU" id="itemsTabId"/>
+				<tab label="Add Item/SKU" id="addItemTabId" />
+			</tabs>	
+			<tabpanels>
+				<tabpanel>
+					<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+						<h:tr bgcolor="#eef2f5">
+							<h:td >
+								<label value="Search By " sclass="boldLabel"/>
+							</h:td>
+							<h:td>
+								<listbox id="searchLBId" rows="1" mold="select" style="position:relative;left:10px;"  >
+									<listitem label="--Select Criteria--" selected="true" value="0" />
+									<listitem label="Item SID" value="1"/>
+									<listitem label="Description" value="2"/>
+									<listitem label="Category" value="3" />
+									<!-- <listitem forEach="${custWin$ManageItemsController.posMappingLists}" label="${each.displayLabel}" value="${each}"/> -->
+								</listbox>
+							</h:td>
+							<h:td>
+								<textbox id="searchTBId"   style="position:relative;left:10px;" value="Search..." 
+									w:onClick="javascript: if(this.getValue()=='Search...') {  this.setValue(''); }" 
+									w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Search...'); }" focus="true" /> 
+								
+							</h:td>
+			
+							<h:td align="left" >
+					 			<button  id="filterBtnId" sclass="idle140"	label="Filter" />
+					 			<a label="Reset" id="resetSearchCriteriaAnchId" />
+							</h:td>
+		
+						</h:tr>
+					</h:table >	
+					
+					<div>
+					<grid id="itemsGridId" 
+						emptyMessage="No Items added, To create new Item/SKU Click on 'Add Item/SKU' Button">
+					 	
+					 	<columns  menupopup="auto">
+					       <column label="Item SID" />
+					       <column label="Description" />
+					       <column label="Category" />
+				           <column label="Price" />
+					       <column label="Department"  />
+					       <column label="DCS"   />
+					       <column label="Class" visible="false" />
+					       <column label="Sub-class"  visible="false" />
+					       
+					       <column label="Tax%" visible="false" />
+					       <column label="Size"  visible="false"  />
+					       <column label="Brand"  visible="false" />
+					       <column label="Actions" />
+					     </columns>
+					     <rows id="itemsRowsId" />
+					    
+					</grid>
+					</div>	
+					
+					<h:table width="100%">
+					    <h:tr>
+						    <h:td>
+							    <label value="Export as a:" />
+								<combobox id="exportCbId" readonly="true" sclass="cb_100w">
+									<comboitem label=" .csv" value="csv" />
+									<!-- <comboitem label=" .xls" value="xls" /> -->
+								</combobox>
+									<label value=".file" />
+									<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId" />
+							</h:td>
+		    				<h:td align="right">
+			   					<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   					<listbox rows="1" mold="select" id="itemsPerPageLBId" style="margin-right:30px;">
+									<listitem label="10" selected="true" />
+									<listitem label="25" />
+									<listitem label="50" />
+									<listitem label="100" />
+								</listbox>
+							</h:td>
+							<h:td width="280px"  >
+								<paging id="itemsPagingId" detailed="true" pageSize="10" width="280px" 
+									class="contactsViewPaging" style="border:none;"  visible="true" />
+							</h:td>
+						</h:tr>
+	   				</h:table>
+	   				
+					<window id="custExport" title="Select Fields to Export" border="normal"  width="600px" visible="false"   xmlns:h="native"
+						onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+                  		<div id="chkDivId" width="580px" style="margin:15px;" />
+				   		<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+							<h:tr>
+								<h:td >
+                           			<a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />  
+                           			<a label="Clear All" id="clearAllAnchr" /> </h:td> 	<h:td>
+                       				<div align="right" style="margin:10px 40px 0 0;">
+                         				<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+		                   				<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);"  />
+									</div>
+                				</h:td>
+                			</h:tr>
+						</h:table>
+					</window>	
+				
+				</tabpanel>
+				
+				<tabpanel>
+				
+				<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+								<caption label="Add Item/SKU "  />
+					<h:table>
+						<h:tr>
+							<h:td  width="100">
+								<label value="Item Description:" /><label value=" * " style="color:red;" />
+							</h:td>
+							<h:td>
+								<textbox  id="descTbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="Tax%:" />
+							</h:td>
+							<h:td>
+								<textbox  id="taxTbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="Item Category:" /><label value=" * " style="color:red;" />
+							</h:td>
+							<h:td>
+								<textbox  id="catTbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="Department:" />
+							</h:td>
+							<h:td>
+								<textbox  id="deptTbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="Item SID:" /><label value=" * " style="color:red;" />
+							</h:td>
+							<h:td>
+								<textbox  id="sidTbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="Class:" />
+							</h:td>
+							<h:td>
+								<textbox  id="classTbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="Brand:" />
+							</h:td>
+							<h:td>
+								<textbox  id="brandTbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="Sub Class:" />
+							</h:td>
+							<h:td>
+								<textbox  id="subclassTbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="Price:" /><label value=" * " style="color:red;" />
+							</h:td>
+							<h:td>
+								<textbox  id="priceTbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="Size:" />
+							</h:td>
+							<h:td>
+								<textbox  id="sizeTbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="Vendor Code:" />
+							</h:td>
+							<h:td>
+								<textbox  id="vcodeTbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="DCS:" />
+							</h:td>
+							<h:td>
+								<textbox  id="dcsTbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="UDF1:" />
+							</h:td>
+							<h:td>
+								<textbox  id="udf1TbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="UDF2" />
+							</h:td>
+							<h:td>
+								<textbox  id="udf2TbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="UDF3:" />
+							</h:td>
+							<h:td>
+								<textbox  id="udf3TbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="UDF4" />
+							</h:td>
+							<h:td>
+								<textbox  id="udf4TbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td  width="100">
+								<label value="UDF5:" />
+							</h:td>
+							<h:td>
+								<textbox  id="udf5TbId"  width="220px"   /> 
+							</h:td>
+							
+							<h:td width="100"></h:td>
+							
+							<h:td  width="100">
+								<label value="UDF6" />
+							</h:td>
+							<h:td>
+								<textbox  id="udf6TbId"  width="220px"   /> 
+							</h:td>
+						</h:tr>
+					</h:table>
+					</groupbox>
+					<h:table>
+						<h:tr>
+							<h:td width="200"></h:td>
+							<h:td style="padding-top:30px;">
+								<button label="Back" visible="false" sclass="idle140" id="backBtnId" />
+								<button label="Edit" visible="false" sclass="idle140 greenbtn" id="editItemBtnId" />
+							    <button label="Add Item" sclass="idle140 greenbtn" id="addItemBtnId"/>
+							    <button label="Save" visible="false" sclass="idle140 greenbtn" id="saveItemBtnId"/>
+							    <button label="Cancel" id="cancelItemBtnId" />
+				        	</h:td>
+						</h:tr>	
+					</h:table>
+				</tabpanel>
+			</tabpanels>
+	</tabbox>
+	<!-- *start * window for generating QR code -->
+		<window id="generateQRWinId" visible="false" closable="true" title="Generate QR Codes" 
+						height="200px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				
+				<h:tr>
+					<h:td colspan="1"><label value="QR Code :" /></h:td>
+					<h:td colspan="2"><textbox  id="QRCountIdTbId"  width="160px"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td/>
+					
+					<!-- <h:td  colspan="2" valign="center">	
+						<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+						<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td> -->
+				<h:tr>
+					<h:td colspan="2"><label id="msgLbId" style="color:blue;font-family:verdana;font-size:15px;"/></h:td>
+					
+				</h:tr>
+				<!-- <h:tr>
+				<h:td colspan="3"><label id=errormsgLblId" style="color:blue;font-family:verdana;font-size:15px;"/></h:td>
+				</h:tr> -->
+					<h:tr><h:td align="center" colspan="3"><button label="Ok" id="backQRBtnId" style="width:100px" /></h:td></h:tr>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td><button label="Generate" id="generateQRBtnId" /></h:td>
+					<h:td><button label="Cancel" id="cancelQRBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+		<!-- *end* window for generating qr code -->	
+		
+		<!-- *start * window for generating URL's-->
+		<window id="generateCSVWinId" visible="false" closable="true" title="Generate URL Codes" 
+						height="200px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				
+				<h:tr>
+					<h:td colspan="1"><label value="No. of URL codes to be generated:" /></h:td>
+					<h:td colspan="2"><textbox  id="CSVCountIdTbId"  width="160px"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td/>
+				<h:tr>
+					<h:td colspan="2"><label id="msgLbId" style="color:blue;font-family:verdana;font-size:15px;"/></h:td>			
+				</h:tr>
+					<h:tr><h:td align="center" colspan="3"><button label="Ok" id="backCSVBtnId" style="width:100px" /></h:td></h:tr>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td><button label="Generate" id="generateCSVBtnId" /></h:td>
+					<h:td><button label="Cancel" id="cancelCSVBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+		<!-- *end* window for generating URL's -->	
+	
+		
+	</window>	
+		
+</zk>

@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ 	<class name="org.mq.captiway.scheduler.beans.OptInReport"
+		table="optin_report">
+	  <id name="optRepId" type="java.lang.Long">
+			<column name="template_id" />
+			<generator class="native" />
+	  </id>	
+	  <property name="htmlContent" type="text">
+			<column name="html_content"  />
+	  </property>	
+	
+	  <property name="confirmCount" type="java.lang.Long">
+			<column name="confirm_count" default="0" />
+	  </property>	
+	  </class>
+	  </hibernate-mapping>

@@ -1,0 +1,16 @@
+<?page title="Create Campaign" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="smsCampCreateIndexWinId" apply="org.mq.marketer.campaign.controller.sms.SMSCampCreateIndexController">
+	<!--<zscript>
+		<![CDATA[
+			sessionScope.remove("smsCampaign");
+			sessionScope.remove("editSmsCampaign");
+			sessionScope.remove("messageContent");
+			//sessionScope.remove("editorType");
+			//sessionScope.remove("selectedTemplate");
+			//sessionScope.remove("isBack");
+		]]>
+	</zscript>
+	--><!--<include id="smsCampSettingsIncId" src="/zul/sms/SmsCampSettings.zul"/>
+	--></window>
+</zk>

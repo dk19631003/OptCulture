@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.PurgeQueue" table="purge_queue">
+		<id name="id" type="java.lang.Long" column="id">
+		<generator class="native"></generator>
+		</id>
+		<property name="userId" column="user_id" type="java.lang.Long" unique-key="unique_key"></property>
+		<property name="listId" column="list_id" type="java.lang.Long" unique-key="unique_key"></property>
+		<property name="status" column="status" type="string" ></property>
+		<property name="createdDate" column="created_date" type="calendar" ></property>
+		<property name="purgedDate" column="purged_date" type="calendar"></property>
+	</class>
+		
+
+
+</hibernate-mapping>

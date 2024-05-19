@@ -1,0 +1,632 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="posSettingsWinId" border="0"   apply="org.mq.marketer.campaign.controller.admin.POSSettingsController" 	xmlns:h="native" xmlns:w="client" width="100%">
+	
+	
+	<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px" id="createListGroupBoxId">
+				<caption label="Create POS List"  />
+				<div id="userOrgListDivId" visible="false">
+					<h:table cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td  width="200" >
+								<label value="Select Organization :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="orgListBxId" mold="select" width="200px">
+								<listitem label="--select--" selected="true"/>
+									
+								</listbox>
+							</h:td>	
+							<h:td  width="200" >
+							(OR)
+							
+							<space></space>
+								<label value="Select OrganizationID :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="orgListBx" mold="select" width="200px">
+									<listitem label="--select--" selected="true"/>
+									
+								</listbox>
+							</h:td>	
+							
+	
+						</h:tr>
+					
+					
+						<h:tr>
+							<h:td >
+								<label value="Select User :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="usersListBxId" mold="select" width="200px">
+									
+								</listbox>
+							</h:td>	
+						</h:tr>
+					</h:table>
+				</div>
+					
+				<div id="createListDivId" width="100%" > 
+					<h:table cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td width="200" >
+								<label value="POS List Name :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="posListTxtBoxId" width="270px" maxlength="50" cols="30"/>
+							</h:td>	
+						</h:tr>
+						
+						<h:tr>
+							<h:td valign="top">
+								<label value="Description :" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="posListDescTbId" rows="5" width="270px" maxlength="125" height="100px"/>
+							</h:td>	
+						</h:tr>	
+						
+						<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Double opt-in email:" />
+								</h:td>
+								
+								<h:td >
+									<checkbox id="doubleOptInCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+								
+						</h:tr>
+						<h:tr>
+							<h:td  width="200" />
+								<h:td>
+									<div id="doubleOptLtDiv" width="100%"  style="z-index: 0;" visible="false">
+         								<label value="Opt-in Email:" />
+										<listbox id="optInEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Select Message" />
+										</listbox>
+										<image id="optInPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="previewBtnId" sclass="idle140"/>
+	         						</div>   
+								</h:td>
+						</h:tr>
+						
+						<h:tr style="display:none;">
+								<h:td  width="200">
+									<label value="Enable a Parental Consent email:" />
+								</h:td>
+								
+								<h:td >
+									<checkbox id="parentalConsentCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+						</h:tr>
+						
+						<h:tr style="display:none;">
+							<h:td  width="200" />
+							<h:td>
+							 
+								<div id="parentalOptLtDiv" width="100%"  style="z-index: 0;" visible="false">
+	          						<label value="Parental Consent Email :" />
+									<listbox id="parentalConsentEmailLbId"  width="270px"   mold="select" sclass="contactsView">
+									  <listitem  selected="true" label="Select Message" />
+									</listbox>
+									
+									<image id="parentalPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+									<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="parentalPreviewBtnId" sclass="idle140"/>
+        						</div>  
+							</h:td>
+						</h:tr>
+						<!-- LOYALTY OPT_IN -->
+
+
+						<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Loyalty opt-in email:" id="optionsbasedOnloyalityType" visible="false"/>
+								</h:td>
+								
+								<h:td >
+									<div id="optionsbasedOnloyalityTypeCheckbox" visible="false">
+										<checkbox id="loyaltyOptInCbId"  checked="false" style="padding-right:0px;" />
+									</div>	
+								</h:td>
+								
+						</h:tr>						
+						<h:tr>
+							<h:td  width="200" />
+							<h:td>
+							
+								<div id="loyaltyOptLtDiv" width="100%" visible="false" style="z-index: 0;">
+	          						<label value="Loyalty Opt-in Email :" />
+									<listbox id="LoyaltyOptinEmailLbId"  width="270px"   mold="select" sclass="contactsView">
+									  <listitem  selected="true" label="Select Message" />
+									</listbox>
+									
+									<image id="loyaltyPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+									<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="loyaltyPreviewBtnId" sclass="idle140"/>
+        						</div>  
+							</h:td>
+						</h:tr>
+						<!--  Welcome Email -->
+						
+						<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Welcome Email:" />
+								</h:td>
+								<h:td >
+									<checkbox id="welcomeEmailsCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+								</h:tr>
+								
+								<h:tr>
+							<h:td  width="200" />
+							<h:td>
+							
+								<div id="enableWelcomeEmailDivId" width="100%" visible="false" style="z-index: 0;">
+	          						<label value="Welcome Message:" />
+									<listbox id="welcomeEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+									  <listitem  selected="true" label="Select Message" />
+									</listbox>
+									
+									<image id="previewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+									<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="welcomeMessagePreviewBtnId" sclass="idle140"/>
+										<a label="Edit Message"
+											style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+											id="editMsgBtnId" sclass="idle140" />
+        						</div>  
+							</h:td>
+						</h:tr>
+								
+						
+						
+					</h:table>
+				</div>
+				
+	         	<div align="right">
+					<button label="Save &amp; Continue" id="creatListNxtBtnId" visible="false" sclass="idle140"/>
+	         	    <button label="Save" id="step1SaveBtnId" visible="false" sclass="idle140"/>
+	         	    <button label="Next" id="step1NxtBtnId" visible="false" sclass="idle140 greenbtn"/>
+	         	</div>
+				
+				
+		</groupbox>
+		
+		
+		<div id="posMappingDivId" visible="false" >
+			<!-- Contacts POS Mapping -->
+			<div  id="digiReceiptSettingsDivId" visible="false">
+			<groupbox   closable="false" open="true" visible="true">
+				<caption >
+					<label value="Digital Receipt Settings"/>
+				</caption>
+				<h:table>
+					<h:tr>
+						<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Enable Data Extraction:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="dataExtractionChkBxId" checked="false" visible="true" /> </div> </h:td>
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center"><label value="Enable ZoneWise:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="zoneWiseChkBxId" checked="false" visible="true" /> </div> </h:td>
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center"><label value="Validate Items in Return:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="validateItemsInReturnTrx" checked="false" visible="true" /> </div> </h:td>
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center"><label value="Ignore Points Redemption:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="ignorePointsRedemption" checked="false" visible="true" /> </div> </h:td>
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center"><label value="Highest Value Discount:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="SendAllDiscountChkBxId" checked="true" visible="true" /> </div> </h:td>
+					</h:tr>
+					<h:tr>
+						<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif; text-align:left;"><label value="Enable Loyalty Extraction:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="extractLoyaltyChkBxId" checked="false" visible="true" /> </div> </h:td>
+						<h:td> <div id="enrolLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Enrollment:" /> </div> </h:td>
+						<h:td><div style="padding-left:10px;"> <checkbox id="enrolChkBxId" checked="false" visible="false" /> </div> </h:td>
+						<h:td> <div id="issuanceLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Issuance:" /> </div> </h:td>
+						<h:td><div style="padding-left:10px;"> <checkbox id="issuanceChkBxId" checked="false" visible="false" /> </div> </h:td>
+						<h:td> <div id="returnLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Return:" /> </div> </h:td>
+						<h:td><div style="padding-left:10px;"> <checkbox id="returnChkBxId" checked="false" visible="false" /> </div> </h:td>
+						<h:td> <div id="redemptionLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Redemption:" /> </div> </h:td>
+						<h:td><div style="padding-left:10px;"> <checkbox id="redemptionChkBxId" checked="false" visible="false" /> </div> </h:td>
+					<h:tr>
+						<h:td><div id="redemptionTenderLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif; text-align:left;" align="center" visible="false"><label value="Redeem from:" /> </div> </h:td>
+						<h:td ><listbox id="redeemAsListBxId" mold="select" width="120px" visible="false"></listbox></h:td>
+						<h:td ><listbox id="ninItemFieldListBxId" mold="select" width="100px" visible="false"></listbox></h:td>
+						<h:td> <textbox id="ninItemFieldTbId" value="" width="100px" visible="false" cols="20" maxlength="20" /> </h:td>	
+						<h:td ><listbox id="redeemTenderListBxId" mold="select" width="100px" visible="false"></listbox></h:td>	
+						<h:td> <textbox id="redemptionTenderTbId" value="" width="50px" visible="false" cols="20" maxlength="20" /> </h:td>
+					</h:tr>
+					</h:tr>
+					<h:tr>
+					<h:td><div id="redemptionTenderDisplayLblId" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif; text-align:left;" align="center" visible="false"><label value="Enter Redeemable Tender Display Label:" /> </div> </h:td>
+						<h:td style="padding-bottom:10px;"> <textbox id="redemptionTenderDispLblTbId" value="" width="50px" visible="false" cols="20" maxlength="50" /> </h:td>
+						<h:td> <div id="redemptionReversalLbl" style="padding-bottom:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Perform redeemed amount reversal:" /> </div> </h:td>
+						<h:td><div style="padding-bottom:10px;padding-left:10px;"> <checkbox id="redemptionReversalChkBxId" checked="false" visible="false" /> </div> </h:td>
+						<h:td><div id="cardInfoLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;" visible="false"><label value="Extract Card Number from:" /> </div> </h:td>
+						<h:td ><listbox id="cardInfoListBxId" mold="select" width="100px" visible="false"></listbox></h:td>
+					</h:tr>
+					<!-- <h:tr>
+					<h:td><div id="cardInfoLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;" visible="false"><label value="Extract Card Number from:" /> </div> </h:td>
+						<h:td ><listbox id="cardInfoListBxId" mold="select" width="100px" visible="false"></listbox></h:td>
+					</h:tr> -->
+					<h:tr>
+						<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;text-align:left;" ><label value="Enable Promo Redemption:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="redeemPromoChkBxId" checked="false" visible="true" /> </div> </h:td>
+		   				<h:td><div id="receiptNoteLbl" style="padding-left:10px; font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Extract Receipt Discount from:" /> </div> </h:td>
+						<h:td ><listbox id="receiptNoteListBxId" mold="select" width="120px" visible="false"></listbox></h:td>
+						<h:td><div id="itemNoteLbl" style="padding-left:10px; font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Extract Item Discount from:" /> </div> </h:td>
+						<h:td ><listbox id="itemNoteListBxId" mold="select" width="100px" visible="false"></listbox></h:td>
+						<h:td><div id="itemInfoLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Display ItemInfo in reports:" /> </div> </h:td>
+						<h:td ><listbox id="itemInfoFieldListBxId" mold="select" width="100px" visible="false"></listbox></h:td>
+						<h:td> <div id="IgnLbl" style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;" align="center" visible="false"><label value="Ignore Direct Request:" /> </div> </h:td>
+						<h:td><div style="padding-left:10px;"> <checkbox id="IgnChkBxId" checked="false" visible="false" /> </div> </h:td>
+					</h:tr>
+					<h:tr>
+					<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Send Realtime Loyalty Status:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="sendRealtimeLoyaltyStatus" checked="false" visible="true" /> </div> </h:td>
+		   			<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="eReceipt over SMS:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="eReceiptOverSMS" checked="false" visible="true" /> </div> </h:td>	
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Allow both discounts:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="AllowBothDiscounts" checked="false" visible="true" /> </div> </h:td>	
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Redemption as discount:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="RedeemAsDiscount" checked="false" visible="true" /> </div> </h:td>	
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Exclude discounted item:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="ExcludeDiscountedItem" checked="false" visible="true" /> </div> </h:td>	
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Show Only Highest Loyalty Discount:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="HighDiscountedItem" checked="false" visible="true" /> </div> </h:td>
+		   				<h:td> <div style="padding-left:10px;font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Ignore issuance on redemption:" /> </div> </h:td>
+		   				<h:td><div style="padding-left:10px;"> <checkbox id="ignoreissuanceOnRedemChkBxId" checked="false" visible="true" /> </div> </h:td>	
+		   				</h:tr>
+		   				<h:tr>
+		   				<h:td valign="top" style="margin-top:15px;" width="100px">
+								<label value="Display Template: "/>
+								<textbox id="SMSMsgTbId" width="350px"
+									rows="12" height="165px" maxlength="800"
+									style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 				14px;line-height: 1.5em;margin-top:10px;padding-bottom:25px;padding-top:25px;" w:onClick="updateCaretPosition()"  
+								 	w:onChanging="updateCaretPosition()" w:onFocus="updateCaretPosition()"
+									name="SMSMsgTbId" context="editPopup" />
+
+							
+
+							</h:td>
+					</h:tr>
+				</h:table>
+			</groupbox>
+			</div>
+			
+			<separator height="15px"/>
+			
+			<groupbox   closable="false" open="true" >
+				<caption >
+					<label value="POS Contact Field Mappings"/>
+						<toolbarbutton id="posContTbBtnId" image="/img/icons/icon_minus.png" />
+				</caption>
+				<div  id="posMapContDivId">
+				
+					<div align="right">
+					<toolbarbutton image="/images/action_add.gif"  label="Add Contact Row" id="addContactPosMapBtnId" />
+					</div>
+					<grid>
+						<columns menupopup="auto" sizable="true" >
+							<column label="OptCulture Field" width="160px"></column>
+							<column label="Data Type" width="110px"/>
+							<column label="POS Attribute" />
+							<column label="Digital Receipt Attribute" />
+							<column label="Optional Value" width="200px" visible="false"/>
+							<column label="Display Label" width="150px"></column>
+							<column label="Uniq.Pri" width="70px" visible="false"></column>
+							<column label="Action" width="60px;" />
+						</columns>
+						<rows id="contactRowsId"/>
+					</grid>
+				
+				</div>
+			</groupbox>	
+			
+			<separator height="15px"/>
+			
+			<!-- Sales POS Mapping -->
+			<groupbox  closable="false" open="true">
+				<caption >
+					<label value="POS Sales Field Mappings"/>
+					<toolbarbutton id="posSalesTbBtnId" image="/img/icons/icon_minus.png" />
+				</caption>
+				
+				<div id="posMapSalesDivId">
+					<div align="right">
+						<toolbarbutton image="/images/action_add.gif"  label="Add Sales Row" id="addSalesPosMapBtnId" />
+					</div>
+					<grid>
+						<columns menupopup="auto" sizable="true" >
+							<column label="Optculture Field" width="160px"></column>
+							<column label="Data Type" width="110px"/>
+							<column label="POS Attribute" />
+							<column label="Digital Receipt Attribute" />
+							<column label="Optional Value" width="200px" visible="false" />
+							<column label="Display Label" width="150px"></column>
+							<column label="Uniq.Pri" width="70px" visible="false" ></column>
+							<column label="Action" width="60px;" />
+						</columns>
+						<rows id="salesRowsId"/>
+					</grid>
+				</div>
+				
+			</groupbox>	
+		
+		<separator height="15px"/>
+			<!-- SKU POS Mapping -->
+			<groupbox closable="false" open="true" >
+				<caption >
+					<label value="POS SKU Field Mappings"/>
+					<toolbarbutton id="posSKUTbBtnId" image="/img/icons/icon_minus.png" />
+				</caption>
+				<div  id="posMapSKUDivId">
+					<div align="right">
+						<toolbarbutton image="/images/action_add.gif"  label="Add SKU Row" id="addSKUPosMapBtnId" />
+					</div>
+					<grid>
+						<columns menupopup="auto" sizable="true" >
+							<column label="Optculture Field" width="160px"></column>
+							<column label="Data Type" width="110px"/>
+							<column label="POS Attribute" />
+							<column label="Digital Receipt Attribute" />
+							<column label="Optional Value" width="200px" visible="false" />
+							<column label="Display Label" width="150px"></column>
+							<column label="Uniq.Pri" width="70px" visible="false" ></column>
+							<column label="Action" width="60px" />
+						</columns>
+						<rows id="skuRowsId"/>
+					</grid>
+				</div>
+			</groupbox>
+			
+			<separator height="15px"/>	
+
+			<h:table width="100%">
+				<h:tr>
+					<h:td align="right">
+						<button label="Back" id="posMapBackBtnId" />
+						<button label="Save &amp; Continue" id="saveContinueBtnId" sclass="idle140 greenbtn" />
+						<button label="Save" id="saveBtnId" sclass="idle140"/>
+	         	        <button label="Next" id="nxtBtnId" sclass="idle140 greenbtn"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+								
+		</div>
+	
+	<groupbox id="posFTPSettingsGroupBoxId" sclass="gbStyle" closable="false"  style="padding:15px 10px"  visible="false" >
+			<caption label="POS FTP Settings"  />
+	 <div  width="100%" > 
+	 	<div align="right">
+	 			<button  label="Add" id="ftpSettingsAddBtnId" sclass="idle70"/>
+				<!-- <toolbarbutton image="/images/action_add.gif"  label="Add Sales Row" id="addSalesPosMapBtnId" /> -->
+		</div>
+	 
+		
+		<grid emptyMessage="No Data available">
+			<columns>
+					<column label="File Type" width="100px;"/>
+					<column label="Host Address"  />
+					<column label="User Name" width="160px;"/>
+					<column label="Password" width="120px;"/>
+					<column label="Directory Location" />
+					<!-- <column label="File Format" /> -->
+					<column label="File Name Format" />
+					<column label="Is Enabled" width="90px;"/>
+					<column label="Scheduled Freq Time" width="160px;" />
+					<column label="Action" width="60px;" />
+				</columns>
+				<rows id="ftpSettingsRowsId"  />
+		
+		</grid>
+		
+	 </div>
+	 <separator height="30px"/>
+	 <!--Here to create a list -->
+	 
+	   <div>
+	 	<h:table cellspacing="0" cellpadding="0"   width="100%" align="left"  >
+	 		<h:tr>
+	 			<h:td width="240px">
+	 				<label value="Enable Alert For Sales File Not Received :" sclass="boldLabel"/>
+	 			</h:td>
+	 			<h:td>
+					<checkbox id="alertChekbxId"  sclass="theme-lbHeading" checked="true"  onCheck="alertTitleDivId.visible=!alertTitleDivId.visible;"/>
+				</h:td>
+	 		</h:tr>
+	 		
+	 		 <h:tr>
+					<h:td></h:td>
+					<h:td>
+						<div id="alertTitleDivId" visible="true">
+							<h:table cellspacing="0" cellpadding="0"   align="left" width="100%">	
+								
+				
+				<h:tr class="evenrow">
+					<h:td>
+					<div >
+						<label value="Send Alert To : " sclass="theme-lbHeading"/>
+						<textbox id="alertMailTxtbxId" width="250px" value="Enter Email Address" focus="true"/>
+										<!-- w:onClick="javascript: if(this.getValue()=='Enter Email Address') {  this.setValue(''); }" 
+										w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Email Address'); }"  -->
+						<toolbarbutton id="addMoreEmailTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							<div id="alertMailDivId" />
+					</div>
+					</h:td>
+				</h:tr>		
+					
+								<h:tr height="10px"/>		
+								 <h:tr>
+									<h:td>
+										<label value="Wait-Time Before Sending Alert "  sclass="theme-lbHeading" />
+										<listbox id="alertConfigLstbxId" width="20px" mold="select" rows="1">
+										
+										<listitem label="1" value="1" />
+										<listitem label="2"  value="2"/>
+										<listitem label="3" value="3" selected="true"/>
+										<listitem label="4" value="4"/>
+										<listitem label="5" value="5"/>
+										<listitem label="6" value="6"/>
+										<listitem label="7" value="7"/>
+										
+										</listbox>
+										 <label value="days" sclass="theme-lbHeading"/> 
+									</h:td>
+								</h:tr> 
+								<h:tr height="20px"/>
+							</h:table>
+						</div>
+					</h:td>
+			</h:tr> 
+	 	</h:table>
+	 </div>  
+	 
+	
+	<separator height="45px"/> 
+	
+	 <div>
+		 <label value="POS Location Time-Zone Settings :" sclass="boldLabel"/>
+		 
+		 <listbox id="TimesZonesLbId" mold="select" rows="1">
+		 	
+		 	<listitem label="--select--" selected="true" />
+		 	<listitem label="(GMT -12:00) Eniwetok, Kwajalein" value="-720" />
+		 	<listitem label="(GMT -11:00) Midway Island, Samoa" value="-660" />
+		 	<listitem label="(GMT -10:00) Hawaii" value="-600" />
+		 	<listitem label="(GMT -9:00) Alaska" value="-540" />
+		 	<listitem label="(GMT -8:00) Pacific Time (US &amp; Canada)" value="-480" />
+		 	<listitem label="(GMT -7:00) Mountain Time (US &amp; Canada)" value="-420" />
+		 	<listitem label="(GMT -6:00) Central America, El Salvador" value="-360" />
+		 	<listitem label="(GMT -6:00) Central Time (US &amp; Can.), Mexico" value="-360" />
+		 	<listitem label="(GMT -5:00) Eastern Time (US &amp; Can.)" value="-300" />
+		 	<listitem label="(GMT -4:30) Caracas" value="-270" />
+		 	<listitem label="(GMT -4:00) Atlantic Time (Can.)" value="-240" />
+		 	<listitem label="(GMT -3:30) Newfoundland" value="-210" />
+		 	<listitem label="(GMT -3:00) Brazil, Buenos Aires, Georgetown" value="-180" />
+		 	<listitem label="(GMT -2:00) Mid-Atlantic" value="-120" />
+		 	<listitem label="(GMT -1:00 hour) Azores" value="-60" />
+		 	<listitem label="(GMT) Reykjavik" value="0" />
+		 	<listitem label="(GMT) Western Europe Time, London, Lisbon" value="0" />
+		 	<listitem label="(GMT +1:00 hour) Brussels, Copenhagen, Madrid" value="60" />
+		 	<listitem label="(GMT +2:00) South African Standard Time" value="120" />
+		 	<listitem label="(GMT +2:00) Athens, Cairo" value="120" />
+		 	<listitem label="(GMT +3:00) Baghdad, Moscow, Riyadh" value="180" />
+		 	<listitem label="(GMT +3:30) Tehran" value="210" />
+		 	<listitem label="(GMT +4:00) Abu Dhabi, Muscat" value="240" />
+		 	<listitem label="(GMT +4:30) Kabul" value="270" />
+		 	<listitem label="(GMT +5:00) Islamabad, Karachi" value="300" />
+		 	<listitem label="(GMT +5:30) Bombay, Calcutta, Colombo, New Delhi" value="330" />
+		 	<listitem label="(GMT +6:00) Almaty, Dhaka" value="360" />
+		 	<listitem label="(GMT +6:30) Myanmar" value="390" />
+		 	<listitem label="(GMT +7:00) Bangkok, Hanoi, Jakarta" value="420" />
+		 	<listitem label="(GMT +8:00) Beijing, Perth, Singapore, Hong Kong" value="480" />
+		 	<listitem label="(GMT +9:00) Tokyo, Seoul, Osaka" value="540" />
+		 	<listitem label="(GMT +9:30) Adelaide" value="570" />
+		 	<listitem label="(GMT +10:00) Canbera, Melbourne, Sydney" value="600" />
+		 	<listitem label="(GMT +10:00) Brisbane" value="600" />
+		 	<listitem label="(GMT +10:30) Lord Howe Island" value="630" />
+		 	<listitem label="(GMT +11:00) Solomon Isl., New Caledonia" value="660" />
+		 	<listitem label="(GMT +12:00) Auckland, Fiji, Kamchatka" value="720" />
+		 	<listitem label="(GMT +12:45) Chatham Islands" value="765" />
+		 	<listitem label="GMT +13:00) New Zealand Daylight Time, Tonga" value="780" />
+		 
+		 </listbox>
+	 </div>
+	<!-- <div>
+	 	<label value="Loyalty Service Type :" sclass="boldLabel"  />
+
+		 <listbox id="loyaltyServicetypeLbId" mold="select" rows="1" style="margin-left: 77px;">
+		 	
+		 	<listitem label="SB" value="SB" selected="true" />
+		 	<listitem label="SBToOC" value="SBToOC" />
+		 	<listitem label="OC" value="OC" />
+		 
+		 </listbox>
+	 </div> -->
+	 <h:table>
+	 
+	 <h:tr height="10"/>
+			<h:tr>
+				<h:td width="198px" >
+					<label value="Plug-in Authentication Key: " sclass="boldLabel" /><label value=" * " style="color:red;"/>
+				</h:td>
+				<h:td><textbox id="optSynAuthKeyTbId" value="" cols="30" maxlength="225" />
+				</h:td>
+				<h:td width="150px">
+						<a label="Generate Key" id="generateKeyAnchId" style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+				</h:td>
+					
+	</h:tr>
+	<h:tr>
+	<h:td>
+	<label value="Enable Multi-user"  sclass="boldLabel" />
+	</h:td>
+	<h:td>
+	<checkbox id="ismultiuserCkbId"/>
+	</h:td>
+	</h:tr>
+	
+	<h:tr>
+	<h:td>
+	<label value="User Specific Directory"  sclass="boldLabel" />
+	</h:td>
+	<h:td>
+	<checkbox id="isUserSpecDirCkbId"/>
+	</h:td>
+	</h:tr>
+	 </h:table>
+	 
+	</groupbox>
+	
+	<groupbox id="mastersPosFTPSettingsGroupBoxId" sclass="gbStyle" closable="false"  style="padding:15px 10px"   visible="false">
+		<caption label="Sales to Contacts &amp; Inventory Relation Mapping"  />
+		
+		<div style="padding:10px; margin:10px; border-radius:3px;border: 1px solid #CCCCCC;" id ="relationMapDivId" width="800px"/>
+		<separator height="20px"/>
+		<h:table cellspacing="0" cellpadding="4"   width="825"
+				style="padding:10px; margin:10px; border-radius:3px;border: 1px solid #CCCCCC;"  >
+			<h:tr >
+				<h:td width="250" align="right"> <label value="Sales Unique Key (accross csv files) :" sclass="boldLabel"/> </h:td>
+				<h:td > <listbox id="salesUniqueFieldsId" mold="select" /> </h:td>
+			</h:tr>
+			<h:tr height="30"/>
+			<h:tr >
+				<h:td align="right"> <label value="Inventory Vendor Code :" sclass="boldLabel"/> </h:td>
+				<h:td > <listbox id="vendorCodeFieldsId" mold="select" /> </h:td>
+			</h:tr>
+			<h:tr >
+				<h:td align="right"> <label value="Inventory Department Code :" sclass="boldLabel"/> </h:td>
+				<h:td > <listbox id="deptCodeFieldsId" mold="select" /> </h:td>
+			</h:tr>
+		</h:table>
+		
+		<div align="right">
+			<button label="Back" id="masterPosFTPSettingsBackBtnId" sclass="idle"/>
+			<!-- <button label="Submit" id="masterSubmitBtnId" sclass="idle140 greenbtn"/> -->
+			<button label="Submit" id="submitBtnId" sclass="idle140 greenbtn"/>
+		</div>
+	
+	
+	</groupbox>
+	
+
+		
+		<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+			<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+
+
+
+</window>
+</zk>

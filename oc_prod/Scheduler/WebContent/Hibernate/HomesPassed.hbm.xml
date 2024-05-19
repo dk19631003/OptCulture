@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.HomesPassed"
+		table="homespassed">
+
+		<id name="hpId" type="java.lang.Long">
+			<column name="hp_id" />
+			<generator class="native" />
+		</id>
+
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id"/>
+		</property>
+		
+		<property name="listId" type="java.lang.Long">
+			<column name="list_id"  />
+		</property>
+		
+		<property name="addressUnitId" type="java.lang.Long" >
+			<column name="address_unit_id" />
+		</property>
+
+		<property name="status" type="string">
+			<column name="status" length="255" />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date"  />
+		</property>
+		<property name="lastStatusChange" type="calendar">
+			<column name="last_status_change"  />
+		</property>
+       <property name="lastMailDate" type="calendar">
+			<column name="last_mail_date"  />
+		</property>
+ 		<property name="modifiedDate" type="calendar">
+			<column name="modified_date"  />
+		</property>
+		<property name="addressOne" type="string">
+			<column name="address_one"   length="100" />
+		</property>
+		<property name="addressTwo" type="string">
+			<column name="address_Two" length="100" />
+		</property>
+
+		<property name="street" type="string">
+			<column name="street" length="100" />
+		</property>
+
+
+		<property name="area" type="string">
+			<column name="area" length="100" />
+		</property>
+
+		<property name="city" type="string">
+			<column name="city"  length="50"  />
+		</property>
+		<property name="district" type="string">
+			<column name="district"  length="100"   />
+		</property>
+		
+		<property name="zip" type="string">
+			<column name="zip"   />
+		</property>
+		
+		<property name="state" type="string">
+			<column name="state" length="50"   />
+		</property>
+		
+		<property name="country" type="string">
+			<column name="country" length="50"   />
+		</property>
+		<property name="udf1" type="string">
+			<column name="udf1" length="30"  />
+		</property>
+		
+       <property name="udf2" type="string">
+			<column name="udf2" length="30"   />
+		</property>
+		<property name="udf3" type="string">
+			<column name="udf3" length="30"   />
+		</property>
+		<property name="udf4" type="string">
+			<column name="udf4"  length="30"  />
+		</property>
+		<property name="udf5" type="string">
+			<column name="udf5" length="30"  />
+		</property>
+		<property name="udf6" type="string">
+			<column name="udf6"  length="30"  />
+		</property>
+		<property name="udf7" type="string">
+			<column name="udf7" length="30"  />
+		</property>
+		<property name="udf8" type="string">
+			<column name="udf8" length="30"   />
+		</property>
+		<property name="udf9" type="string">
+			<column name="udf9" length="30"  />
+		</property>
+		<property name="udf10" type="string">
+			<column name="udf10" length="30"   />
+		</property>
+		<property name="udf11" type="string">
+			<column name="udf11" length="30"   />
+		</property>
+		<property name="udf12" type="string">
+			<column name="udf12" length="30"   />
+		</property>
+		<property name="udf13" type="string">
+			<column name="udf13" length="30"  />
+		</property> 
+       
+       <property name="udf14" type="string">
+			<column name="udf14"  length="30"  />
+		</property> 
+       
+       <property name="udf15" type="string">
+			<column name="udf15" length="30"   />
+		</property> 
+        
+       
+	</class>
+
+</hibernate-mapping>

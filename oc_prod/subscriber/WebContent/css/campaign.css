@@ -1,0 +1,80 @@
+@CHARSET "UTF-8";
+.textMailTb {
+	font-size:13px;
+	margin:0 3px 3px 10px;
+}
+
+# CampSettings Css
+div.z-listbox.listbox tr.z-listbox-odd {
+	 background	:transparent;
+}
+div.listbox .z-listbox-body {
+	border-width : 0px;
+}
+div.z-listbox.listbox .z-list-item{
+	background-color:transparent; line-height:25px;
+}
+.listbox.z-list-cell {
+	border-style : none;
+}
+div.z-listbox{ 
+	overflow:visible; background-color:transparent;
+}
+.labelPos{
+	position:relative; top:1px; font-size:11px;
+}
+.z-checkbox input{
+	 position:absolute; top:2px;
+}
+.redStar{
+	font-size:14px;color:red;
+}
+
+# CampMlist Css
+.contactsView .z-paging{ 
+	padding-top:0px; 
+}
+.z-paging{
+	padding:0px; 
+}
+div.z-listbox.contactsView tr.z-list-item-seld {
+	background-color:#99C9DF;
+}
+
+# CampLayout css
+.selectedTbB{
+	font-family:verdena,arial,sans-serif;
+	font-size:13px;
+	color:#276e98;
+	font-weight:bold;
+}
+
+# CampTxtMsg Css
+.textMsgLabelPos{
+	position:relative; top:5px; font-size:11px; 
+}
+
+# CampFinal Css
+.label13px{
+	color:#333333;
+	font-size:13px;
+	font-weight:bold;
+}
+.previewImp{
+	position:relative;
+	top:5px;
+	cursor:pointer;
+}
+div.z-listbox.contactsView {
+	border:1px solid #d9d9d9;
+	overflow:hidden;
+}
+
+# selectTemplate Css
+.note{
+	font-style:verdena,arial,sans-serif;
+	font-size:11px;
+	color:#000;
+	font-weight:bold;
+}
+	

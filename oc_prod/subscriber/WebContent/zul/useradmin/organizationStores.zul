@@ -1,0 +1,683 @@
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.useradmin.OrganizationStoresController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+	<tabbox id="organizationStoresTabBoxId" >
+			<tabs>
+				<tab label="Store Location" id="storeLocTabId"/>
+				<tab label="Add Store Location" id="addStoreLocTabId" />
+			</tabs>	
+			<tabpanels>
+				<tabpanel>
+				<div>
+						<h:table cellspacing="0" cellpadding="4" width="100%" border="0" style="padding:10px 0px;border-radius:5px;">
+					<h:tr >
+					<h:td>
+							
+								<label value="Search by :" sclass="boldLabel"/>
+								
+								<label id="orgId" value="Org.Unit :"  style="font-weight:bold;"/>
+						<listbox id="searchByOrgID" width="150px" mold="select" height="36%">
+						<listitem label="All" selected="true"/>
+						</listbox>
+								<!-- <listbox id="searchByOrgID" rows="1" mold="select" style="position:relative;left:10px;">
+									<listitem label="All" selected="true"/>
+									
+								</listbox> -->
+					</h:td>
+					<h:td>
+							
+								<!-- <listbox id="searchBySbsID" rows="1" mold="select" style="position:relative;left:10px;">
+									<listitem label="All" selected="true"/>
+									
+								</listbox> -->
+								<label id="sbsId" value="SubsidiaryID :"  style="font-weight:bold;"/>
+						<listbox id="searchBySbsID" width="150px" mold="select" height="36%">
+						<listitem label="All" selected="true"/>
+						</listbox>
+					</h:td>
+					<h:td>
+							
+								<!-- <listbox id="searchByStoreID" rows="1" mold="select" style="position:relative;left:10px;">
+									<listitem label="All" selected="true"/>
+									
+								</listbox> -->
+								<label id="storeId" value="StoreID :"  style="font-weight:bold;"/>
+						<listbox id="searchByStoreID" width="150px" mold="select" height="36%">
+						<listitem label="All" selected="true"/>
+						</listbox>
+					</h:td>
+					<h:td width="200" >
+							      <label value="Search by Store Name : " sclass="boldLabel"/>
+							        <textbox id="searchBoxId" 
+								    w:onClick="javascript: if(this.getValue()=='Search Store...') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }" focus="true"/> 
+					</h:td>
+					
+					<h:td  >
+							 <button  id="storeFilterBtnId" sclass="idle140"	label="Filter" />
+							 <a label="Reset" id="resetSearchCriteriaAnchId" />
+					</h:td>
+					
+					</h:tr>
+					</h:table >
+					</div>
+					
+					<div>
+					<grid id="storesGridId" 
+						emptyMessage="No Store Location  exist, To create new Store Location Click on 'Add Store Location' Button">
+					 	
+					 	<columns  menupopup="auto">
+					       <!-- <column label="POS Location ID" /> -->
+					       <column label="Org.Unit ID" />
+					       <column label="Subsidiary ID" />
+					       <column label="Subsidiary Name" />
+					       <column label="POS Store ID" />
+					       <column label="Store Name" />
+				           <column label="Manager" />
+					       <column label="Email ID" />
+					       <column label="Website"  visible="false"/>
+					       <column label="Phone" />
+					       <column label="Street"  visible="false" />
+					       <column label="City"  visible="false"  />
+					       <column label="State"  visible="false"  />
+					       <column label="ZIP"  visible="false" />
+					       <column label="Actions" />
+					       
+					     </columns>
+					     <rows id="orgStoreRowsId" />
+					    
+					</grid>
+						</div>	
+						
+	  <h:table width="100%">
+		    <h:tr>
+		    <h:td>
+		    <label value="Export as a:" />
+	<combobox id="exportCbId" readonly="true" sclass="cb_100w">
+	<comboitem label=" .csv" value="csv" />
+	<comboitem label=" .xls" value="xls" /></combobox>
+	<label value=".file" />
+	<button label="Export" sclass="idle140 greenbtn" style="margin-    left:20px;" id="exportBtnId" /></h:td>
+		    
+				<h:td align="right">
+			   		<label value="Store Locations per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="storesPerPageLBId" style="margin-right:30px;">
+						<listitem label="10" selected="true" />
+						<listitem label="25" />
+						<listitem label="50" />
+						<listitem label="100" />
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="storeLocationsPagingId" detailed="true" pageSize="10" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		   </h:tr>
+	   </h:table>
+						
+				<window id="custExport" title="Select Fields to Export" border="normal"  width="600px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+                  <div id="chkDivId" width="580px" style="margin:15px;" />
+				    <h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+	                     <h:tr><h:td >
+                           <a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />  
+                           <a label="Clear All" id="clearAllAnchr" /> </h:td> 	<h:td>
+                       <div align="right" style="margin:10px 40px 0 0;">
+                         <button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+		                   <button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);"  />
+                </div>
+                 </h:td></h:tr>
+                      </h:table>
+            </window>			
+						
+			<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						
+						<h:td align="right"><image src="/img/theme/preview_icon.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- View" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Delete" style="font-size:11px;" /> </h:td>
+						</h:tr>
+			</h:table>	
+						
+			
+					</tabpanel>
+				
+				
+				<tabpanel>
+					<label value="Add store details through bulk upload or single addition." />
+					<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="Add Store(s)"  />
+						<h:table>
+							
+							<h:tr>
+								<h:td>
+									<h:table>
+							
+									<h:tr>
+										<h:td width="200">
+											<label value="Choose method of upload:" />
+										</h:td>
+										<h:td>
+											<radiogroup id="uploadRgId" >
+												<radio radiogroup="uploadRgId" label="Bulk Upload (by .csv file)" id="bulkuploadRbId" checked="true"/>
+												<radio radiogroup="uploadRgId" label="Add Single Store"  id="singleuploadRbId"/> 
+											 </radiogroup> 
+											 
+										</h:td>
+									</h:tr>
+									</h:table>
+								</h:td>
+							</h:tr>
+							
+							<h:tr height="30"/>
+					<h:tr>
+						<h:td>
+						<div id="singleAddStoreDiv" visible="false" width="1240px">
+							
+							<!-- <h:table>
+							
+							<h:tr>
+								<h:td width="200">
+									<label value="POS Store ID: " /><label value=" * " style="color:red;" />
+								</h:td>
+								<h:td>
+								
+								<combobox  id="posLocCb"  width="150px"  autodrop="true" fulfill="onOpen" maxlength="225"  /> 
+						
+							</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td>
+								<label value="Store Name: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="storeNameTbId" value="" cols="30" maxlength="225" />
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Store Manager Name: " />
+								</h:td>
+								<h:td><textbox id="storeManagerNameTbId" value="" cols="30" maxlength="25" />
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Email Id: " />
+								</h:td>
+								<h:td><textbox cols="30" value="" id="emailIdTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Website: " />
+								</h:td>
+								<h:td><textbox id="websiteTbId" value="" cols="30" maxlength="50"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Phone: " />
+								</h:td>
+								<h:td><textbox cols="30" value="" id="phoneTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Street: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox cols="30" value=" " id="streetTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="City: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox cols="30" value="" id="cityTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="State: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox cols="30" value=" " id="stateTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Zip Code: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox cols="30" value=" " id="zipTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							
+							</h:table> -->
+							<h:table>
+							  <h:tr>
+							   <h:td width="200">
+						<label  value="Org. Unit ID :    " /><label value=" * " style="color:red;"/>
+						</h:td>
+						<h:td>
+						<listbox id="orgUnitId" width="130px" mold="select" height="36">
+						<listitem label="Select" selected="true"/>
+						</listbox>
+					</h:td>
+	
+				 	</h:tr>
+							<h:tr>
+								 <h:td width="200">
+									<label value="Subsidiary ID: " />  <label value=" * " style="color:red;" /> 
+								 </h:td>
+								<h:td>
+								
+							 			<combobox id="sbsNumbCmboBxId" width="220px"/>
+							 			
+								   <listbox id="subsLBId" width="200px" mold="select" visible="false">
+								   <listitem label="select" selected="true"/>
+								   </listbox>
+								<a label="Add New" id="addNewDomainAnchId" style="margin-left:10px;" visible="false"/>
+							   </h:td>
+					              <!--   <h:td>
+											<label value="or"/>
+									 </h:td>
+											<h:td>
+												<toolbarbutton id="addNewSBId"  image="/images/action_add.gif" sclass="tbbLink"
+													label="Add New Subsidary"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+										
+											</h:td> -->
+							</h:tr>
+							<h:tr>
+								 <h:td width="200">
+									<label value="Subsidiary Name: " />  <label value=" * " style="color:red;" /> 
+								 </h:td>
+								<h:td>
+							
+								    <textbox  id="sbLocName"  width="220px" /> 
+							   </h:td>
+							   </h:tr>
+							   <h:tr>
+							   <h:tr>
+								<h:td width="200">
+									<label value="POS Store ID: " /><label value=" * " style="color:red;" />
+								</h:td>
+								<h:td>
+								
+								<!-- <combobox  id="posLocCb"  width="150px"  autodrop="true" fulfill="onOpen" maxlength="225"  /> -->
+								<textbox  id="posLocCb"  width="220px"   /> 
+							</h:td>
+							</h:tr>
+							</h:tr>
+							<h:tr>
+								<h:td  width="200">
+									<label value="Brand: " />
+								</h:td>
+								<h:td>
+									<textbox  id="brandTbId"  width="220px"   /> 
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td  width="200">
+									<label value="Store Image URL: " />
+								</h:td>
+								<h:td>
+									<textbox  id="storeImgUrlTbId"  width="220px"   /> 
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td  width="200">
+									<label value="Brand Image URL: " />
+								</h:td>
+								<h:td>
+									<textbox  id="brandImgUrlTbId"  width="220px"   /> 
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td  width="200">
+									<label value="Description: " />
+								</h:td>
+								<h:td>
+									<textbox  id="descriptionTbId"  width="220px"   /> 
+								</h:td>
+							</h:tr>
+
+							</h:table>
+							 
+							
+							  <groupbox sclass="gbStyle" closable="false" style="padding:15px 10px">
+								<caption label="Contact Details"  />
+								  <h:table style="padding:2px 25px">
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td>
+								<label value="Store Name: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td style="padding-left: 70px"><textbox id="storeNameTbId" value="" cols="30" maxlength="256" />
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Store Manager Name: " />
+								</h:td>
+								<h:td style="padding-left: 70px"><textbox id="storeManagerNameTbId" value="" cols="30" maxlength="256"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Email Id: " />
+								</h:td>
+								<h:td style="padding-left: 70px"><textbox cols="30" value="" id="emailIdTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<!-- <h:tr >
+								<h:td><label value="Website: " />
+								</h:td>
+								<h:td style="padding-left: 70px"><textbox id="websiteTbId" value="" cols="30" maxlength="50"/>
+								</h:td>
+							</h:tr>	 -->
+							<h:tr >
+								<h:td><label value="Phone: " />
+								</h:td>
+								<h:td style="padding-left: 70px"><textbox cols="30" value="" id="phoneTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>	
+							<!-- <h:tr height="10"/> -->
+							
+							</h:table>
+							</groupbox>
+							
+							
+							<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+								<caption label="Address Details "  />
+								  <h:table style="padding:2px 25px">
+								     <h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Street: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox cols="30" value=" " id="streetTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="City: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox cols="30" value="" id="cityTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="State: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox cols="30" value=" " id="stateTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Country: " /> <label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox cols="30" value=" " id="countryTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>
+							<h:tr >	
+							</h:tr>		
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td>
+									<label value="Zip Code: " /><!-- <label value=" * " style="color:red;"/> -->
+									
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox cols="30" value=" " id="zipTbId" maxlength="256"/>
+								
+									<image
+											src="/img/icons/icon_q.png" tooltip="help4"
+											style="padding-left:40px;" />
+											<popup id="help4" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Required for countries where postal/ZIP codes are used."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+								
+								</h:td>
+								<h:tr height="10"/>
+							</h:tr>	
+							<h:tr >
+								<h:td><label value="Website: " />
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox id="websiteTbId" value="" cols="30" maxlength="256"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Latitude :" />
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox cols="30" value="" id="latTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Longitude :" />
+								</h:td>
+								<h:td style="padding-left: 129px"><textbox cols="30" value="" id="LngTbId" maxlength="256"/>
+								</h:td>
+							</h:tr>	
+								  
+								  </h:table>
+							</groupbox>	  
+							
+							
+							
+							<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+								<caption label="Email Sender Details(Optional)"  />
+								  <h:table style="padding:2px 25px">
+								     <h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="From Name: " />
+								</h:td>
+								<h:td style="padding-left: 59px"><textbox cols="37" value=" " id="frmNameTbId" maxlength="256"/><image
+											src="/img/icons/icon_q.png" tooltip="help1"
+											style="padding-left:40px;" />
+											<popup id="help1" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Name displayed as 'From' in the email"
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="From Email Address: " />
+								</h:td>
+								<h:td style="padding-left: 59px"><combobox id="cFromEmailCb"
+											readonly="true" sclass="cb_250w" />
+								</h:td>
+								<h:td><label style="padding-left: 7px" value=" or" /> <a label=" Register" id="frmEmailAnchId" 
+								     style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;"
+								     popup="regEmailPopupId"/><label style="padding-left: 10px" value=" new Email Address" />
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Reply-to Email Address: " />
+								</h:td>
+								<h:td style="padding-left: 59px"><combobox id="cReplyToEmailCb"
+											readonly="true" sclass="cb_250w" />
+								</h:td>
+								<h:td><label style="padding-left: 7px" value=" or" /> <a label=" Register" id="replyToEmailAnchId" 
+								      style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;"
+								      popup="regEmailPopupId"/><label style="padding-left: 10px" value=" new Email Address" />
+								</h:td>
+							</h:tr>	
+								  </h:table>
+							</groupbox>	
+							
+							<popup id="regEmailPopupId"
+											width="400px">
+
+											<h:table>
+												<h:tr>
+													<h:td>
+														Enter Email
+														Address :
+													</h:td>
+												</h:tr>
+												<h:tr>
+													<h:td>
+														<textbox
+															id="cEmailTb" width="250px" value=""
+															name="cEmailTb" maxlength="256" />
+
+													</h:td>
+												</h:tr>
+												<h:tr height="20" />
+												<h:tr>
+													<h:td
+														align="right">
+														<button
+															label="Cancel" sclass="idle70" id="cancelBtnId" />
+														<button
+															label="Submit" sclass="idle140 greenbtn"
+															id="submitBt1nId" />
+													</h:td>
+												</h:tr>
+											</h:table>
+
+										</popup>
+							
+							</div>
+							
+									
+					<div id="bulkAddStoreDiv" visible="true">
+						<h:table >
+						<h:tr>
+						<h:td>
+						<label  value="Org. Unit ID :    " /><label value=" * " style="color:red;"/>
+						</h:td>
+						<h:td>
+						<listbox id="orgUnitbulkLbId" width="130px" mold="select" height="36">
+						<listitem label="Select" selected="true"/>
+						</listbox>
+						</h:td>
+						</h:tr>
+							<h:tr>
+									<h:td width="200"><label value="Browse file to upload:" /></h:td>
+									<h:td width="300">
+										<textbox cols="40" value=" " id="uploadCSVTbId" maxlength="256"/>	
+									</h:td>
+									<h:td style="padding-left:30px;">
+										<button id="uploadBtnId" sclass="idle140"  label="Browse"></button>
+									</h:td>
+							</h:tr>
+						
+							<h:tr>
+								<h:td>	</h:td>
+		
+								<h:td valign="top" style="padding-top:5px;" >	
+									<image src="/img/icons/icon_i.png"  />	
+									<label value="The first row of your CSV file should be header row. " sclass="labelPos"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="30"/>
+						</h:table>
+						
+		
+					<div id="mappingCSVId" visible="false" >
+						<h:table>
+							<h:tr>
+							<h:td width="200"> </h:td>
+							<h:td>
+								<grid align="center" width="600px" emptyMessage="No Store Location  exist, To create new Store Location Click on 'Add Store Location' Button">
+									<columns>
+										<column label="CSV File Header Attribute" width="300px" />
+										<column label="OptCulture Attribute" width="300px"></column>
+									</columns>
+									<rows id="contactRowsId"/>
+								</grid>
+							</h:td>
+							</h:tr>
+						</h:table>
+					</div>
+					
+					</div>
+							
+						</h:td>
+					</h:tr>
+					
+							
+							
+					</h:table>
+							
+					<h:table>
+						<h:tr>
+							<h:td width="200"></h:td>
+							<h:td style="padding-top:30px;">
+								<button label="Back" visible="false" sclass="idle140" id="backBtnId" />
+								<button label="Edit" visible="false" sclass="idle140 greenbtn" id="editStoreBtnId" />
+							    <button label="Add Store" sclass="idle140 greenbtn" id="addStoreBtnId"/>
+							    <button label="Save" visible="false" sclass="idle140 greenbtn" id="saveStoreBtnId"/>
+							    <button label="Cancel" id="cancelStoreBtnId" />
+				        	</h:td>
+						</h:tr>	
+					</h:table>
+					 <!-- <div align="center" style="padding:10px 10px;">
+						<button label="Back" visible="false" sclass="idle140" id="backBtnId" />
+						<button label="Edit" visible="false" sclass="idle140 greenbtn" id="editStoreBtnId" />
+					    <button label="Add Store" sclass="idle140 greenbtn" id="addStoreBtnId"/>
+					    <button label="Save" visible="false" sclass="idle140 greenbtn" id="saveStoreBtnId"/>
+				        
+					</div>  -->
+				</groupbox>
+				</tabpanel>
+			</tabpanels>		
+				</tabbox>			
+		<window id="createSubsWinId" visible="false" closable="true" title="Create New Subsidairy" 
+						height="180px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Subsidiary ID :" /></h:td>
+					<h:td ><textbox  id="subsID" value="" width="160px"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Subsidiary Name :" /></h:td>
+					<h:td ><textbox  id="subName" value="" width="160px"/></h:td>
+				</h:tr>
+				
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Cancel" sclass="idle70"  id="cancelSubsBtnId" /><button label="Save" sclass="idle70 greenbtn" id="saveSubsBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+				</window>
+				</zk>	
+					
+					
+						
+						

@@ -1,0 +1,2733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://camel.apache.org/schema/spring
+http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+<task:annotation-driven />
+<mvc:interceptors>
+	<mvc:interceptor>
+		<mvc:mapping path="/*" />
+			<!-- <mvc:exclude-mapping path="/UserData/**"></mvc:exclude-mapping> -->
+			<!-- <mvc:exclude-mapping path="/img/**"></mvc:exclude-mapping> -->
+		<bean class="org.mq.optculture.interceptor.ExecuteTimeInterceptor" ></bean>
+	</mvc:interceptor>
+</mvc:interceptors>
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="/WEB-INF/jdbc.properties" />
+
+	<bean id="mqsProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location"
+			value="classpath:mqservice.properties" />
+	</bean>
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.url}"
+		p:username="${jdbc.username}" p:password="${jdbc.password}" />
+		
+	<bean id="dataSourceForDML" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:driverClassName="${jdbc_dml.driverClassName}" p:url="${jdbc_dml.url}"
+		p:username="${jdbc_dml.username}" p:password="${jdbc_dml.password}" />		
+	
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<bean id="jdbcTemplateForDML"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSourceForDML"></property>
+	</bean>
+
+		<bean id="transactionManager"
+		     class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		    <property name="dataSource" ref="dataSource" />
+	    </bean>
+
+	<!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
+
+	<!-- lets use the Commons-based implementation of the MultipartResolver interface -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation">
+			<value>classpath:hibernate.cfg.xml</value>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>/Hibernate</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.mq.marketer.campaign.general.OCMySQLDialect
+			</value>
+		</property>
+	</bean>
+	<bean id="sessionFactoryForDML" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation">
+			<value>classpath:hibernate_dml.cfg.xml</value>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>/Hibernate</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.mq.marketer.campaign.general.OCMySQLDialect
+			</value>
+		</property>
+	</bean>
+
+	<bean id="applicationPropertiesDao"
+		class="org.mq.marketer.campaign.dao.ApplicationPropertiesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="applicationPropertiesDaoForDML"
+		class="org.mq.marketer.campaign.dao.ApplicationPropertiesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+
+	<bean id="uploadReportDao"
+		class="org.mq.marketer.campaign.dao.UploadReportDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="uploadReportDaoForDML"
+		class="org.mq.marketer.campaign.dao.UploadReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="mqsRequestDao"
+		class="org.mq.marketer.campaign.dao.MQSRequestDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="mqsRequestDaoForDML"
+		class="org.mq.marketer.campaign.dao.MQSRequestDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="auditTrailsDao"
+		class="org.mq.marketer.campaign.dao.AuditTrailsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="auditTrailsDaoForDML"
+		class="org.mq.marketer.campaign.dao.AuditTrailsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="userActivitiesDao"
+		class="org.mq.marketer.campaign.dao.UserActivitiesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userActivitiesDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserActivitiesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="emailClientDao"
+		class="org.mq.marketer.campaign.dao.EmailClientDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="emailClientDaoForDML"
+		class="org.mq.marketer.campaign.dao.EmailClientDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="emailQueueDao"
+		class="org.mq.marketer.campaign.dao.EmailQueueDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="emailQueueDaoForDML"
+		class="org.mq.marketer.campaign.dao.EmailQueueDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="userCampaignExpirationDao"
+		class="org.mq.marketer.campaign.dao.UserCampaignExpirationDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="userCampaignExpirationDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserCampaignExpirationDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="messagesDao"
+		class="org.mq.marketer.campaign.dao.MessagesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="messagesDaoForDML"
+		class="org.mq.marketer.campaign.dao.MessagesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="orgSMSkeywordsDao"
+		class="org.mq.marketer.campaign.dao.OrgSMSkeywordsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="orgSMSkeywordsDaoForDML"
+		class="org.mq.marketer.campaign.dao.OrgSMSkeywordsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="clickaTellSMSInboundDao" class="org.mq.marketer.campaign.dao.ClickaTellSMSInboundDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+	
+	<bean id="clickaTellSMSInboundDaoForDML" class="org.mq.marketer.campaign.dao.ClickaTellSMSInboundDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="usersDao" class="org.mq.marketer.campaign.dao.UsersDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="generateReportSettingDao" class="org.mq.marketer.campaign.dao.GenerateReportSettingDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="generateReportSettingDaoForDML" class="org.mq.marketer.campaign.dao.GenerateReportSettingDaoForDML">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="usersDaoForDML" class="org.mq.marketer.campaign.dao.UsersDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="usersDomainsDao" class="org.mq.marketer.campaign.dao.UsersDomainsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="usersDomainsDaoForDML" class="org.mq.marketer.campaign.dao.UsersDomainsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="userScoreSettingsDao" class="org.mq.marketer.campaign.dao.UserScoreSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+<bean id="userScoreSettingsDaoForDML" class="org.mq.marketer.campaign.dao.UserScoreSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="contactsDao"
+		class="org.mq.marketer.campaign.dao.ContactsDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="loyaltyMemberSessionIDDao"
+		class="org.mq.optculture.data.dao.LoyaltyMemberSessionIDDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="loyaltyMemberSessionIDDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyMemberSessionIDDaoForDML">
+		<property name="sessionFactory" ref="sessionFactory" />
+		
+	</bean>
+	<bean id="contactsDaoForDML"
+		class="org.mq.marketer.campaign.dao.ContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+
+	<bean id="contactParentalConsentDao"
+		class="org.mq.marketer.campaign.dao.ContactParentalConsentDao">
+		
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="contactParentalConsentDaoForDML"
+		class="org.mq.marketer.campaign.dao.ContactParentalConsentDaoForDML">
+		
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="mailingListDao"
+		class="org.mq.marketer.campaign.dao.MailingListDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="mailingListDaoForDML"
+		class="org.mq.marketer.campaign.dao.MailingListDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="mlCustomFieldsDao"
+		class="org.mq.marketer.campaign.dao.MLCustomFieldsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="mlCustomFieldsDaoForDML"
+		class="org.mq.marketer.campaign.dao.MLCustomFieldsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="cfDataDao"
+		class="org.mq.marketer.campaign.dao.CustomFieldDataDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+<bean id="cfDataDaoForDML"
+		class="org.mq.marketer.campaign.dao.CustomFieldDataDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="suppressedContactsDao"
+		class="org.mq.marketer.campaign.dao.SuppressedContactsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="suppressedContactsDaoForDML"
+		class="org.mq.marketer.campaign.dao.SuppressedContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="campaignsDao"
+		class="org.mq.marketer.campaign.dao.CampaignsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="campaignReportDao" ref="campaignReportDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="campaignsDaoForDML"
+		class="org.mq.marketer.campaign.dao.CampaignsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="campaignReportDao" ref="campaignReportDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="CharacterCodesDao" class="org.mq.marketer.campaign.dao.CharacterCodesDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+<bean id="CharacterCodesDaoForDML" class="org.mq.marketer.campaign.dao.CharacterCodesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+
+	<bean id="smsCampaignsDao"
+		class="org.mq.marketer.campaign.dao.SMSCampaignsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="smsCampaignsDaoForDML"
+		class="org.mq.marketer.campaign.dao.SMSCampaignsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="autoProgramDao"
+		class="org.mq.marketer.campaign.dao.AutoProgramDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="autoProgramDaoForDML"
+		class="org.mq.marketer.campaign.dao.AutoProgramDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	
+	<bean id="autoProgramComponentsDao"
+		class="org.mq.marketer.campaign.dao.AutoProgramComponentsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="autoProgramComponentsDaoForDML"
+		class="org.mq.marketer.campaign.dao.AutoProgramComponentsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="switchConditionDao"
+		class="org.mq.marketer.campaign.dao.SwitchConditionDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="switchConditionDaoForDML"
+		class="org.mq.marketer.campaign.dao.SwitchConditionDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="programOnlineReportsDao" class="org.mq.marketer.campaign.dao.ProgramOnlineReportsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="programOnlineReportsDaoForDML" class="org.mq.marketer.campaign.dao.ProgramOnlineReportsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="componentsAndContactsDao" class="org.mq.marketer.campaign.dao.ComponentsAndContactsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	
+	</bean>
+	
+	
+	<bean id="campaignSegmentFieldsDao"
+		class="org.mq.marketer.campaign.dao.CampaignsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="campaignSegmentFieldsDaoForDML"
+		class="org.mq.marketer.campaign.dao.CampaignsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="myTemplatesDao"
+		class="org.mq.marketer.campaign.dao.MyTemplatesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="myTemplatesDaoForDML"
+		class="org.mq.marketer.campaign.dao.MyTemplatesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	<bean id="digitalReceiptMyTemplatesDao"
+		class="org.mq.marketer.campaign.dao.DigitalReceiptMyTemplatesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="digitalReceiptMyTemplatesDaoForDML"
+		class="org.mq.marketer.campaign.dao.DigitalReceiptMyTemplatesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="digitalReceiptUserSettingsDao"
+		class="org.mq.marketer.campaign.dao.DigitalReceiptUserSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+		<bean id="digitalReceiptUserSettingsDaoForDML"
+		class="org.mq.marketer.campaign.dao.DigitalReceiptUserSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="emailLayoutDao"
+		class="org.mq.marketer.campaign.dao.EmailLayoutDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="emailLayoutDaoForDML"
+		class="org.mq.marketer.campaign.dao.EmailLayoutDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="systemTemplatesDao"
+		class="org.mq.marketer.campaign.dao.SystemTemplatesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="systemTemplatesDaoForDML"
+		class="org.mq.marketer.campaign.dao.SystemTemplatesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="templateCategoryDao"
+		class="org.mq.marketer.campaign.dao.TemplateCategoryDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="templateCategoryDaoForDML"
+		class="org.mq.marketer.campaign.dao.TemplateCategoryDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="campaignReportDao"
+		class="org.mq.marketer.campaign.dao.CampaignReportDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="campaignSentDao" ref="campaignSentDao" />
+	</bean>
+	<bean id="campaignReportDaoForDML"
+		class="org.mq.marketer.campaign.dao.CampaignReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="smsCampaignReportDao"
+		class="org.mq.marketer.campaign.dao.SMSCampaignReportDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="smsCampaignSentDao" ref="smsCampaignSentDao" />
+	</bean>
+	
+	<bean id="smsCampaignReportDaoForDML"
+		class="org.mq.marketer.campaign.dao.SMSCampaignReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="smsCampaignSentDao" ref="smsCampaignSentDaoForDML" />
+	</bean>
+	
+	<bean id="smsSuppressedContactsDao"
+		class="org.mq.marketer.campaign.dao.SMSSuppressedContactsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="smsSuppressedContactsDaoForDML"
+		class="org.mq.marketer.campaign.dao.SMSSuppressedContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+        <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="smsSettingsDao" class="org.mq.marketer.campaign.dao.SMSSettingsDao">
+	
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	</bean>
+	<bean id="smsSettingsDaoForDML" class="org.mq.marketer.campaign.dao.SMSSettingsDaoForDML">
+	
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	
+	</bean>
+	<!-- added newly for rep[ort associated list(s)  -->
+	<bean id="campReportListsDao" class="org.mq.marketer.campaign.dao.CampReportListsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	
+	</bean>	
+	
+	<bean id="smsCampReportListsDao" class="org.mq.marketer.campaign.dao.SMSCampReportListsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	
+	</bean>	
+	
+	<bean id="campaignSentDao"
+		class="org.mq.marketer.campaign.dao.CampaignSentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		
+	</bean>
+	<bean id="campaignSentDaoForDML"
+		class="org.mq.marketer.campaign.dao.CampaignSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		
+	</bean>
+	
+	<bean id="smsCampaignSentDao"
+		class="org.mq.marketer.campaign.dao.SMSCampaignSentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="smsCampaignSentDaoForDML"
+		class="org.mq.marketer.campaign.dao.SMSCampaignSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<!-- added for URL shortner -->
+	<bean id="urlShortCodeMappingDao"
+		class="org.mq.marketer.campaign.dao.UrlShortCodeMappingDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="urlShortCodeMappingDaoForDML"
+		class="org.mq.marketer.campaign.dao.UrlShortCodeMappingDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	 <bean id="appContextProviderId" class="org.mq.optculture.utils.ApplicationContextProvider">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	</bean>
+	
+	
+	
+	<bean id="clicksDao"
+		class="org.mq.marketer.campaign.dao.ClicksDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="clicksDaoForDML"
+		class="org.mq.marketer.campaign.dao.ClicksDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="notificationClicksDao"
+		class="org.mq.marketer.campaign.dao.NotificationClicksDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="notificationClicksDaoForDML"
+		class="org.mq.marketer.campaign.dao.NotificationClicksDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="autoEmailclicksDao"
+		class="org.mq.marketer.campaign.dao.AutoEmailClicksDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+		<bean id="smsClicksDao"
+		class="org.mq.marketer.campaign.dao.SMSClicksDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+		<bean id="smsOpensDao"
+		class="org.mq.marketer.campaign.dao.SMSOpensDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+		<bean id="smsBouncesDao"
+		class="org.mq.marketer.campaign.dao.SMSBouncesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="smsBouncesDaoForDML"
+		class="org.mq.marketer.campaign.dao.SMSBouncesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userFromEmailIdDao"
+		class="org.mq.marketer.campaign.dao.UserFromEmailIdDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="userFromEmailIdDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserFromEmailIdDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="opensDao" class="org.mq.marketer.campaign.dao.OpensDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="opensDaoForDML" class="org.mq.marketer.campaign.dao.OpensDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="unsubscribesDao" class="org.mq.marketer.campaign.dao.UnsubscribesDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="unsubscribesDaoForDML" class="org.mq.marketer.campaign.dao.UnsubscribesDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="bounceDao" class="org.mq.marketer.campaign.dao.BounceDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="bounceDaoForDML" class="org.mq.marketer.campaign.dao.BounceDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="scheduleDao"
+		class="org.mq.marketer.campaign.dao.ScheduleDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="scheduleDaoForDML"
+		class="org.mq.marketer.campaign.dao.ScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="campaignScheduleDao"
+		class="org.mq.marketer.campaign.dao.CampaignScheduleDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="campaignScheduleDaoForDML"
+		class="org.mq.marketer.campaign.dao.CampaignScheduleDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="smsCampaignScheduleDao"
+		class="org.mq.marketer.campaign.dao.SMSCampaignScheduleDao">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="smsCampaignScheduleDaoForDML"
+		class="org.mq.marketer.campaign.dao.SMSCampaignScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="userSMSSenderIdDao"
+		class="org.mq.marketer.campaign.dao.UserSMSSenderIdDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userSMSSenderIdDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserSMSSenderIdDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="userSMSGatewayDao"
+		class="org.mq.marketer.campaign.dao.UserSMSGatewayDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="userSMSGatewayDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserSMSGatewayDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	<bean id="OCSMSGatewayDao"
+		class="org.mq.marketer.campaign.dao.OCSMSGatewayDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="OCSMSGatewayDaoForDML"
+		class="org.mq.marketer.campaign.dao.OCSMSGatewayDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	<bean id="customTemplatesDao"
+		class="org.mq.marketer.campaign.dao.CustomTemplatesDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="customTemplatesDaoForDML"
+		class="org.mq.marketer.campaign.dao.CustomTemplatesDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="organizationStoresDao"
+		class="org.mq.marketer.campaign.dao.OrganizationStoresDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="organizationStoresDaoForDML"
+		class="org.mq.marketer.campaign.dao.OrganizationStoresDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="userConnectionDao"
+		class="org.mq.marketer.campaign.dao.UserConnectionDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userConnectionDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserConnectionDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="socialCampaignDao"
+		class="org.mq.marketer.campaign.dao.SocialCampaignDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="socialCampaignDaoForDML"
+		class="org.mq.marketer.campaign.dao.SocialCampaignDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="socialCampaignScheduleDao"
+		class="org.mq.marketer.campaign.dao.SocialCampaignScheduleDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="socialCampaignScheduleDaoForDML"
+		class="org.mq.marketer.campaign.dao.SocialCampaignScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="socialCampaignReportDao"
+		class="org.mq.marketer.campaign.dao.SocialCampaignReportDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+		<bean id="socialCampaignReportDaoForDML"
+		class="org.mq.marketer.campaign.dao.SocialCampaignReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="socialAccountPageSettingsDao"
+		class="org.mq.marketer.campaign.dao.SocialAccountPageSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="socialAccountPageSettingsDaoForDML"
+		class="org.mq.marketer.campaign.dao.SocialAccountPageSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="updateOptSyncDataDao" class="org.mq.marketer.campaign.dao.UpdateOptSyncDataDao" >
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="updateOptSyncDataDaoForDML" class="org.mq.marketer.campaign.dao.UpdateOptSyncDataDaoForDML" >
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	
+	<bean id="captiwayToSMSApiGateway" class="org.mq.marketer.campaign.controller.service.CaptiwayToSMSApiGateway">
+		
+		<property name="cellNextApi" ref="cellNextApi" />
+		<property name="netCoreApi" ref="netCoreApi" />
+		<property name="clickaTellApi" ref="clickaTellApi" />
+		<property name="smsCountryApi" ref="smsCountryApi" />
+		<property name="mVaayooApi" ref="mVaayooApi" />
+	
+	</bean>
+	
+	<bean id="cellNextApi" class="org.mq.marketer.campaign.controller.service.CellNextApi">
+	</bean>
+	
+	<bean id="netCoreApi" class="org.mq.marketer.campaign.controller.service.NetCoreApi">
+	</bean>
+	<bean id="clickaTellApi" class="org.mq.marketer.campaign.controller.service.ClickaTellApi">
+	</bean>
+	<bean id="smsCountryApi" class="org.mq.marketer.campaign.controller.service.SMSCountryApi">
+	</bean>
+	<bean id="mVaayooApi" class="org.mq.marketer.campaign.controller.service.MVaayooApi">
+	</bean>
+	
+<!-- <lang:jruby id="contactListUploader"
+		script-interfaces="org.mq.marketer.campaign.controller.contacts.ContactListOperations"
+		script-source="classpath:org/mq/marketer/campaign/controller/contacts/ContactListOperations.rb">
+	</lang:jruby>
+
+ -->	
+ 
+	<bean id="uploadCSVFile"
+		class="org.mq.marketer.campaign.controller.contacts.UploadCSVFile">
+		<property name="contactsDao" ref="contactsDao" />
+		<property name="contactsDaoForDML" ref="contactsDaoForDML" />
+		<property name="mailingListDao" ref="mailingListDao" />
+		<property name="mailingListDaoForDML" ref="mailingListDaoForDML"/>
+		<property name="cfDataDao" ref="cfDataDao" />
+		<property name="cfDataDaoForDML" ref="cfDataDaoForDML" />
+		<property name="messagesDao" ref="messagesDao" />
+		<property name="mlCustomFieldsDao" ref="mlCustomFieldsDao" />
+		<property name="mlCustomFieldsDaoForDML" ref="mlCustomFieldsDaoForDML" />
+		<property name="suppressedContactsDao" ref="suppressedContactsDao" />
+		<property name="suppressedContactsDaoForDML" ref="suppressedContactsDaoForDML" />
+		<property name="smsSuppressedContactsDao" ref="smsSuppressedContactsDao" />
+		<property name="smsSuppressedContactsDaoForDML" ref="smsSuppressedContactsDaoForDML" />
+		
+		<!-- <property name="contactListUploader" ref="contactListUploader" /> -->		
+	</bean>
+	
+	<bean id="purgeList"
+		class="org.mq.marketer.campaign.general.PurgeList">
+		<property name="mailingListDao" ref="mailingListDao" />
+		<property name="purgeDao" ref="purgeDao" />
+		<property name="purgeDaoForDML" ref="purgeDaoForDML" />
+		<property name="contactParentalConsentDao" ref="contactParentalConsentDao" />
+		<property name="unsubscribesDao" ref = "unsubscribesDao"/>
+		<property name="unsubscribesDaoForDML" ref = "unsubscribesDaoForDML"/>
+		<property name = "suppressedContactsDao" ref = "suppressedContactsDao" />
+	</bean>
+	
+	<bean id="emailContentDao"
+		class="org.mq.marketer.campaign.dao.EmailContentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="emailContentDaoForDML"
+		class="org.mq.marketer.campaign.dao.EmailContentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="vmtaDao"
+		class="org.mq.marketer.campaign.dao.VmtaDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="vmtaDaoForDML"
+		class="org.mq.marketer.campaign.dao.VmtaDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+		 <bean id="userVmtaDao"
+		class="org.mq.marketer.campaign.dao.UserVmtaDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="userVmtaDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserVmtaDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="segmentRulesDao"
+		class="org.mq.marketer.campaign.dao.SegmentRulesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="segmentRulesDaoForDML"
+		class="org.mq.marketer.campaign.dao.SegmentRulesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+	<!-- <bean id="externalMailTracker" class="org.mq.marketer.campaign.controller.service.ExternalMailTracker">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="messagesDao" ref="messagesDao"/>
+		
+		<property name="campaignScheduleDao" ref="campaignScheduleDao"/>
+		<property name="campaignScheduleDaoForDML" ref="campaignScheduleDaoForDML"/>
+		
+		
+		<property name="usersDao" ref="usersDao"/>
+		<property name="campaignsDao" ref="campaignsDao" />
+		<property name="campaignsDaoForDML" ref="campaignsDaoForDML" />
+		<property name="mailingListDao" ref="mailingListDao"/>
+		<property name="mailingListDaoForDML" ref="mailingListDaoForDML"/>
+		<property name="contactsDao" ref="contactsDao"/>
+		<property name="contactsDaoForDML" ref="contactsDaoForDML"/>
+		<property name="emailQueueDao" ref="emailQueueDao"/>
+		<property name="purgeList" ref="purgeList"/>
+	</bean>
+
+	<bean id="extMailTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="10000" />
+		<property name="period" value="900000" />
+		<property name="timerTask" ref="externalMailTracker" />
+	</bean> -->
+		
+	<bean id="socialCampSender" class="org.mq.marketer.campaign.controller.service.SocialCampaignSender">
+		<property name="usersDao" ref="usersDao"/>
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="socialCampaignDao" ref="socialCampaignDao" />
+		<property name="socialCampaignScheduleDao" ref="socialCampaignScheduleDao" />
+		<property name="socialCampaignReportDao" ref="socialCampaignReportDao" />
+		<property name="socialAccountPageSettingsDao" ref="socialAccountPageSettingsDao" />
+		<property name="socialAccountPageSettingsDaoForDML" ref="socialAccountPageSettingsDaoForDML" />
+		<property name="messagesDao" ref="messagesDao" />
+		
+	</bean>
+	
+	<bean id="socialCampTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="10000" />
+		<property name="period" value="300000" />
+		<property name="timerTask" ref="socialCampSender" />
+	</bean>	
+	
+	<!-- <bean id="timerFactory2" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="extMailTask" />
+			</list>
+		</property>
+	
+	</bean> -->
+	
+	<bean id="timerFactory1" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="socialCampTask" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Update Cards Timer Task -->
+	
+	<!-- <bean id="updateSparkBaseCardsController" class="org.mq.marketer.campaign.controller.service.UpdateSparkBaseCardsController">
+	</bean>
+	
+	<bean id="scheduledTask8" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="60000" />
+		<property name="period" value="900000" />
+		<property name="timerTask" ref="updateSparkBaseCardsController" />
+	</bean>
+	
+	<bean id="timerFactory3" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask8" />
+			</list>
+		</property>
+	</bean> -->
+	<!-- cards timer task -->
+ 	
+   <bean id="formMappingDao" class="org.mq.marketer.campaign.dao.FormMappingDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+   </bean>
+   
+   <bean id="formMappingDaoForDML" class="org.mq.marketer.campaign.dao.FormMappingDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+   </bean>
+   
+   <bean id="eventTriggerDao" class="org.mq.marketer.campaign.dao.EventTriggerDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+   </bean>
+   
+   <bean id="eventTriggerDaoForDML" class="org.mq.marketer.campaign.dao.EventTriggerDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+   </bean>
+   
+   <bean id="eventTriggerEventsObservable" class="org.mq.marketer.campaign.controller.service.EventTriggerEventsObservable">
+		<property name="eventTriggerEventsObserver" ref="eventTriggerEventsObserver" />
+		<property name="eventTriggerDao" ref="eventTriggerDao" />
+		<property name="campaignReportDao" ref="campaignReportDao" />
+	</bean>
+   <bean id="eventTriggerEventsObserver" class="org.mq.marketer.campaign.controller.service.EventTriggerEventsObserver">
+		<property name="eventTriggerDao" ref="eventTriggerDao" />
+		<!-- <property name="eventTriggerDaoForDML" ref="eventTriggerDaoForDML" /> -->
+		<property name="eventTriggerEventsDaoForDML" ref="eventTriggerEventsDaoForDML" />
+		<property name="mailingListDao" ref="mailingListDao" />
+		
+	</bean>
+   <bean id="eventTriggerEventsDao" class="org.mq.marketer.campaign.dao.EventTriggerEventsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+   </bean>
+   <bean id="eventTriggerEventsDaoForDML" class="org.mq.marketer.campaign.dao.EventTriggerEventsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+   </bean>
+    <bean id="contactSpecificDateEventsDao" class="org.mq.marketer.campaign.dao.ContactSpecificDateEventsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+   </bean>
+   
+   <bean id="contactSpecificDateEventsDaoForDML" class="org.mq.marketer.campaign.dao.ContactSpecificDateEventsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+   </bean>
+   
+    <bean id="triggerCustomEventDao" class="org.mq.marketer.campaign.dao.TriggerCustomEventDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+   </bean>
+   
+   <bean id="triggerCustomEventDaoForDML" class="org.mq.marketer.campaign.dao.TriggerCustomEventDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+   </bean>
+   
+   <bean id="externalSMTPSettingsDao" class="org.mq.marketer.campaign.dao.ExternalSMTPSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+   </bean>
+   
+   <bean id="externalSMTPSettingsDaoForDML" class="org.mq.marketer.campaign.dao.ExternalSMTPSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+   </bean>
+   
+ 	<!--********************* OPTINTEL************** -->
+ 	
+ 	<bean id="posMappingDao" class="org.mq.marketer.campaign.dao.POSMappingDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+   </bean>
+ 	
+ 	<bean id="posMappingDaoForDML" class="org.mq.marketer.campaign.dao.POSMappingDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+   </bean>
+ 	
+ 	<bean id="retailProSalesDao" class="org.mq.marketer.campaign.dao.RetailProSalesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="retailProSalesDaoForDML" class="org.mq.marketer.campaign.dao.RetailProSalesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+ 	
+ 	<bean id="salesLiteralHashCodeGenerateDao" class="org.mq.marketer.campaign.dao.SalesLiteralHashCodeGenerateDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="countryCodeDao" class="org.mq.marketer.campaign.dao.CountryCodeDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	
+	
+	
+	<bean id="salesLiteralHashCodeGenerateDaoForDML" class="org.mq.marketer.campaign.dao.SalesLiteralHashCodeGenerateDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+ 	<bean id="userPOSFTPSettingsDao" class="org.mq.marketer.campaign.dao.UserPosFTPSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+   </bean>
+ 	<bean id="userPOSFTPSettingsDaoForDML" class="org.mq.marketer.campaign.dao.UserPosFTPSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+   </bean>
+ 	<!-- ********************************************* --> 
+ 	<bean id="skuFileDao" class="org.mq.marketer.campaign.dao.SkuFileDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="skuFileDaoForDML" class="org.mq.marketer.campaign.dao.SkuFileDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+ 
+	<bean id="sparkBaseLocationDetailsDao" class="org.mq.marketer.campaign.dao.SparkBaseLocationDetailsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="sparkBaseLocationDetailsDaoForDML" class="org.mq.marketer.campaign.dao.SparkBaseLocationDetailsDaoForDML">
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" /> 
+	</bean>
+
+	<bean id="sparkBaseCardDao" class="org.mq.marketer.campaign.dao.SparkBaseCardDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="sparkBaseCardDaoForDML" class="org.mq.marketer.campaign.dao.SparkBaseCardDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="posFileLogDao" class="org.mq.marketer.campaign.dao.POSFileLogDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="posFileLogDaoForDML" class="org.mq.marketer.campaign.dao.POSFileLogDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+      <bean id="etlFileUploadLogDao" class="org.mq.marketer.campaign.dao.ETLFileUploadLogDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="etlFileUploadLogDaoForDML" class="org.mq.marketer.campaign.dao.ETLFileUploadLogDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="csvFileUploadLogDaoForDML" class="org.mq.marketer.campaign.dao.CSVFileUploadLogDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="contactsLoyaltyDao" class="org.mq.marketer.campaign.dao.ContactsLoyaltyDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	<bean id="contactsLoyaltyDaoForDML" class="org.mq.marketer.campaign.dao.ContactsLoyaltyDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="EventsDao" class="org.mq.optculture.data.dao.EventsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	<bean id="EventsDaoForDML" class="org.mq.optculture.data.dao.EventsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="valueCodesDao" class="org.mq.optculture.data.dao.ValueCodesDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	
+	<bean id="valueCodesDaoForDML" class="org.mq.optculture.data.dao.ValueCodesDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="specialRewardsDao" class="org.mq.optculture.data.dao.SpecialRewardsDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	
+	
+	
+	<bean id="referralProgramDao" class="org.mq.optculture.data.dao.ReferralProgramDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	
+	
+	
+	<bean id="referralProgramDaoForDML" class="org.mq.marketer.campaign.dao.ReferralProgramDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="rewardreferralTypeDao" class="org.mq.optculture.data.dao.RewardReferraltypeDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	
+	
+	<bean id="rewardreferralTypeDaoForDML" class="org.mq.marketer.campaign.dao.RewardReferraltypeDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<bean id="specialRewardsDaoForDML" class="org.mq.optculture.data.dao.SpecialRewardsDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="loyaltyBalanceDao" class="org.mq.marketer.campaign.dao.LoyaltyBalanceDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	
+	<bean id="loyaltyBalanceDaoForDML" class="org.mq.marketer.campaign.dao.LoyaltyBalanceDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="loyaltyMemberItemQtyCounterDao" class="org.mq.marketer.campaign.dao.LoyaltyMemberItemQtyCounterDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="loyaltyMemberItemQtyCounterDaoforDML" class="org.mq.marketer.campaign.dao.LoyaltyMemberItemQtyCounterDaoforDML" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+
+
+	<bean id="loyaltySettingsDao" class="org.mq.optculture.data.dao.LoyaltySettingsDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltySettingsDaoForDML" class="org.mq.optculture.data.dao.LoyaltySettingsDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="purgeDao" class="org.mq.marketer.campaign.dao.PurgeDao">
+	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="purgeDaoForDML" class="org.mq.marketer.campaign.dao.PurgeDaoForDML">
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	<bean id="couponsDao" class="org.mq.marketer.campaign.dao.CouponsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	<bean id="couponsDaoForDML" class="org.mq.marketer.campaign.dao.CouponsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>	
+	
+	
+	<bean id="coupDiscGenDao" class="org.mq.marketer.campaign.dao.CouponDiscountGenerateDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	
+	<bean id="coupDiscGenDaoForDML" class="org.mq.marketer.campaign.dao.CouponDiscountGenerateDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>	
+	
+	<bean id="couponCodesDao" class="org.mq.marketer.campaign.dao.CouponCodesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="couponCodesDaoForDML" class="org.mq.marketer.campaign.dao.CouponCodesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+  <bean id="referralCodesIssuedDao" class="org.mq.marketer.campaign.dao.ReferralcodesIssuedDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="referralCodesIssuedDaoForDML" class="org.mq.marketer.campaign.dao.ReferralcodesIssuedDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	<bean id="referralCodesRedeemedDaoForDML" class="org.mq.marketer.campaign.dao.ReferralcodesRedeemedDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	<bean id="referralCodesRedeemedDao" class="org.mq.optculture.data.dao.ReferralcodesRedeemedDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean> 
+	
+	
+	
+	<bean id="secRolesDao" class="org.mq.marketer.campaign.dao.SecRolesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="secRolesDaoForDML" class="org.mq.marketer.campaign.dao.SecRolesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="secGroupsDao" class="org.mq.marketer.campaign.dao.SecGroupsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="secGroupsDaoForDML" class="org.mq.marketer.campaign.dao.SecGroupsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="secRightsDao" class="org.mq.marketer.campaign.dao.SecRightsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="secRightsDaoForDML" class="org.mq.marketer.campaign.dao.SecRightsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="digitalReceiptsJSONDao" class="org.mq.marketer.campaign.dao.DigitalReceiptsJSONDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="digitalReceiptsJSONDaoForDML" class="org.mq.marketer.campaign.dao.DigitalReceiptsJSONDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="userAgentJSONDao" class="org.mq.marketer.campaign.dao.UserAgentJSONDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="userAgentJSONDaoForDML" class="org.mq.marketer.campaign.dao.UserAgentJSONDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<!-- <bean id="autoUpdateCoupStatus" class="org.mq.marketer.campaign.controller.service.AutoUpdateCoupStatus">
+		
+	</bean>
+	
+	<bean id="timerFactory4" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask1" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="scheduledTask1" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="50000" />
+		<property name="period" value="300000" />
+		<property name="timerTask" ref="autoUpdateCoupStatus" />
+	</bean>
+	 -->
+	 
+	 <bean id="autoUpdateEventStatus" class="org.mq.marketer.campaign.controller.service.AutoUpdateEventStatus">
+		
+	</bean>
+	
+	<bean id="timerFactory5" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask2" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="scheduledTask2" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="50000" />
+		<property name="period" value="300000" />
+		<property name="timerTask" ref="autoUpdateEventStatus" />
+	</bean>
+	 
+	 
+	 
+	 
+	  <bean id="autoUpdatereferralProgramtStatus" class="org.mq.marketer.campaign.controller.service.AutoUpdatereferralProgramtStatus">
+		
+	</bean>
+	
+	<bean id="timerFactory4" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask1" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="scheduledTask1" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="50000" />
+		<property name="period" value="300000" />
+		<property name="timerTask" ref="autoUpdatereferralProgramtStatus" />
+	</bean>
+	 
+	 
+	<bean id="mastersToTransactionMappingsDao" class="org.mq.marketer.campaign.dao.MastersToTransactionMappingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="mastersToTransactionMappingsDaoForDML" class="org.mq.marketer.campaign.dao.MastersToTransactionMappingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="uploadContactsThread"
+		class="org.mq.marketer.campaign.controller.contacts.UploadContactsThread">
+		<!-- <property name="contactsDao" ref="contactsDao" />
+		<property name="mailingListDao" ref="mailingListDao" />
+		<property name="usersDao" ref="usersDao" />
+		<property name="messagesDao" ref="messagesDao" />
+		<property name="emailQueueDao" ref="emailQueueDao" />
+		<property name="customTemplatesDao" ref="customTemplatesDao" />
+		<property name="customTemplatesDaoForDML" ref="customTemplatesDaoForDML" />
+		<property name="captiwayToSMSApiGateway" ref="captiwayToSMSApiGateway" />
+		<property name="smsSettingsDao" ref="smsSettingsDao" />	 -->
+	</bean>
+	<bean id="contactScoreSetting" class="org.mq.marketer.campaign.controller.ContactScoreSetting">
+		<property name="userScoreSettingsDao" ref="userScoreSettingsDao" />
+		<property name="userScoreSettingsDaoForDML" ref="userScoreSettingsDaoForDML" />
+		<property name="contactScoresDao" ref="contactScoresDao" />
+	</bean>
+	<bean id="contactScoresDao" class="org.mq.marketer.campaign.dao.ContactScoresDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="contactScoresDaoForDML" class="org.mq.marketer.campaign.dao.ContactScoresDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<!-- <Start> Process Digital Receipts Transaction Data -->
+	<!-- <bean id="processDigitalReceiptsData" class="org.mq.marketer.campaign.general.ProcessDigitalReceiptsData">
+	</bean>
+	
+	<bean id="scheduledTask9" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="30000" />
+		<property name="timerTask" ref="processDigitalReceiptsData" />
+	</bean>
+	
+	<bean id="timerFactory9" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask9"/>
+			</list>
+		</property>
+	</bean> -->
+	
+<bean id="timerFactory6" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask10" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="scheduledTask10" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="50000" />
+		<property name="period" value="90000" />
+		<property name="timerTask" ref="updateEmailReports" />
+	</bean>
+	
+	<bean id="updateEmailReports" class="org.mq.marketer.campaign.controller.service.UpdateEmailReports">
+		
+	</bean>
+	<bean id="updateAutoEmailReports" class="org.mq.marketer.campaign.controller.service.UpdateAutoEmailReports"/>
+	
+	<bean id="scheduledTask11" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="50000" />
+		<property name="period" value="90000" />
+		<property name="timerTask" ref="updateAutoEmailReports" />
+	</bean>
+	
+	<bean id="timerFactory7" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask11" />
+			</list>
+		</property>
+	</bean>
+		
+	<!-- <End> Process Digital Receipts Transaction Data -->
+
+	<bean id="drSentDao"
+		class="org.mq.marketer.campaign.dao.DRSentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="drSentDaoForDML"
+		class="org.mq.marketer.campaign.dao.DRSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="drSmsSentDao"
+		class="org.mq.marketer.campaign.dao.DRSMSSentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="drSmsSentDaoForDML"
+		class="org.mq.marketer.campaign.dao.DRSMSSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="zoneTemplateSettingsDao"
+		class="org.mq.marketer.campaign.dao.ZoneTemplateSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="drSmsChannelSentDao"
+		class="org.mq.marketer.campaign.dao.DRSMSChannelSentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="drSmsChannelSentDaoForDML"
+		class="org.mq.marketer.campaign.dao.DRSMSChannelSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="farwardToFriendDao"
+		class="org.mq.marketer.campaign.dao.FarwardToFriendDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="farwardToFriendDaoForDML"
+		class="org.mq.marketer.campaign.dao.FarwardToFriendDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="shareSocialNetworkLinksDao"
+		class="org.mq.marketer.campaign.dao.ShareSocialNetworkLinksDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="shareSocialNetworkLinksDaoForDML"
+		class="org.mq.marketer.campaign.dao.ShareSocialNetworkLinksDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+<bean id="userCampaignCategoriesDao"
+		class="org.mq.marketer.campaign.dao.UserCampaignCategoriesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="userCampaignCategoriesDaoForDML"
+		class="org.mq.marketer.campaign.dao.UserCampaignCategoriesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+<bean id="defaultCategoriesDao"
+		class="org.mq.marketer.campaign.dao.DefaultCategoriesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="defaultCategoriesDaoForDML"
+		class="org.mq.marketer.campaign.dao.DefaultCategoriesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+
+	<bean id="transactionalTemplatesDao"
+		class="org.mq.marketer.campaign.dao.TransactionalTemplatesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="transactionalTemplatesDaoForDML"
+		class="org.mq.marketer.campaign.dao.TransactionalTemplatesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="resetPasswordTokenDao" class="org.mq.marketer.campaign.dao.ResetPasswordTokenDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+
+	<bean id="resetPasswordTokenDaoForDML" class="org.mq.marketer.campaign.dao.ResetPasswordTokenDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplateForDML" /> -->
+	</bean>
+
+	<bean id="sparkBaseTransactionsDao" class = "org.mq.marketer.campaign.dao.SparkBaseTransactionsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="sparkBaseTransactionsDaoForDML" class = "org.mq.marketer.campaign.dao.SparkBaseTransactionsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="magentoBusinessServiceImpl" class="org.mq.optculture.business.magento.MagentoBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="supportTicketDao" class="org.mq.marketer.campaign.dao.SupportTicketDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="supportTicketDaoForDML" class="org.mq.marketer.campaign.dao.SupportTicketDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="gatewayBusinessServiceImpl" class="org.mq.optculture.business.gateway.GatewayBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="equenceHTTPDLRService" class="org.mq.optculture.controller.EquenceHTTPDLRService">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	 <bean id="equenceBusinessServiceImpl" class="org.mq.optculture.business.gateway.EquenceBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+ -->	</bean> 
+	
+	<bean id="synapseHTTPDLRService" class="org.mq.optculture.controller.SynapseHTTPDLRService">
+	</bean>
+	 <bean id="synapseBusinessServiceImpl" class="org.mq.optculture.business.gateway.SynapseBusinessServiceImpl">
+	</bean> 
+	
+	<bean id="drToLtyExtractionImpl" class="org.mq.optculture.business.digitalReceipt.DRToLtyExtractionImpl">
+	</bean>
+	
+	<!-- <bean id="dRToLtyExtractionService" class="org.mq.optculture.business.digitalReceipt.DRToLtyExtractionImpl">
+	</bean> -->
+	
+	<!--  <bean id="dRToLtyExtractionService" class="org.mq.optculture.restservice.digitalReceipt.DRToLtyExtractionService">
+	</bean>  -->
+	
+	<bean id="usersAdditionalContactDetailsDao" class="org.mq.marketer.campaign.dao.UsersAdditionalContactDetailsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="usersAdditionalContactDetailsDaoForDML" class="org.mq.marketer.campaign.dao.UsersAdditionalContactDetailsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplateForDML" /> -->
+	</bean>
+	
+	<bean id="productsUsedDao" class="org.mq.marketer.campaign.dao.ProductsUsedDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="productsUsedDaoForDML" class="org.mq.marketer.campaign.dao.ProductsUsedDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplateForDML" /> -->
+	</bean>
+
+	<bean id="sparkBaseTokenServiceImpl" class="org.mq.optculture.business.sparkbase.SparkBaseTokenServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="couponCodeEnquiryServiceImpl" class="org.mq.optculture.business.couponcode.CouponCodeEnquiryServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="ReferralCodeEnquiryServiceImpl" class="org.mq.optculture.business.couponcode.ReferralCodeEnquiryServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	
+	
+	
+	<bean id="couponCodeRedeemedServiceImpl" class="org.mq.optculture.business.couponcode.CouponCodeRedeemedServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="smsCampaignUrlsDao"
+		class="org.mq.marketer.campaign.dao.SMSCampaignUrlsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+		
+	<bean id="posDRBusinessServiceImpl" class="org.mq.optculture.business.digitalReceipt.PosDRBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	<bean id="sendDRBusinessServiceImpl" class="org.mq.optculture.business.digitalReceipt.SendDRBusinessServiceImpl">
+	</bean>
+	
+	<bean id="generalMailSenderServiceImpl" class="org.mq.optculture.business.generalMailSender.GeneralMailSenderServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+
+	<bean id="resetPasswordBusinessServiceImpl" class="org.mq.optculture.business.resetPassword.ResetPasswordBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="drReportBusinessServiceImpl" class="org.mq.optculture.business.digitalReceipt.DRReportBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	<bean id="updateContactsBusinessServiceImpl" class="org.mq.optculture.business.updatecontacts.UpdateContactsBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="issueCouponServiceImpl" class="org.mq.optculture.business.couponcode.IssueCouponServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<!-- Changes start 2.5.3.0 -->
+	<bean id="importContactsBusinessServiceImpl" class="org.mq.optculture.business.importcontacts.ImportContactsBusinessServiceImpl">
+		
+	</bean>
+	<!-- Changes end 2.5.3.0 -->
+	<bean id="EventsServiceBusinessImpl" class="org.mq.optculture.business.events.EventsServiceBusinessImpl">
+		
+	</bean>
+	<bean id="FaqServiceBusinessImpl" class="org.mq.optculture.business.faq.FaqServiceBusinessImpl">
+		
+	</bean>
+	<!-- APP-4908 -->
+	<bean id="NexonStoreEnquiryServiceImpl" class="org.mq.optculture.business.nexon.NexonStoreEnquiryServiceImpl">
+		
+	</bean>
+	
+	<bean id="ReIssuePerksServiceBusinessImpl" class="org.mq.optculture.business.loyalty.ReIssuePerksServiceBusinessImpl">
+		
+	</bean>
+	
+	<!--<bean id="TermsServiceBusinessImpl" class="org.mq.optculture.business.terms.TermsServiceBusinessImpl">
+		
+	</bean>-->
+	
+	<bean id="updateSkuBusinessServiceImpl" class="org.mq.optculture.business.updatesku.UpdateSkuBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="countryReceivingNumbersDao"
+		class="org.mq.marketer.campaign.dao.CountryReceivingNumbersDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+<bean id="countryReceivingNumbersDaoForDML"
+		class="org.mq.marketer.campaign.dao.CountryReceivingNumbersDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="loyaltyInquiryService" class="org.mq.optculture.business.loyalty.LoyaltyInquiryServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyInquiryOCService" class="org.mq.optculture.business.loyalty.LoyaltyInquiryOCServiceImpl" >
+	</bean>
+	<bean id="loyaltyMemberLoginService" class="org.mq.optculture.business.mobileapp.OCLoyaltyMemberLoginServiceImpl" >
+	</bean>
+	<bean id="ocUserLoginService" class="org.mq.optculture.business.account.OCUserLoginServiceImpl" >
+	</bean>
+	<bean id="loyaltyMemberLogoutService" class="org.mq.optculture.business.mobileapp.OCLoyaltyMemberLogoutServiceImpl" >
+	</bean>
+	<bean id="getPageURLService" class="org.mq.optculture.business.genesys.GetPageURLServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyIssuanceService" class="org.mq.optculture.business.loyalty.LoyaltyIssuanceServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyIssuanceOCService" class="org.mq.optculture.business.loyalty.LoyaltyIssuanceOCServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyRedemptionService" class="org.mq.optculture.business.loyalty.LoyaltyRedemptionServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyRedemptionOCService" class="org.mq.optculture.business.loyalty.LoyaltyRedemptionOCServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyEnrolmentService" class="org.mq.optculture.business.loyalty.LoyaltyEnrollmentServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyOCEnrolmentService" class="org.mq.optculture.business.loyalty.LoyaltyOCEnrollmentServiceImpl" ><!--Changes APP-1326 -->
+	</bean>
+	<bean id="loyaltyTransferService" class="org.mq.optculture.business.loyalty.LoyaltyTransferMembershipServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyDataOCServiceImpl" class="org.mq.optculture.business.loyalty.LoyaltyDataOCServiceImpl" >
+	</bean>
+	
+	<bean id="loyaltyDataBusinessServiceImpl" class="org.mq.optculture.business.loyalty.LoyaltyDataBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	<bean id="loyaltyEnrollmentHistoryServiceImpl" class="org.mq.optculture.business.loyalty.LoyaltyEnrollmentHistoryServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="loyaltyReturnTransactionOCService" class="org.mq.optculture.business.loyalty.LoyaltyReturnServiceImpl" >
+	</bean>
+
+	<!-- OptSynch timers -->
+	
+	<bean id="loyaltyenrollbyxml" class="org.mq.optculture.timer.LoyaltyEnrolmentByXML" >
+	</bean>
+	
+	<bean id="loyaltyenrollxmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask" >
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="loyaltyenrollbyxml" />
+	</bean>
+	
+	<bean id="loyaltyenrollxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyenrollxmltimertask" />
+			</list>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="loyaltyissuancebyxml" class="org.mq.optculture.timer.LoyaltyIssuanceByXML">
+	</bean>
+	
+	<bean id="loyaltyissuancexmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="loyaltyissuancebyxml" />
+	</bean>
+	
+	<bean id="loyaltyissuancexml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyissuancexmltimertask" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="loyaltyenrollOCbyxml" class="org.mq.optculture.timer.LoyaltyEnrolmentOCByXML" >
+	</bean>
+	
+	<bean id="loyaltyenrollocxmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask" >
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="loyaltyenrollOCbyxml" />
+	</bean>
+	
+	<bean id="loyaltyenrollocxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyenrollocxmltimertask" />
+			</list>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="loyaltyissuanceOCbyxml" class="org.mq.optculture.timer.LoyaltyIssuanceOCByXML">
+	</bean>
+	
+	<bean id="loyaltyissuanceocxmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="loyaltyissuanceOCbyxml" />
+	</bean>
+	
+	<bean id="loyaltyissuanceocxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyissuanceocxmltimertask" />
+			</list>
+		</property>
+	</bean>
+	<bean id="loyaltyredemptionbyxml" class="org.mq.optculture.timer.LoyaltyRedemptionByXML">
+	</bean>
+	
+	<bean id="loyaltyredemptionxmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="loyaltyredemptionbyxml" />
+	</bean>
+	
+	<bean id="loyaltyredemptionxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyredemptionxmltimertask" />
+			</list>
+		</property>
+	</bean>	
+
+	<bean id="loyaltybalancedump" class="org.mq.optculture.timer.LoyaltyBalancesFilesGenerator">
+	</bean>
+	
+	<!-- <bean id="loyaltybalancedumptimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="14400000" />
+		<property name="timerTask" ref="loyaltybalancedump" />
+	</bean>
+	
+	<bean id="loyaltybalancedump_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltybalancedumptimertask" />
+			</list>
+		</property>
+	</bean> -->
+	
+	<bean id="loyaltycustomerdump" class="org.mq.optculture.timer.LoyaltyCustomerDumpGenerator">
+	</bean>
+	
+	<!-- <bean id="loyaltycustomerdumptimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="loyaltycustomerdump" />
+	</bean>
+	
+	<bean id="loyaltycustomerdump_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltycustomerdumptimertask" />
+			</list>
+		</property>
+	</bean> -->
+	
+	
+	<bean id="loyaltyTransactionDao" class="org.mq.marketer.campaign.dao.LoyaltyTransactionDao" >
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyTransactionDaoForDML" class="org.mq.marketer.campaign.dao.LoyaltyTransactionDaoForDML" >
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="campaignReportBusinessServiceImpl" class="org.mq.optculture.business.campaign.CampaignReportBusinessServiceImpl" >
+	</bean>
+<bean id="autoEmailReportBusinessServiceImpl" class="org.mq.optculture.business.autoEmail.AutoEmailReportBusinessServiceImpl" >
+	</bean>
+
+	 <bean id="updateContactRequestXmlFile" class="org.mq.optculture.timer.UpdateContactRequestXmlFile">
+	</bean>
+	
+	<bean id="updateContactScheduledTimerTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="updateContactRequestXmlFile" />
+	</bean>
+	
+	<bean id="updateContactRequestXml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="updateContactScheduledTimerTask" />
+			</list>
+		</property>
+	</bean>
+	 <bean id="updateSkuRequestXmlFile" class="org.mq.optculture.timer.UpdateSkuRequestXmlFile">
+	</bean>
+	
+	<bean id="updateSkuScheduledTimerTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="updateSkuRequestXmlFile" />
+	</bean>
+	
+	<bean id="updateSkuRequestXml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="updateSkuScheduledTimerTask" />
+			</list>
+		</property>
+	</bean>
+	<bean id="sendDigitalReceiptsByXML" class="org.mq.optculture.timer.SendDigitalReceiptsByXML">
+	</bean>
+	
+	<bean id="digitalReceiptsxmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="sendDigitalReceiptsByXML" />
+	</bean>
+	
+	<bean id="digitalReceiptsxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="digitalReceiptsxmltimertask" />
+			</list>
+		</property>
+	</bean>
+   
+
+	<bean id="optSyncPromobyxml" class="org.mq.optculture.timer.OptSyncPromotionByXml">
+	</bean>
+	
+	<!-- <bean id="optSynPromoxmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="40000" />
+		<property name="period" value="86400000" />
+		<property name="timerTask" ref="optSyncPromobyxml" />
+	</bean>
+	
+	<bean id="optSyncPromoxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="optSynPromoxmltimertask" />
+			</list>
+		</property>
+	</bean> -->
+	<bean id="contactSubscriptionServiceImpl" class="org.mq.optculture.business.contactSubscription.ContactSubscriptionServiceImpl">
+	</bean>
+
+	
+	<bean id="updateOptSyncDataServiceImpl" class="org.mq.optculture.business.optSyncData.OptSyncDataServiceImpl" >
+	
+	</bean>
+	
+	<bean id="optSyncUpadteTimer" class="org.mq.optculture.timer.OptSyncUpdateTimer">
+	</bean>
+	
+	<bean id="optSyncUpdateTimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="40000" />
+		<property name="period" value="600000" />
+		<property name="timerTask" ref="optSyncUpadteTimer" />
+	</bean>
+	
+	<bean id="optSyncUpdate_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="optSyncUpdateTimertask" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="loyaltyProgramTransDao" class="org.mq.optculture.data.dao.LoyaltyProgramTransDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="loyaltyProgramTransDaoForDML" class="org.mq.optculture.data.dao.LoyaltyProgramTransDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="loyaltyProgramTierDao" class="org.mq.optculture.data.dao.LoyaltyProgramTierDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyProgramTierDaoForDML" class="org.mq.optculture.data.dao.LoyaltyProgramTierDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyProgramDao" class="org.mq.optculture.data.dao.LoyaltyProgramDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyProgramDaoForDML" class="org.mq.optculture.data.dao.LoyaltyProgramDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyCardSetDao"
+		class="org.mq.optculture.data.dao.LoyaltyCardSetDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyCardSetDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyCardSetDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyCardsDao"
+		class="org.mq.optculture.data.dao.LoyaltyCardsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="loyaltyCardsDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyCardsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyProgramExclusionDao"
+		class="org.mq.optculture.data.dao.LoyaltyProgramExclusionDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyProgramExclusionDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyProgramExclusionDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<!-- <bean id="contactsLoyaltyStageDao" class="org.mq.marketer.campaign.dao.ContactsLoyaltyStageDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	 -->
+	
+	<bean id="loyaltyThresholdBonusDao" class="org.mq.optculture.data.dao.LoyaltyThresholdBonusDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+	
+	<bean id="loyaltyThresholdBonusDaoForDML" class="org.mq.optculture.data.dao.LoyaltyThresholdBonusDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>	
+	
+	<bean id="loyaltyAutoCommDao" class="org.mq.optculture.data.dao.LoyaltyAutoCommDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyAutoCommDaoForDML" class="org.mq.optculture.data.dao.LoyaltyAutoCommDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="earnAndRedeemRules" class="org.mq.optculture.timer.EarnAndRedeemRules">
+	</bean>
+	
+	<bean id="loyaltyCardFinder" class="org.mq.optculture.business.helper.LoyaltyCardFinder">
+	</bean>
+	<bean id="earnAndRedeemRulesTimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="earnAndRedeemRules" />
+	</bean>
+	
+	<bean id="earnAndRedeemRules_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="earnAndRedeemRulesTimertask" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="loyaltyRewardExpiry" class="org.mq.optculture.timer.LoyaltyRewardExpiry">
+	</bean>
+	
+	<!-- <bean id="loyaltyRewardExpiryTimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="60000" />
+		<property name="period" value="180000" />
+		<property name="timerTask" ref="loyaltyRewardExpiry" />
+	</bean>
+	
+	<bean id="loyaltyRewardExpiry_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyRewardExpiryTimertask" />
+			</list>
+		</property>
+	</bean> -->
+	
+	<bean id="loyaltyRewardExpiryComm" class="org.mq.optculture.timer.LoyaltyRewardExpiryComm">
+	</bean>
+	
+	<!-- <bean id="loyaltyRewardExpiryCommTimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="60000" />
+		<property name="period" value="180000" />
+		<property name="timerTask" ref="loyaltyRewardExpiryComm" />
+	</bean>
+	
+	<bean id="loyaltyRewardExpiryComm_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyRewardExpiryCommTimertask" />
+			</list>
+		</property>
+	</bean> -->
+	
+	
+	<bean id="loyaltyMembershipExpiry" class="org.mq.optculture.timer.LoyaltyMembershipExpiry">
+	</bean>
+	
+	<bean id="DRStoreReportGenerator" class="org.mq.optculture.timer.DRStoreReportGenerator">
+	</bean>
+	<!-- <bean id="loyaltyMembershipExpiryTimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="180000" />
+		<property name="timerTask" ref="loyaltyMembershipExpiry" />
+	</bean>
+	<bean id="loyaltyMembershipExpiry_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyMembershipExpiryTimertask" />
+			</list>
+		</property>
+	</bean> -->
+	
+	<bean id="loyaltyMembershipExpiryAutoComm" class="org.mq.optculture.timer.LoyaltyMembershipExpiryAutoComm">
+	</bean>
+	<!-- <bean id="loyaltyMembershipExpiryAutoCommTimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="180000" />
+		<property name="timerTask" ref="loyaltyMembershipExpiryAutoComm" />
+	</bean>
+	<bean id="loyaltyMembershipExpiryAutoComm_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyMembershipExpiryAutoCommTimertask" />
+			</list>
+		</property>
+	</bean> -->
+	
+	<bean id="optSyncinboxPromoTimer" class="org.mq.optculture.timer.OptSynInboxPromoRedemtionProcessByXml">
+	</bean>
+	
+	
+	<bean id="optSyncInboxPromoTimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="10000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="optSyncinboxPromoTimer" />
+	</bean>
+	
+	<bean id="optSyncInboxPromo_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="optSyncInboxPromoTimertask" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="contactsLoyaltyStageDao" class="org.mq.marketer.campaign.dao.ContactsLoyaltyStageDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	
+	<bean id="contactsLoyaltyStageDaoForDML" class="org.mq.marketer.campaign.dao.ContactsLoyaltyStageDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>	
+	
+	<bean id="exportFileDetailsDao" class="org.mq.marketer.campaign.dao.ExportFileDetailsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+
+        <bean id="exportFileDetailsDaoForDML" class="org.mq.marketer.campaign.dao.ExportFileDetailsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="exportFileCleanUpTimer" class="org.mq.optculture.timer.ExportFileCleanUpTimer">
+		
+	</bean>
+	
+	
+	<bean id="exportFileTimerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="exportFileSchedulerTimer" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="exportFileSchedulerTimer" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="10000" />
+		<property name="period" value="900000" />
+		<property name="timerTask" ref="exportFileCleanUpTimer" />
+	</bean>
+	
+	<bean id="loyaltyTransactionParentDao" class="org.mq.optculture.data.dao.LoyaltyTransactionParentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyTransactionParentDaoForDML" class="org.mq.optculture.data.dao.LoyaltyTransactionParentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyTransactionChildDao" class="org.mq.optculture.data.dao.LoyaltyTransactionChildDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="loyaltyTransactionChildDaoForDML" class="org.mq.optculture.data.dao.LoyaltyTransactionChildDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="reIssuePerksOnExpiryDao" class="org.mq.optculture.data.dao.ReIssuePerksOnExpiryDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="reIssuePerksOnExpiryDaoForDML" class="org.mq.optculture.data.dao.ReIssuePerksOnExpiryDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="customerSalesUpdateDataDao" class="org.mq.marketer.campaign.dao.CustomerSalesUpdateDataDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="customerSalesUpdateDataDaoForDML" class="org.mq.marketer.campaign.dao.CustomerSalesUpdateDataDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyTransactionExpiryDao" class="org.mq.optculture.data.dao.LoyaltyTransactionExpiryDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="loyaltyTransactionExpiryDaoForDML" class="org.mq.optculture.data.dao.LoyaltyTransactionExpiryDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="OTPGeneratedCodesDao" class="org.mq.optculture.data.dao.OTPGeneratedCodesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="OTPGeneratedCodesDaoForDML" class="org.mq.optculture.data.dao.OTPGeneratedCodesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyOTPOCService" class="org.mq.optculture.business.loyalty.LoyaltyOTPOCServiceImpl" >
+	</bean>
+	
+	<bean id="FAQDao" class="org.mq.marketer.campaign.dao.FAQDao" >
+	<property name="jdbcTemplate" ref="jdbcTemplate" />
+	<property name="sessionFactory" ref="sessionFactory" /> 
+	</bean>
+	
+	<bean id="FAQDaoForDML" class="org.mq.marketer.campaign.dao.FAQDaoForDML" >
+	 <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	<property name="sessionFactory" ref="sessionFactoryForDML" /> 
+	</bean> 
+	
+	<bean id="autoSMSDao" class="org.mq.marketer.campaign.dao.AutoSMSDao" >
+	<property name="jdbcTemplate" ref="jdbcTemplate" />
+	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="autosmsURLDaoForDml"
+		class="org.mq.optculture.data.dao.AutoSmsUrlDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		 <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="autoSMSSentUrlShortCodeDaoForDML"
+		class="org.mq.optculture.data.dao.AutoSmsUrlShortCodeDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		 <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="autoSMSDaoForDML" class="org.mq.marketer.campaign.dao.AutoSMSDaoForDML" >
+	<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="autoSmsQueueDao" class="org.mq.marketer.campaign.dao.AutoSmsQueueDao" >
+	<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="autoSmsQueueDaoForDML" class="org.mq.marketer.campaign.dao.AutoSmsQueueDaoForDML" >
+	<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+
+    <bean id="smsQueueDao" class="org.mq.marketer.campaign.dao.SmsQueueDao" >
+	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="smsQueueDaoForDML" class="org.mq.marketer.campaign.dao.SmsQueueDaoForDML" >
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="waTemplatesDao" class="org.mq.marketer.campaign.dao.WATemplatesDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+	<!-- APP-4288 --> 
+	<bean id="waCampaignsDao" class="org.mq.marketer.campaign.dao.WACampaignsDao">
+	    <property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="waCampaignScheduleDao" class="org.mq.marketer.campaign.dao.WACampaignScheduleDao">
+	    <property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="waCampaignsDaoForDML" class="org.mq.marketer.campaign.dao.WACampaignsDaoForDML">
+	    <property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+        <bean id="waCampaignReportDao"
+		class="org.mq.marketer.campaign.dao.WACampaignReportDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="waCampaignSentDao" ref="waCampaignSentDao" />
+	</bean>
+
+	<bean id="waCampaignScheduleDaoForDML"
+		class="org.mq.marketer.campaign.dao.WACampaignScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+		<bean id="waBouncesDao"
+		class="org.mq.marketer.campaign.dao.WABouncesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="waTemplatesDaoForDML"
+		class="org.mq.marketer.campaign.dao.WATemplatesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="waCampaignSentDao" class="org.mq.marketer.campaign.dao.WACampaignSentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+		<bean id="waClicksDao"
+		class="org.mq.marketer.campaign.dao.WAClicksDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+		<bean id="waOpensDao"
+		class="org.mq.marketer.campaign.dao.WAOpensDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="waBouncesDaoForDML"
+		class="org.mq.marketer.campaign.dao.WABouncesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="waCampReportListsDao" class="org.mq.marketer.campaign.dao.WACampReportListsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="waCampaignUrlsDao"
+		class="org.mq.marketer.campaign.dao.WACampaignUrlsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	</bean>	
+	<bean id="userWAConfigsDao" class="org.mq.marketer.campaign.dao.UserWAConfigsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
+	
+	<bean id="loyaltyThresholdAlertsDao" class="org.mq.optculture.data.dao.LoyaltyThresholdAlertsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyThresholdAlertsDaoForDML" class="org.mq.optculture.data.dao.LoyaltyThresholdAlertsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="ltySettingsActivityLogsDao" class="org.mq.optculture.data.dao.LtySettingsActivityLogsDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="ltySettingsActivityLogsDaoForDML" class="org.mq.optculture.data.dao.LtySettingsActivityLogsDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	<bean id="asyncLoyaltyInquiryService" class="org.mq.optculture.business.loyalty.AsyncLoyaltyInquiryServiceImpl" >
+  </bean>
+  <!-- <bean id="asyncLoyaltyTrxDao" class="org.mq.marketer.campaign.dao.AsyncLoyaltyTrxDao" ></bean> -->
+  <bean id="asyncLoyaltyTrxDao" class="org.mq.marketer.campaign.dao.AsyncLoyaltyTrxDao" >
+  <property name="jdbcTemplate" ref="jdbcTemplate" />
+  <property name="sessionFactory" ref="sessionFactory" />
+ </bean>
+ 
+ <bean id="asyncLoyaltyTrxDaoForDML" class="org.mq.marketer.campaign.dao.AsyncLoyaltyTrxDaoForDML" >
+  <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+  <property name="sessionFactory" ref="sessionFactoryForDML" />
+ </bean>
+
+  <bean id="asyncLoyaltyTrxTimer" class="org.mq.optculture.timer.AsyncLoyaltyTrxTimer" >
+ </bean>
+ 
+ <bean id="asyncLoyaltyTrxTimerTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" >
+  <property name="delay" value="60000" />
+  <property name="period" value="30000" />
+  <property name="timerTask" ref="asyncLoyaltyTrxTimer" />
+ </bean>
+ 
+ <bean id="asyncLoyaltyTrx_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+  <property name="scheduledTimerTasks">
+   <list>
+    <ref bean="asyncLoyaltyTrxTimerTask" />
+   </list>
+  </property>
+ </bean>
+<bean id="AsyncLoyaltyIssuanceService" class="org.mq.optculture.business.loyalty.AsyncLoyaltyIssuanceServiceImpl" >
+ </bean>
+<bean id="asyncLoyaltyEnrolmentService" class="org.mq.optculture.business.loyalty.AsyncLoyaltyEnrollmentServiceImpl" >
+ </bean>
+
+<bean id="userEmailAlertDao"
+		class="org.mq.optculture.data.dao.UserEmailAlertDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		 <property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="userEmailAlertDaoForDML"
+		class="org.mq.optculture.data.dao.UserEmailAlertDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		 <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	<bean id="loyaltyreturnbyxml" class="org.mq.optculture.timer.LoyaltyReturnByXML" >
+	</bean>
+	
+	<bean id="loyaltyFraudAlertDao"
+		class="org.mq.optculture.data.dao.LoyaltyFraudAlertDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		 <property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="loyaltyFraudAlertDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyFraudAlertDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		 <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="loyaltyreturnxmltimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask" >
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="loyaltyreturnbyxml" />
+	</bean>
+	
+	<bean id="loyaltyreturnxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="loyaltyreturnxmltimertask" />
+			</list>
+		</property>
+	</bean>
+	
+	
+	<bean id="promoTrxLogDao" class="org.mq.marketer.campaign.dao.PromoTrxLogDao" >
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="promoTrxLogDaoForDML" class="org.mq.marketer.campaign.dao.PromoTrxLogDaoForDML" >
+        <property name="sessionFactory" ref="sessionFactoryForDML" />
+    </bean>
+     
+     <bean id="SBloyaltyReturnService" class="org.mq.optculture.business.loyalty.SparkBaseReturnServiceImpl" >
+    </bean>	
+	
+    <bean id="myFoldersDao" class="org.mq.marketer.campaign.dao.MyFoldersDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="myFoldersDaoForDML" class="org.mq.marketer.campaign.dao.MyFoldersDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="zoneDao" class="org.mq.marketer.campaign.dao.ZoneDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="zoneDaoForDML" class="org.mq.marketer.campaign.dao.ZoneDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+
+
+ <bean id="purchaseHistoryServiceImpl" class="org.mq.optculture.business.mobileapp.PurchaseHistoryServiceImpl" >
+    </bean>
+    <bean id="ltyTrxHistoryServiceImpl" class="org.mq.optculture.business.mobileapp.LoyaltyTransactionHistoryServiceImpl" >
+    </bean>
+    <bean id="couponsHistoryServiceImpl" class="org.mq.optculture.business.mobileapp.CouponsHistoryServiceImpl" >
+    </bean>
+    <bean id="storeInquiryServiceImpl" class="org.mq.optculture.business.mobileapp.StoreInquiryServiceImpl" >
+    </bean>
+    <bean id="webPortalBrandingServiceImpl" class="org.mq.optculture.business.mobileapp.WebPortalBrandingServiceImpl" >
+    </bean>
+    
+    <bean id="customerFeedbackDao" class="org.mq.marketer.campaign.dao.CustomerFeedbackDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="customerFeedbackDaoForDML" class="org.mq.marketer.campaign.dao.CustomerFeedbackDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userDesignedCustomRowsDaoForDML" class="org.mq.marketer.campaign.dao.UserDesignedCustomRowsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="userDesignedCustomRowsDao" class="org.mq.marketer.campaign.dao.UserDesignedCustomRowsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="processDigitalReceiptServiceImpl" class="org.mq.optculture.business.digitalReceipt.ProcessDigitalReceiptServiceImpl" >
+    	</bean>
+    <bean id="generalTrxbyxml" class="org.mq.optculture.timer.GeneralRequestOfflineService" >
+    </bean>
+	
+	<bean id="routeBuilder" class="org.mq.optculture.sales.routes.SalesRouteBuilder" />
+    <bean id="csvRouteBuilder" class="org.mq.optculture.sales.routes.CsvRouteBuilder" />
+    
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+		<routeBuilder ref="routeBuilder" />
+		<routeBuilder ref="csvRouteBuilder" /> 
+	</camelContext>
+   
+    
+    <bean id="generalTrxtimertask" class="org.springframework.scheduling.timer.ScheduledTimerTask" >
+        <property name="delay" value="30000" />
+        <property name="period" value="60000" />
+        <property name="timerTask" ref="generalTrxbyxml" />
+    </bean>
+    
+    <bean id="generalTrxbyxml_timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+        <property name="scheduledTimerTasks">
+            <list>
+        <ref bean="generalTrxtimertask" />
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="notificationDao" class="org.mq.marketer.campaign.dao.NotificationDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="notificationDaoForDML"
+		class="org.mq.marketer.campaign.dao.NotificationDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="notificationScheduleDaoForDML"
+		class="org.mq.marketer.campaign.dao.NotificationScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="notificationScheduleDao"
+		class="org.mq.marketer.campaign.dao.NotificationScheduleDao">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="notificationCampaignReportDao" class="org.mq.marketer.campaign.dao.NotificationCampaignReportDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="notificationCampaignReportDaoForDML" class="org.mq.marketer.campaign.dao.NotificationCampaignReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="notificationCampaignSentDao" class="org.mq.marketer.campaign.dao.NotificationCampaignSentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="notificationCampaignSentDaoForDML" class="org.mq.marketer.campaign.dao.NotificationCampaignSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="notificationCampReportListsDao" class="org.mq.marketer.campaign.dao.NotificationCampReportListsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	 <bean id="pushNotificationService" class="org.mq.optculture.business.pushNotification.PushNotificationServiceImpl" >
+    </bean>	
+    
+    <bean id="sessionMonitor" class="org.mq.marketer.campaign.controller.service.SMSGatewaySessionMonitor" >
+	</bean>
+	
+	<bean id="scheduledTask19" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="30000" />
+		<property name="period" value="60000" />
+		<property name="timerTask" ref="sessionMonitor" />
+	</bean>
+	
+    <bean id="timerFactory20" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask19" />
+			</list>
+		</property>
+	</bean>
+	
+</beans>

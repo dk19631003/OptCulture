@@ -1,0 +1,211 @@
+package org.mq.optculture.business.helper;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.CampaignSent;
+import org.mq.marketer.campaign.beans.TemplateCategory;
+import org.mq.marketer.campaign.beans.Unsubscribes;
+import org.mq.marketer.campaign.dao.CampaignSentDao;
+import org.mq.marketer.campaign.dao.UnsubscribesDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.utils.ServiceLocator;
+
+public class CampaignReportUpdateHelper {
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	public Map<Object, Object> getStatusAndCategories(Long sentId, Long userId , CampaignSent campaignSent) throws BaseServiceException {
+
+		Map<Object, Object> resultMap = new HashMap<Object, Object>();
+
+		try {
+
+			CampaignSentDao campaignSentDao = (CampaignSentDao)ServiceLocator.getInstance().getDAOByName("campaignSentDao");
+			// CampaignSent campaignSent = campaignSentDao.findById(sentId);
+			resultMap.put(Constants.QS_CRID, campaignSent.getCampaignReport().getCrId());
+			resultMap.put(Constants.QS_EMAIL, campaignSent.getEmailId());
+			resultMap.put(Constants._STATUS, campaignSent.getStatus());
+
+			//for old campaigns userId can be null because userId is not passed in the unsub url
+			if(userId == null) {
+
+				userId = campaignSentDao.getUserIdBySentId(sentId);
+				resultMap.put(Constants.QS_USERID, userId);
+
+			}
+			UnsubscribesDao unsubscribesDao = (UnsubscribesDao)ServiceLocator.getInstance().getDAOByName("unsubscribesDao");
+			resultMap.put(Constants._CATEGORIES, unsubscribesDao.
+					getUnsubscribedCategories(campaignSent.getEmailId(), userId));
+
+		} catch (Exception e) {
+			logger.error("** Exception: while getting the bean from the context", e);
+		}
+		return resultMap;
+	}
+
+	public List<TemplateCategory> updateUnsubscribe(Long userId, Long crId, Long sentId,
+			String reasonStr, String emailId, Short categoryWeight) {
+		
+		logger.info("---- just entered ----");
+		
+		CampaignSentDao campaignSentDao = null;
+		try {
+			campaignSentDao = (CampaignSentDao)ServiceLocator.getInstance().getDAOByName("campaignSentDao");
+		} catch (Exception e) {
+			logger.error("Exception ::",e);
+		}
+		
+		if(categoryWeight > 0 ) {
+			
+			campaignSentDao.updateCampaignSent(sentId, Constants.CS_STATUS_UNSUBSCRIBED);
+			if(logger.isDebugEnabled()) {
+				logger.debug(" CampaignSent is updated as unsubscribed for sentId :"+sentId);
+			}
+		}
+		else {
+			
+			campaignSentDao.updateCampaignSent(sentId, Constants.CS_STATUS_SUCCESS);
+			if(logger.isDebugEnabled()) {
+				logger.debug(" CampaignSent is updated as re subscribed for sentId :"+sentId);
+			}
+		}
+		
+		
+	/*	CampaignReportDao campaignReportDao = (CampaignReportDao)
+										context.getBean("campaignReportDao");
+		campaignReportDao.updateCampaignReport(crId, Constants.CR_TYPE_UNSUBSCRIBES);*/
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug(" CampaignReport is updated for sentId :"+sentId);
+		}
+		
+		UnsubscribesDao unsubscribesDao = null;
+		try {
+			unsubscribesDao = (UnsubscribesDao)ServiceLocator.getInstance().getDAOByName("unsubscribesDao");
+		} catch (Exception e) {
+			logger.error("Exception ::",e);
+		}
+		
+		if(categoryWeight == 0 ) {
+			unsubscribesDao.deleteByEmailIdUserId(emailId, userId);
+		}
+		else{
+			
+			if(logger.isDebugEnabled()) {
+				logger.debug(">>>>>>>> Unsubscribe object is creating");
+			}
+			Unsubscribes unsubscribe = new Unsubscribes();
+			unsubscribe.setUserId(userId);
+			unsubscribe.setEmailId(emailId);
+			unsubscribe.setReason(reasonStr);
+			unsubscribe.setUnsubcategoriesWeight(categoryWeight);
+			unsubscribe.setDate(Calendar.getInstance());
+			
+			try {
+				unsubscribesDao.saveOrUpdate(unsubscribe);
+				if(logger.isDebugEnabled()) {
+					logger.debug(" unsubscribe object is created");
+				}
+			} 
+			catch (RuntimeException e) {
+				
+				logger.error("** Exception while updating the unsubscribe", e);
+				
+				if(logger.isDebugEnabled()) {
+					logger.debug(" The recipeint of this user is already " +
+							"existed in the unsubscribes table");
+				}
+				if(unsubscribesDao.updateUnsubscribe(emailId, userId, 
+						reasonStr, categoryWeight, Calendar.getInstance()) == 0) {
+					logger.warn(" Could not update the unsubscribe for (emailId, userId)"
+							+emailId+", "+userId);
+				}
+				
+			}
+		}
+		return unsubscribesDao.getUnsubscribedCategories(emailId, userId);
+		
+	}
+	
+	public String replacePlaceHolders(String placeHoldersStr,
+			String contactPhValStr, String htmlContent) throws BaseServiceException {
+		if(contactPhValStr != null) {
+			String[] phTokenArr = contactPhValStr.split(Constants.ADDR_COL_DELIMETER);
+			String keyStr = "";
+			String ValStr = "";
+			for (String phToken : phTokenArr) {
+
+				keyStr = phToken.substring(0, phToken.indexOf(Constants.DELIMETER_DOUBLECOLON));
+				ValStr = phToken.substring(phToken.indexOf(Constants.DELIMETER_DOUBLECOLON)+Constants.DELIMETER_DOUBLECOLON.length());
+
+				if(keyStr.equals(Constants.CAMPAIGN_PH_UNSUBSCRIBE_LINK)) {
+					String unsubURL = PropertyUtil.getPropertyValue("unSubscribeUrl").replace("|^", "[").replace("^|", "]");
+					String value = "<a href="+unsubURL+ " target=\"_blank\">unsubscribe</a>";
+					htmlContent = htmlContent.replace(keyStr, value);
+				
+					continue;
+					//tempTextContent = tempTextContent.replace(Constants.LEFT_SQUARE_BRACKET+cfStr+Constants.RIGHT_SQUARE_BRACKET, value);
+				}
+				else if(keyStr.equals(Constants.CAMPAIGN_PH_WEBPAGE_VERSION_LINK)){
+					String webpagelink = PropertyUtil.getPropertyValue("weblinkUrl").replace("|^", "[").replace("^|", "]");
+
+					String value = "<a style=\"color: inherit; text-decoration: underline; \"  href="+webpagelink+"" +
+							" target=\"_blank\">View in web-browser</a>";
+
+					htmlContent = htmlContent.replace(keyStr, value);
+					continue;
+					//value = "<a href="+webpagelink+">Webpage Link</a>";
+				}else if(keyStr.equals(Constants.CAMPAIGN_PH_SHARE_TWEET_LINK)){
+					String webpagelink = PropertyUtil.getPropertyValue("shareTweetLinkUrl").replace("|^", "[").replace("^|", "]");
+
+					String value = "<a style=\"color: blue; text-decoration: underline; \"  href="+webpagelink+"" +
+							" target=\"_blank\">Share on Twitter</a>";
+
+					htmlContent = htmlContent.replace(keyStr, value);
+					continue;
+					//value = "<a href="+webpagelink+">Webpage Link</a>";
+				}else if(keyStr.equals(Constants.CAMPAIGN_PH_SHARE_FACEBOOK_LINK)){
+					String webpagelink = PropertyUtil.getPropertyValue("shareFBLinkUrl").replace("|^", "[").replace("^|", "]");
+
+					String value = "<a style=\"color: blue; text-decoration: underline; \"  href="+webpagelink+"" +
+							" target=\"_blank\">Share on Facebook</a>";
+
+					htmlContent = htmlContent.replace(keyStr, value);
+					continue;
+					//value = "<a href="+webpagelink+">Webpage Link</a>";
+				}else if(keyStr.contains(Constants.CAMPAIGN_PH_FORWRADFRIEND_LINK)) {
+					String farwardFriendLink = PropertyUtil.getPropertyValue("forwardToFriendUrl").replace("|^", "[").replace("^|", "]");
+
+					String value = "<a href="+farwardFriendLink+" target=\"_blank\">Forward to Friend</a>";
+					htmlContent = htmlContent.replace(keyStr, value);
+					continue;
+					//value = "<a href="+webpagelink+">Webpage Link</a>";
+				}
+				// to add update reference center
+				else if(keyStr.contains(Constants.CAMPAIGN_PH__UPDATE_PREFERENCE_LINK)) {
+
+					String updateSubscrptionLink = PropertyUtil.getPropertyValue("updateSubscriptionLink").replace("|^", "[").replace("^|", "]");
+					String value = "<a href="+updateSubscrptionLink+ " target=\"_blank\">Subscriber Preference Link</a>";
+
+					logger.debug("upadte link is"+updateSubscrptionLink);
+
+					logger.debug("value  is"+value);
+					htmlContent = htmlContent.replace(keyStr, value);
+
+					//value = "<a href="+webpagelink+">Webpage Link</a>";
+				}
+				htmlContent = htmlContent.replace(keyStr, ValStr);
+			}//for
+
+		}
+		return htmlContent;
+		
+	}
+}

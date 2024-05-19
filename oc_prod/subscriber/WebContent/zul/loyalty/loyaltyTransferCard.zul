@@ -1,0 +1,245 @@
+<zk>
+<style>
+ .custCheck {
+  width:140px;
+ }
+ .line{
+    color: blue;
+    border-bottom:1px solid blue;
+}
+ .underline{
+ 	color: #0000EE;
+    text-decoration: underline;
+ }
+</style>
+<window border="1" id="loyaltyTransferCardWinId"  apply="org.mq.optculture.controller.loyalty.LoyaltyTransferCardController"
+		xmlns:h="native"  xmlns:w="client" width="100%">
+	<style>
+	.myTab .z-tab-accordion-img {
+		float:right;
+		margin-right: 10px;
+		margin-top: 3px;
+	}
+	</style>
+	<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+				<h:tr height="25px">
+					<h:td>
+						<label value="Search by : " sclass="theme-lbHeading" />
+							<listbox id="searchbyLbId" mold="select" >
+							<listitem label="Membership Number is" value="card_number" selected="true"/>
+							<listitem label="Name is like" value="fullName" />
+							<listitem label="Phone Number is" value="mobile_phone" />
+							<listitem label="Email Address is" value="email_id" />
+						</listbox>
+						<textbox id="searchByTbId" width="150px" style="color:grey;font-style: italic;font-size:12px; text-shadow: 2px 2px #ff0000;" />
+						<span id= "fullNameSpanId" visible="false"><!-- <label value="First Name" id="firstNameLbId" style="margin-left:10px;" /> -->
+										<textbox id="first_nameTbId" width="100px" value="first name" />
+										<!-- <label value="Last Name" id="lastNameLbId" style="margin-left:10px;" /> -->
+										<textbox id="last_nameTbId" width="100px" value="last name" />
+						</span>
+						</h:td>
+					<h:td width="50%">
+						<button label="Filter" sclass="idle" width="100px" id="filterBtnId" />
+						<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+					</h:td>
+				</h:tr>
+			</h:table>
+	
+	<div align="right" style="margin-top:5px;">
+		<h:table  cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+		<h:tr>
+		<h:td width="320px"><label value="Source Card" />
+			<textbox width="150px" id="srcCardTbId" style="margin-left:10px;" />
+		</h:td>
+		<h:td width="340px">
+			<label value="Destination Card" />
+			<textbox width="150px" id="destCardTbId" style="margin-left:10px;" />
+		</h:td>
+		<h:td>
+			<button id="submitBtnId" label="Submit" sclass="idle70 greenbtn" /></h:td>
+		</h:tr>
+		</h:table>
+	</div>
+	<div align="right" style="margin-top:5px;">	
+	 <h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+		
+		<h:tr style="background-color: #F4F5F9; padding: 15px 10px;" height="40px">	
+				<h:td width="250px" >	
+					<label value="Source Card Details" style="font-weight:bold;" />
+				</h:td>
+		</h:tr>
+		
+	 </h:table>
+	
+	<h:table colspan="2"  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+		
+		<h:tr style="background-color: #F4F5F9; color: #125F7B; padding: 15px 10px;" height="40px">	
+		
+				<h:td>
+					<label value="Membership Number : " style="font-size: 13px;" />
+					<label id="membershipLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+		</h:tr>
+		
+	</h:table>
+	<h:table colspan="2"  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+
+		<h:tr style="background-color: #F4F5F9; color: #125F7B; padding: 15px 10px;" height="40px">	
+			<h:td width="250px">
+					<label value="First Name : " style="font-size: 13px;" />
+					<label id="firstNameLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>		
+				<h:td width="250px">
+					<label value="Last Name : " style="font-size: 13px;" />
+					<label id="lastNameLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+			</h:tr>
+	</h:table>	
+	
+		<h:table  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+			 <h:tr style="background-color: #F4F5F9; color: #125F7B; padding: 15px 10px;" height="40px">
+				<h:td width="250px">
+					<label value="Phone Number : " style="font-size: 13px;" />
+					<label id="moblieNumberLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>
+				<h:td width="250px">
+					<label value="Email Address : " style="font-size: 13px;" />
+					<label id="emailAddressLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+				</h:tr>
+		 </h:table>	
+	</div>
+	<div align="right" style="margin-top:5px;">	
+	 <h:table colspan="2"  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+		<h:tr style="background-color: #F4F5F9; padding: 15px 10px;" height="40px">	
+				<h:td width="250px" >	
+					<label value="Destination Card Details" style="font-weight:bold;" />
+				</h:td>
+		</h:tr>
+	 </h:table>
+	
+	<h:table colspan="2"  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+		
+		<h:tr style="background-color: #F4F5F9; color: #125F7B; padding: 15px 10px;" height="40px">	
+		
+				<h:td>
+					<label value="Membership Number : " style="font-size: 13px;" />
+					<label id="destMembershipLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+		</h:tr>
+		
+	</h:table>
+	<h:table colspan="2"  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+
+		<h:tr style="background-color: #F4F5F9; color: #125F7B; padding: 15px 10px;" height="40px">	
+			<h:td width="250px">
+					<label value="First Name : " style="font-size: 13px;" />
+					<label id="destFirstNameLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>		
+				<h:td width="250px">
+					<label value="Last Name : " style="font-size: 13px;" />
+					<label id="destLastNameLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+			</h:tr>
+	</h:table>	
+	
+		<h:table  cellspacing="0" cellpadding="4" width="100%" border="0"
+				 style="padding:0px;border-radius:0px;">
+			 <h:tr style="background-color: #F4F5F9; color: #125F7B; padding: 15px 10px;" height="40px">
+				<h:td width="250px">
+					<label value="Phone Number : " style="font-size: 13px;" />
+					<label id="destMoblieNumberLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>
+				<h:td width="250px">
+					<label value="Email Address : " style="font-size: 13px;" />
+					<label id="destEmailAddressLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</h:td>	
+				</h:tr>
+		 </h:table>	
+		 </div>
+	<div align="right" style="margin-top:5px;">	
+	<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+		<h:tr>
+		<h:td width="220px"><label value="Store" />
+		<listbox id="storeNumberLbId" mold="select" style="width:85px;">
+			<listitem label="--Select--" selected="true" value="0" />
+		</listbox>
+		<!-- <textbox width="150px" id="storeNumberTbId" style="margin-left:10px;" /> -->
+		</h:td>
+		<h:td>
+		<button id="transferBtnId" label="Transfer" sclass="idle70 greenbtn" /></h:td>
+		<!-- <popup id="ltyPwdPopupId" width="200px">
+							     Enter Loyalty Password
+				            <textbox id="ltyPwdTbId" maxlength="25" type="password" value ="" /> 
+				            <div align="right" style="margin-top:5px;"><button label="Submit" id="submitPwdBtnId" /></div>
+							
+						</popup> -->
+	</h:tr>
+	</h:table>
+	</div>
+	
+
+<window id="latestDetailsSubWinId" title="" closable="false" 
+			visible="false" border="normal" width="800px" height="300px" position="center">
+				<caption>
+					<toolbarbutton label="Close" onClick="latestDetailsSubWinId.setVisible(false)"/>
+				</caption>
+				
+							
+				<div id="foundMultipleMatchesDivId" visible="false" style="overflow:auto;" height="350px;" >
+				
+						<h:table cellspacing="0" cellpadding="0" width="100%"  style="padding-left:30px;margin-top:10px;">
+			
+							<h:tr height="10">
+								<h:td valign="top"  style="margin-top:20px;">
+									<label value="Multiple loyalty customers were found with your search criteria " /><label id="searchCriteriaLblId"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="40px">
+								<h:td>
+									<label value="Please select the most relevant customer to your search from results shown below: "/>	
+								</h:td>
+							</h:tr>		
+						</h:table>
+							<h:table >	
+								<h:tr height="90px">
+									<h:td>
+									
+										<div  width="690px" height="120px" style="overflow-y:scroll; overflow-x:auto;border: #E0E0E0  solid 0.2px;">
+											<radiogroup id="multipleMatchesRgId" style="margin-right:4px; ">
+											</radiogroup>
+										</div>
+									
+									</h:td>
+								</h:tr>
+								
+								<h:tr height="10px"/>
+								<h:tr >
+									<h:table cellspacing="2" cellpadding="1" align="right" >
+											<h:tr >
+												<h:td colspan="6" style="padding-right:px;">
+														<button label="Select" sclass="idle140 greenbtn"  id="selectMultipleChoiceBtnId" />
+														<button label="Cancel" id="cancelBtnId"  width="50" sclass="idle140 " onClick="latestDetailsSubWinId.setVisible(false)" />
+												</h:td>
+											</h:tr>
+									</h:table>
+								</h:tr>
+						</h:table>
+					</div>
+				
+					
+			</window>
+		</window>
+</zk>
+
+

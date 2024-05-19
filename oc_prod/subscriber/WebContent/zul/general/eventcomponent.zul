@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<window border="none" draggable="canvas2" minheight="16" minwidth="16" sizable="false" 
+	  sclass="myWin popupWin" id="eventComponentWinId"
+	apply="org.mq.marketer.campaign.controller.program.EventComponentController"
+	xmlns:h="http://www.zkoss.org/2005/zk/native" xmlns:w="http://www.zkoss.org/2005/zk/client" context="editPopup">
+	
+	<style>
+		.z-window-embedded-cnt {
+			padding:0;
+		}
+	</style>
+	
+	<label id="prevCompLblId" visible="false" />
+	<label id="nextCompLblId" visible="false" />
+
+	<menupopup id="editPopup" >
+	
+       <menuitem id="menuitemPropertiesId" image="/img/icons/edit_lists_icon.png" label="Properties"  />
+       <menuseparator />
+       <menuitem id="menuitemRemoveId" image="/img/icons/delete.png" label="Remove" />
+		
+	</menupopup>
+
+<!--  	
+	<attribute w:name="onMouseDown"><![CDATA[
+	   var logTb = zk.Widget.$(jq('$logTb')[0]).getValue();
+	   zk.Widget.$(jq('$logTb')[0]).setValue('\n Down='+this.getId());
+	   
+	]]></attribute>
+	
+	<attribute w:name="onMouseUp"><![CDATA[
+		var logTb = zk.Widget.$(jq('$logTb')[0]).getValue();
+		zk.Widget.$(jq('$logTb')[0]).setValue('\n UP='+this.getId());
+	]]></attribute>
+	
+-->
+	<!--<zscript><![CDATA[
+		public void resize(Event event) {
+			Window obj = (Window)event.getTarget();
+			Image image = (Image)obj.getFellow("image");
+			image.setWidth(obj.getWidth());
+			image.setHeight(obj.getHeight());
+		}	
+		public void select(Window current) {
+			org.zkforge.canvas.Canvas canvas = (org.zkforge.canvas.Canvas)current.getParent();
+			List children = canvas.getChildren();
+			for (int i=0; i<children.size(); i++) {
+				Window obj = (Window)children.get(i);
+				obj.setBorder("none");
+				obj.setStyle("position:absolute;padding:1px;");
+			}
+			current.setBorder("normal");
+			current.setStyle("position:absolute;padding:0px;");
+		}
+	
+		]]></zscript>
+
+	--><vbox sclass="disableSelection">
+			<div id="imageDiv" width="46px" height="46px" align="center">
+				<image id="image"/>	
+			</div>
+			<h:table width="46px" height="32px" border="0">
+				<h:tbody>
+				<h:tr style="height:32px;vertical-align:top;">
+				
+					<h:td style="color:darkgray; text-align:center; ">
+						<label id="titleLblId" value="Wait for 5 days" style="font-size:11px;"  />
+						
+						<div id="analysisDivId" visible="false" style="position:absolute;border:1px solid #CCCCCC;box-shadow:2px 2px 2px #CCCCCC;left:27px;top:-1px;">
+						<h:table width="60px"  border="0" cellspacing="0" cellpadding="0" >
+							<h:tbody>
+							<h:tr bgcolor="#00A7D5">
+								<h:td style="padding-right: 2px; color: white;" align="right">
+									<!--<label id="currentLblId" value="" style="font-size:12px;" visible="true"/>
+									--><a id="currentLblId" label="" ></a>
+								</h:td>
+							</h:tr>
+							<h:tr bgcolor="#5ACCE5">
+								<h:td style="padding-right: 2px; color: white;" align="right">
+									<!--<label id="passedLblId"  value="12345" style="font-size:12px;" />
+									--><a id="passedLblId" label="" ></a>
+								</h:td>
+							</h:tr>
+						</h:tbody>
+						</h:table>
+						</div>
+						
+						
+					</h:td>
+				</h:tr>
+				</h:tbody>
+			</h:table>	
+		</vbox>
+		
+		
+</window>
+	
+	

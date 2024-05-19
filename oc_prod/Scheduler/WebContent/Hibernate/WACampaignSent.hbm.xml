@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.WACampaignSent"
+		table="wa_campaign_sent">
+		<id name="sentId" type="java.lang.Long">
+			<column name="sent_id" />
+			<!-- <generator class="native" /> -->
+		</id>
+		<property name="mobileNumber" type="string">
+			<column name="mobile_number" not-null="true" length="60" />
+		</property>
+		<many-to-one name="waCampaignReport"
+			class="org.mq.captiway.scheduler.beans.WACampaignReport"
+			foreign-key="CampaignRepFkey" fetch="select" lazy="false">
+			<column name="wa_cr_id" not-null="true" />
+		</many-to-one>
+		<property name="opens" type="int">
+			<column name="opens" />
+		</property>
+		<property name="clicks" type="int">
+			<column name="clicks" />
+		</property>
+		<property name="status" type="string">
+			<column name="status"  not-null="true" />
+		</property>
+		<property name="contactId" type="java.lang.Long">
+			<column name="contact_id"/>
+		</property>
+		<property name="requestId" type="string">
+			<column name="request_id"/>
+		</property>
+		<property name="apiMsgId" type="string">
+			<column name="api_msg_id"/>
+		</property>
+	</class>
+</hibernate-mapping>

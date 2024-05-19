@@ -1,0 +1,287 @@
+<zk>
+	<window id="editorWindId" apply="org.mq.marketer.campaign.controller.gallery.MyTempBlockEditorController" width="100%"  xmlns:w="client"  xmlns:h="native">
+		<script src="/js/editor.js"/> 
+		<script src="/js/blockEditor.js"  /> 
+		<style src="/css/editor.css"/>
+		
+		<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js" />
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" /> -->
+
+		<script type="text/javascript" src="/js/tinymce/jquery.tinymce.js"/>
+		
+		<textbox id="htmlStuffId" value="test" visible="false"/>
+		<textbox id="htmlStuffAId" value="test" visible="false"/>
+		<textbox id="htmlStuffId1" value="test"  visible="false"/>
+		<textbox id="htmlStuffId2" value="test"  visible="false"/>
+		<textbox id="spamChekTbId" value="test"  visible="false"/>
+		<textbox id="testMailTbId" value="test"  visible="false"/>
+
+	<h:table cellspacing="0" cellpadding="2" width="100%" >
+		<h:tr height="50">
+		<h:td valign="top">
+
+		<div>
+			<label value="Make your modifications in layout, content and background color of the chosen template." /><h:br />
+			<label value="Please Note:" style="font-weight:bold;" /><label value="You can also save modified template into"/>
+			<label value="My Templates " style="font-weight:bold" /><label value="to reuse it in other email campaigns."/>
+		</div>
+		</h:td>
+		
+		<h:td align="left" valign="bottom" width="400">
+			<label value="" id="autoSaveLbId" style = "color:#0063A1;font-weight: bold;" />
+		</h:td>
+		
+		<h:td width="310" valign="bottom" align="right">
+		<div >
+			<!-- <toolbarbutton id="reloadTlbBtnId" label="Reload"  width="80px" sclass="alink" 
+			 image="/img/icons/icon_reload_big.png" 
+			  w:onClick="previewEmail()"  onClick="launchEditorDivId.setVisible(true);" style="font-weight: bold;" /> -->
+			 
+			<!--  <toolbarbutton id="previewTBarBtnId" label="Preview" width="80px" sclass="alink"  image="/images/icon_preview_big.png" 
+				w:onClick="previewEmail()" onClick="launchEditorDivId.setVisible(true);" style="font-weight: bold;" />
+			 -->
+			<toolbarbutton id="previewTBarBtnId" label="Preview" width="80px" sclass="alink"  image="/images/icon_preview_big.png" 
+				onClick="launchEditorDivId.setVisible(true);" style="font-weight: bold;" />
+				
+			<!-- <button id="saveEditBtnId"  label="Save HTML"  w:onClick="save(this.$f('htmlStuffId2'))" visible="false" width="150px"/> -->
+			<toolbarbutton id="saveEditBtnId"  image="/img/icons/icon_save_big.png" sclass="alink" label="Save" width="80px" visible="false"
+			onClick="launchEditorDivId.setVisible(true);" style="font-weight: bold;" w:onClick="save(this.$f('htmlStuffId'))" />
+			
+			<toolbarbutton id="saveNewTBarBtnId"  image="/img/icons/icon_save_big.png" sclass="alink" label="Save" width="80px"
+			onClick="launchEditorDivId.setVisible(true);" style="font-weight: bold;" w:onClick="save(this.$f('htmlStuffId'))" /> 
+		
+		<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)"/>
+		</caption>
+		<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+		<iframe id="iframeId" width="100%" height="100%"/>
+		</div>
+		</window>
+		
+		</div>
+		</h:td>
+		</h:tr>
+	</h:table>
+		
+			<h:table cellspacing="0" cellpadding="2" width="100%" >
+				<h:tr>
+					<h:td width="230px" valign="top">
+					
+						<vlayout style="margin-right:10px;">
+								<groupbox closable="false" style="margin-bottom:20px;">
+									<caption label="Tools" />
+									
+									<toolbarbutton label="Check for Spam score" visible="false" id="spamScrBtnId" sclass="alink" width="180px" 
+									image="/img/icons/icon_check_spam.png" 
+									style="margin-bottom:10px;font-weight: bold;" 
+									w:onClick="save(this.$f('spamChekTbId'))" onClick="launchEditorDivId.setVisible(true);" />
+									
+									<image id="troberImgId" src="/img/theme/throbber.gif" visible="false"/>
+									
+									<!-- <toolbarbutton label="Save in MyTemplates" sclass="alink" width="180px" id="saveInMyTemplateTbarId"
+									image="/img/icons/icon_save_mytemplate.png" 
+									style="margin-bottom:10px;font-weight: bold;" w:onClick="previewEmail()"
+									onClick="launchEditorDivId.setVisible(true);winId.setVisible(true);winId.setPosition(&quot;center&quot;);winId.doHighlighted();"/> -->
+									<!-- <toolbarbutton label="Save in My Templates" sclass="alink" width="180px" id="saveInMyTemplateTbarId"
+									image="/img/icons/icon_save_mytemplate.png" 
+									style="margin-bottom:10px;font-weight: bold;" w:onClick="previewEmail()" /> -->
+								</groupbox>
+						
+						
+								<groupbox closable="false" style="margin-bottom:20px;"> 
+									<caption label="Body Background Color" />
+									
+									<div style="padding:8px 0;">
+										<colorbox id="cboxId" width="40px" height="20px" color="#029BCB" /> <label value="Pick color" style="color:#00638F; font-weight:bold;"/>
+									</div>
+										
+									<div style="padding:8px 0;">
+										<toolbarbutton id="undoTlBtnId" label="Undo" image="/img/icons/icon_undo.png" disabled="false"  
+											style="color:#00638F;font-weight: bold;" w:onClick="parent.undoRedoColor('undo');"/>
+											
+										<toolbarbutton id="redoTlBtnId" label="Redo" image="/img/icons/icon_redo.png" disabled="false" 
+											style="color:#00638F;font-weight: bold;margin-left:15px;" w:onClick="parent.undoRedoColor('redo');"/>
+									</div>
+								</groupbox>
+						
+								<groupbox closable="false">
+									<caption label="Send a Test Email" />
+									<div align="center" style="padding-top:8px;">
+										<textbox id="testEmailTbId" value="Email Address..." cols="18"  width="200px;" >
+										</textbox>
+									</div>
+									<div >	
+										<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+										<label value="To send a test email to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+									</div>
+									
+									<div align="right" style="margin-top:10px">
+										<button label="Send" id="sendBtnId"  onClick="launchEditorDivId.setVisible(true);" style="margin-left:2px;" sclass="idle70" />
+									</div>
+									
+									
+								</groupbox>
+						</vlayout>
+						
+					</h:td>
+				
+					<h:td valign="top" >
+					
+						<groupbox closable="false">
+							<caption label="Editor"  />
+							
+							<div id="launchEditorDivId" style="background-color:#eeeeff; border:1px solid #CCCCCC; padding:5px;">
+								<button id="editBtnId" width="150px" onClick="launchEditorDivId.setVisible(false);"
+								 w:onClick="loadTMCEditor();" label="Launch Editor" 
+								sclass="idle140 greenbtn" />
+								<timer id="myTempCkAutoSaveTimerId"  delay="60000" repeats="true" w:onTimer="autoSave(this.$f('htmlStuffAId'))">
+								</timer>  
+							</div>
+							
+						    <h:div id="mainDivId" style="display:none">
+							  <h:div id="addDelBtnDiv" class="adddelbtn">
+							  	<h:input type="button"  class="addblock" title="Duplicate this Block" onclick="javascript:parent.btnClicked();" id="myBtn"  />
+							  	<h:input type="button" onclick="javascript:parent.delClicked();" id="myDelBtn" title="Delete this Block"  class="delblock" />
+							  </h:div>
+							</h:div>
+						
+							<div id="appCenterDivId"  sclass="appCenterDiv" />
+						</groupbox>
+					</h:td>
+				</h:tr>
+				
+			</h:table>
+			
+			
+			
+		
+		<div align="right" style="margin-top:10px;">
+			<button id="backBtId" label="Back" sclass="idle140"  />
+			<button id="nextBtnId" label="Save" w:onClick="save(this.$f('htmlStuffId'))" sclass="idle140 greenbtn"  />
+		</div>
+		
+		<!-- Check and remove the grid -->
+		<grid style="border:none;" visible="false">
+					<columns>
+						<column align="center" />
+					</columns>
+					<rows>
+						<row visible="false">Save repeatedly to avoid loss of work</row>
+						
+						<row visible="false"><cell>
+							<toolbarbutton id="addBlockBtnId" class="toolbarBtn" label="Add block" image="/img/icons/add_icon.png" popup="editPopup"/>
+							<menupopup id="editPopup"/>
+							<toolbarbutton id="deleteBlock" class="toolbarBtn" label="Delete" image="/img/icons/delete_icon.png" w:onClick="deleteBlock()"/>					
+						</cell></row>
+						
+						
+						<row visible="false"><cell align="left">
+						
+						
+							<label value="Insert Place holder" style="font-size:11px;" /><h:br/>
+							
+							<div align="center" style="padding:8px 0;">
+								<listbox id="phLbId" mold="select" width="140px" onSelect="phTbId.setValue((String)phLbId.getSelectedItem().getValue())" style="font-size:11px;"/>
+								<button label="Insert" w:onClick="insertPh(this.$f('phTbId').getValue())" width="50px" />					
+								<textbox value="select" id="phTbId" w:onChange="alert(this.getValue());" visible="false"/>
+	 					   </div>
+	 					
+						</cell></row>
+						
+					</rows>
+		</grid>
+		
+		<textbox id="unameTbId" visible="false" value="${uname}" />
+		
+		
+		<window id="winId" title="Save in My Templates" border="normal" visible="false" width="550px" height="200px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+				 <h:table>
+					<h:tr>
+						<h:td colspan="3">
+						
+						<textbox id="htmlStuffId3" value="test"  visible="false"/>
+						
+			        	<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+			        	
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+		        		<label value="Name :"/> <textbox id="templatNameTbId" maxlength="25"  />
+						</h:td>
+						<h:td>
+			        	<label value="Select folder:"/>
+					     <listbox id="myTemplatesListId" width="150px" sclass="templateList" rows="1" mold="select"/>
+						</h:td>
+						<h:td>
+		        		<button label="Submit" sclass="idle70" id="myTemplatesSubmtBtnId" w:onClick="save(this.$f('htmlStuffId3'))"  />
+						</h:td>
+						</h:tr>
+				</h:table>
+					
+		 </window>
+		
+		
+		
+		<script defer="true" >
+			<![CDATA[
+				gUser = "${unameTbId.value}";
+				
+				// Define a variable for body background color and also set its init color to colorpicker.
+				function colorToHex(color) {
+							
+							if(color == undefined) return;
+					
+						    if (color.substr(0, 1) === '#') {
+						        return color;
+						    }
+						    
+						    var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+						    
+						    var red = parseInt(digits[2]);
+						    var green = parseInt(digits[3]);
+						    var blue = parseInt(digits[4]);
+						    
+						    var rgb = blue | (green << 8) | (red << 16);
+						    
+						    return digits[1] + '#' + rgb.toString(16);
+					}
+				
+				   var initColor;
+				   
+				   if(parent.document.getElementById('bodyTableId') != undefined) {
+					    initColor = parent.document.getElementById('bodyTableId').style.backgroundColor;
+		   			} 	else if(parent.document.getElementById('bodyDivId') != undefined) {
+						initColor = parent.document.getElementById('bodyDivId').style.backgroundColor;
+					//	alert('body color : '+ initColor);
+						
+		   			}
+				 
+				 //  alert(initColor);
+				  // alert('col :'+ colorToHex(initColor));
+				   if(initColor != '')
+				   		zk.Widget.$('$cboxId').setColor(colorToHex(initColor));
+				   
+				 				   
+				   if(typeof cboxColrArr !== 'undefined' && initColor != '') {
+				      //if(cboxColrArr != null && cboxColrArr != undefined) { 
+				   		cboxColrArr[0] = colorToHex(initColor);
+				   } 
+				  // alert(cboxColrArr);
+				 //  alert(colorToHex(initColor));
+				   //alert(tempArr);
+				//   alert(tempArr[0]);
+				 //  tempArr[0] = colorToHex(initColor);	
+				   //alert(zk.Widget.$(jq('$cboxId')).getColor());
+				   
+				   
+				   zk.Widget.$('$undoTlBtnId').setDisabled(true);
+				   zk.Widget.$('$redoTlBtnId').setDisabled(true);
+			]]>
+		</script>
+		
+		
+</window>
+</zk>

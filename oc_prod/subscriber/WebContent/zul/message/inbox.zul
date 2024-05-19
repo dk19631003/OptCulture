@@ -1,0 +1,29 @@
+<zk>
+<window id="inboxWinId" border="0" apply="org.mq.marketer.campaign.controller.message.InboxController">
+
+			
+			<listbox id="messageslbId" width="100%" sclass="messageLb" style="align:center" 
+				checkmark="true"  multiple="true"  rows="8" >
+			
+				<listhead sizable="false">
+					<listheader label="" width="30px" />
+					<listheader label="Module"  width="29%" style="background-color:transparent"/>
+					<listheader label="Subject" width="38%" maxlength="50"/>
+					<listheader label="Date" width="33%" />
+				</listhead>
+				
+				
+		</listbox>
+		
+		<div>
+			<a label="Move to Trash" style="padding:3px;font-size:13px;" id="moveToTrashAnchrId"/>
+			<label id="totalMsgsLblId" />
+		</div>
+		
+		
+		<div sclass="contactsView">
+			<paging id="messagesPagingId" pageSize="10" width="99%" class="contactsViewPaging"  />
+		</div>
+
+</window>			
+</zk>

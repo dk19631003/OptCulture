@@ -1,0 +1,292 @@
+<zk>
+<style>
+ .custCheck {
+  width:160px;
+ }
+ 
+ 
+</style>
+	<window width="100%" id="ltyRegistrationReportWinId" apply="org.mq.optculture.controller.loyalty.LtyRegistrationReportController"
+	 xmlns:h="http://www.zkoss.org/2005/zk/native"
+	xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<groupbox sclass="gbStyle" closable="false" >
+			<caption label="Customers Report"  />
+			<h:table cellspacing="0" cellpadding="0" width="95%" align="left" style="padding-top:20px;"	>
+				<h:tr>
+					<h:td width="100%">
+						<h:table cellspacing="0" cellpadding="0" width="105%" align="left" 
+							style="background-color: #F8F8F8; border: 1px solid #CCCCCC;border-radius:5px; padding: 10px;margin-left:10px;">
+							<h:tr >
+								<h:td width="50">
+									<label value="Filter By:" style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td width="100" align="right" >
+									<label value="Time Duration " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<listbox id="timeDurLbId" width="130px" mold="select" style="position:relative;">
+										<listitem label="Last 30 Days" selected="true" />
+										<listitem label="Last 3 Months"  />
+										<listitem label="Last 6 Months"  />
+										<listitem label="Last 1 Year"  />
+										<listitem label="Custom Dates"  />
+									</listbox>
+								</h:td>
+								<h:td colspan="5"   >
+									<div id="datesDivId" visible="false">
+										<label value="From " style="display:inline-block;font-weight:bold;" />
+										<datebox id="fromDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+										format="dd-MMM-yyyy" constraint="no future"/>
+										<label value="To " style="display:inline-block;font-weight:bold;" />
+										<datebox id="toDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+										format="dd-MMM-yyyy" constraint="no future"/>
+									</div>
+								</h:td>
+							</h:tr>
+							<h:tr height="5" />
+							<h:tr >
+								<h:td />
+								<h:td   align="right" >
+									<label value="Card-Set " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<listbox id="cardsetLbId" width="100px" mold="select" style="position:relative;">
+										<listitem label="All" value="All" selected="true" />
+									</listbox>
+								</h:td>
+								
+								<h:td />
+								<h:td   align="right" >
+									<label value="Tier " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<listbox id="tierLbId" width="100px" mold="select" style="position:relative;">
+										<listitem label="All" value="All" selected="true" />
+										</listbox>
+								</h:td>
+								<h:td  align="right" >
+									<label value="Store" style="display:inline-block;font-weight:bold;" />
+							<bandbox  id="storeBandBoxId" mold="rounded" 
+							style="width:90px;font-size:13px;margin-top:2px;margin-right:4px;"
+						            readonly="true" value="" >
+									
+				           <bandpopup id="storeBandpopupId" width="120px" >
+				
+					       <listbox checkmark="true"  id="storeLbId" 
+					       multiple="true" width="120px" style="position:relative;">
+						    <listhead>
+							<listheader label="All"/>
+							
+							
+						</listhead>
+						
+					</listbox>
+					</bandpopup>
+					</bandbox>
+					</h:td>
+								<h:td  align="right" >
+									<label value="Employee ID " style="display:inline-block;font-weight:bold;" />
+							<bandbox  id="employeeBandBoxId" mold="rounded" 
+							style="width:90px;font-size:13px;margin-top:2px;margin-right:4px;"
+						            readonly="true" value="" >
+									
+				           <bandpopup id="employeeBandpopupId" width="120px" >
+				
+					       <listbox checkmark="true"  id="employeeLbId" 
+					       multiple="true" width="120px" style="position:relative;">
+						    <listhead>
+							<listheader label="All"  />
+							
+							
+						</listhead>
+						
+					</listbox>
+					</bandpopup>
+					</bandbox>
+					</h:td>
+								<h:td width="180" align="right"  >
+									<label value="Show Only Transacted Cards " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<checkbox id="transCardsChkId"/>
+									
+								</h:td>
+								
+								<h:td align="right">
+									<button label="Apply" id="filterBtnId" sclass="idle70" ></button>
+								</h:td>
+							</h:tr>
+						</h:table>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td valign="bottom" >
+						<div style="margin-left:10px;">
+							<label value="Enrollments Between " style="font-weight:bold;"/>
+							<label value="" id="plotLblId" style="font-weight:bold;"/>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr style="padding-top:20px;">
+					<h:td>
+						<div height="250px" width="100%"  style="padding-top:20px;margin-left:10px;">
+							<chart id="plot1"  width="800px" showTooltiptext="true" 
+			        		showLegend="true"  orient="vertical" paneColor="#FFFFFF" type="line" 
+			        		fgAlpha="250" xAxis="Days" yAxis="No. of Enrollments" />
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr>
+				<h:td>
+				<div id="tierbreakDivId" style="padding-top:20px;margin-left:10px;"  visible="false">
+				<label value="Tiers Memberships Between " style="font-weight:bold"/>
+				<label value="" id="tierbreakLblId" style="font-weight:bold;"/>
+				<grid id="tierbreakdownLbId" sclass="contactsView" emptyMessage="No Records Found" width="50%" style="margin-top:10px;">
+					<columns id="tierbreakColsId" style="background-color:#488eb0;">
+					</columns>
+					<foot id="tierbreakFooterId" />
+					 <rows id="tierbreakRowsId" />
+				</grid>
+			</div>sssss
+			</h:td>
+			</h:tr>
+			<h:table cellspacing="5" cellpadding="5" width="50%">
+			<h:tr width="300">
+				
+				<h:td>
+				<div id="exportDivId" visible="false">
+					<label value="Export as a " />
+					<combobox  id="exporttierCbId" readonly="true" sclass="cb_100w">
+		 	  			<comboitem label=" .csv file" value="csv" />    
+					</combobox> 
+					<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exporttierBtnId" />
+					</div>
+				</h:td>
+				</h:tr>
+				</h:table>
+			    <h:tr>
+					<h:td valign="bottom">
+						<div style="padding-top:30px;margin-left:10px;" >
+							<h:table cellspacing="0" cellpadding="0" width="100%" border="0" style="margin-top:10px;border-radius:5px;">
+								<h:tr>
+									<h:td width="340">
+								      <label value="Search Membership Number : " style="font-weight:bold"/>
+								        <textbox id="cardSearchBoxId" 
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }" focus="true"/> 
+									</h:td>
+									<h:td width="300">
+									<label value="Filter By Membership Status : " style="font-weight:bold"/>
+								        <listbox id="statusLbId" mold="select">
+								        <listitem label="All" value="All" />
+										<listitem label="Active" value="Active" selected="true" />
+										<listitem label="Suspended" value="Suspended"/>
+										<listitem label="Expired" value="Expired"/>
+										<listitem label="Closed" value="Closed"/>
+										</listbox>
+								</h:td>
+									<h:td>
+											 <a label="Reset" id="cardResetBtnId"/>
+									</h:td>
+								</h:tr>
+							</h:table >
+						</div>
+					</h:td>
+				</h:tr>
+			</h:table>
+			<h:table cellspacing="0" cellpadding="0" width="100%" align="left" style="padding-bottom:20px;"	>
+				<h:tr>
+					<h:td valign="top">
+						<listbox  id="regReportLbId" sclass="contactsView" emptyMessage="No Records Found"  width="100%" style="margin-top:10px;" >
+							<listhead style="background-color:#488eb0;" menupopup="auto">
+								<listheader label="Membership Number" width="16%"  align="left" />
+								<listheader label="Status" width="10%"  align="left" />
+								<listheader label="Reg. Source " width="10%" align="center" visible="false" />
+								<listheader label="Registered On" width="15%" align="center"/>
+								<listheader label="First Name" width="12%" align="center"/>
+								<listheader label="Last Name" width="13%" align="center"/>
+								<listheader label="Mobile Number" width="12%" align="center"/>
+								<listheader label="Email Address" width="15%" align="leftr"/>
+								<listheader label="Balance Points" width="11%" align="left"/>
+								<listheader label="Balance Currency" width="12%" align="left" />
+								<listheader label="Store" width="15%"  align="left" visible="false" />
+								<listheader label="Card Type" width="15%"  align="left" visible="false" />
+								<listheader label="Hold Balance" width="15%"  align="left" visible="false" />
+								<listheader label="Lifetime Points" width="15%"  align="left" visible="false" />
+								<listheader label="Tier" width="15%"  align="left" visible="false" />
+							</listhead>
+						</listbox>
+					</h:td>
+				</h:tr>
+			</h:table>
+			
+			<separator/>
+				
+					<h:table cellspacing="0" cellpadding="0" width="100%">
+						<h:tr bgcolor="#F9F9F9">
+						
+						<h:td>
+							<label value="Export as a:" />
+							<combobox  id="exportCbId" readonly="true" sclass="cb_100w">
+						 	  		<comboitem label=" .csv file" value="csv" />    
+							</combobox> 
+							
+							<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId" />
+						</h:td>
+						
+						<h:td align="right" width="100">
+							<label value="Items per page:" style="font-size:11px;" />
+						</h:td>
+								
+						<h:td  width="70">
+							<listbox rows="1" mold="select" id="pageSizeLbId"	>
+								<listitem label="5" selected="true" />
+								<listitem label="10"  />
+								<listitem label="15" />
+							</listbox>
+								
+						</h:td>
+						<h:td width="300">
+							<paging id="loyaltyListBottomPagingId" width="300px"
+									detailed="true" pageSize="10" class="contactsViewPaging" style="border:none;" />
+						</h:td>
+						</h:tr>
+					</h:table>
+				
+				<separator/>
+				
+				<!-- <h:table style="padding-top:20px;">
+ 				<h:tr>
+ 				 	<h:td>
+ 				 	<label value="Export as a:" />
+				<combobox  id="exportCbId" readonly="true" sclass="cb_100w">
+			 	  		<comboitem label=" .csv file" value="csv" />    
+				</combobox> 
+				
+				<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId" />
+ 				 	</h:td>
+ 				</h:tr>
+			</h:table> -->
+			<window id="custExport" title="Select Fields to Export" border="normal"  width="600px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="580px" style="margin:15px;" />
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td >
+					 <a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />  
+					 <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+			</window>
+		</groupbox>
+	</window>
+</zk>

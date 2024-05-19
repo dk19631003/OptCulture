@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	
+	
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.EventTriggerEvents" table="event_trigger_events" lazy="false">
+		<id name="eventId" type="java.lang.Long" column="event_id">
+			<generator class="native" />
+		</id>
+		<property name="eventTriggerId" type="java.lang.Long" column="event_trigger_id"/>
+		<property name="triggerType" type="java.lang.Integer" column="trigger_type"/>			
+		<property name="createdTime" type="calendar" column="created_time"/>
+		<property name="eventTime" type="calendar" column="event_time"/>
+		<property name="userId" type="java.lang.Long" column="user_id"/>
+		<property name="emailStatus" type="byte" column = "email_status"/>
+		<property name="smsStatus" type="byte" column = "sms_status"/>
+		<property name="eventCategory" type="string" column="event_category"/>	
+		<property name="sourceId" type="java.lang.Long" column="source_id"/>
+		<property name="contactId" type="java.lang.Long" column="contact_id"/>
+		<property name="triggerCondition" type="string" column="tr_condition"/>
+		<property name="campaignSentDate" type="calendar" column="campaign_sent_date"/>
+		<property name="smsSentDate" type="calendar" column="sms_sent_date"/>
+		<property name="campSentId" type="java.lang.Long" column="camp_sent_id"/>
+		<property name="campCrId" type="java.lang.Long" column="camp_cr_id"/>
+		<property name="smsSentId" type="java.lang.Long" column="sms_sent_id"/>
+		<property name="smsCrId" type="java.lang.Long" column="sms_cr_id"/>		
+		
+		
+		</class>
+</hibernate-mapping>

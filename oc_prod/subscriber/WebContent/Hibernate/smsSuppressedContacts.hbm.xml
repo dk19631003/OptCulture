@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 2:15:04 PM  -->
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.SMSSuppressedContacts" table="sms_suppressed_contacts">
+    <id name="id" type="java.lang.Long" column="id">
+      <generator class="native"/>
+    </id>
+    <property name="mobile" type="string" column="mobile" length="100" not-null="true"  unique-key="Unique_mobile" />
+    <many-to-one name="user" class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"  fetch="select">
+      <column name="user_id" />
+    </many-to-one> 
+    <property name="type" type="string" column="type" />
+    <property name="source" type="string" column="source" />    <!-- changes 2.5.3.0 -->
+     <property name="suppressedtime" type="java.util.Calendar" >
+			<column name="suppressed_time" />
+		</property>
+		<property name="reason" type="string" column="reason" />
+    
+    
+  </class>
+</hibernate-mapping>

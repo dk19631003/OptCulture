@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.EventTrigger" table="event_trigger" lazy="false">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<property name="triggerName" type="string" column="trigger_name"/>
+		<property name="campaignId" type="java.lang.Long" column="campaign_id"/>
+		<property name="triggerType" type="string" column="trigger_type"/>	
+		<property name="minutesOffset" type="integer" column="minutes_offset" />
+		<property name="eventField" type="string" column="event_field" />
+		<property name="dataType" type="string" column="data_type"/>
+		<property name="status" type="string" column="status"/>
+		<property name="triggerCreatedDate" type="calendar" column="trigger_created_date"/>
+		<property name="triggerModifiedDate" type="calendar" column="trigger_modified_date"/>
+		<property name="lastSentDate" type="calendar" column="last_sent_date"/>
+  		<property name="selectedCampaignFromName" type="string" column="selected_campaign_from_name" /> 
+  		<property name="selectedCampaignReplyEmail" type="string" column="selected_campaign_reply_email" /> 
+  		<property name="selectedCampaignFromEmail" type="string" column="selected_campaign_from_email" /> 
+		<property name="optionsFlag" type="integer" column="options_flag" />
+		<property name="smsQueryStr" type="text" column="sms_query_str" />
+		<property name="smsId" type="java.lang.Long" column="sms_id" /> 
+		<many-to-one name="users" class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false">
+			<column name="user_id" />
+		</many-to-one>
+		
+		<many-to-one name="addTriggerContactsToMl" class="org.mq.captiway.scheduler.beans.MailingList" foreign-key="mlId"
+			fetch="select" lazy="false">
+			<column name="add_to_list" />
+		</many-to-one>	
+		
+		<!--  mailingLists will be the object to which we will create getter and setter in EventTrigger bean -->
+		<set name="mailingLists" table="mlists_trigger" lazy="false">
+			<key column="id" />
+			<many-to-many class="org.mq.captiway.scheduler.beans.MailingList" column="list_id" />
+		</set>
+		<!-- <set name="addTriggerContactsToMls" table="add_trigger_contacts_to_mlists" lazy="false">
+			<key column="id"/>
+			<many-to-many class="org.mq.captiway.scheduler.beans.MailingList" column="list_id" />
+		</set>	 -->
+		
+		 <!-- added for new implementation -->
+    
+  		  <property name="triggerQuery" type="text" column="trigger_query" /> 
+  		   <property name="trBits" type="java.lang.Long" column="tr_bits" /> 
+  		    <property name="trType" type="java.lang.Integer" column="tr_type" /> 
+  		     <property name="trBitFlagOffTime" type="java.lang.Long" column="tr_bit_flag_offtime" /> 
+  		      <property name="inputStr" type="string" column="input_str" /> 
+  		      <property name ="lastFetchedTime" type="calendar" column="last_fetched_time" />
+  		       <property name="targetDaysFlag" type="string" column="target_days_flag" />  
+  		      <property name="targetTime" type="time" column="target_time" />  
+  		      
+  		       <property name="campCategory" type="java.lang.Long" column="camp_category" />
+  		      
+  		      <!-- END -->
+		
+					
+		</class>
+</hibernate-mapping>

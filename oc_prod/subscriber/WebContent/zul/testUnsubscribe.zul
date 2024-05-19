@@ -1,0 +1,144 @@
+<?page title="Unsubscribe Request" contentType="text/html;charset=UTF-8"?>
+<zk>
+ <style >
+				#categoryTableId {
+					font-family:arial,verdana;
+					font-size:15px;
+					font-weight:bold;
+				}
+				#footer {
+					padding: 30px 0px;
+					font: 11px verdana;
+					color: #6d6e71;
+					text-align: center;
+				}
+				
+				.unsubscribeBtn {
+					color:#FFFFFF;
+					font-size:16px;
+					font-weight:bold;
+					background:url(/subscriber/img/btn-1.jpg) 0 0 no-repeat;
+					width:207px;
+					height:49px;
+					border:0 none;
+				}
+				.resubscribeBtn {
+					color:#FFFFFF;
+					font-size:16px;
+					font-weight:bold;
+					background:url(/subscriber/img/btn2.jpg) 0 0 no-repeat;
+					width:207px;
+					height:49px;
+					border:0 none;
+				}
+				.txtarea {
+					width:290px;
+					height:90px;
+					padding:5px;
+					border:1px solid #c5c5c5;
+					border-radius:5px;
+					font-family:Arial, Helvetica, sans-serif; 
+					font-size:12px; 
+					color:#666666;
+			}
+			.labelcell{
+				padding-left:15px; 
+				font-family:Arial, Helvetica, sans-serif; 
+				font-size:12px; 
+				color:#666666;
+			}
+			.sme{
+			border:1px solid #c5c5c5;
+			border-radius:5px;
+			padding:10px;
+			margin-top:20px;
+			width:510px;
+			}
+
+		.inputsm {
+				width:200px;
+				padding:0 4px;
+				height:33px;
+				border:1px solid #c5c5c5;
+				border-radius:5px;
+				font-family:Arial, Helvetica, sans-serif; 
+				font-size:12px; 
+				color:#666666;
+			}
+			
+		</style>
+
+<window  xmlns:h="native" apply="org.mq.marketer.campaign.controller.TestUnsubscribeController" >
+
+<h:table width="620" border="0" align="center" style="background:url(/subscriber/img/bg_texure.png) 0 0;margin-top : 7px;" cellspacing="0" cellpadding="0" >
+		  <h:tr>
+		    <h:td height="550" align="center" valign="top" style="padding:50px 0">
+		    
+<div id="confirmUnsubscribeRequestDivId" visible="true">
+				<h:table style="background:#FFFFFF; border:1px solid #c5c5c5;" width="540" border="0" align="center" cellpadding="0" cellspacing="0">
+				<h:tr><h:td style="font-family:Georgia, 'Times New Roman', Times, 
+				serif; font-size:16px; font-weight:bold; color:#333333; background:url(/subscriber/img/head-bottom.jpg)
+				 no-repeat left bottom; padding:15px 15px 15px 18px;">Confirm Unsubscribe Request</h:td></h:tr>
+					<h:tr>
+			        <h:td height="340" valign="top" class="labelcell">
+			        <h:table>
+			        	<h:tr>
+			        		<h:td height="60" style="padding-bottom:10px; font-weight:bold; font-size:12px; color:#333333;">You are choosing to unsubscribe email ID from this subscription list.</h:td>
+			    		</h:tr>
+				         <h:tr>
+				            <h:td height="40" style="padding-bottom:10px;  font-weight:bold; font-size:12px; color:#333333;">To complete your unsubscribe request, please click on the "Unsubscribe" button below.</h:td>
+				            </h:tr>
+				         <h:tr>
+			            	<h:td height="42" align="left" valign="middle">Reason for unsubscribing (optional):<h:br/></h:td>
+			            </h:tr>
+			          	<h:tr>
+			            	<h:td height="25" align="left" valign="middle"><textbox class="txtarea" name="reason" id="textarea" cols="45" rows="5" ></textbox></h:td>
+			           </h:tr>
+			          <h:tr>
+				            <h:td height="100" align="left" valign="middle">
+				           <button  label="Unsubscribe"
+				            class="unsubscribeBtn" id="button"  onClick="confirmUnsubscribeRequestDivId.setVisible(false);unsubscribeDivId.setVisible(true);;reSubscriptionDivId.setVisible(false);"/></h:td>
+			            </h:tr>
+			            </h:table>
+			            </h:td>
+			            </h:tr>
+			            
+			        </h:table>
+</div>
+
+<div id="unsubscribeDivId" visible="false">
+					<h:table style="background:#FFFFFF; border:1px solid #c5c5c5;" width="540" border="0" align="center" cellpadding="0" cellspacing="0">
+					<h:tr><h:td style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:16px; 
+					font-weight:bold; color:#333333; background:url(/subscriber/img/head-bottom.jpg) no-repeat left bottom; padding:15px 15px 15px 18px;">Unsubscribed Successfully</h:td>
+					</h:tr><h:tr>
+					<h:td height="70" style="padding-left:15px; padding-bottom:20px;padding-top:20px;color:#333333;font-weight:bold; font-family: Arial,Helvetica,sans-serif;
+    				font-size: 12px;">You have successfully unsubscribed email ID  from this subscription list.<h:br/><h:br/> You will no longer receive emails from us.
+    				</h:td></h:tr>
+					<h:tr >	<h:td height="100" align="center" valign="middle" >
+							        	<div style="font-family: Arial,Helvetica,sans-serif;font-size: 12px;background:#e7f5f8; border:1px solid #bfe6ef; color:#333333;margin: 0 10px 20px; padding: 10px ;">
+							        	Did you unsubscribe by accident? Click on the Re-subscribe button below.<h:br />
+              							<h:br/>
+  										<button class="resubscribeBtn"  label="Re-Subscribe" onClick="confirmUnsubscribeRequestDivId.setVisible(false);unsubscribeDivId.setVisible(false);reSubscriptionDivId.setVisible(true);"/>
+							        	</div>
+							 		    </h:td>
+							 		 </h:tr> 
+							 		  
+</h:table>
+</div>
+
+<div id="reSubscriptionDivId" visible="false">
+<h:table style="background:#FFFFFF; border:1px solid #c5c5c5;" width="540" border="0" align="center" cellpadding="0" cellspacing="0">
+<h:tr>
+<h:td height="50" valign="bottom" style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:16px; font-weight:bold; color:#333333; background:url(/subscriber/img/head-bottom.jpg) no-repeat left bottom; padding:0px 0px 10px 15px;">Re-subscription Successful!</h:td>
+</h:tr>
+<h:tr>
+<h:td height="150" align="center" valign="middle"><div style="font-family: Arial,Helvetica,sans-serif;font-size: 12px;background:#f0ffde; border:1px solid #c4eb96; color:#333333;margin: 0 10px; padding: 20px;">Thank you for your interest in receiving emails from us. You'll be hearing from us soon.</div></h:td>
+</h:tr>
+</h:table>
+</div>
+</h:td>
+</h:tr>
+</h:table>
+
+</window>
+</zk>

@@ -1,0 +1,404 @@
+<zk>
+	<style src="/css/campaign.css" >
+	.hoverlistheaders > div.z-listheader-cnt{ 
+        cursor: pointer;
+    }
+	</style>
+	<window id="smsCampSettigsWinId" border="0" width="100%"
+		apply="org.mq.marketer.campaign.controller.sms.SmsCampSetupController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<script>
+			<![CDATA[
+			
+			function updateCaretPosition() {
+			//alert("hai");
+			// get the zk widgets
+			var scriptTB = zk.Widget.$(jq('$SMSMsgKeywordTbId'))
+			var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+			
+			// get the js elements
+			var jsScriptTB = document.getElementById(scriptTB.uuid)
+			var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+			
+			// get the caret position
+			var pos = getCaret(jsScriptTB);
+			
+			// set the caret position in the hidden text field
+			jsCaretPosTB.value = pos;
+			
+			// trigger an event to send the caret position to the server
+			if (document.createEvent) {
+			var evt = document.createEvent('HTMLEvents');
+			evt.initEvent( 'blur', false, false);
+			jsCaretPosTB.dispatchEvent(evt);
+			
+			var evt2 = document.createEvent('HTMLEvents');
+			evt2.initEvent( 'change', false, false);
+			jsCaretPosTB.dispatchEvent(evt2);
+			} else if (document.createEventObject) {
+			jsCaretPosTB.fireEvent('onblur');
+			jsCaretPosTB.fireEvent('onchange');
+			}
+			}
+			
+			function getCaret(el) {
+            	
+            	if (el.selectionStart) {
+                    return el.selectionStart;
+                } else if (document.selection) {
+                    el.focus();
+
+                    var r = document.selection.createRange();
+
+                    
+                    if (r == null) {
+                    	
+                    	alert(r);
+                        return 0;
+                    }
+
+                    var re = el.createTextRange();
+                    	
+                            rc = re.duplicate();
+                    re.moveToBookmark(r.getBookmark());
+                    rc.setEndPoint('EndToStart', re);
+                    return rc.text.length;
+                }else{
+                	
+                	if(el.value.length > 0) {
+                		
+                		el.selectionStart = el.value.length;
+                		 return el.selectionStart;
+                		
+                	}
+                	
+                }
+                return 0;
+
+
+              
+            }
+			]]>
+			</script>
+
+		<!-- <div>
+			<label value="Set-up  your SMS Campaign." />
+		</div> -->
+	<separator/>
+	<!--	<groupbox width="99%" sclass="gbStyle"
+				style="margin-top:10px;" closable="false">
+			<caption>
+				<label value="SMS Settings" />
+			</caption>
+
+
+			<h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+
+
+				<h:tr>
+					<h:td valign="bottom" width="150">
+						<label value="Shared short-code:" />
+					</h:td>
+
+					<h:td valign="bottom" colspan="2">
+						<textbox id="shortCodeTbId" value=""
+							name="shortCodeTb" width="250px" maxlength="100" />
+					</h:td>
+				</h:tr>
+
+
+				<h:tr>
+					<h:td valign="bottom" width="150">
+						<label value="Sender ID:" />
+					</h:td>
+
+					<h:td valign="bottom" colspan="2">
+						<textbox id="senderIdTbId" value=""
+							name="smsNameTb" width="250px" maxlength="100" />
+					</h:td>
+
+				</h:tr>
+				
+				<h:tr>
+				
+					<div id="recieveNumDivId">
+						<h:td valign="bottom" width="150">
+							<label value="Receiving Number:" />
+						</h:td>
+	
+						<h:td valign="bottom" colspan="2">
+							<textbox id="receivingNumTbId" value=""
+								name="smsNameTb" width="250px" maxlength="100" />
+						</h:td>
+					</div>
+
+				    </h:tr>  
+			</h:table>
+
+		</groupbox>
+
+		
+		<groupbox width="99%" sclass="gbStyle"
+				style="margin-top:10px;" closable="false">
+			<caption>
+				<label value="SMS Settings" />
+			</caption>
+
+
+			<h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">				
+				<h:tr>
+				
+					<div id="recieveNumDivId">
+						<h:td valign="bottom" width="200">
+							<label value="Message Receiving Number:" />
+						</h:td>
+	
+						<h:td valign="bottom" colspan="2">
+							<textbox id="receivingNumTbId" value="9909909900"
+								name="smsNameTb" width="250px" maxlength="100" disabled="true"/>
+						</h:td>
+					</div>
+
+				</h:tr>
+			</h:table>
+
+		</groupbox>
+
+	-->
+	
+	
+	<!-- report controller ReportGridRenderer 
+	<grid id="keywordGridId" mold="paging"   emptyMessage="No Records Found..."  >
+					<columns menupopup="auto" >
+						<column label="Keyword" width="140px" />
+						<column label="Receiving Number" width="250px"/>
+						<column label="Auto Response" width="120px"/>
+						<column label="Active From"   />
+						<column label="Active To"  />
+						<column label="Actions"  />
+					</columns>
+	</grid> -->
+	<div height="20px;" align="right">
+						
+			<!-- <button id="addNewKeywordBtnId" label="Add new Keyword" /> -->
+			<toolbarbutton id="addNewKeywordBtnId"	image="/images/action_add.gif" sclass="tbbLink"	style="color:#2886B9;text-decoration: underline;"  label="Add new Keyword" />
+	</div>
+	<separator/>
+	<listbox id="keywordlbId" width="99%" emptyMessage="No items match for your search" 
+			sclass="contactsView" multiple="true" mold="paging">
+				<listhead sizable="false" style="background-color:#488eb0;">
+					<listheader label="Keyword" id="sortbyKeyword" sclass="hoverlistheaders" align="left" style="padding-left:10px;" />
+					<listheader label="Created Date" id="sortbyCreatedDate" sclass="hoverlistheaders"  align="center"  />
+					<listheader label="Receiving Number" id="sortbyReceivingNumber"  sclass="hoverlistheaders" align="left" style="padding-left:10px;" />
+					<listheader label="Auto Response"  id="sortbyAutoResponse" sclass="hoverlistheaders" align="center" width="170px"/>
+					<listheader label="Status"   align="center" width="170px"/>
+					<listheader label="Valid From"  id="sortbyValidFrom" sclass="hoverlistheaders"  align="center"  width="170px"/>
+					<listheader label="Valid To" id="sortbyValidTo"  sclass="hoverlistheaders"  align="center"  width="170px"/>
+					<listheader label="Actions" align="center" width="200px"/>
+				</listhead>
+				
+	</listbox>
+			<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="keywordPageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="280px"  >
+						<paging id="keywordListPaging" detailed="true" pageSize="10" width="280px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table>
+			  	
+	<separator/>
+	<separator/>
+	<separator/>
+	<div id="addNewKeyordDivId" visible="false">
+		<groupbox width="99%" sclass="gbStyle" style="margin-top:10px;"
+			closable="false">
+			<caption>
+				<label value="Keyword" />
+			</caption>
+				<h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+
+				<h:tr >
+					<h:td colspan="2" >
+						<label value="Keyword:" style="margin-right:36px;"/><space/>	<textbox id="insertKeywordTbId" />				
+						<label value="Message Receiving Number:" style="margin-left:25px;"/><space/>
+						<combobox id="receivingNumCbId" name="smsNameTb" width="200px" maxlength="15" readonly="true"/>
+						<toolbarbutton id="checkAvailTbId" image="/img/icons/approve_icn.png" sclass="tbbLink"
+											label="Check Availability"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+					</h:td>
+			</h:tr>
+			<h:tr />
+			<h:td>
+			
+				<label id="keywordAvailabilityStatusLblId" style="color:#2886B9;font-weight:bold;margin-left:100px;" />
+			</h:td>
+			<h:tr>
+					<h:td>				
+										
+									
+										<label value="Valid From:" style="margin-right:20px;"/><space/>
+										<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" format="dd-MMM-yyyy" /><space/>
+										<label value="To:"/><space/>
+										<datebox id="toDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy"/> 
+									
+						
+										
+					</h:td>
+			</h:tr>
+			<!-- <h:tr>
+					<h:td>
+						
+					
+					</h:td>
+					<h:td style="padding-bottom:5px;"  colspan="2">
+						
+							 <label value="" style="color:#43A0BA;" id="availLblId"/>
+					
+					</h:td>
+				
+			</h:tr> -->
+				
+
+			<h:tr>
+					<h:td width="450px">
+					<h:table>
+					<h:tr>
+					<h:td valign="top">
+						<label value="Auto-response: " />
+					</h:td>
+					<h:td>
+					<textbox id="caretPosTB" visible="false" />
+					<h:div style="position:relative;">
+					<textbox id="SMSMsgKeywordTbId" width="350px"
+							value=""
+							rows="12" height="140px" maxlength="600"
+							style="font-family: Arial,Helvetica,sans-serif;font-size:
+					 				14px;line-height: 1.5em;margin-top:0px;margin-left:12px;padding-top:25px;"
+							w:onClick="updateCaretPosition()"
+							w:onChanging="updateCaretPosition()"
+							name="SMSkeywordTbId"
+							context="editPopup" />
+						<label value="" id="headerLblId" style="color:#666666;left:10px;position:absolute;left:25px;top:7px;"/>
+						</h:div>	
+					</h:td>
+					</h:tr>
+					</h:table>		
+					</h:td>
+					<h:td rowspan="2" valign="top" width="560px">
+						<h:table cellspacing="5" cellpadding="5" border="0" width="100%">
+							<!-- <h:tr style="display:none;">
+								<h:td>
+									<listbox id="insertMergetagsLbId"
+										mold="select" width="200px">
+										<listitem
+											label="Insert Merge Tag" selected="true" />
+									</listbox>
+								</h:td>
+							</h:tr> -->
+							<h:tr>
+								<h:td>
+									<listbox id="insertMergetagsLbId"
+										mold="select" width="200px">
+										<listitem
+											label="Insert Merge Tags" selected="true" />
+									</listbox>
+								</h:td>
+							</h:tr>
+
+							<h:tr>
+								<h:td >
+									<listbox id="insertCouponLbId"
+										mold="select" width="200px">
+										<listitem label="Insert Discount code"
+											selected="true" />
+									</listbox>
+									<label value="or"/>
+									<toolbarbutton id="addNewCouponTBId" 
+										image="/images/action_add.gif" sclass="tbbLink"
+										label="Add Discount Code"
+										style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+								</h:td>
+
+							</h:tr>
+							
+							<h:tr>
+								<h:td>
+									<listbox id="insertBarcodeLbId"
+										mold="select" width="200px">
+										<listitem
+											label="Insert Barcode as Url" selected="true" />
+									</listbox>
+									<label value="or" />
+									<toolbarbutton
+										id="addNewBarcodeTBId" image="/images/action_add.gif"
+										sclass="tbbLink" label="Add Barcode"
+										style="color:#2886B9;font-weight:bold;text-decoration:underline;" />
+								</h:td>
+							</h:tr>
+
+							<h:tr >
+								<h:td>
+									<textbox value="Use Url Shortener"
+										width="300px" id="linkURLTxtBoxId" />
+									<button id="insertLinkBtnId"
+										label="Insert" sclass="idle70" />
+
+								</h:td>
+							</h:tr>
+						</h:table>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td >
+						<label value="Character Count :"
+							style="font-weight:bold;margin-left:117px;" />
+						<textbox id="charCountTbId" readonly="true"
+							value="0" width="70px" />
+						<label value="(160 Characters per SMS)" />
+					</h:td>
+				</h:tr>
+
+				<h:tr >
+					<div align="right">
+						<h:td>
+							<button id="saveNewKeywordBtnId" label="Save"
+								sclass="greenbtn" width="150px"/>
+
+						</h:td>
+					</div>
+
+				</h:tr>
+			</h:table>
+			
+		</groupbox>
+		
+	</div>
+	<h:table cellspacing="0" cellpadding="2" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Delete" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/theme/home/reports_icon.png"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Report" style="font-size:11px;" /> </h:td>
+						
+					</h:tr>
+	</h:table>
+	</window>
+
+</zk>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.SMSDeliveryReport" table="sms_delivery_report">
+    <id name="smsDlrId" type="java.lang.Long" column="sms_dlr_id">
+      <generator class="native"/>
+    </id>
+	<property name="requestId" type="text" column="request_id"/>
+    
+	<property name="smsCampRepId" type="java.lang.Long" column="sms_camp_rep_id"/>
+	<property name="status" type="string" column="status" length="100"/>
+	<property name="reqGeneratedDate" type="calendar" column="req_generated_date"/>
+	<!-- <property name="isTransactional" type="string" column="is_transactional"/>
+	
+	<property name="userSMSTool" type="string" column="user_sms_tool"/>
+	 -->
+	<property name="userSMSTool" type="java.lang.Long" column="user_sms_tool"/>
+	
+  </class>
+
+
+</hibernate-mapping>

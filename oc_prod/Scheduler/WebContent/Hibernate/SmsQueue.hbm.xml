@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+	<class name="org.mq.captiway.scheduler.beans.SmsQueue" table="sms_queue">
+	
+		<id name="id" type="java.lang.Long">
+			<column name="id"></column>
+			<generator class="native"></generator>
+		</id>
+	
+<!-- 		<many-to-one name="smscampaign" class="org.mq.captiway.scheduler.beans.SMSCampaings"
+			foreign-key="SmsCampaignSentFkey" fetch="select" lazy="false">
+		<column name="sms_campaign_id"></column>
+		</many-to-one>
+ -->		
+		
+		<many-to-one name="user"
+			class="org.mq.captiway.scheduler.beans.Users"
+			foreign-key="SmsCampaignSentFkey" fetch="select" lazy="false">
+			<column name="user_id" />
+		</many-to-one>
+		
+		<property name="msgType" type="string">
+			<column name="msg_type" length="30" not-null="true" />
+		</property>
+
+		<property name="contactId" type="java.lang.Long">
+			<column name="contact_id"  />
+		</property>
+
+		<property name="status" type="string">
+			<column name="status" length="30" not-null="true" />
+		</property>
+
+		<property name="toMobilePhone" type="string">
+			<column name="to_mobile_phone" length="15" />
+		</property>
+
+		<property name="message" type="text">
+			<column name="message"/>
+		</property>
+
+		<property name="sentDate" type="calendar">
+			<column name="sent_date" />
+		</property>
+
+		<property name="senderId" type="string">
+			<column name="sender_id"></column>
+		</property>
+			
+		<property name="msgId" type="string">
+			<column name="msg_Id"></column>
+		</property>	
+		<property name="dlrStatus">
+			<column name="dlr_Status"></column>
+		</property>
+	</class>
+
+</hibernate-mapping>

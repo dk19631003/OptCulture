@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.CampaignReport" table="campaign_report">
+    <id name="crId" type="java.lang.Long">
+      <column name="cr_id" unique-key="Unique_cr"/>
+      <generator class="native"/>
+    </id>
+	<property name="campaignName" type="string" >
+      <column name="campaign_name" not-null="true" />
+    </property>
+    <property name="sentDate" type="calendar">
+      <column name="sent_date"/>
+    </property>
+	<property name="content" type="text" >
+      <column name="content" not-null="true" />
+    </property>
+	<property name="subject" type="string" >
+      <column name="subject" not-null="true" />
+    </property>
+	<property name="sent" type="long">
+      <column name="sent"/>
+    </property>
+	<property name="opens" type="int">
+      <column name="opens"/>
+    </property>
+    <property name="spams" type="int">
+      <column name="spams"/>
+    </property>
+    
+	<property name="clicks" type="int">
+      <column name="clicks"/>
+    </property>
+	<property name="unsubscribes" type="int">
+      <column name="unsubscribes"/>
+    </property>
+	<property name="bounces" type="int">
+      <column name="bounces"/>
+    </property>
+	<property name="status" type="string" >
+      <column name="status" length="100"/>
+    </property>
+    <property name="placeHoldersStr" type="string" >
+      <column name="place_holders_str" length="1024"/>
+    </property>
+	<set name="domains" table="campaign_domains" lazy="false">
+		<key column="cr_id" />
+		<element type="string" column="domain"  />
+	</set>
+	<set name="urls" table="campaign_urls" lazy="false">
+		<key column="cr_id" />
+		<element type="string" column="url"/>
+	</set>
+	<many-to-one name="user" class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId" fetch="select" lazy="false">
+		<column name="user_id"/>
+	</many-to-one>
+	<property name="sourceType" type="string" >
+      <column name="source_type" length="100"/>
+    </property>
+    
+    <property name="configured" type="long">
+			<column name="configured" default="0" />
+		</property>
+		
+		  <property name="preferenceCount" type="int">
+			<column name="preference_count" default="0" />
+		</property>
+    
+ </class>
+</hibernate-mapping>

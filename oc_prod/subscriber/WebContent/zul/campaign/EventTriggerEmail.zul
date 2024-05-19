@@ -1,0 +1,1452 @@
+<?page title="eventTriggEmailPageId" contentType="text/html;charset=UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:n="http://www.zkoss.org/2005/zk/native"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<style>
+.triggerOpt {
+ padding:10px;
+ margin-left:20px;
+ margin-top:10px;
+ 
+}
+
+.dashboardMyLinks {
+		color:#2589BB;
+		font-weight:bold;
+		padding:0 5px;
+		display:inline-block;
+		
+     }
+</style>
+
+	<window id="eventTriggerWinId" width="100%"
+		xmlns:w="http://www.zkoss.org/2005/zk/client"
+		apply="org.mq.marketer.campaign.controller.campaign.EventTriggerEmailController">
+		<tabbox id="triggerTabbxId" width="100%">
+			<tabs>
+				<tab label="Event Triggers" id="triggersTabId"/>
+				<tab label="Add Trigger" id="addTriggerTabId" />
+				<tab label="Create Custom Event" id="eventTypeOptTabid" visible="false" />
+				<!-- <tab visible="false" /> -->
+				
+				
+			</tabs>
+
+			<tabpanels>
+				<tabpanel>
+					<h:table width="100%">
+
+						<h:tr>
+							<h:td valign="top">
+
+								<h:table>
+									<h:tr>
+										<h:td>
+											<label
+												value="A trigger is used to prompt an email/SMS  to be sent" />
+											<h:br />
+											<label
+												value="to a mailing list based on the occurrence of an event or specific criteria or a particular date." />
+										</h:td>
+									</h:tr>
+								</h:table>
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td>
+								<grid id="existingTriggersGrdId" width="98%" 
+									
+									emptyMessage="No Events found. Please go to the 'Add Trigger' Tab to create an Events.">
+
+
+									<columns>
+										<column >
+											Name
+										</column>
+										<column width="20%">
+											Created on
+										</column>
+										<column width="20%">
+											Last Modified Date
+										</column>
+										<!-- <column width="15%">
+											Triggered By
+										</column> -->
+										<column width="15%">
+											Status
+										</column>
+										<column width="30%">
+											Actions
+										</column>
+									</columns>
+									 <rows id="triggerRowsId" />
+									
+								</grid>
+							</h:td>
+						</h:tr>
+					</h:table>
+					
+					 <h:table width="98%">
+					    <h:tr>
+							<h:td align="right">
+						   		<label value="Triggers per page:"  style="padding-right:5px;font-size:11px;"/>
+						   		<listbox rows="1" mold="select" id="triggerPerPageLBId" style="margin-right:30px;">
+									<listitem label="5" selected="true" />
+									<listitem label="10"  />
+									<listitem label="15"/>
+								</listbox>
+							</h:td>
+							<h:td width="280px"  >
+								<paging id="triggerPagingId" detailed="true" pageSize="5" width="280px" 
+									class="contactsViewPaging" style="border:none;"  />
+							</h:td>
+					   </h:tr>
+				   </h:table>
+								
+					
+					<h:table idth="100%" align="right"
+					style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+				<h:tr >
+					
+					
+					<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+					<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+					
+					<h:td align="right"><image src="/img/pause_icn.png"/></h:td>
+					<h:td  align="left" style="padding-right:30px;"><label value="- Pause" style="font-size:11px;" /> </h:td>
+					
+					<h:td align="right"><image src="/img/play_icn.png"/></h:td>
+					<h:td  align="left" style="padding-right:30px;"><label value="- Activate" style="font-size:11px;" /> </h:td>
+							
+					<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+					<h:td align="left" style="padding-right:10px;"> <label value="- Delete" style="font-size:11px;" /> </h:td>
+					
+					<h:td align="right"><image src="/img/theme/home/reports_icon.png"/></h:td>
+						<h:td align="left" style="padding-right:10px;"> <label value="- Report" style="font-size:11px;" /> </h:td>
+						
+					</h:tr>
+			</h:table>	
+					
+				</tabpanel>
+
+				<tabpanel>
+					<h:table cellspacing="5" cellpadding="2">
+						<h:tr height="10px" />
+						<h:tr>
+							<h:td  width="120px" align="right">
+									<label value="Trigger Name :" />
+							</h:td>
+
+							<h:td width="270">
+									<textbox width="250px" id="eventTriggerNameTbId" />
+							</h:td>
+							<h:td >
+									<checkbox label="Enable"  checked="true" id="triggerStatusChkBxId" />
+							</h:td>
+						</h:tr>
+
+						<h:tr>
+							<h:td />
+							<h:td colspan="2" valign="top" >
+								<image src="/img/icons/icon_i.png" />
+								<label
+									style="color: #4D4C4C;font-size: 12px;font-style: italic;"
+									value="Trigger name is only for your reference and will not appear in the actual email." />
+							</h:td>
+						</h:tr>
+						
+						
+						<h:tr height="20px" />
+						
+						
+						<h:tr>
+							<h:td valign="top" align="right" >
+									<label value="Mailing List(s) :" />
+							</h:td>
+
+							<h:td  align="left" colspan="2">
+								<listbox width="250px" rows="5" id="ETMlListsLBId" checkmark="true" multiple="true" >
+									<listhead>
+										<listheader label="" width="40px" />
+										<listheader label="select list(s)"  />
+									</listhead>
+								</listbox>
+							</h:td>
+						</h:tr>
+	
+					<h:tr height="20px" />
+					
+						<h:tr>
+					
+							<h:td valign="top" 	align="right">
+									<label value="Trigger Type :" />
+							</h:td>
+							<h:td colspan="2">
+								<groupbox>
+									<h:table style="background-color: #F8F8F8; border-bottom: 1px solid #CCCCCC; box-shadow: 0 0 2px #CCCCCC; padding: 10px;">
+										<radiogroup	id="triggerTypeRGId">
+											<h:tr>
+											
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="contactDateRbnId" label="Contact Date"
+														  checked="true"/>
+												</h:td>
+												
+												<h:td valign="top"
+													width="200px" align="left">
+													
+													<radio
+														id="onPurchaseRbnId" label="On Purchase"
+														 />
+													
+												</h:td>
+												
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="loyaltyRbnId" label="Loyalty Balance"
+														 />
+												</h:td>
+												
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="campaignOpenRbnId" label="Campaign Opened"
+														 />
+												</h:td>
+											</h:tr>
+											
+											<h:tr>
+											
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="optinMediumRbnId" label="Opt-In Medium"
+														 />
+												</h:td>
+												
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="productRbnId" label="Purchase of Product"
+														 />
+												</h:td>
+												
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="giftRbnId" label="Gift Balance"
+														 />
+												</h:td>
+												
+												<h:td valign="top"
+													width="205px" align="left">
+													<radio
+														id="campaignClickedRbnId" label="URL Clicked in the campaign"
+														 />
+												</h:td>
+												
+												
+											</h:tr>
+											<h:tr>
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="dateAddedRbnId" label="Contact Added"
+														 />
+												</h:td>
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="amountRbnId" label="Receipt Amount"
+														 />
+												</h:td>
+												
+												<h:td valign="top"
+													width="200px" align="left">
+													<radio
+														id="differenceRbnTd" label="Change in Value"
+														 />
+												</h:td>
+												
+												
+											</h:tr>
+										</radiogroup>
+									</h:table>
+
+									
+									<div height="100px" visible="false" id="productDivId" sclass="triggerOpt">
+										
+											<label value="Purchase of " />
+												
+											<listbox width="150px" mold="select" id="productCriteriaLBId" style="margin-left:10px;">
+												<listitem label="SKU" value="rs.sku" selected="true"/>
+												<listitem label="Item Category" value="rs.item_category" />
+											</listbox>
+										
+											<listbox width="100px" mold="select" id="productOptionsLbId" style="margin-left:10px;">
+												<listitem label="is" value="is" selected="true"/>
+												<listitem label="one of" value="is in" />
+											</listbox>
+
+											<textbox width="100px" id="productTxtBxId" style="margin-left:10px;" />
+												
+									</div>
+
+									<div height="100px" visible="false" id="contactDateDivId"  sclass="triggerOpt">
+										<h:table>
+											<h:tr>
+												<h:td>
+													<label value="Date stored with Contact "/>
+												</h:td>
+												<h:td>
+			                                        <listbox width="100px" id="contactDateLbId" mold="select" style="margin-left:10px;">
+			                                        
+			                                        <listitem label="Birthday"  selected="true"/>
+			                                        <listitem label="Anniversary" />
+			                                        
+			                                        </listbox>
+												</h:td>
+												<h:td>
+													<checkbox id="dateIsYrIgnoreChkBxId" label= "Ignore Year" checked="true"  value="isYearIgnored" />
+												</h:td>
+											</h:tr>
+										
+										</h:table>
+										
+                                       <!--  <listbox width="100px" mold="select"  style="margin-left:10px;">
+                                        <listitem label=""/>
+                                        <listitem label=""/>
+                                        </listbox> -->
+
+									</div>
+									
+									<div height="100px" visible="false"
+										id="campaignOpenDivId" sclass="triggerOpt">
+										<label value="Campaign Opened" />
+			
+										<listbox width="250px" mold="select" style="margin-left:10px;" id="campOpenedLbId"/>
+										<toolbarbutton image="/images/icon_preview_big.png" label="Preview" id="campOpenPreviewToolBtnId" 
+	        																						style="font-weight:bold;color:#43A0BA;" />
+												
+									</div>
+									
+									<div height="100px" visible="false"
+										id="onPurchaseDivId" sclass="triggerOpt">
+										<label 	value="This will be triggered on sales transaction." />
+									</div>
+									
+									<div height="100px" visible="false"
+										id="optinMediumDivId" sclass="triggerOpt">
+										<label value="Opt-in Medium:"/>
+
+                                        <listbox width="100px" id="contactOptInMediumLbId"  mold="select" style="margin-left:10px;">
+                                        <listitem label="POS" value="POS" selected="true"/>
+                                        <listitem label="Manual" value="AddedManually" />
+                                        <listitem label="Web Form" value="WebForm:" />
+                                         <listitem label="Mobile Opt-In" value="Mobile Opt-In" />
+                                        </listbox>
+
+
+                                        <listbox width="100px" mold="select" id="userWebFormsLbId" visible="false" style="margin-left:10px;">
+                                        
+                                        </listbox> 
+									</div>
+									
+									<div height="100px" visible="false"
+										id="campaignClickedDivId" sclass="triggerOpt">
+										
+										<div>
+											<label 
+												value="In Campaign ">
+											</label>
+												<listbox
+													width="250px" id="campClickedLbId" mold="select" style="margin-left:10px;">
+												</listbox>
+												<toolbarbutton image="/images/icon_preview_big.png" label="Preview" id="campClickPreviewToolBtnId" 
+	        																						style="font-weight:bold;color:#43A0BA;" />
+												
+										</div>
+										<separator height="10px" />
+										<div visible="false" id="urlSetDivId">
+										<!-- <h:table>
+										<h:tr>
+										<h:td>
+													<label
+														value="In Campaign ">
+													</label>
+												</h:td>
+												<h:td>
+													</h:td>
+													</h:tr>
+													
+													<h:tr height="20px" />
+													<h:tr>
+													<h:td> -->
+													<label
+														value="URL Clicked">
+													</label>
+											<!-- </h:td>
+											<h:td> -->
+													<listbox
+														width="250px" id="urlSetLbId" mold="select" style="margin-left:10px;">
+													</listbox>
+													<image	id="urlHelpImgId" src="/img/QuestionmarkButton-16x16.png" 	tooltip="sentCampaignDesc" style="cursor: help" />
+													<popup id="sentCampaignDesc"
+														width="400px" style="bgcolor:#CCCCCC">
+													<h:table>
+														<h:tr>
+															<h:td>
+																<label
+																	value="Url(s) of a selected campaign includes of all sents of this campaign."
+																	sclass="labelPos" />
+															</h:td>
+														</h:tr>
+
+												</h:table>
+
+										</popup>
+													
+													
+													<!-- </h:td>
+													</h:tr>
+											</h:table> -->
+											</div>
+									</div>
+									<div height="100px" visible="false"
+										id="dateAddedDivId" sclass="triggerOpt">
+										<label 	value="This will be triggered when a new contact is added." />
+											
+									</div>		
+									<div height="100px" visible="false"
+										id="amountDivId" sclass="triggerOpt">
+										<label value="Receipt Amount" />
+										
+											<listbox width="180px" mold="select" id="purchaseAmtOptionsLbId" style="margin-left:10px;">
+												<listitem label="Is more than"  selected="true" value=">" />
+												<listitem label="Is less than"  value="&lt;" />
+												<listitem label="Is equal to"  value="="/>
+												<listitem label="Is in the range of"  value="between"  />
+												
+											</listbox>
+
+											<doublebox width="100px" id="purchaseAmountDblBxId" style="margin-left:10px;" />
+											<doublebox width="100px" visible="false" id="purchaseAmount1DblBxId" style="margin-left:10px;" />
+									</div>
+									
+									<div height="100px" visible="false"
+										id="giftBalDivId" sclass="triggerOpt">
+										<h:table>
+											<h:tr>
+												<h:td>
+												 
+													<label value="Trigger when gift-card balance changes through transaction :" /> 
+												</h:td>
+												<h:td>
+													<checkbox label="Top-up Amount Issuance" id="giftTopUpChkId" value="8192"/>
+													<checkbox label="Redemption" id="giftRedeemChkId" value="16384"/>
+												</h:td>
+											</h:tr>
+										</h:table>
+										
+										<h:table>
+										<h:tr>
+											<h:td>
+												<label value="Balance-level reaches (Optional) :" />
+											</h:td>
+											<!-- <h:td>
+												<listbox width="180px" mold="select" id="giftContactOptionLbId1" style="margin-left:10px;">
+														<listitem label="Amount"  selected="true"/>
+												</listbox>
+											</h:td> -->
+											<h:td>
+												<listbox width="180px" mold="select" id="giftContactOptionLbId2" style="margin-left:10px;">
+														<listitem label="More than"  selected="true" value=">" />
+														<listitem label="Less than"  value="&lt;" />
+														<listitem label="Equal to"  value="="/>
+														<listitem label="Between range"  value="between"  />
+												</listbox>
+											</h:td>
+											<h:td>
+												<doublebox width="100px" id="giftBalDbl1BxId" style="margin-left:10px;" />
+												<doublebox width="100px" visible="false" id="giftBal2DblBxId" style="margin-left:10px;" />
+											</h:td>
+										
+										</h:tr>
+										</h:table>
+										
+											
+										
+									</div>
+									
+									<div height="100px" visible="false"
+										id="loyaltyPointsDivId" sclass="triggerOpt">
+										<h:table>
+											<h:tr>
+												<h:td>
+												 
+													<label value="Trigger when a member's balance changes through transaction :" /> 
+												</h:td>
+												<h:td>
+													<checkbox label="Issuance" id="layaltyIssueChkId" value="256"/>
+													<checkbox label="Redemption" id="layaltyRedeemChkId" value="512"/>
+													<checkbox label="Adjustments" id="layaltyAdjustChkId" value="1024"/>
+													
+												</h:td>
+											</h:tr>
+										</h:table>
+										
+										<h:table>
+										<h:tr>
+											<h:td>
+												<label value="Balance-level reaches (Optional) :" />
+											</h:td>
+											<h:td>
+												<listbox width="180px" mold="select" id="loyaltyContactOptionLbId1" style="margin-left:10px;">
+														<listitem label="Points"   value="lc.points_balance" selected="true"  />
+														<listitem label="Currency"  value="lc.amount_balance" />
+												</listbox>
+											</h:td>
+											<h:td>
+												<listbox width="180px" mold="select" id="loyaltyContactOptionLbId2" style="margin-left:10px;">
+														<listitem label="More than"  selected="true" value=">" />
+														<listitem label="Less than"  value="&lt;" />
+														<listitem label="Equal to"  value="="/>
+														<listitem label="Between range"  value="between"  />
+														<!-- <listitem label="Is Nill"  value="none"  /> -->
+												</listbox>
+											</h:td>
+											<h:td>
+												<doublebox width="100px" id="loyaltyBalDbl1BxId" style="margin-left:10px;" />
+												<doublebox width="100px" visible="false" id="layaltyBal2DblBxId" style="margin-left:10px;" />
+											</h:td>
+										
+										</h:tr>
+										</h:table>
+										
+											
+										
+									</div>
+									<div height="100px" visible="false"
+										id="loyaltyDiffDivId" sclass="triggerOpt">
+										<h:table>
+											<h:tr>
+												<h:td>
+												 
+													<label value="Trigger when change in value is through transaction :" /> 
+												</h:td>
+												<h:td>
+													<checkbox label="Issuance" id="layaltyDiffIssueChkId" value="65536"/>
+												</h:td>
+											</h:tr>
+										</h:table>
+										
+										<h:table>
+										<h:tr>
+											<h:td>
+												<label value="Change in Value reaches :" />
+											</h:td>
+											<h:td>
+												<listbox width="180px" mold="select" id="loyaltyDiffOptionLbId1" style="margin-left:10px;">
+														<listitem label="Points"   value="lc.points_difference" selected="true"  />
+														<listitem label="Currency"  value="lc.amount_difference" />
+												</listbox>
+											</h:td>
+											<h:td>
+												<listbox width="180px" mold="select" id="loyaltyDiffOptionLbId2" style="margin-left:10px;">
+														<listitem label="More than"  selected="true" value=">" />
+														<listitem label="Less than"  value="&lt;" />
+														<listitem label="Equal to"  value="="/>
+														<listitem label="Between range"  value="between"  />
+														<!-- <listitem label="Is Nill"  value="none"  /> -->
+												</listbox>
+											</h:td>
+											<h:td>
+												<doublebox width="100px" id="loyaltyDiffDbl1BxId" style="margin-left:10px;" />
+												<doublebox width="100px" visible="false" id="loyaltyDiffDbl2BxId" style="margin-left:10px;" />
+											</h:td>
+										
+										</h:tr>
+										</h:table>
+										
+											
+										
+									</div>
+								</groupbox>
+							</h:td>
+						</h:tr>
+					</h:table>
+					
+					<separator height="20px" />
+				
+					<h:table cellspacing="5" cellpadding="2" height="170">
+						<h:tr >
+							<h:td  width="100px" align="right" valign="top">
+									<label value="Trigger the Action :" style="display:inline-block;margin-top:15px;"/>
+							</h:td>
+							<h:td   valign="top">
+								<h:table>
+									<h:tr>
+										<h:td  valign="top">
+											<listbox id="triggerActionLbId" mold="select" style="margin-top:5px;">
+												<listitem  label="After" id="afterListItemId" selected="true" ></listitem>
+												<listitem id="beforeListItemId" label="Before"  ></listitem>
+												<listitem id="onListItemId" label="Immediately" ></listitem>
+												<listitem id="onDayListItemId" label="On the same day" ></listitem>
+											</listbox>
+										</h:td>
+
+										<h:td  valign="top">
+											<div id="beforeAfterMsgDivId" style="float:left;">
+											
+											<h:table>
+											<h:tr>
+											<h:td>
+											<listbox id="hoursDaysLbId" width="100px" mold="select" style="margin-left:10px;">
+												<listitem label="hour(s)" id="hoursListItemId"  visible="false" value="60"></listitem>
+												<listitem label="day(s)" id="daysListItemId"   selected="true" value="1440" ></listitem>
+											</listbox>
+											</h:td>
+											
+											
+											<h:td >
+											<listbox mold="select" id="numbersLbId" style="margin-left:10px;" />
+												
+			
+											</h:td>
+											
+											</h:tr>
+											</h:table>
+											
+											</div>
+										</h:td>
+									</h:tr>
+								</h:table>
+							</h:td>
+						</h:tr>
+						<h:tr />
+						<h:tr>
+						<h:td  width="120px" align="right" >
+						</h:td>
+						<h:td >
+							<h:table>
+							<h:tr>
+							<h:td align="right" >
+							<label value="Set time of day :" id="targetTimeLblId"  />
+							</h:td>
+							<h:td>
+							<listbox id="timerListBoxId" mold="select"  >
+								<listitem label="1 AM" value="1" selected="true" />
+								<listitem label="2 AM" value="2" />
+								<listitem label="3 AM" value="3" />
+								<listitem label="4 AM" value="4" />
+								<listitem label="5 AM" value="5" />
+								<listitem label="6 AM" value="6" />
+								<listitem label="7 AM" value="7" />
+								<listitem label="8 AM" value="8" />
+								<listitem label="9 AM" value="9" />
+								<listitem label="10 AM" value="10" />
+								<listitem label="11 AM" value="11" />
+								<listitem label="12 PM" value="12" />
+								<listitem label="1 PM" value="13" />
+								<listitem label="2 PM" value="14" />
+								<listitem label="3 PM" value="15" />
+								<listitem label="4 PM" value="16" />
+								<listitem label="5 PM" value="17" />
+								<listitem label="6 PM" value="18" />
+								<listitem label="7 PM" value="19" />
+								<listitem label="8 PM" value="20" />
+								<listitem label="9 PM" value="21" />
+								<listitem label="10 PM" value="22" />
+								<listitem label="11 PM" value="23" />
+							
+							</listbox>
+							</h:td>
+							</h:tr>
+							</h:table>
+						</h:td>
+						
+						
+						
+						
+							<!-- <div id="targetTimeDivId" visible="true">
+							</div> -->
+								
+								<!-- <h:td>
+									<listbox id="timerListBoxId" mold="select" >
+										<listitem label="1 AM" value="1" selected="true" />
+										<listitem label="2 AM" value="2" />
+										<listitem label="3 AM" value="3" />
+										<listitem label="4 AM" value="4" />
+										<listitem label="5 AM" value="5" />
+										<listitem label="6 AM" value="6" />
+										<listitem label="7 AM" value="7" />
+										<listitem label="8 AM" value="8" />
+										<listitem label="9 AM" value="9" />
+										<listitem label="10 AM" value="10" />
+										<listitem label="11 AM" value="11" />
+										<listitem label="12 PM" value="12" />
+										<listitem label="1 PM" value="13" />
+										<listitem label="2 PM" value="14" />
+										<listitem label="3 PM" value="15" />
+										<listitem label="4 PM" value="16" />
+										<listitem label="5 PM" value="17" />
+										<listitem label="6 PM" value="18" />
+										<listitem label="7 PM" value="19" />
+										<listitem label="8 PM" value="20" />
+										<listitem label="9 PM" value="21" />
+										<listitem label="10 PM" value="22" />
+										<listitem label="11 PM" value="23" />
+									
+									</listbox>
+									
+								</h:td> -->
+								</h:tr>
+								<h:tr height="5"/>
+								<h:tr>
+								<h:td width="100px" align="right" >
+								</h:td>
+									<h:td >
+									<h:table>
+									<h:tr>
+									<h:td>
+									<label value="Set day(s) of week :"  id="targetDayLblId"/>
+									</h:td>
+									<h:td>
+									<div id="targetDaysDivId" >			
+									<checkbox label= "Mon" id="ignoreMonChkBoxId" checked="true" value="2" sclass="dashboardMyLinks" />
+									<checkbox label= "Tue" id="ignoreTueChkBoxId" checked="true" value="3" sclass="dashboardMyLinks" /> 
+									<checkbox label= "Wed" id="ignoreWedChkBoxId" checked="true" value="4" sclass="dashboardMyLinks" /> 
+									<checkbox label= "Thu" id="ignoreThurChkBoxId" checked="true" value="5" sclass="dashboardMyLinks" /> 
+									<checkbox label= "Fri" id="ignoreFriChkBoxId" checked="true" value="6" sclass="dashboardMyLinks" /> 
+									<checkbox label= "Sat" id="ignoreSatChkBoxId" checked="true" value="7" sclass="dashboardMyLinks" /> 
+									<checkbox label= "Sun"  id="ignoreSunChkBoxId" checked="true" value="1" sclass="dashboardMyLinks" /> 
+									</div>
+									</h:td>
+									</h:tr>
+									</h:table>
+									
+									
+									</h:td>
+									<!-- <h:td>	
+									<checkbox label="Enable Target Time" id="enableTargetTimeChkBoxId" w:onClick="enableTargetTimerComponentsDiv(this, false);"  visible="true" 
+									checked="true" />
+									</h:td> -->
+								</h:tr>
+							</h:table>
+							
+									
+									
+									
+									
+									
+											
+											
+											
+										<!-- 	</h:tr>
+											
+											<h:tr>
+									<h:td/>
+									<h:td/>		
+										<h:td >
+											<div id="targetTimeDivId" visible="false">
+												<h:table>
+												<h:tr> -->
+												<!-- <h:td>
+												<listbox id="timerListBoxId" mold="select" >
+													<listitem label="1 AM" value="1" selected="true" />
+													<listitem label="2 AM" value="2" />
+													<listitem label="3 AM" value="3" />
+													<listitem label="4 AM" value="4" />
+													<listitem label="5 AM" value="5" />
+													<listitem label="6 AM" value="6" />
+													<listitem label="7 AM" value="7" />
+													<listitem label="8 AM" value="8" />
+													<listitem label="9 AM" value="9" />
+													<listitem label="10 AM" value="10" />
+													<listitem label="11 AM" value="11" />
+													<listitem label="12 PM" value="12" />
+													<listitem label="1 PM" value="13" />
+													<listitem label="2 PM" value="14" />
+													<listitem label="3 PM" value="15" />
+													<listitem label="4 PM" value="16" />
+													<listitem label="5 PM" value="17" />
+													<listitem label="6 PM" value="18" />
+													<listitem label="7 PM" value="19" />
+													<listitem label="8 PM" value="20" />
+													<listitem label="9 PM" value="21" />
+													<listitem label="10 PM" value="22" />
+													<listitem label="11 PM" value="23" />
+												
+												</listbox>
+												
+												</h:td> -->
+												<!-- <timebox id="timeBoxId" format="hh:mm a" width="100px"/> -->
+												<!-- <h:td>
+												<label  value=" At " id="trigAtLabelId" />
+												<listbox id="hoursLbId"  mold="select"/>
+												<label value="Hours" />
+												</h:td>
+												<h:td>
+												<listbox  id="mintsLbId"  mold="select">
+													<listitem label="00" />
+													<listitem label="30" />
+												</listbox>
+												<label value="Minutes"/>
+												</h:td>
+												<h:td>
+												<listbox  id="meridianLbId"  mold="select">
+													<listitem label="AM" value="0" />
+													<listitem label="PM" value="1" />
+												</listbox>
+												</h:td> -->
+												<!-- <h:td >
+												
+												<checkbox label= "Mon" id="ignoreMonChkBoxId" checked="true" value="2" sclass="dashboardMyLinks" />
+												<checkbox label= "Tue" id="ignoreTueChkBoxId" checked="true" value="3" sclass="dashboardMyLinks" /> 
+												<checkbox label= "Wed" id="ignoreWedChkBoxId" checked="true" value="4" sclass="dashboardMyLinks" /> 
+												<checkbox label= "Thu" id="ignoreThurChkBoxId" checked="true" value="5" sclass="dashboardMyLinks" /> 
+												<checkbox label= "Fri" id="ignoreFriChkBoxId" checked="true" value="6" sclass="dashboardMyLinks" /> 
+												<checkbox label= "Sat" id="ignoreSatChkBoxId" checked="true" value="7" sclass="dashboardMyLinks" /> 
+												<checkbox label= "Sun"  id="ignoreSunChkBoxId" checked="true" value="1" sclass="dashboardMyLinks" /> 
+												</h:td>
+												</h:tr>
+												</h:table>
+											</div>
+											</h:td>
+									</h:tr>
+											
+											
+											</h:table>
+											</div>
+											</h:td>
+									
+									</h:tr>	
+									
+								</h:table>
+											
+									
+
+							</h:td>
+
+						</h:tr>
+					</h:table> -->
+				
+					<separator height="20px" />
+				
+					<h:table cellspacing="5" cellpadding="2"> 
+						<h:tr>
+							<h:td valign="top" width="120px" align="right">
+									<label value="Action :" style="display:inline-block;margin-top:10px;"/>
+							</h:td>
+							<h:td>
+								<h:table>
+									<h:tr>
+										<h:td>
+											<checkbox
+												label="Send Email Campaign" id="sendEmailCampaignChkBxId">
+												<!-- w:onClick="displaySendEmailCampaignDiv(this);" -->
+											</checkbox>
+										</h:td>
+										<h:td>
+											<div visible="false"
+												id="sendEmailCampaignDivId">
+												<listbox width="250px"
+													mold="select" id="campaignsLbId">
+												</listbox>
+												<toolbarbutton
+													label="Preview" image="/images/icon_preview_big.png" style="font-weight:bold;color:#43A0BA;" id="campaignPreviewTBtnId">
+												</toolbarbutton>
+												<toolbarbutton
+													label="Configure" style="text-decoration:underline;" id="configTlbBtnId" >
+													<!-- w:onClick="viewDivision(this);" -->
+												</toolbarbutton>
+											</div>
+										</h:td>
+									</h:tr>
+									
+									<!-- <h:tr>
+										<h:td colspan="2">
+									<div id="categoryDivId" visible="false" >
+										<label value="Email Catgory :"  sclass="labelPos" style="padding-left:40px;" />
+										<label value="" id="catregiryLblId"  />
+										</div>
+										
+										</h:td>
+										</h:tr> -->
+										
+									<h:tr>
+										<h:td colspan="2">
+				 							<div id="campConfigSettngDivId"	visible="false">
+										<h:table cellpadding="8px">
+											<h:tr>
+												<h:td>
+													<label
+														value="Send from this name :" />
+												</h:td>
+												<h:td>
+													<textbox
+														id="trigCampNameTbId" />
+													<image
+														src="/img/QuestionmarkButton-16x16.png"
+														tooltip="sendNameDesc" style="cursor: help" />
+												</h:td>
+											</h:tr>
+
+											<h:tr>
+												<h:td>
+													<label
+														value="Send from this email address :" />
+												</h:td>
+												<h:td>
+													<combobox
+														id="trigCampFromCbId" readonly="true">
+													</combobox>
+													<image
+														src="/img/QuestionmarkButton-16x16.png"
+														tooltip="sendNameDesc1" style="cursor: help" />
+												</h:td>
+											</h:tr>
+
+											<h:tr>
+												<h:td>
+													<label
+														value="Send reply email to :" />
+												</h:td>
+												<h:td>
+													<combobox
+														id="trigCampReplyCbId" readonly="true">
+													</combobox>
+													<image
+														src="/img/QuestionmarkButton-16x16.png"
+														tooltip="sendNameDesc2" style="cursor: help" />
+												</h:td>
+											</h:tr>
+
+											<h:tr>
+												<h:td colspan="2"
+													align="center">
+													<button
+														id="sendgOptSaveBtnId" label="Save">
+													</button>
+													<button
+														id="sendOptCancelBtnId" label="Cancel" >
+														<!-- w:onClick="zk.Widget.$('$campConfigSettngDivId').hide();" -->
+													</button>
+												</h:td>
+											</h:tr>
+										</h:table>
+										
+										<popup id="sendNameDesc"
+											width="400px" style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Name displayed as 'From' in the email"
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+										<popup id="sendNameDesc1"
+											width="400px" style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Email will be displayed as 'From Email'"
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+										<popup id="sendNameDesc2"
+											width="400px" style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Email will be displayed as 'Reply Email'"
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+									</div>
+								
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<checkbox
+												label="Send SMS Campaign" id="sendSMSCampaignChkBxId">
+											</checkbox>
+										</h:td>
+										<h:td>
+											<div visible="false"
+												id="sendSMSCampaignDivId">
+												<listbox width="250px"
+													mold="select" id="smsLbId">
+												</listbox>
+												<toolbarbutton
+													label="Preview" image="/images/icon_preview_big.png" style="font-weight:bold;color:#43A0BA;" id="smsPreviewTBtnId">
+												</toolbarbutton>
+											</div>
+										</h:td>
+									</h:tr>
+									
+								</h:table>
+							</h:td>
+						</h:tr>
+						<h:tr>
+                             <h:td />       <h:td>
+                               
+                                    <toolbarbutton
+                                                    label="More Options" style="color:#2589BB;text-decoration:underline;font-size:12;font-weight:bold;" id="MoreOptionsTlBtnId" >
+ 									</toolbarbutton>
+                                 
+                                   
+                                 <div id="MoreOptionsDivId" visible="false">
+                                    <h:table>
+                                    <h:tr>
+                                        <h:td>
+                                            <checkbox
+                                                label="Add to other list" id="addToOtherListChkBxId">
+                                                
+                                            </checkbox>
+                                        </h:td>
+                                        <h:td>
+                                            <div visible="false" id="addToOtherListDivId">
+                                                <listbox width="250px" id="addToMlLbId"
+                                                 mold="select">
+                                                </listbox>
+                                            </div>
+                                        </h:td>
+                                    </h:tr>
+                                    <h:tr>
+                                        <h:td>
+                                            <checkbox id="removeFrCampMlChkBxId"
+                                                label="Remove from list">
+                                            </checkbox>
+                                        </h:td>
+                                    </h:tr>
+                                </h:table>
+                                </div>
+
+                                </h:td>
+                                </h:tr>
+                                
+                       <h:tr >
+					<h:td  valign="top" width="200px" align="right">
+						<label value="Campaign Category:"/>
+						
+					</h:td>
+					
+					<h:td >
+						<listbox  id="categoryLbId"  rows="1" mold="select" style="position:relative;" width="200px">
+						
+						<listitem label="Select Category" selected="true" ></listitem>
+						</listbox>
+						
+							<image src="/img/icons/icon_q.png" tooltip="help2"  style="padding-left:40px;" id="helpImgId" visible="false" />
+						<popup id="help2"   width="400px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="You need to enable subscriber preference center for this setting" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup>
+						
+					</h:td>
+				</h:tr>
+                                
+                                
+                                
+                               
+					</h:table>
+			
+					<separator height="20px" />
+					
+					<div align="right">
+						<button label="Cancel" id="cancelBtnId" sclass="idle140"></button>
+						<!-- <button label="Get Count" sclass="idle140"></button> -->
+						<button label="Save" id="etSaveBtnId"
+							sclass="idle140 greenbtn">
+						</button>
+					</div>
+				
+						
+						
+						<window id="previewWinId" title="Preview" border="normal"
+								mode="overlapped" visible="false" position="center">
+								<caption>
+									<toolbarbutton label="Close"
+										onClick="previewWinId.setVisible(false)" />
+								</caption>
+								<div id="contentDivId" width="750px" height="500px"
+									style="overflow:auto">
+									<html id="html" />
+								</div>
+						</window>
+						
+						
+						
+						<script>
+						
+						<![CDATA[
+						function enableAfterBeforeDivComponents(listItemObj) {
+							
+							//var listItemArr = ["afterListItemId","beforeListItemId","onListItemId","onDayListItemId"];
+							
+							var div = zk.Widget.$('$beforeAfterMsgDivId');
+							var numLb = zk.Widget.$('$numbersLbId');
+							var hoursDaysLb = zk.Widget.$('$hoursDaysLbId');
+							
+							var targetTimeLabel = zk.Widget.$('$targetTimeLblId');
+							var targetTimeListBox = zk.Widget.$('$timerListBoxId');
+							
+							var targetDaysLabel = zk.Widget.$('$targetDayLblId');
+							var targetDaysDiv = zk.Widget.$('$targetDaysDivId');
+							
+							//var targetTimerChkBoxId = zk.Widget.$("$enableTargetTimeChkBoxId");
+							//targetTimerChkBoxId.setChecked(false);
+							//enableTargetTimerComponentsDiv(targetTimerChkBoxId, isFromServer);
+							
+								if(listItemObj.getId() == 'afterListItemId' || listItemObj.getId() == 'beforeListItemId' ) 
+								{
+									div.setVisible(true);
+									numLb.setVisible(true);
+									hoursDaysLb.setVisible(true);
+									
+									targetTimeLabel.setVisible(true);
+									targetTimeListBox.setVisible(true);
+									
+									targetDaysLabel.setVisible(true);
+									targetDaysDiv.setVisible(true);
+									
+								}else{
+									
+										div.setVisible(false);
+										targetDaysLabel.setVisible(false);
+										targetDaysDiv.setVisible(false);
+									
+									if(listItemObj.getId() == 'onDayListItemId') {
+										
+										targetTimeLabel.setVisible(true);
+										targetTimeListBox.setVisible(true);
+										
+										
+									}else{
+										//alert('true');
+										targetTimeLabel.setVisible(false);
+										targetTimeListBox.setVisible(false);
+										
+									}
+									
+									
+								}//else
+							
+							
+							
+						}
+						function toggleDivContents(radioObj, isFromServer)
+						{
+
+							//var	triggerGbxId = zk.Widget.$("$triggerTypeGbxId");
+							var radioArr = ["productRbnId","contactDateRbnId","campaignOpenRbnId","onPurchaseRbnId",
+							                "optinMediumRbnId","campaignClickedRbnId","dateAddedRbnId","amountRbnId"];
+							var	divArr = ["$productDivId","$contactDateDivId","$campaignOpenDivId","$onPurchaseDivId",
+							   	          "$optinMediumDivId","$campaignClickedDivId","$dateAddedDivId","$amountDivId"];
+		
+							
+							for(var i=0 ; i<radioArr.length ; i++)
+							{
+								if(radioObj.getId() == radioArr[i]) 
+								{
+									zk.Widget.$(divArr[i]).setVisible(true); 
+									
+								}
+								else if(!(zk.Widget.$(divArr[i]) == undefined))
+								{
+									zk.Widget.$(divArr[i]).setVisible(false); 
+								} 
+							}
+							
+							var trigActLb = zk.Widget.$("$triggerActionLbId");
+		     				
+		     				var hoursLi = zk.Widget.$("$hoursListItemId");
+		     				
+		     				var afterLi = trigActLb.getChildAt(0);
+		     				var beforeLi = trigActLb.getChildAt(1);
+		     				var onLi = trigActLb.getChildAt(2);
+		     				var onDayLi = trigActLb.getChildAt(3);
+		     				//var numbLb = trigActLb.getChildAt(1);
+		     				//var hourDaysLb = trigActLb.getChildAt(1);
+		     				
+	 						var onDateLi =  zk.Widget.$("$onListItemId");
+	 						 var jsScriptTB = document.getElementById(onLi.uuid)
+
+		 						
+							if( (radioObj.getId() == 'contactDateRbnId' ) || (radioObj.getId() == 'optinMediumRbnId')  ) {
+								if( radioObj.getId() == 'contactDateRbnId' ){
+									onLi.hide();
+									hoursLi.hide();
+									beforeLi.show();
+								}else{
+									
+									beforeLi.hide();
+									hoursLi.show();
+									onLi.show();
+								}
+		 						
+								//(zk.Widget.$(jq('$onListItemId')[0])).setLabel('On the same date');
+								//zk.Widget.$("$onListItemId").setLabel('On the same date');
+								//onLi.setLabel('Immediately');
+		 					}else{
+		 						
+		 						onLi.show();
+								beforeLi.hide();
+								hoursLi.show();
+								//(zk.Widget.$(jq('$onListItemId')[0])).setLabel('Immediately');
+		 						
+		 					}
+								
+	 						// var selectedListItem = getSelectedItem(trigActLb);
+	 						
+		 						 
+						}
+
+						
+						function enableTargetTimer(ListItemObj) {
+							//var targetTimerChkBoxId = zk.Widget.$("$enableTargetTimeChkBoxId");
+						//var targetTimerCompDiv =  zk.Widget.$("$targetTimeDivId");
+							
+							var targetTimeLabel = zk.Widget.$('$targetTimeLblId');
+							var targetTimeListBox = zk.Widget.$('$timerListBoxId');
+							
+							var targetDaysLabel = zk.Widget.$('$targetDayLblId');
+							var targetDaysDiv = zk.Widget.$('$targetDaysDivId');
+							
+							
+							if(ListItemObj.getId() == "hoursListItemId") {
+								
+								targetTimeLabel.setVisible(false);
+								targetTimeListBox.setVisible(false);
+								targetDaysLabel.setVisible(false);
+								targetDaysDiv.setVisible(false);
+							}else if(ListItemObj.getId() == "daysListItemId") {
+								alert('true');
+								targetTimeLabel.setVisible(true);
+								targetTimeListBox.setVisible(true);
+								targetDaysLabel.setVisible(true);
+								targetDaysDiv.setVisible(true);
+								
+								//targetTimerCompDiv.setVisible(false);
+							}//else ifoll
+							
+							
+							
+							
+							
+						}
+						function enableTargetTimerComponentsDiv(ChkBoxObj,isFromServer) {
+							var targetTimerChkBoxId = zk.Widget.$("$enableTargetTimeChkBoxId");
+							var targetTimerCompDiv =  zk.Widget.$("$targetTimeDivId");
+							//alert("clicked"+targetTimerChkBoxId.isChecked);
+							if(ChkBoxObj.getId() == "enableTargetTimeChkBoxId"  ) {
+								
+								targetTimerCompDiv.setVisible(targetTimerChkBoxId.isChecked());
+							}
+							
+							if(targetTimerChkBoxId.isChecked() == true && isFromServer == false) {
+								
+								var dayschkArr = ['$ignoreSunChkBoxId', '$ignoreMonChkBoxId', '$ignoreTueChkBoxId',
+													'$ignoreWedChkBoxId', '$ignoreThurChkBoxId', '$ignoreFriChkBoxId', '$ignoreSatChkBoxId'];
+								
+								for(var i=0 ; i<dayschkArr.length ; i++)
+								{
+									alert(''+zk.Widget.$(dayschkArr[i]) );
+									
+									(zk.Widget.$(dayschkArr[i])).setChecked(true);
+									
+									
+								}
+								
+								var timerListBox = zk.Widget.$('$timerListBoxId');
+								timerListBox.setSelectedIndex(0);
+								
+							}
+							
+							
+						}
+						
+						
+						]]>
+						
+						
+						
+						</script>
+						
+				</tabpanel>
+				
+				<tabpanel>
+					<h:table width="100%">
+						<h:tr>
+							<h:td>
+								<label
+									value="You can create &amp; save your custom trigger dates here.These will appear as a list under " />
+								<label
+									value="  &quot; A specific date &quot;"
+									style="font-weight:bold;" />
+								<h:br />
+								<label
+									value="option from where you'll be able to  choose one to trigger you event." />
+								<h:br />
+								<label
+									value="For example, you can enter Trigger Date Name as " />
+								<label value="Independence Day"
+									style="font-weight:bold;" />
+								<label value=" and Selected Date as" />
+								<label value=" 15/08/2011"
+									style="font-weight:bold;" />
+							</h:td>
+						</h:tr>
+					</h:table>
+
+
+					<groupbox closable="false"
+						style="margin:10px 15px 10px 0">
+						<caption label="Add Custom Event"></caption>
+						<h:table width="50%">
+
+							<h:tr>
+								<h:td align="right">
+									<label value="Enter Event Name :" />
+								</h:td>
+								<h:td>
+									<textbox id="custEvntTbId"></textbox>
+								</h:td>
+							</h:tr>
+
+							<h:tr>
+								<h:td align="right">
+									<label value="Select Date :" />
+								</h:td>
+								<h:td>
+									<datebox id="custmEvntDateBxId"
+										format="dd-MM-yyyy" cols="18"
+										use="org.mq.marketer.campaign.custom.MyDatebox"
+										readonly="true" width="165px">
+									</datebox>
+								</h:td>
+							</h:tr>
+
+							<h:tr>
+								<h:td></h:td>
+								<h:td>
+									<button id="custmEvntSavBtnId"
+										label="Save">
+									</button>
+
+								</h:td>
+							</h:tr>
+						</h:table>
+					</groupbox>
+
+
+
+					<grid width="99%" id="existingCustomEventsGrdId">
+
+
+						<columns>
+							<column width="35%">Name</column>
+							<column width="35%">Date</column>
+							<column>Action</column>
+						</columns>
+
+						<rows>
+							<row>
+								<label value="Email name" />
+								<label value="12/12/2010" />
+								<toolbarbutton label="delete"
+									style="padding:0px 20px;border: 0px;" />
+							</row>
+							<row>
+								<label value="Email name" />
+								<label value="12/12/2010" />
+								<toolbarbutton label="delete"
+									style="padding:0px 20px;border: 0px;" />
+							</row>
+							<row>
+								<label value="Email name" />
+								<label value="12/12/2010" />
+								<toolbarbutton label="delete"
+									style="padding:0px 20px;border: 0px;" />
+							</row>
+							<row>
+								<label value="Email name" />
+								<label value="12/12/2010" />
+								<toolbarbutton label="delete"
+									style="padding:0px 20px;border: 0px;" />
+							</row>
+						</rows>
+					</grid>
+
+					<!-- <script>
+						<![CDATA[
+						function validateCustomFrm() {
+						
+						
+						if(zk.Widget.$(jq('$custEvntTbId')).getValue() == '') {
+						jq.alert('Custom event name field cannot be empty.');
+						return false;
+						}
+						//alert(zk.Widget.$(jq('$custmEvntDateBxId')).getValue());
+						if(zk.Widget.$(jq('$custmEvntDateBxId')).getValue() == undefined ||  zk.Widget.$(jq('$custmEvntDateBxId')).getValue() == '') {
+						jq.alert('Please select custome event date.');
+						return false;
+						} 
+						}		
+						]]>
+						</script>		 -->
+
+
+				</tabpanel>
+				
+				
+			<!-- 	<tabpanel>
+					<h:table width="100%">
+						<h:tr>
+							<h:td>
+								<include src=""
+									id="triggerPageIncludeId" />
+							</h:td>
+
+						</h:tr>
+					</h:table>	
+						        	
+				</tabpanel> -->
+			</tabpanels>
+		</tabbox>
+
+
+	</window>
+
+</zk>

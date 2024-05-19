@@ -1,0 +1,28 @@
+<zk>
+	<window width="100%" id="clickURLWinId" apply="org.mq.marketer.campaign.controller.report.ClickURLController" 
+		xmlns:h="native">
+		
+		<style src="/css/reports.css" />
+		<groupbox sclass="gbStyle" closable="false" >
+				<caption label="URLs Clicked Report"  />
+				
+		<grid id="viewClickUrlsGridId" mold="paging" pageSize="10"
+			emptyMessage="No Records Found..." >
+			<columns sizable="true">
+				<column id="urlNameColId" label="URL Clicked" align="left" width="60%" sort = "auto"/>
+				<column id="uniqueClickColId" label="Unique Clicks for URL" align="center" width="20%" sort = "auto" />
+				<column id="totalClickColId" label="Total Clicks for URL" align="center" width="20%" sort = "auto" />
+				
+			</columns>
+			
+		<foot>
+        <footer label="TOTAL CLICKS" style="text-align:left;font-weight:bold;"/>
+        <footer id="uniqueClicksLBFId"  label="" style="text-align:center"/>
+        <footer id="totClicksLBFId" label="" style="text-align:center"/>
+        </foot>
+		
+		</grid>	
+		
+		</groupbox>
+		</window>
+</zk>

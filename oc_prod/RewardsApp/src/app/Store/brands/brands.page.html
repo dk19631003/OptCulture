@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start" >
+          <ion-button  (click)="backButtonEvent()">
+            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+    <ion-title>Brands</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+      <!-- <ion-item-group *ngFor="let group of brands">
+
+      <ion-item-divider light>{{group.letter}}</ion-item-divider> -->
+      <ion-list>
+      
+        <ion-item  (click)="goToStoreInfo(contact.BrandName)" *ngFor="let contact of brands">
+         <ion-avatar slot="start">
+             <img src="{{contact.BrandImagePath}}">
+          </ion-avatar>
+         <ion-label>{{contact.BrandName}}</ion-label>
+       </ion-item>
+         
+      </ion-list>
+      <!-- </ion-item-group> -->
+</ion-content>

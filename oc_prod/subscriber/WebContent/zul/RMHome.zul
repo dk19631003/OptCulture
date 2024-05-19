@@ -1,0 +1,477 @@
+<?page title="Application Home Page" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+	<window  id="RMHomeWinId" apply="org.mq.marketer.campaign.controller.RMHomeController" 
+	xmlns:h="native" xmlns:w="client" >
+<style>
+.quickViewTable {
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 3px 1px #BBBBBB;
+    margin: 5px;
+    padding: 0px;
+    text-align: center;
+    font-family: arial;
+    font-size: 14px;
+    height: 260px;
+}
+
+.quickOverviewLink { 
+	color:#FFFFFF;
+	text-decoration:none;
+}
+.quickOverviewLink:hover{
+	text-decoration:underline;
+}
+
+.quickViewTableData {
+	font-size: 16px;
+}
+
+.hrLine {
+    background: url("images/overview_horzt_line.jpg") no-repeat scroll center transparent;
+    height: 25px;
+}
+.vertLine {
+    background: url("images/overview_vert_line.jpg") no-repeat scroll center transparent;
+}
+.greenStrip {
+    background: url("images/Green_bg.png") no-repeat scroll -3px -3px  transparent;
+   height:45px;
+   font-family:arial;
+   font-weight:bold;
+   font-size:12px;
+   color:#FFFFFF;
+   padding:10px 0 0 10px;
+}
+
+
+.linksGroupBox {
+	display:inline-block; 
+	width:49%; 
+}
+
+.linksGroupBox .z-groupbox-cnt {
+	min-height:150px;
+}
+
+.linksDiv {
+    float: left;
+    width: 272px;
+    padding: 8px 0px 2px 15px;
+	height:60px;
+}
+
+.linksDiv a {
+	color:#2589BB;
+	text-decoration:none;
+	font-weight:bold;
+	margin-top:2px;
+	margin-bottom:3px;
+	display:block;
+}
+.linksDiv a:hover{
+	text-decoration:underline;
+}
+
+.linksDiv img{
+	margin:0 15px 20px 0;
+}
+
+
+.dashboardMyLinks {
+		color:#2589BB;
+		font-weight:bold;
+		padding:0 15px;
+		text-decoration:underline;
+     }
+
+
+
+.messagesDataRead {
+    border: 1px solid #AAAAAA;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 10px 1px #BBBBBB inset;
+    color: #000000;
+    display: inline-block;
+    font-weight: bold;
+    min-width: 12px;
+    padding: 3px 8px;
+    text-align: center;   
+}
+
+.messagesDataUnRead {
+    border: 1px solid #538D27;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 20px 4px #538D27 inset;
+    color: #FFFFFF;
+    display: inline-block;
+    font-weight: bold;
+    min-width: 12px;
+    padding: 3px 8px;
+    text-align: center;   
+}
+
+ <!-- Loyalty and optintel dashboard css  -->
+  .compareUp span.compareArrow{
+     	background:url('img/optDash/Upward_icn.png') no-repeat right 1px;
+     	display: inline-block;
+	    padding-right: 20px;
+	   
+     }
+     
+     .compareDown span.compareArrow{
+     	background:url('img/optDash/Downward_icn.png') no-repeat right 1px;
+     	display: inline-block;
+	    padding-right: 20px;
+	   
+     }
+     
+     .dashboardMyLinksSelected {
+     	color:#000000;
+     	text-decoration:none;
+		font-weight:bold;
+		padding:0 15px;
+     }
+     
+</style>
+
+	<tabbox >	
+	 				<tabs>
+						<tab label="Dashboard"></tab>
+						<tab id="optIntelDashTabId" label="Optintel Dashboard" visible="false"></tab>
+						<tab id="loyaltyDashTabId" label="Loyalty Dashboard" style="display:none;" ></tab>
+				</tabs>
+				
+				<tabpanels>
+						<tabpanel>
+						
+								<div align="right" style="padding-right:20px;">
+								<a id="downloadAId" label="Downloads" style="color:#2589BB;font-weight:bold;margin-right: 5px;" />
+							 <label id="myDownloadCountId" value="1" sclass="messagesDataRead" />
+							<a id="messagesAId" label="Messages" style="color:#2589BB;font-weight:bold;margin-right: 5px;" />
+							 <label id="mainMsgsCountId" value="1" sclass="messagesDataRead" />
+						</div>
+					
+						<h:table cellspacing="0" cellpadding="0" width="100%"  >
+							
+					
+						<h:tr>
+							<h:td valign="top" align="middle" width="400">
+							<h:table cellspacing="0" cellpadding="0" width="400" class="quickViewTable" >
+								<h:tr >
+								<h:td  class="greenStrip" align="left" valign="top">
+								<a id="quickOverviewAId" label="Quick Overview" sclass="quickOverviewLink" tooltiptext="Refresh Quick Overview Data."/>
+								</h:td>
+								<h:td />
+								<h:td />
+							</h:tr>
+							<h:tr>
+							<!-- <h:td width="49%">Active Email Campaigns</h:td> -->
+								<h:td width="49%">Active Campaigns</h:td>
+								<h:td rowspan="9" width="2%" class="vertLine"></h:td>
+								<h:td width="49%">Active Contacts</h:td>
+							</h:tr>
+							<h:tr height="26">
+								<h:td> <label id="activeCampaignsLblId" value="0" sclass="quickViewTableData"/> </h:td>
+								<h:td> <label id="totalSubscribersLblId" value="0" sclass="quickViewTableData" /></h:td>
+							</h:tr>
+							
+							<h:tr height="20">
+								<h:td colspan="3" class="hrLine"></h:td>
+							</h:tr>
+							
+							<h:tr>
+								<h:td>Opt-ins this month</h:td>
+								<h:td>Opt-outs this month</h:td>
+							</h:tr>
+							<h:tr height="26">
+								<h:td> <label id="optInsLblId" value="0" sclass="quickViewTableData"/> </h:td>
+								<h:td> <label id="optOutsLblId" value="0" sclass="quickViewTableData" /></h:td>
+							</h:tr>
+							
+							<h:tr height="20">
+								<h:td colspan="3" class="hrLine"></h:td>
+							</h:tr>
+							
+							<h:tr>
+								<h:td>Emails Scheduled Today</h:td>
+								<h:td>SMS Scheduled Today</h:td>
+							</h:tr>
+							<h:tr height="26">
+								<h:td> <label id="messageScheduledLblId" value="0" sclass="quickViewTableData"/> </h:td>
+								<h:td> <label id="unsubBouncedLblId" value="0" sclass="quickViewTableData" /></h:td>
+							</h:tr>
+							<h:tr height="20">
+							<h:td></h:td>
+							<h:td></h:td>
+							</h:tr>
+						</h:table>		
+										
+										
+									</h:td>
+									
+									
+									
+									<h:td align="middle" valign="top">
+										<h:table width="100%" cellpadding="5" cellspacing="0" border="0">
+					
+						 					<h:tr>
+												<h:td >
+													<listbox id="recentCampListLbId" sclass="contactsView"  width="99%"  
+														emptyMessage="No Email/SMS Reports found.">
+													
+														<listhead style="background-color:#488eb0;" >
+															<listheader label="Latest Campaigns"  align="left" maxlength="35" width="30%" style="padding-left:10px;" />
+															<listheader label="Campaign Type"  align="center" width="15%"/>
+															<listheader label="Sent On" align="center" width="25%"/>
+															<listheader label="Sent to Contacts"  align="center" width="15%"/>
+															<listheader label="Reports"  align="center" width="15%"/>
+														</listhead>
+													</listbox>
+												</h:td>
+											</h:tr>
+											
+										</h:table>
+									</h:td>
+									
+									
+									
+									
+								</h:tr>
+							</h:table>
+							
+							<separator />
+							
+							<div>
+							
+							
+							<groupbox closable="false" sclass="linksGroupBox" >
+								<caption label="Campaigns"/>
+				
+							<div id ="emailCampaignsDivId" sclass="linksDiv" visible="false" >
+								<image src="img/icons/email_campaigns_icon.png" align="left"  />
+								 <a id="viewEmailAId" label="Email Campaigns"  />
+								 <label value="View, modify &amp; manage  email campaigns." />
+							</div>
+							
+							<div id="smsCampaignsDivId"  sclass="linksDiv" visible="false">
+								<image src="img/icons/sms_campaigns.png" align="left"  />
+								<a id="viewSMSAId" label="SMS Campaigns"  />
+								<label value="View, modify &amp; manage  SMS campaigns." />
+							</div>
+						
+							<div  id="createEmailcampaignsDivId" sclass="linksDiv" visible="false">
+								<image src="img/icons/create_an_email.png" align="left"  />
+								 <a id="creatEmailAId" label="Create an Email" />
+								 <label value="Create a new email campaign." />
+							</div>
+							
+							<div  id="CreateSmscampaignsDivId" sclass="linksDiv" visible="false" >
+								<image src="img/icons/create_sms.png" align="left"  />
+							 	<a id="creatSMSAId" label="Create an SMS" />
+							 	<label value="Create a new SMS campaign." />
+							 </div>
+				
+						</groupbox>
+						
+					
+						<groupbox closable="false"  sclass="linksGroupBox" >
+							<caption label="Contacts"/>
+			
+					<div id="addContactDivId" sclass="linksDiv" visible="false">
+						
+						<image src="img/icons/upload-a-list.png" align="left"  />
+						<a id="addContactAId" label="Upload a List" />
+						<label value="Add new contacts by either uploading a supported list or by manually adding details." />
+					</div>
+						
+					<div id="createSegmentDivId" sclass="linksDiv" visible="false">
+						<image src="img/icons/create-a-segment.png" align="left"  />
+						<a id="createSegmentAId" label="Create a Segment" />
+						<label value="Apply segmentation rules to your lists targeting specific contacts based on their known attributes." />
+					</div>
+						
+					<div id="manageContactsDivId" sclass="linksDiv" visible="false">
+							<image src="img/icons/all-lists.png" align="left"  />
+							 <a id="allListsAId" label="All Lists"  />
+							 <label value="View &amp; manage your contact lists." />
+					</div>
+			
+					<div  id="manageSegmentsDivId" sclass="linksDiv" visible="false">
+							<image src="img/icons/all_segments.png" align="left"  />
+							 <a id="allSegmentsAId" label="All Segments"  />
+							 <label value="View &amp; manage your list segments." />
+					</div>
+			
+					</groupbox>
+					
+						<groupbox closable="false"  sclass="linksGroupBox" >
+							<caption label="Reports"/>
+					<div id="emailReportsDivId" sclass="linksDiv" visible="false">
+						<image src="img/icons/email_campaign_reports.png" align="left"  />
+						<a id="emailCampReportsAId" label="Email Campaign Reports" />
+						<label value="View detailed reports on sent email campaigns." />
+					</div>
+					
+					<div id="smsCampReportsDivId" sclass="linksDiv" visible="false">
+						<image src="img/icons/sms_campaign_report.png" align="left"  />
+						<a id="SMSCampReportsAId" label="SMS Campaign Reports" />
+						<label value="View detailed reports on sent SMS campaigns." />
+					</div>
+					<div id="waCampReportsDivId" sclass="linksDiv" visible="false">
+						<image src="img/icons/sms_campaign_report.png" align="left"  />
+						<a id="WACampReportsAId" label="WA Campaign Reports" />
+						<label value="View detailed reports on sent WA campaigns." />
+					</div>
+					
+					<div  id="smsKeywordReportsDivId" sclass="linksDiv" visible="false">
+						<image src="img/icons/sms_keywrd_usage_rprt.png" align="left"  />
+						 <a id="SMSKeywordReportsAId" label="SMS Keyword Usage Reports" />
+						 <label value="View performance of keywords used in SMS campaign." />
+					</div>
+		
+					<div id="optintelReportsDivId" sclass="linksDiv" visible="false">
+						<image src="img/icons/optintel_reports.png" align="left"  />
+						 <a id="optintelReportsAId" label="Optintel Reports" />
+						 <label value="View performance of promotional campaigns run through Point-of-Sale." />
+					</div>
+		
+				</groupbox>
+				
+				<groupbox closable="false"  sclass="linksGroupBox" >
+				<caption label="Others"/>
+	      
+				<div  id="manageAutoEmailsDivId" sclass="linksDiv" visible="false" >
+					<image src="img/icons/manage-auto-emails.png" align="left"  />
+					 <a id="manageAutoEmailsAId" label="Manage Auto Emails" />
+					 <label value="Create  &amp; manage all types of auto-emails like double opt-in message, etc ." />
+				</div>
+	              
+				<div id="manageKeywordsDivId" sclass="linksDiv" visible="false" >
+					<image src="img/icons/manage_keywords.png" align="left"  />
+					 <a id="manageKeywordAId" label="Manage Keywords"  />
+					 <label value="Create  &amp; manage keywords and their auto-responses." />
+				</div>
+	
+				<div id="accountSettingsDivId" sclass="linksDiv" visible="false">
+					<image src="img/icons/account_settings.png" align="left"  />
+					<a id="accountSettingsAId" label="Account Settings"  />
+					
+					<label value="View &amp; manage settings like password, contact information,etc."/>
+				</div>
+				
+				<div id="userAccountaDivId" sclass="linksDiv"  visible="false" >
+					<image src="img/icons/manage-users.png" align="left"  />
+					 <a id="userAccountsAId" label=" Manage Users " />
+					 <label value="Create  &amp; manage accounts of users in the  organization." />
+				</div>
+				
+				<div id="faqaDivId" sclass="linksDiv"  visible="false" >
+					 <a id="faqAId" label=" FAQ " />
+					 <label value="Create  FAQ" />
+				</div>
+				<div id="termsaDivId" sclass="linksDiv"  visible="false" >
+					 <a id="termsAId" label=" Terms and Conditions " />
+					 <label value="Create Terms and Conditions" />
+				</div>
+	
+			</groupbox>
+		
+				</div>
+						
+						</tabpanel>
+							
+						<tabpanel>
+						 	<include id="optintelIncId"></include>									
+						</tabpanel>
+						
+						<tabpanel>
+							<include id="loyaltyIncId"></include>
+						</tabpanel>
+				</tabpanels>
+	</tabbox>
+<window id="mandatorychnagePwdWinId" xmlns:h="native" xmlns:w="client" title="Change Password"
+		 closable="true" visible="false" border="normal"  width="450px" height="250px" >
+		<!--  <caption>
+			<toolbarbutton label="Close" onClick="changePwdWinId.setVisible(false)"/>
+		</caption> -->
+		<div height="40px" align="center" >
+			<label value="Note :" style="font-weight:bold;" />
+			<label value="Due to recent security enchancements, your password has expired. "/>
+			<label value="Please enter a new password below." />
+		</div>
+			<h:table>
+				<h:tr height="10"/>
+				<h:tr>
+	     			<h:td colspan="2">
+	     				<label value="" id="responseLblId" style="color:#EF2C2C;font-size:12px;font-weight:bold;font-family:verdena;margin-left:10px;"/>
+	     			</h:td>
+		     	</h:tr>
+		     	<h:tr height="10"/>
+				<h:tr>
+					<h:td>
+					<label value="New Password " style="margin-left:10px;"/><label value=" * " style="color:red;"/>
+					</h:td>
+					<h:td><textbox id="passwordTbId" value="" cols="30" maxlength="25" type="password"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10"/>
+				<h:tr>
+					<h:td><label value="Confirm Password "  style="margin-left:10px;"/><label value=" * " style="color:red;"/>
+					</h:td>
+					<h:td><textbox id="rePasswordTbId" value="" cols="30" maxlength="25" type="password"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10"/>
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Save" sclass="idle70 greenbtn" id="savePwdBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		<div>
+			
+		</div>
+		</window>
+		<window id="changePwdWinId" xmlns:h="native" xmlns:w="client" title="Change Password"
+		 closable="true" visible="false" border="normal"  width="450px" height="250px" >
+		<!--  <caption>
+			<toolbarbutton label="Close" onClick="changePwdWinId.setVisible(false)"/>
+		</caption> -->
+		<div height="40px"  >
+			<label value="Note :" style="font-weight:bold;" />
+			<label value=" Looks like your account password has not been changed since its creation. For security reasons, we recommend you to change your password now." />
+		</div>
+			<h:table>
+				<h:tr height="10"/>
+				<h:tr>
+	     			<h:td colspan="2">
+	     				<label value="" id="responseLblId" style="color:#EF2C2C;font-size:12px;font-weight:bold;font-family:verdena;margin-left:10px;"/>
+	     			</h:td>
+		     	</h:tr>
+		     	<h:tr height="10"/>
+				<h:tr>
+					<h:td>
+					<label value="New Password " style="margin-left:10px;"/><label value=" * " style="color:red;"/>
+					</h:td>
+					<h:td><textbox id="passwordTbId" value="" cols="30" maxlength="25" type="password"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10"/>
+				<h:tr>
+					<h:td><label value="Confirm Password "  style="margin-left:10px;"/><label value=" * " style="color:red;"/>
+					</h:td>
+					<h:td><textbox id="rePasswordTbId" value="" cols="30" maxlength="25" type="password"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10"/>
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Save" sclass="idle70 greenbtn" id="savePwdBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		<div>
+			
+		</div>
+		</window>
+	</window>
+</zk>

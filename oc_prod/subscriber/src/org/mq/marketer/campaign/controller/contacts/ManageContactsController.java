@@ -1,0 +1,184 @@
+package org.mq.marketer.campaign.controller.contacts;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.clapper.util.io.FileUtil;
+import org.mq.marketer.campaign.beans.CustomTemplates;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.dao.CustomTemplatesDao;
+import org.mq.marketer.campaign.dao.CustomTemplatesDaoForDML;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageUtil;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.zkoss.util.media.Media;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.UploadEvent;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkplus.spring.SpringUtil;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
+
+public class ManageContactsController extends GenericForwardComposer {
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	public ManageContactsController() {
+				
+	}
+	private Div welcomeHTMLDivId = null;
+	private Div suppContDivId = null;
+	private Div suppressDivId = null;
+	private Div suppressResDivId = null;
+	private Button saveButtonId = null;
+	private Window custTempWinId = null;
+	private Textbox welcomeHtmlTbId = null;
+	private Label subTitle = null;
+	
+	@Override
+		public void doAfterCompose(Component comp) throws Exception {
+			// TODO Auto-generated method stub
+			super.doAfterCompose(comp);
+			subTitle.setValue("Suppressed Contacts");
+		}
+	/*
+	public void init(Div suppContDivId,Div welcomeHTMLDivId,Textbox welcomeHtmlTbId,Button saveButtonId,Window custTempWinId, Div suppressResDivId, Div suppressDivId, Label subTitle) {
+		this.suppContDivId = suppContDivId;
+		this.welcomeHTMLDivId = welcomeHTMLDivId;
+		this.welcomeHtmlTbId = welcomeHtmlTbId;
+		this.saveButtonId = saveButtonId;
+		this.custTempWinId = custTempWinId;
+		this.suppressResDivId = suppressResDivId;
+		this.suppressDivId = suppressDivId;
+		this.subTitle = subTitle;
+		
+		subTitle.setValue("Suppress Contacts");
+	}
+	*/
+	public void changeDivContents(String divId) {
+		MessageUtil.clearMessage();
+		if(divId.equals("suppress")) {
+			subTitle.setValue("Suppress Contacts");
+			suppressResDivId.setVisible(false);
+			welcomeHTMLDivId.setVisible(false);
+			suppContDivId.setVisible(true);
+			saveButtonId.setVisible(false);
+			suppressDivId.setVisible(true);
+		} else if(divId.equals("welcome")) {
+			subTitle.setValue("Add WelCome Mail");
+			suppContDivId.setVisible(false);
+			welcomeHTMLDivId.setVisible(true);
+			saveButtonId.setVisible(true);
+		}
+	}
+	
+	public void submit(String templateName) {
+		try {
+			MessageUtil.clearMessage();
+			String textHTML = welcomeHtmlTbId.getValue();
+			logger.debug("HTML text is :"+textHTML);
+			String subscribeLink = PropertyUtil.getPropertyValue("subscribeLink");
+			if(textHTML.indexOf(subscribeLink)<0) {
+				MessageUtil.setMessage("Custom HTML must have at least one [url].", "red", "top");
+				custTempWinId.setVisible(false);
+				return;
+			}
+			CustomTemplates customTemplates = new CustomTemplates();
+			customTemplates.setUserId(GetUser.getUserObj());
+			customTemplates.setHtmlText(textHTML);
+			customTemplates.setTemplateName(templateName);
+			customTemplates.setType("welcomemail");
+			CustomTemplatesDao customTemplateDao = (CustomTemplatesDao)SpringUtil.getBean("customTemplatesDao");
+			CustomTemplatesDaoForDML customTemplateDaoForDML = (CustomTemplatesDaoForDML)SpringUtil.getBean("customTemplatesDaoFoeDML");
+			//customTemplateDao.saveOrUpdate(customTemplates);
+			customTemplateDaoForDML.saveOrUpdate(customTemplates);
+			custTempWinId.setVisible(false);
+			MessageUtil.setMessage("Welcome email saved successfully.","green", "top");
+		} catch (Exception e) {
+			logger.error("** Exception :",(Throwable)e);
+		}
+	}
+	
+	public void uploadSuppressCSVFile(Media media,Div suppressDivId,Div suppressResDivId) {
+		try {
+			
+			if(logger.isDebugEnabled()) logger.debug("-- Just entered--");
+			
+			MessageUtil.clearMessage();
+			Media m = (Media)media;
+			String path = PropertyUtil.getPropertyValue("usersParentDirectory").trim() + "/" + GetUser.getUserName() + "/List/" + m.getName();
+			UploadCSVFileController uploadCSVFileController = new UploadCSVFileController();
+			boolean isSuccess = uploadCSVFileController.copyDataFromMediaToFile(path,m);
+			
+			if(logger.isDebugEnabled()) logger.debug("Is copy of the file successfull :"+isSuccess);
+			
+			if(!isSuccess){
+				if(logger.isDebugEnabled()) logger.debug("Could not copy the file from Media");
+				return;
+			}
+			
+			if(logger.isDebugEnabled()) logger.debug("File copied from media is successfull.");
+			
+			UploadCSVFile uploadCSVFile = (UploadCSVFile)SpringUtil.getBean("uploadCSVFile");
+			
+			if(logger.isDebugEnabled()) logger.debug("uploadCSVFile object : " +  uploadCSVFile);
+			
+			Object[] obj = {GetUser.getUserObj(),path,m.getName()};
+			
+			if(logger.isDebugEnabled()) logger.debug("Is uploadCSVFile thread running : " + uploadCSVFile.isRunning);
+			
+			synchronized(uploadCSVFile) {
+				uploadCSVFile.uploadQueue.add(obj);
+				if(!uploadCSVFile.isRunning){
+					Thread thread = new Thread(uploadCSVFile);
+					thread.start();
+				}
+			}
+			
+			if(logger.isDebugEnabled()) logger.debug("Thread Started . Exiting ...");
+			
+			suppressDivId.setVisible(false);
+			suppressResDivId.setVisible(true);
+			
+	     } catch(Exception e) {
+	    	 logger.error("** Exception :",(Throwable)e);
+	     }
+	}
+	
+	public void onUpload$suppFileUploadId(UploadEvent event) {
+		try {
+			//		Media media = event.getMedia();
+			upload(event.getMedia());
+		} catch (Exception e) {
+			logger.error("** Exception  :::",e);
+		}
+	}
+	
+	
+	private  void upload(Object media) throws Exception {
+		MessageUtil.clearMessage();
+		if(media == null) {
+			MessageUtil.setMessage("Please select a file.", "color:red", "TOP");
+			return;
+		}
+		String path = PropertyUtil.getPropertyValue("usersParentDirectory").trim() + "/" + sessionScope.get("userName") + "/List/" +((Media)media).getName();
+		String ext = FileUtil.getFileNameExtension(path);
+		if(ext == null){
+			MessageUtil.setMessage("Upload .csv file only.","color:red","TOP");
+			return;
+		}
+		if(!ext.equalsIgnoreCase("csv")){
+			MessageUtil.setMessage("Upload .csv file only.","color:red","TOP");
+			return;
+		}
+		uploadSuppressCSVFile((Media)media,suppressDivId,suppressResDivId);
+	}
+	
+	public void onClick$backBtnId() {
+		PageUtil.goToPreviousPage();
+	}
+	
+} // class 

@@ -1,0 +1,287 @@
+<zk>
+	<style>
+		.hovergridcolumn > div.z-column-cnt { 
+		color: #FFFFFF;
+		font-weight: bold;
+		cursor: pointer;
+		}
+	</style>
+	<window  border="0" width="100%" apply="org.mq.optculture.controller.loyalty.LoyaltyPerkRulesController" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native"
+	xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<div>
+			<label
+				value="Define earn and burn rules of your loyalty program." />
+		</div>
+
+		<div id="fstDivId">
+			<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+				<caption>
+					<label value="Privilege Definition" />
+				</caption>
+
+				<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;" >
+					<div id="tierTypeDivId" visible="false">
+					<h:tr height="50">
+						<h:td width="200">
+
+							
+								<label value="Privilege Tier :"
+									style="display:inline-block;" />
+						</h:td>
+						<h:td colspan="2">
+								<listbox id="selTierLbId" width="100px"
+									mold="select" style="position:relative;">
+									<listitem label="Select Tier"
+										value="Select Tier" selected="true" />
+								</listbox>
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td width="200">
+							<label value="Privilege Name :" style="display:inline-block;"/>
+							<label value=" * " style="color:red;" />
+						</h:td>
+
+						<h:td  colspan="2">
+							<textbox id="privilegeNameTbId" value=""
+								name="privilegeNameTb" width="190px" maxlength="60" />
+						</h:td>
+
+					</h:tr>
+					</div>
+					<h:tr height="50">
+						<h:td width="200" >
+							<label value="Perks Issuance :"
+								style="display:inline-block;" />
+							<label value=" * " style="color:red;" />
+						</h:td>
+						<h:td width="90">
+							<textbox id="valueTbId" value=""
+								name="valueTb" width="70px" maxlength="60" style="margin-top:5px;position:relative;"/>
+						</h:td>
+						<h:td  width="90" >
+							<listbox id="perkIssuanceTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<!-- <listitem label="Perks" value="Perks"
+									selected="true">
+								</listitem>
+								<listitem label="Amount" value="Amount">
+								</listitem> -->
+							</listbox>
+							</h:td>
+							<!-- <h:td width="1" style="padding-right:0px;">
+							<div id="valueCodeDivId" visible="false">
+							<listbox id="ValueCodeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Select value code"  selected="true"></listitem>
+							</listbox>
+							</div>
+						    </h:td> -->
+							<h:td width="30" style="margin-top:5px;position:relative;">
+							<label value="Per: " style="margin-top:5px;position:relative;" />
+							</h:td>
+							<h:td width="90">
+							<listbox id="perkExpValueTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Year" value="Year" Selected="true">
+								</listitem>
+								<listitem label="Half Year" value="Half Year">
+								</listitem>
+								<listitem label="Quarter" value="Quarter">
+								</listitem>
+								<listitem label="Month" value="Month">
+								</listitem>
+								
+							</listbox>
+							</h:td>
+							<div visible="false">
+							
+							<h:td width="90" style="padding-left:10px;">
+							<textbox id="perkExpValueTbId" value=""
+								name="giftAmtExpValueTb" width="50px" maxlength="60" style="margin-top:5px;position:relative;"/>
+								</h:td>
+								</div>
+								<h:td>
+								</h:td>
+					</h:tr>
+					<!--  <h:tr height="50">
+					<h:td>
+					<label value="Expiry :"
+								style="display:inline-block;position:relative;" />
+					</h:td>
+					<h:td colspan="6">
+					<checkbox id="expiryChkId" checked="true" style="padding-top:0px;position:relative;"/>
+					<image src="/img/icons/icon_i.png" />
+						<label value="Note: Perks will expiry after completing the duration of month/year selected above from the date of issuance" sclass="labelPos" />
+					</h:td>
+					</h:tr>-->
+					<h:tr height="0"/>
+					<h:td>
+					</h:td>
+					<h:tr height="50">
+						<h:td>
+							<label value="Perks Usage Limit :"
+								style="display:inline-block;position:relative;" />
+						</h:td>
+						<h:td colspan="5">
+							<textbox id="perkLimitTbId" value=""
+								name="perkLimitTb" width="70px" maxlength="60" style="margin-top:5px;position:relative;" />
+							<label value="Per: " style="margin-left:10px;" />	
+							<listbox id="perkLimitDateTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;margin-left:10px">
+								<listitem label="Quarter" value="Quarter"
+									selected="true">
+								</listitem>
+								<listitem label="Month" value="Month">
+								</listitem>
+							</listbox>
+							<!-- <textbox id="perkLimitDateTbId" value=""
+								name="perkLimitDateTb" width="50px" maxlength="60" style="margin-left:10px" /> -->
+						</h:td>
+					</h:tr>
+					</h:table>
+					</groupbox>
+			<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+				<caption>
+					<label value="Redemption Rule" />
+				</caption>
+					<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;" >
+					<h:tr height="70">
+						<h:td width="200">
+							<label value="Conversion Rule :"
+								style="display:inline-block;position:relative;" />
+						</h:td>
+						<h:td colspan="2">
+							<label value="Every" />
+							<textbox id="coversionfromTbId" value=""
+								name="coversionfromTb" width="50px" maxlength="60" />
+							<!-- <label
+								value="points earned is equivalent to    $" /> -->
+						<label id = "currencySymbolId"/>
+							<textbox id="conversionToTbId" value=""
+								name="conversionToTb" width="50px" maxlength="60" />
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+					<div id="redeemPercentageDivId">
+					<h:td valign="top" width="200">
+						<label value="Limit Redemption Amount to:" style="display:inline-block;position:relative;"/>
+					</h:td>
+					<h:td valign="top" width="310">
+						<textbox id="redemptionPercentageTbId" value=""
+								 width="100px" maxlength="60" style="padding-left:5px;"/>
+						<label value="% of Billed Amount, or flat value of"/>
+					</h:td>
+					<h:td valign="top">
+						<textbox id="redemptionValueTbId" value=""
+								name="valueTb" width="100px" maxlength="60"/>
+						<label value="whichever is lower"/>
+					</h:td>
+				</div>
+				</h:tr>
+				<h:tr height="50">
+				<h:td valign="top" width="200">
+						<label value="Minimum Receipt Amount:" style="display:inline-block;position:relative;"/>
+				</h:td>
+				<h:td valign="top" >
+						<textbox id="minReceiptAmtTbId" value=""
+								 width="100px" maxlength="60" style="padding-left:5px;"/>
+						<label value=" Required to Redeem"/>
+				</h:td>
+				</h:tr>
+				<h:tr height="50" >
+					<h:td width="200px">
+						<label value="Require Authentication by OTP for Redemption:" style="display:inline-block;position:relative;"/>
+						<image src="/img/icons/icon_q.png" tooltip="otpAuthPopId"  style="padding-left:5px;" />
+						<popup id="otpAuthPopId" width="500px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="OTP is a One Time Password sent to customer's mobile no. and expires after 3 hours."
+											sclass="labelPos" />
+									</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+					</h:td>
+					
+					<h:td colspan="2">
+						<hbox>
+							<checkbox id="enableOTPAuthChkId" style="display:inline-block;position:relative;" />
+							<div id="otpEnabledDivId" visible="false">
+								<label value="Authenticate when amount is greater than (Optional): " />
+								<textbox  id="otpAmtLimitTbId" value="" width="100px"  maxlength="60"/>
+							</div>
+						
+						</hbox>
+					</h:td>
+				</h:tr>
+				<!-- <h:tr height="50">
+				<h:td valign="top" width="200">
+						<label value="Minimum Balance:" style="display:inline-block;position:relative;"/>
+				</h:td>
+				<h:td valign="top" >
+						<textbox id="minBalanceTbId" value=""
+								 width="60px" maxlength="60" style="padding-left:5px;"/>
+						<label value=" Required to Redeem"/>
+				</h:td>
+				</h:tr> -->
+					<h:tr height="50">
+						<h:td></h:td>
+						<h:td colspan="2" >
+							<button id="savBtnId"
+								sclass="idle140 greenbtn" label="Add">
+							</button>
+							<button id="cancelBtnId" visible="false"
+								sclass="idle140" label="Cancel">
+							</button>
+						</h:td>
+					</h:tr>
+				</h:table>
+			</groupbox>
+			</div>
+			<div width="100%" align="left" style="padding-left:20px;">
+				<separator />
+				<grid emptyMessage="No data available" width="90%" style="margin-top:20px;">
+				<columns style="background-color:#488eb0;" id="tierColsId">
+				</columns>
+					<!--  <columns>
+						<column label="Privilege Tier"></column>
+						<column label="Privilege Name"></column>
+						<column label="Earn" width="150px"></column>
+						<column label="Redeem" width="150px"></column>
+						<column label="Activation" width="150px"></column>
+						<column label="Pts. Conversion Decision" width="180px"></column>
+						<column label="Tier Upgrade Rules"
+							width="200px">
+						</column>
+						<column label="Actions"></column>
+					</columns> --> 
+					<rows id="tierRowsId" />
+				</grid>
+			</div>
+			<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+		<h:tr height="20"></h:tr>
+					<h:tr >
+						<h:td colspan="6" style="padding-right:30px;">
+								<button label="Previous" sclass="idle140"  id="previousBtnId" />
+								<button label="Next" id="nextBtnId" sclass="idle140 greenbtn" />
+						</h:td>
+					</h:tr>
+			</h:table>	
+			
+			  
+			<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+						<caption>
+							<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+						</caption>
+						<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+							<iframe id="html" width="100%" height="100%"/>
+						</div>
+					</window>
+	</window>
+</zk>
+

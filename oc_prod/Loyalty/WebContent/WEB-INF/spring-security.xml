@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<util:properties id="config" location="classpath:security.xml" />
+
+<bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
+		<constructor-arg>
+			<util:list>
+				<security:filter-chain pattern="/resources/**" filters="none" />
+				<security:filter-chain pattern="/js/**" filters="none" />
+				<security:filter-chain pattern="/**"
+					filters="
+					formLoginFilter,logoutFilter,securityContextPersistenceFilter,
+					anonymousAuthenticationFilter,
+					exceptionTranslationFilter,
+					filterSecurityInterceptor" />
+			</util:list>
+		</constructor-arg>
+	</bean>
+
+	<!-- step 1 -->
+	 <bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter" /> 
+
+	<!-- step 2 -->
+	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<constructor-arg value="/" />
+		<constructor-arg>
+			<util:list>
+				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+			</util:list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/logout" />
+		<!--  <property name="invalidateHttpSession" value="true"/> -->
+	</bean>
+	
+	<bean id="formLoginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+    <!-- A reference to rememberMeServices is required to add a remember me cookie on login. -->
+<!--     <property name="rememberMeServices" ref="rememberMeServices"/> -->
+    <!-- Authenticates login request. -->
+    <property name="authenticationManager" ref="authenticationManager" />
+    <!-- Reference to an implementation of AuthenticationSuccessHandler, whose onAuthenticationSuccess method will be invoked if login attempt was successful. -->
+    <property name="authenticationSuccessHandler">
+        <bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+            <property name="defaultTargetUrl" value="/membership" />
+        </bean>
+    </property>
+</bean>
+
+	<!-- step 3 -->
+	<bean id="anonymousAuthenticationFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+		<constructor-arg value="${config['anonymous.key']}" />
+	</bean>
+
+	<!-- stop 4 -->
+	<bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<constructor-arg ref="authenticationEntryPoint" />
+	</bean>
+
+	<bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<constructor-arg value="/login.html" />
+	</bean>
+
+	<!-- step 5 -->
+	<bean id="filterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager" ref="affirmativeBased" />
+		<property name="securityMetadataSource">
+			<security:filter-security-metadata-source>
+			<security:intercept-url pattern="/index" access="ROLE_ANONYMOUS" />
+				<security:intercept-url pattern="/login.html" access="ROLE_ANONYMOUS" />
+				<security:intercept-url pattern="/membership" access="ROLE_USER" />
+				<security:intercept-url pattern="/activities" access="ROLE_USER" />
+				<security:intercept-url pattern="/profile" access="ROLE_USER" />
+			</security:filter-security-metadata-source>
+		</property>
+	</bean>
+	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+	<constructor-arg>
+			<util:list>
+				<ref bean="authService" />
+				<ref bean="anonymousAuthenticationProvider" />
+			</util:list>
+			</constructor-arg>
+	</bean>
+<bean id="authService"
+		class="org.mq.loyality.common.service.AuthServiceImpl">
+	</bean>
+	<bean id="encryptPwd"
+		class="org.mq.loyality.utils.EncryptDecryptLtyMembshpPwd" />
+
+	<bean id="anonymousAuthenticationProvider" class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+		<constructor-arg value="${config['anonymous.key']}" />
+	</bean>
+	<bean id="affirmativeBased" class="org.springframework.security.access.vote.AffirmativeBased">
+		<constructor-arg>
+			<util:list>
+				<ref bean="roleVoter" />
+				<ref bean="authenticatedVoter" />
+			</util:list>
+		</constructor-arg>
+	</bean>
+ <bean id="concurrencyFilter"
+   class="org.springframework.security.web.session.ConcurrentSessionFilter">
+  <property name="sessionRegistry" ref="sessionRegistry" />
+  <property name="expiredUrl" value="/login.html" />
+</bean> 
+	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter" />
+	<bean id="authenticatedVoter" class="org.springframework.security.access.vote.AuthenticatedVoter" />
+     <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" /> 
+      <bean id="securityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" />
+</beans>

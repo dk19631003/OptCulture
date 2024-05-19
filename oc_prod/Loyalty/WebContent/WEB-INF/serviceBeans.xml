@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+						
+<bean id="userService" class="org.mq.loyality.common.service.UserServiceImpl"/>
+<bean id="membershipService" class="org.mq.loyality.common.service.MemberServiceImpl"/>
+<bean id="geoService" class="org.mq.loyality.common.service.DefaultGeoService"/>
+<bean id="captiwayToSMSApiGateway" class="org.mq.loyality.utils.CaptiwayToSMSApiGateway"/>
+<bean id="gatewayRequestProcessHelper" class="org.mq.loyality.utils.GatewayRequestProcessHelper"/>
+
+<bean id="netCoreApi" class="org.mq.loyality.utils.NetCoreApi"/>
+<bean id="clickaTellApi" class="org.mq.loyality.utils.ClickaTellApi"/>
+<bean id="mVaayooApi" class="org.mq.loyality.utils.MVaayooApi"/>
+
+
+
+</beans>

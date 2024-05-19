@@ -1,0 +1,89 @@
+package org.mq.optculture.model.ocloyalty;
+
+import javax.xml.bind.annotation.XmlElement;
+
+public class RequestHeader {
+
+	private String requestId;
+	private String requestDate;
+	private String pcFlag;
+	private String storeNumber;
+	private String employeeId;
+	private String terminalId;
+    private String docSID;
+	
+	public RequestHeader() {
+	}
+
+	
+	public RequestHeader(String requestId, String requestDate, String pcFlag, 
+			String storeNumber, String employeeId, String terminalId, String docSID) {
+		
+		this.requestId = requestId;
+		this.requestDate = requestDate;
+		this.pcFlag = pcFlag;
+		this.storeNumber =storeNumber;
+		this.employeeId = employeeId;
+		this.terminalId = terminalId;
+		this.docSID = docSID;
+		
+	}
+	
+	public String getRequestId() {
+		return requestId;
+	}
+	@XmlElement(name = "requestId")
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
+
+	public String getPcFlag() {
+		return pcFlag;
+	}
+	@XmlElement(name = "pcFlag")
+	public void setPcFlag(String pcFlag) {
+		this.pcFlag = pcFlag;
+	}
+
+	public String getStoreNumber() {
+		return storeNumber;
+	}
+	@XmlElement(name = "storeNumber")
+	public void setStoreNumber(String storeNumber) {
+		this.storeNumber = storeNumber;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+	@XmlElement(name = "employeeId")
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
+	public String getTerminalId() {
+		return terminalId;
+	}
+	@XmlElement(name = "terminalId")
+	public void setTerminalId(String terminalId) {
+		this.terminalId = terminalId;
+	}
+	
+	public String getRequestDate() {
+		return requestDate;
+	}
+	@XmlElement(name = "requestDate")
+	public void setRequestDate(String requestDate) {
+		this.requestDate = requestDate;
+	}
+	
+	
+
+	public String getDocSID() {
+		return docSID;
+	}
+	@XmlElement(name = "docSID")
+	public void setDocSID(String docSID) {
+		this.docSID = docSID;
+	}
+
+}

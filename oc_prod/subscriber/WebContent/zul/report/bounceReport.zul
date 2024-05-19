@@ -1,0 +1,117 @@
+<zk>
+	<window id="bounceWinId" width="100%" apply="org.mq.marketer.campaign.controller.report.BouncesController" xmlns:h="native">
+	 <style src="/css/reports.css" />
+	 <groupbox sclass="gbStyle" closable="false">
+				<caption label="Bounce Report"  />
+			    	<h:table>
+			      		<h:tr>
+			        		<h:td style="padding:10px;" colspan="9">
+			        		
+			  		  			<label value="The following subscribers did not receive this campaign."/>
+			         			<h:br/>	
+			  		 			<label value="Soft bounces " style="font-weight:bold;"/><label value="are those that temporarily failed but the actual address is still valid, such as full mailbox." />
+			  		 			  <h:br/>
+			  		 			  <label value="Hard bounces" style="font-weight:bold;" /> <label value=" are permanent and mean the mailbox is no longer valid." />
+			  		 				<h:br/>
+			  		 				<image src="/img/icons/icon_i.png" style="margin-top:10px;" />	
+			  		 				<label value="We recommended that you remove all email addresses with hard bounces from your contact lists"  />
+			  		 			
+			  	 			</h:td>
+			  	  		</h:tr>
+			  	  	</h:table>
+			  	  	
+			  	  	<h:table>
+		        		
+		        		<h:tr style="line-height:10px;">	 
+		    				<h:td id="tabId1" class="tabmenu tabmenusel" onclick="changeRepTabMenu('tabId',1,5)"><toolbarbutton label="Hard Bounces" id="hardBounceTbarBtnId" style="font-weight:bold;color:#43A0BA;"  /></h:td>
+			    			<h:td style="padding:5px 15px;"></h:td>
+			    			<h:td id="tabId2" class="tabmenu" onclick="changeRepTabMenu('tabId',2,5)"><toolbarbutton label="Soft Bounces" id="softBounceTbarBtnId" style="font-weight:bold;color:#43A0BA;" /></h:td>
+			    			<h:td style="padding:5px 15px;"></h:td>
+			    			<h:td id="tabId3" class="tabmenu" onclick="changeRepTabMenu('tabId',3,5)"><toolbarbutton label="Dropped" id="droppedTbarBtnId" style="font-weight:bold;color:#43A0BA;" /></h:td>
+			    			<h:td style="padding:5px 15px;"></h:td>
+			    			<h:td id="tabId4" class="tabmenu" onclick="changeRepTabMenu('tabId',4,5)"><toolbarbutton label="Blocked" id="blockedTbarBtnId" style="font-weight:bold;color:#43A0BA;" /></h:td>
+			    			<h:td style="padding:5px 15px;"></h:td>
+			    			<h:td id="tabId5" class="tabmenu" onclick="changeRepTabMenu('tabId',5,5)"><toolbarbutton label="Others" id="othersTbarBtnId" style="font-weight:bold;color:#43A0BA;" /></h:td>
+		        		</h:tr>
+		       		</h:table>
+	 
+			   <listbox id="bounceGenericLbId" emptyMessage="No Records Found..." sclass="contactsView" width="99%"  >
+					<listhead id="bounceLbHeaderId" sizable="true" >
+						<listheader label="Email Address" width= "40%"></listheader>
+						<listheader label="Reason" maxlength="50"></listheader>
+					</listhead>
+				</listbox>
+				
+				<h:table  width="99%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="340px"  >
+						<paging id="bouncePagingId" detailed="true" pageSize="10" width="340px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table>
+			</groupbox>
+			<h:table style="padding-top:20px;">
+ 				<h:tr>
+ 				 	<h:td>
+					<label value="Export as a" /> 
+					<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+				 	   			<comboitem label=" .csv file" value="csv" />    
+					</combobox> 
+					
+					<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId"/>
+ 				 	</h:td>
+ 				</h:tr>
+ 			</h:table>
+			<groupbox sclass="gbStyle" closable="false" id="notSentGbBox" visible="false">
+			<caption label="Delivery Status Pending"  />
+			 <listbox id="notSentLbId" emptyMessage="No Records Found..." sclass="contactsView" width="99%" >
+					<listhead id="notSentLbHeaderId" sizable="true" >
+						<listheader label="Email Address"></listheader>
+					</listhead>
+				</listbox>
+				
+				<h:table  width="99%" cellspacing="0" cellpadding="0" style="padding-top:10px;" >
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="notSentpageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="340px"  >
+						<paging id="notSentPagingId" detailed="true" pageSize="10" width="340px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table>
+				<h:table style="padding-top:20px;">
+ 				<h:tr>
+ 				 	<h:td>
+					<label value="Export as a" /> 
+					<combobox sclass="cb_100w" id="exportPendingReportCbId" readonly="true">
+				 	   			<comboitem label=" .csv file" value="csv" />    
+					</combobox> 
+					
+					<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportPendingReportBtnId"/>
+ 				 	</h:td>
+ 				</h:tr>
+ 			</h:table>
+	 		
+	 </groupbox>
+		</window>
+</zk>

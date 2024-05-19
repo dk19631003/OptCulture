@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated JAN 20, 2020 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.Notification"
+		table="Notification">
+		
+		<id name="notificationId" type="java.lang.Long">
+			<column name="notification_id" />
+			<generator class="native" />
+		</id>
+		<property name="notificationName" type="string">
+			<column name="notification_campaign_name" length="100" not-null="true" />
+		</property>
+		
+		<property name="createdDate" type="java.util.Calendar" not-null="true" >
+			<column name="created_date" />
+		</property>
+		
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="30" />
+		</property>
+		<property name="draftStatus" type="string">
+			<column name="draft_status" length="30" />
+		</property>
+		<property name="notificationSenderId" type="string">
+			<column name="notification_sender_id" length="30" />
+		</property>
+
+		<property name="header" type="string">
+			<column name="header" />
+		</property>
+		
+		<property name="logoImageUrl" type="string">
+			<column name="logo_Image_Url" />
+		</property>
+		
+		<property name="bannerImageUrl" type="string">
+			<column name="banner_Image_Url" />
+		</property>
+		
+		<property name="redirectUrl" type="string">
+			<column name="redirect_Url" />
+		</property>
+
+		<property name="notificationContent" type="text">
+			<column name="notification_content" />
+		</property>
+		
+		<property name="scheduleType" type="string">
+			<column name="schedule_type" length="30" />
+		</property>
+		
+		<property name="listType" type="text">
+			<column name="list_type" />
+		</property>
+		
+		<set name="mailingLists" table="mlists_notification" lazy="false">
+			<key column="notification_id" />
+			<many-to-many class="org.mq.marketer.campaign.beans.MailingList" column="list_id" />
+		</set>
+		
+		<property name="category" type="java.lang.Long">
+			<column name="category"  />
+		</property>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id"  />
+		</property>
+		
+	</class>
+</hibernate-mapping>
+

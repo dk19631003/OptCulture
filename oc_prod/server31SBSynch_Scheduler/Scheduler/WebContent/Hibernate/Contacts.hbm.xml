@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.Contacts"
+		table="contacts">
+		<id name="contactId" type="java.lang.Long" column="cid">
+			<generator class="native" />
+		</id>
+		<!-- <many-to-one name="mailingList"
+			class="org.mq.captiway.scheduler.beans.MailingList"
+			foreign-key="MailingListEmail_ID" lazy="false" fetch="select">
+			<column name="list_id" not-null="true"
+				unique-key="Unique_email" />
+		</many-to-one>  -->
+		<!-- <set name="mlSet"  table="contacts_mlists" cascade="save-update" lazy="false" >
+			<key column="cid"  />
+			<many-to-many class="org.mq.captiway.scheduler.beans.MailingList" column="list_id" />
+		</set>
+		 -->
+		<many-to-one name="users" class="org.mq.captiway.scheduler.beans.Users" 
+			foreign-key="userId" fetch="select">
+			<column name="user_id" not-null="true"  />
+		</many-to-one>
+		<property name="emailId" type="string" column="email_id"
+			length="100"  />
+		<property name="firstName" type="string" column="first_name"
+			length="50" />
+		<property name="lastName" type="string" column="last_name"
+			length="50" />
+		<property name="createdDate" type="calendar" column="created_date" />
+		<property name="optinStatus" type="java.lang.Boolean"
+			column="optin_status" />
+		<property name="emailStatus" type="string">
+			<column name="email_status" length="50" not-null="true" />
+		</property>
+		<property name="lastStatusChange" type="timestamp"
+			column="last_status_change" />
+		<property name="lastMailDate" type="timestamp"
+			column="last_mail_date" />
+			
+		<property name="purged" type="java.lang.Boolean"
+		column="purged" />
+			
+		<property name="addressOne" type="string">
+			<column name="address_one" length="100" default="''" />
+		</property>
+		<property name="addressTwo" type="string">
+			<column name="address_two" length="100" default="''" />
+		</property>
+		<property name="city" type="string">
+			<column name="city" length="50" default="''" />
+		</property>
+		<property name="state" type="string">
+			<column name="state" length="50" default="''" />
+		</property>
+		<property name="country" type="string">
+			<column name="country" length="50" default="''" />
+		</property>
+		<property name="pin" type="int">
+			<column name="pin" length="10" default="0" />
+		</property>
+		<property name="phone" type="java.lang.Long">
+			<column name="phone" length="15" default="0" />
+		</property>
+		<property name="optin" type="byte">
+			<column name="optin" default="0" />
+		</property>
+		<property name="subscriptionType" type="string">
+			<column name="subscription_type" length="50" />
+		</property>
+		
+		<property name="externalId" type="string">
+			<column name="external_id" length="45" />
+		</property>
+		<property name="optinMedium" type="string">
+			<column name="optin_medium" length="30" />
+		</property>
+		
+		
+		<property name="gender" type="string">
+			<column name="gender" length="30" />
+		</property>
+		
+		<property name="birthDay" type="calendar">
+			<column name="birth_day" />
+		</property>
+		
+		
+		
+		<property name="anniversary" type="calendar">
+			<column name="anniversary_day" />
+		</property>
+		
+		<property name="homeStore" type="string">
+			<column name="home_store" />
+		</property>
+		
+		<property name="udf1" type="string">
+			<column name="udf1" length="30" />
+		</property>
+		
+		<property name="udf2" type="string">
+			<column name="udf2" length="30" />
+		</property>
+		
+		<property name="udf3" type="string">
+			<column name="udf3" length="30" />
+		</property>
+		
+		<property name="udf4" type="string">
+			<column name="udf4" length="30" />
+		</property>
+		
+		<property name="udf5" type="string">
+			<column name="udf5" length="30" />
+		</property>
+		
+		<property name="udf6" type="string">
+			<column name="udf6" length="30" />
+		</property>
+		
+		<property name="udf7" type="string">
+			<column name="udf7" length="30" />
+		</property>
+		
+		<property name="udf8" type="string">
+			<column name="udf8" length="30" />
+		</property>
+		
+		<property name="udf9" type="string">
+			<column name="udf9" length="30" />
+		</property>
+		
+		<property name="udf10" type="string">
+			<column name="udf10" length="30" />
+		</property>
+		
+		<property name="udf11" type="string">
+			<column name="udf11" length="30" />
+		</property>
+		
+		<property name="udf12" type="string">
+			<column name="udf12" length="30" />
+		</property>
+		
+		<property name="udf13" type="string">
+			<column name="udf13" length="30" />
+		</property>
+		
+		<property name="udf14" type="string">
+			<column name="udf14" length="30" />
+		</property>
+		
+		<property name="udf15" type="string">
+			<column name="udf15" length="30" />
+		</property>
+		
+		
+		<property name="optedInto" type="java.lang.Byte">
+			<column name="opted_into"  />
+		</property>
+		
+		<property name="optinPerType" type="java.lang.Byte">
+			<column name="optin_per_type"/>
+		</property>
+		
+		<property name="loyaltyCustomer" type="java.lang.Byte">
+			<column name="loyalty_customer"  />
+		</property>
+		
+		<property name="hpId" type="java.lang.Long">
+			<column name="hp_id"  />
+		</property>
+		
+		<property name="mobileStatus" type="string">
+			<column name="mobile_status" length="255"  />
+		</property>
+		
+		<property name="zip" type="string">
+			<column name="zip"   />
+		</property>
+		<property name="mobilePhone" type="string">
+			<column name="mobile_phone"  />
+		</property>
+		
+		<property name="homePhone" type="string">
+			<column name="home_phone"  />
+		</property>
+		
+		<property name="lastSMSDate" type="calendar"
+			column="last_sms_date" />
+		
+		
+		<property name="mobileOptin" type="boolean">
+		<column name="mobile_opt_in" default="false" />
+		</property>
+		
+		<property name="mlBits" type="java.lang.Long">
+			<column name="mlbits" default="0" />
+		</property>
+		
+		<property name="categories" type="string">
+			<column name="categories" length="1000" />
+		</property>
+		
+		<property name="lastMailSpan" type="java.lang.Integer">
+			<column name="last_mail_span" default="0" />
+		</property>
+		
+		<property name="lastSmsSpan" type="java.lang.Integer">
+			<column name="last_sms_span" default="0" />
+		</property>
+		
+		<!--<one-to-one name="custFieldData" class="org.mq.captiway.scheduler.beans.CustomFieldData" property-ref="emailId" cascade="all"/>
+			
+ 
+		
+	-->
+	
+	<property name="mobileOptinSource" type="string">
+		<column name="mobile_optin_source" length="20" />
+	</property>
+	
+	<property name="mobileOptinDate" type="calendar"
+		column="mobile_optin_date" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 17, 2011 17:07:04 PM -->
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserScoreSettings" 
+	table="user_score_settings" >
+		  
+		<id name="id" type="java.lang.Long" >
+			<column name="id"/>
+			<generator class="native" />
+		</id>
+		
+		<property name="groupName" type="string" >
+			<column name="group_name" />
+		</property>
+		
+		<property name="condition" type="string" >
+			<column name="groupName_cnd" />
+		</property>
+		
+			<property name="dataOne" type="string" >
+			<column name="data1" />
+		</property>
+		
+		<property name="dataTwo" type="string" >
+			<column name="data2" />
+		</property>
+		
+	
+		
+		 <property name="score" type="java.lang.Integer"  >
+			<column name="score" length="20"  />
+		</property>
+		
+		
+		<property name="maxScore" type="java.lang.Integer" >
+		<column name="max_score" />
+		</property>
+		
+		
+		<property name="type" type="string" >
+			<column name="type" />
+		</property>
+		
+		<!--<property name="userId" type="java.lang.Long" >
+		<column name="user_id" />
+		</property>-->
+		
+		<many-to-one name="user"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"
+			fetch="select">
+			<column name="user_id" not-null="true" />
+		</many-to-one>
+		
+		
+		</class>
+</hibernate-mapping>

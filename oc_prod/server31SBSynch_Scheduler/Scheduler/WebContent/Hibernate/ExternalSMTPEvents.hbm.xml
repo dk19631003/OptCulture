@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.ExternalSMTPEvents" table="external_SMTP_events">
+    <id name="eventId" type="java.lang.Long" >
+      <column name="event_id" />
+       <generator class="native"/> 
+    </id>
+   
+	<!--<property name="eventSource" type="long">
+      <column name="event_source" length="100"/>
+    </property>
+    --><property name="eventType" type="string">
+      <column name="event_type" length="100"/>
+    </property>
+    <property name="sentId" type="long">
+      <column name="sent_id" />
+    </property>
+    <property name="userId" type="long">
+      <column name="user_id" />
+    </property>
+    <property name="crId" type="long">
+      <column name="cr_id" />
+    </property>
+    <property name="eventSource" type="string">
+      <column name="event_source" />
+    </property>
+     <property name="emailId" type="string">
+      <column name="email_id" />
+    </property>
+    
+    <property name="statusCode" type="string">
+      <column name="status_code" length="10"/>
+    </property>
+    
+     <property name="type" type="string">
+      <column name="type"/>
+    </property>
+    
+    <property name="reason" type="string">
+      <column name="reason" length="2000"/>
+    </property>
+    
+    <property name="requestTime" type="calendar">
+      <column name="request_time"/>
+    </property>
+    
+ </class>
+</hibernate-mapping>

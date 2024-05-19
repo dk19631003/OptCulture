@@ -1,0 +1,314 @@
+<zk>
+	<window id="manageSegmentWinId" width="100%" apply="org.mq.marketer.campaign.controller.contacts.ManageBCRMSegmentsController"  xmlns:h="http://www.zkoss.org/2005/zk/native">
+	
+		
+		<div id="addNewBCRMSegRuleDivId"  visible="true">					
+			<groupbox sclass="gbStyle"  style="padding:10px 5px;" closable="false" >
+				<caption label="Segment Settings" />
+						
+				<h:table cellspacing="0" cellpadding="0" width="100%" >
+			
+					<h:tr>
+					
+						<h:td valign="top" width="150">
+							<label value="Segment name :" /><label value="*" style="color:red;" />
+						</h:td>
+						
+						<h:td valign="top">
+							<textbox id="segmentRuleNameTbId" maxlength="50" width="340px" /> <space/><label id="nameStatusLblId" />
+						</h:td>
+	
+					</h:tr>
+					<h:tr height="10px"/>
+					<h:tr>
+					
+						<h:td valign="top">
+							<label value="Description :" />
+						</h:td>
+						
+						<h:td valign="top">
+							<textbox id="segRuleDescpTxtBoxId" rows="4" height="100px" width="340px" />
+						</h:td>
+						
+					</h:tr>
+					<h:tr height="10px"/>
+					<!--<h:tr>
+					
+						<h:td valign="top">
+							<label value="Select List-Type :" />
+						</h:td>
+						
+						<h:td valign="top">
+						
+							<listbox id="listTypeRgId" mold="select" >
+								
+								<listitem label="BCRM" value="BCRM" selected="true" />
+								<listitem label="Web Forms" value="Normal" />
+								<listitem label="Manual Upload" value="Normal"/>
+							</listbox>
+						</h:td>	
+										
+					</h:tr>
+					<h:tr height="10px"/>
+					
+				--></h:table>
+				</groupbox>
+				
+				<groupbox sclass="gbStyle" style="padding:10px 5px;"  closable="false" >
+				<caption label="Select List(s)" />
+						
+					<listbox style="margin:10px 10px;"   id="dispMlLBoxId" width="350px"  multiple="true" rows="5"  sclass="contactsView" checkmark="true">
+						<listhead style="background-color:#488eb0;">
+							<listheader label="List Name" width="100%" align="left" maxlength="30"/>
+						</listhead>
+						<listitem forEach="${manageSegmentWinId$ManageBCRMSegmentsController.mailingLists}" label="${each.listName}" value="${each}"/>
+					</listbox>
+			
+				
+			</groupbox>
+			<div align="right">
+			
+				<button label="Proceed" id="proceedBtnId" sclass="idle140 greenbtn" />
+			
+			</div>
+					
+					
+			
+		</div>
+		<div id="segmentBcrmRulesDivId" visible="false">
+		
+				<h:table cellspacing="0" bgcolor="#F4F5F9" style="padding:10px 10px;border-radius:5px;"  cellpadding="0" width="100%" >
+					<h:tr>
+						<h:td >
+							<label value="Selected List(s) Name :" style="font-weight:bold;" />
+							<label id="selListLblId" />
+						</h:td>
+						<h:td>
+							<button label="Get Latest Count" sclass="idle140" id="getNumOfContactsAnchId" style="font-weight:bold;"/>
+						</h:td>
+											
+						<h:td >
+							<label value="No. of contacts in Segment : " style="font-weight:bold;"/>
+							<label id="numOfContactsLblId" value="0" style="padding-right:3px;" />
+						</h:td>
+						<h:td >
+							<label value="No. of contacts with Email Id : " style="font-weight:bold;"/>
+							<label id="numOfEmailContactsLblId" value="0" style="padding-right:3px;"/>
+						</h:td>
+						<h:td>
+							<label value="No. of contacts with Mobile : " style="font-weight:bold;"/>
+							<label id="numOfMobileContactsLblId" value="0" style="padding-right:3px;"/>
+						</h:td>
+						
+					</h:tr>
+					
+				</h:table>
+				
+				<div  style="padding:12px 5px;">
+					<label value="You create multiple rules on your list(s) to create 
+					segments by a simple drag-and-drop of Profile, Purchase &amp; Interaction Attributes from the menu into appropriate drop-boxes."/>
+				</div>
+			
+		
+			<h:table width="100%" cellspacing="0" cellpadding="0">
+				<h:tr>
+					
+					<h:td width="225" valign="top" >
+					
+						<groupbox sclass="gbStyle"   closable="false" >
+							<caption label="Attribute Categories" />
+							
+							<tabbox mold="accordion" height="500px" style="margin:5px;">
+								<tabs>
+									<tab sclass="segmentHead"  label="BCRM Attributes" />
+									<tab sclass="segmentHead"  label="Profile Attributes" />
+									<tab sclass="segmentHead" visible="true" id="purchaseAttrTabId" label="Purchase Attributes" />
+									<tab sclass="segmentHead"  label="Interaction Attributes" />
+								
+								</tabs>
+								<tabpanels>
+								<tabpanel style="border:0 none; padding:1px 0;">
+									<listbox  style="border:0px;" id="homesPassedAttrLbId" sclass="segmentList" height="410px">
+										<!-- <listitem draggable="profileSegment" label="Date Added" id="proDateAddedLiId" style="padding:10px;"/>
+										<listitem draggable="profileSegment" label="Opted in Date" id="proOptdInDateLiId" style="padding:10px;"/>
+										<listitem draggable="profileSegment" label="Email ID" id="proEmailIdLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Mobile" id="proMobileLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="City" id="proCityLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="State" id="proStateLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Country" id="proCountryLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Zip" id="proZipLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Gender" id="proGenderLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Opt-in Medium" id="proOptInMediumLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="contact Type" id="proContactTypeLiId" style="padding:10px;" />
+									 --></listbox>
+									
+									</tabpanel>
+									
+									<tabpanel style="border:0 none; padding:1px 0;">
+									<listbox  style="border:0px;" id="profileAttrLbId" sclass="segmentList" height="410px">
+										<!--<listitem draggable="profileSegment" label="Date Added" id="proDateAddedLiId" style="padding:10px;"/>
+										<listitem draggable="profileSegment" label="Opted in Date" id="proOptdInDateLiId" style="padding:10px;"/>
+										<listitem draggable="profileSegment" label="Email ID" id="proEmailIdLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Mobile" id="proMobileLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="City" id="proCityLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="State" id="proStateLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Country" id="proCountryLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Zip" id="proZipLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Gender" id="proGenderLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="Opt-in Medium" id="proOptInMediumLiId" style="padding:10px;" />
+										<listitem draggable="profileSegment" label="contact Type" id="proContactTypeLiId" style="padding:10px;" />
+									--></listbox>
+									
+									</tabpanel>
+									
+									<tabpanel style="border:0 none; padding:1px 0;">
+									
+										<listbox style="border:0px;" id="purchaseAttrLbId" sclass="segmentList" height="410px">
+											<!--<listitem  draggable="purIntSegment" label="Purchase Date" id="purPurDateLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="SKU" id="purSKULiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Item Category" id="purItemCatLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Promo" id="purPromoLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Store No" id="purStoreNoLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Home store" id="purHomeStoreLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Vendor Code" id="purVenCodeLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Total Purchase Value" id="purTotPurValLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Any Item Purchase Value" id="purAnyItemPurValLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Number of Purchases" id="purNumOfPurLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Total Reward Points" id="purTotRewPointsLiId" style="padding:10px;" />
+											<listitem  draggable="purIntSegment" label="Tender Type" id="purTenTypeLiId" style="padding:10px;" />
+															  
+										--></listbox>
+									
+									
+									</tabpanel>
+									
+									<tabpanel  style="border:0 none; padding:1px 0;">
+										<listbox  style="border:0px;" id="interactionAttrLbId" sclass="segmentList" height="410px">
+											<!--<listitem draggable="purIntSegment" label="Opens" id="InteractOpenLiId" style="padding:10px;" />
+											<listitem draggable="purIntSegment" label="Clicks" id="InteractClicksLiId" style="padding:10px;" />
+												
+										--></listbox>
+											
+										
+										
+									</tabpanel>
+								</tabpanels>
+							
+							</tabbox>
+							
+							
+							
+						</groupbox>
+						
+					</h:td>
+					
+					<h:td width="10" />
+					
+					<h:td valign="top">
+					
+					<groupbox  closable="false">
+						<caption label="Segmentation Rules" />
+							
+						<groupbox  mold="3d"   >
+							<caption label="Profile Attribute Rules" >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop Profile Attributes  / Home passed  to create segment rules"/> </h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+							
+							
+							<div id="profileAttributeDivId" droppable="profileSegment" style="min-height:10px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+									<label value="AND"  
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />
+									<label value="Drag Profile / Home passed Attributes here to create AND combination rule" />
+								</div>
+							</div>
+						</groupbox>
+						
+						<label value="AND" style="display:block;font-weight:bold; margin:10px;" />
+						
+						<groupbox  mold="3d" >
+							<caption label="Purchase Attribute Rules"  >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop Purchase Attributes to create segment rules"/> 
+									</h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+								
+							
+							<div id="purIntAttributeDivId" droppable="purIntSegment" style="min-height:10px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+								<label value="AND" 
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />	
+								<label value="Drag Purchase Attributes here to create AND combination rule" />
+								</div>
+							</div>
+						</groupbox>
+						
+						<!-- ADDED FOR NEW APPROCH OF INTERACTION ATTRIBUTE -->
+						<label value="AND" style="display:block;font-weight:bold; margin:10px;" />
+						
+						<groupbox  mold="3d" sclass="darkgroupbox" >
+							<caption label="Interaction Attribute Rules "  >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop Interaction Attributes to create segment rules"/> 
+									</h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+								
+							
+								<hlayout><label value = "Select Campaigns:" style="font-weight:bold;"/>
+								<listbox id="dispcampaignsLbId" width="350px" multiple="true" checkmark="true" rows="6"  sclass="contactsView">
+									<listhead style="">
+										<listheader label="Campaign Name" width="100%" align="left" maxlength="30"/>
+									</listhead>
+									</listbox>
+									<checkbox checked="true" id="latestCRChkBoxId" label="Consider only latest sent campaigns" />
+								</hlayout>
+							<div id="intAttributeDivId" droppable="IntSegment" style="min-height:10px;padding-top: 50px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+								<label value="AND" 
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />	
+								<label value="Drag Interaction Attributes here to create AND combination rule" />
+								</div>
+							</div>
+							
+						</groupbox>
+						
+						
+						
+					</groupbox>
+					
+					</h:td>
+				</h:tr>	
+				
+			</h:table>
+			
+			<div style="padding:10px 5px;" align="right">
+						<button label ="Back" sclass="idle140" id="cancelBtnId" />
+						<button label="Save Segment Rule" id="segmentBtnId" sclass="idle140 greenbtn" />
+						<button label="Update" visible="false" id="updateBtnId" sclass="idle140 greenbtn" />
+			
+			</div>
+		
+		</div>
+	
+	</window>
+
+</zk>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.UserCampaignExpiration"
+		table="user_campaign_expiration">
+		
+		<id name="id" type="java.lang.Long">
+			<column name="id" unique="true"/>
+		</id>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="startDate" type="calendar">
+			<column name="start_date" />
+		</property>
+		<property name="endDate" type="calendar">
+			<column name="end_date" />
+		</property> 
+		<!-- <property name="freequency" type="java.lang.String">
+			<column name="freequency" />
+		</property> -->
+		
+		<property name="lastSentOn" type="calendar">
+			<column name="last_sent_on" />
+		</property>
+		<property name="sentOn" type="calendar">
+			<column name="sent_on" />
+		</property>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id"/>
+		</property>
+		<property name="campaignId" type="java.lang.Long">
+			<column name="campaign_id"/>
+		</property>
+		<property name="status" type="java.lang.String">
+			<column name="status" length="10"/>
+		</property>
+		<property name="toEmailId" type="java.lang.String">
+			<column name="to_email" length="150"/>
+		</property>
+		<property name="msgContent" type="java.lang.String">
+			<column name="msg" length="1000"/>
+		</property>
+		
+	</class>
+</hibernate-mapping>

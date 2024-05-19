@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 2:15:04 PM  -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.SuppressedContacts" table="suppressed_contacts">
+    <id name="id" type="java.lang.Long" column="id">
+      <generator class="native"/>
+    </id>
+    <property name="email" type="string" column="email" length="100" not-null="true"  unique-key="Unique_email" />
+    <many-to-one name="user" class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId"  fetch="select">
+      <column name="user_id" not-null="true" unique-key="Unique_Mlist"/>
+    </many-to-one> 
+    <property name="type" type="string" column="type" />
+     <property name="suppressedtime" type="java.util.Calendar" >
+			<column name="suppressed_time" />
+		</property>
+		<property name="reason" type="string">
+     		 <column name="reason" length="2000"/>
+		 </property>
+  </class>
+</hibernate-mapping>

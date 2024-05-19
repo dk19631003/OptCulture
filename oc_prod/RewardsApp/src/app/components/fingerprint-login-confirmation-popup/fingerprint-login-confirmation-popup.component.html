@@ -1,0 +1,37 @@
+<ion-toolbar>
+	<ion-buttons slot="end" >
+		<ion-button  (click)="dismiss()">
+		  <ion-icon mode="md" color="dark" slot="icon-only" name="close-circle-outline"></ion-icon>
+		</ion-button>
+	</ion-buttons>
+</ion-toolbar>
+<ion-content>
+  <ion-row>
+    <ion-col size="12">
+      <ion-label class="textFont navy" text-wrap>  
+        Hello , <span > {{userName}}</span>  
+        Do you want to login using Face ID/Touch ID 
+      </ion-label>
+    </ion-col>
+  </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" type="button" shape="round"   class="Login-Button textFont text_transform" (click)="openFingerPrint()"> 
+           Login Using FingerPrint
+        </ion-button>
+      </ion-col>
+    </ion-row>
+       
+         
+         <div class="textCenter">
+            <ion-text class="BY-TEXT">OR</ion-text>
+         </div>
+         <ion-row>
+           <ion-col class="pdtop0">
+            <ion-button expand="full" type="button" fill="outline" shape="round"  class="Login-Button textFont text_transform" (click)="dismiss()">
+              Cancel
+            </ion-button>
+           </ion-col>
+         </ion-row>
+
+</ion-content>

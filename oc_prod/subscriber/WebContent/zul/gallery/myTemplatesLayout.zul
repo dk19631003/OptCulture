@@ -1,0 +1,89 @@
+<zk>
+	<window id="emailIndexWinId"  width="100%"  xmlns:h="http://www.w3.org/1999/xhtml" apply="org.mq.marketer.campaign.controller.gallery.MyTemplatesLayoutController">
+		<style src="/css/campaign.css"/>
+		
+		<script src="/js/editor.js"/> 
+		<script src="/js/blockEditor.js"  /> 
+		<style src="/css/editor.css"/>
+		
+
+		<script type="text/javascript" src="/js/tinymce/jquery.tinymce.js"/>
+		
+		<textbox id="htmlStuffId" value="test" visible="false"/>
+		<textbox id="htmlStuffId1" value="test"  visible="false"/>
+		<textbox id="htmlStuffId2" value="test"  visible="false"/>
+		<textbox id="spamChekTbId" value="test"  visible="false"/>
+		<textbox id="testMailTbId" value="test"  visible="false"/>
+		
+		
+		
+		<hlayout style="margin-top: 15px;">
+					<button id="templateTbId"  image="images/choose_template.jpg" 
+					 label="Choose a Template" height="68px" width="250px" sclass="edit_opt_btn" />
+					 
+
+					<button id="plainEditorTbId"  image="images/create_scratch.jpg" 
+					 label="Create from Scratch" height="68px" width="250px" sclass="edit_opt_btn" />
+
+					<button id="copyTextTbId"  image="images/copy_paste_html.jpg" 
+					 label="Copy-Paste HTML Code" height="68px" width="250px" sclass="edit_opt_btn" />
+		
+		
+		</hlayout>
+		
+		<div id="templateListDivId" visible="false"  style="border:1px solid #cccccc; margin:50px 0 10px 0; padding:10px;">
+		
+			<h:table cellspacing="2" cellpadding="0" width="100%" >
+				
+				<h:tr>
+					<h:td align="left" width="210px" valign="top">
+						
+						<groupbox  id="categoryGBoxId" width="210px" closable="false" style="margin-right:10px;">
+							<caption label="Category" style="fony-weight:bold;" />
+		 					
+		 					<listbox width="198px" id="categoryListLbId" sclass="templateList"/>
+						</groupbox>
+						
+					</h:td>
+					
+					<h:td  valign="top" >
+						<groupbox  id="templatesGBoxId" visible="false" closable="false">
+							<caption label="Templates" style="fony-weight:bold;" />
+							
+								<div id="myTempDivId" visible="false" >
+									<h:table >
+						
+										<h:tr>
+										<h:td align="left">
+											<label value="Select folder:"/>
+										</h:td>
+										<h:td>
+											<listbox id="myTemplatesListId" width="250px" sclass="templateList" visible="false" rows="1" mold="select"/>
+										</h:td>
+										</h:tr>
+										</h:table>
+								</div>
+							<div id="templListDivId"  style="overflow:auto; padding-bottom:5px;" width="100%" >
+							</div>
+							
+						</groupbox>
+						
+					</h:td>
+				</h:tr>
+			</h:table>
+			
+			<div align="right"  visible="false" id="iconDescriptionDivId" style="margin:10px 10px 0 0;">
+				<image src="/img/theme/preview_icon.png" />
+				<label value=": Preview" sclass="note"/><space width="30px" />
+				<image src="/Images/theme/Edit_icn.png" />
+				<label value=": Edit" sclass="note"/>
+			</div>
+		</div>
+		
+		
+		<div align="right">
+				<button label="Back" id="backBtnId" sclass="idle70"/>
+		</div>
+		
+	</window>
+</zk>

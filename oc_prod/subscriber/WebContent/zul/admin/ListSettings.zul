@@ -1,0 +1,70 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="listSettingsWinId" border="0"   apply="org.mq.marketer.campaign.controller.admin.ListSettingsController" 	
+																				xmlns:h="native" xmlns:w="client" width="100%">
+	
+	
+	
+	
+		<groupbox   closable="false" open="true" >
+			<caption >
+				<label value="Contact Field Mappings"/>
+			</caption>
+			<div  id="posMapContDivId">
+			
+			<div align="right">
+			<toolbarbutton image="/images/action_add.gif"  label="Add Contact Row" id="addContactMapBtnId" />
+			</div>
+				<grid width="100%">
+					<columns>
+						<column label="Contact Attribute" width="126px"/>
+						<column label="OptCulture Attribute" width="170px"></column>
+						<column label="Data Type" width="278px" />
+						<column label="Preconfigured Values" width="190px"/>
+						<column label="Display Label" width="128px"></column>
+						<column label="Default Merge-Tags"  width="189px"></column>
+						<column label="Unique Priority" width="110px"></column>
+						<column label="Action" width="15%"/>
+						
+					</columns>
+					<rows id="contactRowsId"/>
+				</grid>
+			</div>
+		</groupbox>	
+		<!-- changes 2.5.4.0 -->
+		
+		<groupbox id="listMapLoyaltyGroupbox" visible = "false">
+		<caption >
+				<label value="Loyalty Field Mappings"/>
+		</caption>
+			
+			<div  id="posMapLoyaltyDivId">
+			<div align="right">
+			<toolbarbutton image="/images/action_add.gif"  label="Add Loyalty Row" id="addLoyaltyMapBtnId" />
+			</div>
+		<grid width="100%">
+					<columns>
+						<column label="Loyalty Attribute" width="15%"/>
+						<column label="OptCulture Attribute" width="170px"></column>
+						<column label="Data Type" width="25%" />
+						<column label="Preconfigured Values" width="190px" visible="false"/> <!--Because of previous written code, making invisible instead of commenting -->
+						<column label="Display Label" width="15%"></column>
+						<column label="Default Merge-Tags"  width="189px"></column>
+						<column label="Unique Priority" width="110px" visible="false" ></column> <!--Because of previous written code, making invisible instead of commenting -->
+						<column label="Action" width="15%" />
+						
+					</columns>
+					<rows id="loyaltyRowsId"/>
+				</grid>	
+			</div>
+		
+		</groupbox>
+		
+		
+		
+		<div align="right">
+			<button label="Save" id="saveBtnId"/>
+		</div>
+	
+	</window>
+</zk>

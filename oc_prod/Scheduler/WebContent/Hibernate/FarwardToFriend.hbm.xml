@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.FarwardToFriend"
+		table="farward_to_friend">
+		<id name="farwardFriendId" type="java.lang.Long">
+			<column name="farward_friend_id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="contactId" type="java.lang.Long">
+		<column name="cid" />
+		</property>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" not-null="true" />
+		</property>
+		
+		<property name="crId" type="java.lang.Long">
+			<column name="cr_id"  />
+		</property>
+		
+		
+		<property name="email" type="string">
+			<column name="email"  length="60" />
+		</property>
+		
+		<property name="referer" type="string">
+			<column name="referer" length="30"  />
+		</property>
+		
+		<property name="sentId" type="java.lang.Long">
+			<column name="sent_id"  />
+		</property>
+		
+		<property name="custMsg" type="text">
+			<column name="cust_msg"  length="60" />
+		</property>
+		
+		<property name="toEmailId" type="string">
+			<column name="to_email_id"  length="60" />
+		</property>
+		
+		<property name="toFullName" type="string">
+			<column name="to_full_name"  length="60" />
+		</property>
+		
+		<property name="sentDate" type="calendar">
+	        <column name="sent_date"/>
+	    </property>
+		
+		<property name="opens" type="int">
+			<column name="opens" />
+		</property>
+		
+		<property name="clicks" type="int">
+			<column name="clicks" />
+		</property>
+	 
+   <property name="captcha" type="string">
+			<column name="captcha"  length="60" />
+		</property>
+		
+		<property name="status" type="string">
+			<column name="status"  length="60" />
+		</property>
+		
+    
+	</class>
+</hibernate-mapping>

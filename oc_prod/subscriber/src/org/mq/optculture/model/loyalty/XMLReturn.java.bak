@@ -1,0 +1,28 @@
+package org.mq.optculture.model.loyalty;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.mq.optculture.model.ocloyalty.LoyaltyOfflineReturnTransactionRequest;
+import org.mq.optculture.model.ocloyalty.LoyaltyReturnTransactionRequest;
+
+@XmlRootElement(name = "RETURNREQS")
+public class XMLReturn {
+
+	private List<LoyaltyOfflineReturnTransactionRequest> returnTransactionRequest;
+
+	public List<LoyaltyOfflineReturnTransactionRequest> getReturnTransactionRequest() {
+		return returnTransactionRequest;
+	}
+
+	@XmlElement(name = "returnTransactionRequest")
+	public void setReturnTransactionRequest(
+			List<LoyaltyOfflineReturnTransactionRequest> returnTransactionRequest) {
+		this.returnTransactionRequest = returnTransactionRequest;
+	}
+
+	
+
+}

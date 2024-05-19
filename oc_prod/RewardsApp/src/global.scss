@@ -1,0 +1,475 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+:root {
+  --coverimageurl :url(./assets/images/sideimage.png);
+  --themecolor :var(--themecolor);
+  --globalfont: 'Raleway', sans-serif  ;
+  --ion-default-font : var(--globalfont)  !important;
+  }
+.Login-Button-Text
+{
+     
+      font-size: 12px;
+      font-weight: 600;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.33;
+      letter-spacing: 0px;
+      text-align: center;
+}
+.white
+{
+  color: #ffffff;
+}
+.black
+{
+  color: #000000; 
+}
+.bcyellow{
+  background-color: var(--themecolor);
+}
+.Login-Button
+{
+  --ion-background-color: #000000;
+  --border-radius: 5px;
+}
+.logo
+{
+    background: transparent;
+    display: block;
+    margin-left: auto;
+    margin-right: auto; 
+}
+.bgAuto{
+  --background:auto;
+}
+.mr-top-25
+{
+  margin-top: 25%;
+}
+.text_transform{
+  text-transform: inherit;
+}
+
+// .html {
+//   --ion-default-font : 'Raleway', sans-serif !important;
+// }
+
+// .html .ios{
+//   --ion-default-font : 'Raleway', sans-serif !important ;
+// }
+.Mobile-Number {
+    
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.36;
+    letter-spacing: normal;
+    text-align: left;
+    color: #666666 !important;
+  }
+ 
+  .BY-TEXT
+  {
+    margin-left: auto;
+    margin-right: auto;
+   
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.42;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #000000;
+  }
+  .bottom{
+    bottom:0px;
+    // position:fixed;
+    // width: 90%;
+  }
+  .center{
+    margin-top: 50%;
+    text-align: center;
+}
+.CARD-TYPE-TEXT
+{
+ 
+  font-size: 20px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.35;
+  letter-spacing: normal;
+  text-align: left;
+  color: #16161d;
+}
+
+.Points-TEXT
+{
+
+  font-size: 12px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
+}
+.Suggestion-Text
+{
+  
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color:black;
+}
+.color-background
+{
+  --ion-background-color: var(--themecolor);
+}
+.textCenter{
+  text-align: center;
+}
+
+.colorClass
+{
+   height: 200px !important;
+   background-color: var(--themecolor) ;
+   border-bottom-left-radius: 25px;
+   text-align: center;
+}
+.yellowbackground{
+  background-color: var(--themecolor) ;
+}
+.mr-right-5
+{
+  margin-right: 5%;
+}
+.mr-left-5
+{
+  margin-left: 5%;
+}
+.mr-top-12
+{
+  margin-top:12%;
+}
+.SIGN-UP-NOW {
+  width: 98px;
+  height: 19px;
+ 
+  font-size: 14px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
+}
+.marginAuto{
+  margin: auto;
+}
+.heightAuto{
+  height: auto;
+}
+.box-border
+{
+    border-radius: 10px ;
+    // padding-left: 30px !important;
+     border: 1px solid #011f3f;
+     box-shadow: none !important;
+     --highlight-color-focused:transparent;
+     --highlight-color-valid:transparent;
+     --highlight-color-invalid:transparent;
+     --min-height: 40px;
+}
+
+.titleText{
+  
+  font-weight: bold;
+  font-size: 34px !important;
+  color: #FFFFFF;
+}
+.checkbox-icon
+{
+  width: 15px;
+  height: 15px;
+}
+.textFont{
+  
+  font-size: 15px;
+}
+.bg-transparent{
+  --ion-background-color:transparent !important;
+}
+
+.coolGrey{
+  color: #8b959a;
+}
+.navy{
+  color: #011f3f;
+}
+.right{
+  float: right;
+}
+.left{
+  float: left;
+}
+.headerText{
+  
+  font-size: 16px;
+}
+.blue{
+  color: #4b81ec;
+}
+.bold{
+  font-weight: bold;
+}
+.red{
+  color: #FF0000;
+}
+.green{
+  color: green;
+}
+.line{
+  --min-height: 5px;
+  --border-bottom-color:black;
+  --inner-border-width: 0 0 1px 0;
+}
+.border-radius{
+  border-radius: 15px;  
+}
+.notificationText{
+  
+  font-size: 12px;
+}
+.ht25
+{
+    height: 150px !important;
+}
+.pdtop20{
+  padding-top: 20px;
+}
+.pdtop10{
+    padding-top: 10px; 
+}
+.custom-popover {
+  ion-radio  {
+      --color-checked:var(--ion-color-dark);
+  }
+  ion-label{
+    font-size: 15px !important;
+    
+  }
+ 
+}
+.title{
+  font-size: 24px !important;
+  
+  font-weight: bold !important;
+  color: #ffffff !important;
+}
+
+.icon-start
+{
+  margin-inline-end: 16px;
+}
+
+.fn13{
+  font-size: 13px;
+  
+}
+
+.rotate90 {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.bgblack{
+  background: black;
+}
+.iconButton{
+  height: 32px;
+}
+ion-button{
+  height: 40px;
+  --background:  var(--themecolor);
+  color: white;
+  --border-color: var(--themecolor);
+  --background-hover: var(--themecolor);
+  --background-activated: var(--themecolor);
+}
+.pdleft0{
+  padding-left: 0px;
+}
+.pdbottom0{
+  padding-bottom: 0px;
+}
+
+.margin0{
+  margin: 0px 0px 0px 0px;
+}
+.ht100{
+  height: 100% !important;
+}
+.ht40{
+  height: 40%;
+}
+.pad5{
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+.filterText{
+  
+  font-size: larger;
+  color: #ffffff;
+}
+.col2{
+  padding-left: 0px;
+}
+.col1{
+  padding-right: 0px;
+}
+.pdleft{
+  padding-left: 30px
+}
+.mr0{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  height: 30px;
+}
+.mrtop13{
+  margin-top: 10%;
+}
+.borderleft{
+  border-left: 1px solid #ffffff;
+  padding-left:30px;
+}
+ion-list-header{
+  text-transform: inherit;
+}
+
+.list-ios{
+  margin-bottom: 16px;
+}
+.padding-top{
+  margin-top: 60px;
+}
+
+ion-app {
+  margin-top: env(safe-area-inset-top);
+  margin-bottom: env(safe-area-inset-bottom)
+}
+
+.openReciept {
+  --width: 700px;
+}
+
+.posrelative{
+  position: relative;
+  width: 100%;
+}
+
+
+.wd100{
+  width:100%
+}
+.posabsolute{
+  position: absolute;
+  bottom: 0;
+}
+
+.padding0{
+  padding: 0 0 0 0;
+}
+
+.imgClass{
+  height: 32%;
+  border-bottom-left-radius: 50px;
+  text-align: center;
+  background-size: 100% 100% !important;
+}
+
+modal-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.bgimage{
+  background-image : var(--coverimageurl)  ;
+  background-repeat: repeat;
+}
+
+.overflow{
+  overflow-y: auto;
+}
+
+.overflowcontent{
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+ion-checkbox{
+  --background-checked: var(--themecolor);
+  --border-color-checked: var(--themecolor);
+}
+.themetextcolor{
+  color: var(--themecolor);
+}
+.mandatory{
+  color: red;
+}
+
+.fingerprint-modal {
+  background: rgba(0, 0, 0, 0.5) !important;
+  padding: 50% 10%  !important;
+}
+
+// @media (min-width: map-get($grid-breakpoints, lg)) {
+//   ion-navbar.toolbar,
+//   ion-header .toolbar[fixed],
+//   ion-footer .toolbar[fixed],
+//   ion-tabs .tabbar {
+//     margin: 0;
+//     padding-right: calc((100% - #{map-get($grid-max-widths, lg)}) / 2);
+//     padding-left: calc((100% - #{map-get($grid-max-widths, lg)}) / 2);
+//   }
+//  }
+

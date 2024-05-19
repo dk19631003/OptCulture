@@ -1,0 +1,796 @@
+ package org.mq.marketer.campaign.controller.admin;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.Vmta;
+import org.mq.marketer.campaign.dao.VmtaDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageListEnum;
+import org.mq.marketer.campaign.general.PageUtil;
+import org.mq.marketer.campaign.general.Redirect;
+import org.mq.marketer.campaign.general.Utility;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkplus.spring.SpringUtil;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Grid;
+import org.zkoss.zul.Groupbox;
+import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.ListModel;
+import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.RowRenderer;
+import org.zkoss.zul.Textbox;
+
+public class VmtaController extends GenericForwardComposer  {
+
+	private Grid vmtaGridId;
+	private List vmtaList;
+	
+	private Textbox vmtaDescTbId, vmtaAccountTxtBxId, selectedVmtaNameTextBxId, passTxtBxId, hostTxtBxId, vmtaAccountNameCbId;
+	private Combobox vmtaCbId,  emailRouteCbId;
+	private Listbox pvmtaLbId;
+	private Checkbox onlyVmtaCbId;
+	
+	//private Listbox vmtaStatusLbId;
+
+	//private Checkbox pooledVmtaCbId;
+	
+	private Groupbox newVmtaGbId;
+	private Groupbox vmtaPoolGbId;
+	
+	private Button showVmtaBtnId;
+	
+	private Button addVmtaBtnId;
+	private Button cancelVmtaBtnId;
+	private Button updateVmtaBtnId;
+	private Div updateVmtaDivId;
+	private VmtaDao vmtaDao;
+	
+	private Div addVmtaDivId;
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	public VmtaController() {
+		vmtaDao = (VmtaDao)SpringUtil.getBean("vmtaDao");
+//		this.vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+	}
+	
+	
+	@Override
+	public void doAfterCompose(Component comp) throws Exception {
+		super.doAfterCompose(comp);
+		logger.debug("-- Just Entered -- ");
+		
+		String style = "font-weight:bold;font-size:15px;color:#313031;" +
+						"font-family:Arial,Helvetica,sans-serif;align:left";
+		
+		/*PageUtil.setHeader("Manage VMTA", "", style, true);*/
+		PageUtil.setHeader("Manage Email Route", "", style, true);
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public void onClick$showVmtaBtnId() {
+		
+		showVmtaBtnId.setDisabled(true);
+		showVmtaPanel(true, null);
+	} // onClick$showVmtaBtnId
+	
+	
+	Vmta selectedVmta = null;
+	
+	private void showVmtaPanel(boolean isFromAdd, Vmta vmta) {
+
+		if(isFromAdd) {
+			
+			/*updateVmtaDivId.setVisible(false);
+			addVmtaDivId.setVisible(true);*/
+			
+			vmtaAccountNameCbId.setDisabled(false);
+			emailRouteCbId.setDisabled(false);
+			
+			vmtaAccountNameCbId.setText(Constants.STRING_NILL);
+			for (int i=emailRouteCbId.getItemCount()-1 ; i>=0 ; i--) {
+			
+				emailRouteCbId.removeItemAt(i);
+			}
+			
+			/*vmtaNameId.setValue("");
+			vmtaAccountTxtBxId.setValue("");*/
+			passTxtBxId.setValue("");
+			hostTxtBxId.setValue("");
+			vmtaDescTbId.setValue("");
+			
+			selectedVmta = new Vmta();
+			//pooledVmtaCbId.setDisabled(false);
+			//vmtaNameId.setDisabled(false);
+			
+			addVmtaBtnId.setVisible(true);
+			updateVmtaBtnId.setVisible(false);
+			
+			//this.vmtaNameId.setText("");
+			this.vmtaDescTbId.setText("");
+			//pooledVmtaCbId.setChecked(false);
+			//vmtaStatusLbId.setSelectedIndex(0); 
+			
+			
+			onlyVmtaCbId.setChecked(false);
+			pvmtaLbId.clearSelection();
+			
+			newVmtaGbId.setVisible(true);
+			vmtaPoolGbId.setVisible(false);
+			List<Vmta> retVmta = vmtaDao.findUniqueVmta();
+			if(retVmta == null || retVmta.size() ==0) return;
+			
+			for (Vmta vmta2 : retVmta) {
+				Comboitem ci = new Comboitem(vmta2.getVmtaName());
+				
+				ci.setParent(emailRouteCbId);
+			}
+			
+			if(emailRouteCbId.getItemCount() > 0) emailRouteCbId.setSelectedIndex(0);
+		}
+		else { // From Edit
+			/*updateVmtaDivId.setVisible(true);
+			addVmtaDivId.setVisible(false);*/
+			
+			/*selectedVmtaNameTextBxId.setValue(vmta.getVmtaName());
+			selectedVmtaNameTextBxId.setDisabled(true);*/
+			
+		    
+			selectedVmta = vmta;
+			
+			//populateEmailRouteCbIdAndVmtaAccountNameCbId();
+			vmtaAccountNameCbId.setValue(selectedVmta.getAccountName());
+			emailRouteCbId.setValue(selectedVmta.getVmtaName());
+			vmtaAccountNameCbId.setDisabled(true);
+			emailRouteCbId.setDisabled(true);
+			
+			passTxtBxId.setValue(vmta.getAccountPwd());
+			hostTxtBxId.setValue(vmta.getHost());
+			
+			showVmtaBtnId.setDisabled(true);
+			addVmtaBtnId.setVisible(false);
+			updateVmtaBtnId.setVisible(true);
+
+			//this.vmtaNameId.setText(vmta.getVmtaName());
+			this.vmtaDescTbId.setText(vmta.getDescription());
+			
+			/*List<Listitem> lsts =  vmtaStatusLbId.getItems();
+			for (Listitem lst : lsts) {
+				if(vmta.getStatus().equalsIgnoreCase(lst.getLabel())) {
+					logger.info("Select : "+lst.getLabel());
+					vmtaStatusLbId.setSelectedItem(lst);
+					break;
+				}
+			} // for
+*/			
+			//pooledVmtaCbId.setChecked(vmta.getPooledVmtas()!=null);
+
+			//pooledVmtaCbId.setDisabled(true);
+			//vmtaNameId.setDisabled(true);
+
+			if(vmta.getPooledVmtas()!=null && vmta.getPooledVmtas().length()>0) { // Selection of Pooled VMTAs
+
+				List<String> tempList = new ArrayList<String>();
+	
+				String[] ids = vmta.getPooledVmtas().split(",");
+				for (String id : ids) {
+					tempList.add(id.trim());
+				} // for
+	
+				Vmta tempVmta;
+				Set selectionSet = new HashSet();
+				
+				//lsts =  pvmtaLbId.getItems();
+				List<Listitem> lsts = pvmtaLbId.getItems();
+				for (Listitem lst : lsts) {
+					
+					tempVmta = (Vmta)lst.getValue();
+					if(tempList.contains(""+tempVmta.getId())) {
+						selectionSet.add(lst);
+					} // if
+					
+				} // for
+				
+				pvmtaLbId.clearSelection();
+				pvmtaLbId.setSelectedItems(selectionSet);
+			} // if
+			
+			newVmtaGbId.setVisible(true);
+			//vmtaPoolGbId.setVisible(pooledVmtaCbId.isChecked());
+			
+		} // else
+		
+	} // showVmtaPanel
+	
+	/**
+	 * This Method cancels the Add VMTA operation
+	 */
+	public void onClick$cancelVmtaBtnId() {
+		
+		MessageUtil.clearMessage();
+		showVmtaBtnId.setDisabled(false);
+		vmtaPoolGbId.setVisible(false);
+		newVmtaGbId.setVisible(false);
+	} // onClick$cancelVmtaBtnId
+	
+	
+	
+	/**
+	 * 
+	 */
+	public void onClick$updateVmtaBtnId() {
+
+		if(isValidVmtaDetails(false)) {
+			MessageUtil.setMessage("VMTA details updated successfully.", "color:blue;", "TOP");
+		}
+	} // onClick$updateVmtaBtnId
+	
+
+	
+	/**
+	 * 
+	 */
+	public void onClick$addVmtaBtnId() {
+
+		if(isValidVmtaDetails(true)) {
+			MessageUtil.setMessage("New VMTA added successfully.", "color:blue;", "TOP");
+		}
+	} // onClick$addVmtaBtnId
+		
+	
+	private boolean isVMTAExists(String vmtaName) {
+		List<Comboitem> retItems = emailRouteCbId.getItems();
+		
+		for (Comboitem comboitem : retItems) {
+			
+			if(comboitem.getLabel().equalsIgnoreCase(vmtaName)) return true;
+		}
+		
+		return false;
+	}
+	private boolean isValidVmtaDetails(boolean isAdd) {
+		try {
+			
+			vmtaAccountNameCbId.getChildren().clear();
+			emailRouteCbId.getChildren().clear();
+			
+			if((emailRouteCbId.getValue()==null || emailRouteCbId.getValue().trim().equals("")) && isAdd) {
+			
+				MessageUtil.setMessage("VMTA Name cannot be left empty.", "color:red", "TOP");	
+				return false;
+			} // if
+			
+			
+			
+			/*if((vmtaAccountTxtBxId.getValue()==null || vmtaAccountTxtBxId.getValue().trim().equals("")) && isAdd) {
+				
+				MessageUtil.setMessage("VMTA Account cannot be left empty.", "color:red", "TOP");
+				return false;
+			} // if
+*/			
+			if(vmtaAccountNameCbId.getValue()==null && vmtaAccountNameCbId.getValue().trim().isEmpty() ){
+				MessageUtil.setMessage("Please give an account to edit.", "color:red", "TOP");
+				return false;
+			}
+			
+            if((passTxtBxId.getValue()==null || passTxtBxId.getValue().trim().equals("")) && isAdd) {
+				
+				MessageUtil.setMessage("Password cannot be left empty.", "color:red", "TOP");	
+				return false;
+			} // if
+            
+            /*if(hostTxtBxId.getValue()==null || hostTxtBxId.getValue().trim().equals("")) {
+				
+				MessageUtil.setMessage("Host cannot be left empty.", "color:red", "TOP");	
+				return false;
+			} // if
+*/		
+            if(isAdd && isVMTAExists(emailRouteCbId.getValue())) {
+            	
+            	MessageUtil.setMessage("SMTP is already exists.", "color:red", "TOP");	
+				return false;
+            }
+			String vmtaName = emailRouteCbId.getValue().trim();
+			String vmtaAccountName = vmtaAccountNameCbId.getValue().trim();
+			String vmtaAccountPassword = passTxtBxId.getValue().trim();
+			String vmtaAccountHost = hostTxtBxId.getValue().trim();
+			String vmtaDesc = vmtaDescTbId.getValue().trim();
+			
+			boolean isVmtaNameSame = false;
+			boolean isVmtaAccountSame = false;
+			boolean isVmtaPasswordSame = false;
+			boolean isVmtaHostSame = false;
+			boolean condForDuplicateMsgInNewAdd = false;
+			boolean condForDuplicateMsgInUpdate = false;
+			//VmtaDao vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+			//vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+			
+			/*if(!isAdd){
+				vmtaName = emailRouteCbId.getValue();
+				vmtaAccountName = vmtaAccountNameCbId.getValue().trim();
+			}*/
+			
+			//List<Vmta> vmtaList = vmtaDao.findUniqueVmta();
+			
+			
+			List<Vmta> vmtaList = vmtaDao.findAllVmtaByVmtaName(emailRouteCbId.getValue());
+			
+			
+			for(Vmta aVmta:vmtaList){
+				
+				if(aVmta.getAccountName().equalsIgnoreCase(vmtaAccountNameCbId.getValue().trim())) {
+				if(isAdd){
+					
+						MessageUtil.setMessage("Given VMTA Name with given account already exists.","color:red", "TOP");
+						return false;
+						
+					}else{
+					
+					selectedVmta = aVmta;
+					
+					}
+				}
+				/*if(aVmta.getVmtaName().equalsIgnoreCase(vmtaName) && aVmta.getAccountName().equalsIgnoreCase(vmtaAccountName) && aVmta.getHost() !=null && aVmta.getHost().equalsIgnoreCase(vmtaAccountHost)){
+					
+					if (isAdd) {
+						MessageUtil.setMessage("Given VMTA Name with given account and host already exists.","color:red", "TOP");
+						return false;
+					}else if(vmtaAccountPassword.equals("") && aVmta.getAccountPwd() == null){
+						MessageUtil.setMessage("Password is not registered.", "color:red", "TOP");	
+						return false;
+					}else if(vmtaAccountPassword.equals("") || vmtaAccountPassword.equals(selectedVmta.getAccountPwd())){
+						MessageUtil.setMessage("Given configuration already exists.","color:red", "TOP");
+						return false;
+						
+					}
+				}*/
+				/*isVmtaNameSame = isVmtaAccountSame = isVmtaHostSame = false;
+				
+				if(aVmta.getVmtaName().equalsIgnoreCase(vmtaName)){
+					isVmtaNameSame = true;
+				}
+				
+				if(aVmta.getAccountName().equalsIgnoreCase(vmtaAccountName)){
+					isVmtaAccountSame = true;
+				}
+				
+				if(aVmta.getHost() != null && aVmta.getHost().equalsIgnoreCase(vmtaAccountHost)){
+					isVmtaHostSame = true;
+				}
+				
+				
+				condForDuplicateMsgInNewAdd = isVmtaNameSame && isVmtaAccountSame && isAdd;
+				condForDuplicateMsgInUpdate = isVmtaNameSame && isVmtaAccountSame && isVmtaHostSame && !isAdd && vmtaAccountPassword.equals("") && aVmta.getAccountPwd() != null;
+				if(condForDuplicateMsgInNewAdd || condForDuplicateMsgInUpdate){
+					MessageUtil.setMessage("Given configuration already exists.","color:red", "TOP");
+					return false;
+				}
+				*/
+				
+				
+			}
+			
+			/*if(isAdd && vmtaDao.findByVmtaName(vmtaName) != null) {
+				MessageUtil.setMessage("Given VMTA Name already exists.", "color:red", "TOP");	
+				return false;
+			} // if
+*/			
+			String pooledVmtaStr=null;
+			// For Pooled VMTA 
+			/*if(pooledVmtaCbId.isChecked()) {
+				
+				if(pvmtaLbId.getSelectedCount()<=0) {
+					MessageUtil.setMessage("Select at least one VMTA Name for the pool.", "color:red", "TOP");	
+					return false;
+				}
+				
+				List<String> tempList = new ArrayList<String>();
+				
+				List<Vmta> pooledVmtaList = vmtaDao.getOnlyPooledVmtas();
+				
+				for (Vmta vmta : pooledVmtaList) {
+					// Skip the selected Vmta pooled items in Edit mode
+					if(isAdd==false && vmta.getId().equals(selectedVmta.getId())) {
+						continue;
+					}
+					
+					String[] ids = vmta.getPooledVmtas().split(",");
+					for (String id : ids) {
+						tempList.add(id.trim());
+					} // for
+				} // for
+				
+	
+				Set<Listitem> selListItems = pvmtaLbId.getSelectedItems();
+				
+				pooledVmtaStr="";
+				
+				Vmta tempVmta;
+				for (Listitem li : selListItems) {
+					logger.info(" Selected Label: " + li.getLabel() +"  Value="+li.getValue());
+					
+					tempVmta = (Vmta)li.getValue();
+					
+					if(tempList.contains(""+tempVmta.getId())) {
+						MessageUtil.setMessage("Selected VMTA is already pooled. Choose VMTAs which are not selected for any pool.", "color:red", "TOP");	
+						return false;
+					}
+					
+					if(pooledVmtaStr.length()!=0) {
+						pooledVmtaStr += ",";
+					}
+					
+					pooledVmtaStr += tempVmta.getId();
+					
+				} // for
+				
+			} // if
+*/			
+			/*if (isAdd==false && Messagebox.show("Are you sure you want to update the VMTA :"+selectedVmta.getVmtaName(), "Prompt", 
+	      		  Messagebox.YES|Messagebox.NO, Messagebox.QUESTION) == Messagebox.NO) {
+	          return false;
+	        }*/
+			
+			if (isAdd==false && Messagebox.show("Are you sure you want to update the VMTA :"+selectedVmta.getVmtaName(), "Prompt", 
+		      		  Messagebox.YES|Messagebox.NO, Messagebox.QUESTION) != Messagebox.YES) {
+		          return false;
+		        }
+
+            
+			if(isAdd){
+				selectedVmta.setVmtaName(vmtaName);
+				selectedVmta.setAccountName(vmtaAccountName);
+				selectedVmta.setAccountPwd(vmtaAccountPassword);
+				selectedVmta.setHost(vmtaAccountHost);
+			}else{
+				
+				/*for(Vmta aVmta:vmtaList){
+					if(aVmta.getVmtaName().equalsIgnoreCase(vmtaName) && aVmta.getAccountName().equalsIgnoreCase(vmtaAccountName)){
+						selectedVmta = aVmta;
+						break;
+					}
+				}*/
+				
+				
+				if(vmtaAccountPassword.equals("") && selectedVmta.getAccountPwd() == null){
+					MessageUtil.setMessage("Password is not registered for current VMTA", "color:red", "TOP");
+					return false;
+				}else if(!vmtaAccountPassword.equals("")){
+					selectedVmta.setAccountPwd(vmtaAccountPassword);
+				}
+				
+				if(vmtaAccountHost.equals("") && selectedVmta.getHost() == null){
+					MessageUtil.setMessage("Host is not registered for current VMTA", "color:red", "TOP");
+					return false;
+				}else if(!vmtaAccountHost.equals("")){
+					selectedVmta.setHost(vmtaAccountHost);
+				}
+				
+				
+			}
+			
+			selectedVmta.setDescription(vmtaDesc);				
+			//selectedVmta.setStatus(vmtaStatusLbId.getSelectedItem().getLabel());
+			selectedVmta.setPooledVmtas(pooledVmtaStr);
+			vmtaDao.saveOrUpdate(selectedVmta);
+			//MessageUtil.setMessage("VMTA details updated successfully.", "color:blue;", "TOP");
+			
+			Redirect.goTo(PageListEnum.EMPTY);
+			Redirect.goTo(PageListEnum.ADMIN_EDIT_VMTA);
+			/*Include xcontents = (Include)Sessions.getCurrent().getAttribute("xcontents");
+			xcontents.setSrc("/zul/" + PageListEnum.EMPTY + ".zul");
+			xcontents.setSrc("/zul/" + PageListEnum.ADMIN_EDIT_VMTA + ".zul");*/
+				
+			return true;
+		} catch (WrongValueException e) {
+			
+			logger.error("Exception ::", e);
+			MessageUtil.setMessage("Failed to Create/Edit the VMTA.", "color:red", "TOP");	
+			logger.error(" - problme while Create/Edit the VMTA.");
+			return false;
+		} catch(Exception e) {
+			MessageUtil.setMessage("Failed to Create/Edit the VMTA.", "color:red", "TOP");	
+			logger.error(" - problme while Create/Edit the VMTA.",e);
+			return false;
+		}
+ 	   
+		
+	} // isValidVmtaDetails
+		
+	
+	
+
+	
+	public List getVmtaList() {
+	
+		logger.info("In getVmtaList()");
+		//VmtaDao vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+		vmtaList = vmtaDao.getAllVmtas();
+		return vmtaList;		
+	}
+
+
+	public List<Vmta> getOnlyVmtaList() {
+		
+		logger.info("In getVmtaList()");
+		//VmtaDao vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+		return vmtaDao.getOnlyVmtas();
+	}
+
+	
+	public ListModel getUsersModel() {
+		return new ListModelList(getVmtaList());
+	}
+	
+
+	/*public void onCheck$pooledVmtaCbId() {
+		vmtaPoolGbId.setVisible(pooledVmtaCbId.isChecked());
+	}*/
+	
+	
+	List<String> pooledVmtaIdList = null;
+	
+	public void onCheck$onlyVmtaCbId() {
+
+		if(pooledVmtaIdList==null) {
+			pooledVmtaIdList = new ArrayList<String>();
+			logger.info("--------------Vel Loaded ----------------------");
+
+			//VmtaDao vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+			List<Vmta> pooledVmtaList = vmtaDao.getOnlyPooledVmtas();
+			
+			for (Vmta pooledvmta : pooledVmtaList) {
+				
+				String[] ids = pooledvmta.getPooledVmtas().split(",");
+				for (String id : ids) {
+					logger.info("Vec ID:"+id);
+					pooledVmtaIdList.add(id.trim());
+				} // for
+			} // for
+		} // if
+		
+		
+			
+		List<Listitem> lsts =  pvmtaLbId.getItems();
+
+		for (Listitem lst : lsts) {
+			if(!onlyVmtaCbId.isChecked()) {
+				lst.setVisible(true);
+				continue;
+			}
+			if(pooledVmtaIdList.contains(""+ ((Vmta)lst.getValue()).getId())) {
+				lst.setVisible(false);
+			}
+		} // for
+		
+		pvmtaLbId.invalidate();
+		
+	} // onCheck$onlyVmtaCbId
+	
+	
+	
+	public RowRenderer getRowRenderer() {
+		return rowRender;
+	}
+	
+	
+	 @Override
+	public void onEvent(Event evt) throws Exception {
+		
+		super.onEvent(evt);
+		Object obj = evt.getTarget();
+		try {
+			
+			if(obj instanceof Image) {
+				Image img = (Image)obj;
+				
+				Vmta vmta = (Vmta)img.getAttribute("vmtaObj");
+				
+				/* these lines of code is to check whether the selected vmta is in some other pool or not  */ 
+				//VmtaDao vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+				//vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+				
+				
+				if(img.getAttribute("imageEventName").equals("editVmta")) {  // Edit Icon Clicked
+
+					showVmtaPanel(false, vmta);
+				} // if
+				else if(img.getAttribute("imageEventName").equals("deleteVmta")) {  // Delete Icon Clicked
+					MessageUtil.clearMessage();
+					List<String> tempList = new ArrayList<String>();
+					
+					List<Vmta> pooledVmtaList = vmtaDao.getOnlyPooledVmtas();
+					
+					for (Vmta pooledvmta : pooledVmtaList) {
+						
+						String[] ids = pooledvmta.getPooledVmtas().split(",");
+						for (String id : ids) {
+							logger.info("Vec ID:"+id);
+							tempList.add(id.trim());
+						} // for
+					} // for
+						
+					if(tempList.contains(""+vmta.getId())){
+						MessageUtil.setMessage("The selected VMTA is configured in pool. Ensure that the selected VMTA is not in pool.", "color:red", "TOP");
+						return;
+					} // if
+					MessageUtil.clearMessage();
+		          if (Messagebox.show("Are you sure you want to delete the user?", "Prompt", 
+		        		  Messagebox.YES|Messagebox.NO, Messagebox.QUESTION) == Messagebox.NO) {
+		            return;
+		          }
+					
+				logger.info("----------Got the ID: "+vmta.getId());
+				
+				logger.debug("--Before Delete--");
+				logger.info("Vmta delted b4 msg");
+				//VmtaDao vmtaDao =(VmtaDao) SpringUtil.getBean("vmtaDao");
+				vmtaDao.delete(vmta);
+				//img.getParent().getParent().setVisible(false);
+				Redirect.goTo(PageListEnum.EMPTY);
+				Redirect.goTo(PageListEnum.ADMIN_EDIT_VMTA);
+				
+				/*Include xcontents = (Include)Sessions.getCurrent().getAttribute("xcontents");
+				xcontents.setSrc("/zul/" + PageListEnum.EMPTY + ".zul");
+				xcontents.setSrc("/zul/" + PageListEnum.ADMIN_EDIT_VMTA + ".zul");*/
+				
+				logger.debug("--After Delete--");
+				
+				Messagebox.show("VMTA deleted successfully.", 
+						"Information", Messagebox.OK, Messagebox.INFORMATION);
+				logger.info("Vmta deleted");
+			}
+		} // else
+			
+		} catch (Exception e) {
+			logger.error("** Exception :", e);
+		}
+	}
+	
+	
+	
+	private final RowRenderer rowRender  = new MyRenderer();
+	
+	private class MyRenderer implements RowRenderer {
+		MyRenderer() {
+			super();
+			logger.debug("new MyRenderer object is created");
+		}
+		
+		public void render(Row row, java.lang.Object data,int arg2) {
+			
+			try {
+				
+			if(data instanceof Vmta) {
+				Vmta vmta = (Vmta) data;
+			
+				//new Label(vmta.getId()+"").setParent(row);
+				new Label(vmta.getVmtaName()).setParent(row);
+				new Label(vmta.getDescription()).setParent(row);
+				//new Label(vmta.getPooledVmtas()).setParent(row);
+				new Label(vmta.getAccountName()).setParent(row);
+				new Label(vmta.getHost()).setParent(row);
+				
+				Hbox hbox = new Hbox();
+				hbox.setPack("center");
+				
+				Image img = new Image("/img/icons/delete_icon.png");
+				/*img.setTooltiptext("Delete");
+				img.setAttribute("vmtaObj", vmta);
+				img.setAttribute("imageEventName", "deleteVmta");
+				img.setStyle("cursor:pointer;");
+				img.addEventListener("onClick", VmtaController.this);
+				img.setStyle("padding-right:5px");
+				img.setParent(hbox);*/
+				
+				img = new Image("/img/icons/edit_lists_icon.png");
+				img.setTooltiptext("Edit");
+				img.setAttribute("vmtaObj", vmta);
+				img.setAttribute("imageEventName", "editVmta");
+				img.setStyle("cursor:pointer;");
+				img.addEventListener("onClick", VmtaController.this);
+				img.setParent(hbox);
+				
+				hbox.setParent(row);
+				
+			} // if
+			} catch (Exception e) {
+				logger.error("Exception ::", e);
+			}
+
+		} // render
+	}
+	
+	
+	
+	/*public void onChange$vmtaAccountNameCbId() throws Exception {
+		
+		if(vmtaAccountNameCbId.getSelectedIndex() > 0){
+			Vmta aVmtaAccording2AccountChosen = (Vmta)(vmtaAccountNameCbId.getSelectedItem().getAttribute("aVmtaObject"));
+			//passTxtBxId.setValue(aVmtaAccording2AccountChosen.getAccountPwd());
+			hostTxtBxId.setValue(aVmtaAccording2AccountChosen.getHost());
+			vmtaDescTbId.setValue(aVmtaAccording2AccountChosen.getDescription());
+		}else{
+			passTxtBxId.setValue("");
+			hostTxtBxId.setValue("");
+			vmtaDescTbId.setValue("");
+		}
+		
+		
+		
+	}	*/
+	
+  /* private void populateEmailRouteCbIdAndVmtaAccountNameCbId(){
+		
+		vmtaAccountNameCbId.getChildren().clear();
+		emailRouteCbId.getChildren().clear();
+		
+		Comboitem ci = null;
+		Comboitem comboitem2beSelected = null;
+		Comboitem comboitem2beSelected4Route = null;
+		ci = new Comboitem("--Select Account--");
+        ci.setParent(vmtaAccountNameCbId);
+        //vmtaAccountNameCbId.setSelectedItem(ci);
+        
+		Vmta selectedVmtaObject = selectedVmta;
+		
+		
+		List<Vmta> accountListForOneVmta = vmtaDao.findAllVmtaByVmtaName(selectedVmtaObject.getVmtaName());
+		for(Vmta vmta : accountListForOneVmta){
+			ci = new Comboitem(vmta.getAccountName());
+			ci.setAttribute("aVmtaObject", vmta);
+			ci.setParent(vmtaAccountNameCbId);
+			
+			if(selectedVmtaObject.getAccountName().equalsIgnoreCase(vmta.getAccountName())){
+				comboitem2beSelected =ci;
+			}
+		}
+		vmtaAccountNameCbId.setSelectedItem(comboitem2beSelected);
+		
+		List<Vmta> vmtaList = vmtaDao.findAll();
+		
+		for(Vmta vmta : vmtaList){
+			ci = new Comboitem(vmta.getVmtaName());
+			ci.setAttribute("aVmtaObjectAcc2VmtaName", vmta);
+			ci.setParent(emailRouteCbId);
+			
+			if(selectedVmtaObject.getVmtaName().equalsIgnoreCase(vmta.getVmtaName())){
+				comboitem2beSelected4Route =ci;
+			}
+			
+			ci = new Comboitem(vmta.getAccountName());
+			ci.setAttribute("aVmtaObject", vmta);
+			ci.setParent(vmtaAccountNameCbId);
+			
+			if(selectedVmtaObject.getAccountName().equalsIgnoreCase(vmta.getAccountName())){
+				comboitem2beSelected = ci;
+			}
+		}
+		
+		emailRouteCbId.setSelectedItem(comboitem2beSelected4Route);
+		vmtaAccountNameCbId.setSelectedItem(comboitem2beSelected);
+		
+	}*/
+	
+}	

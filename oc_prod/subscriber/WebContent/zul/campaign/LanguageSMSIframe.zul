@@ -1,0 +1,388 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window   xmlns:h="http://www.zkoss.org/2005/zk/native" id="langSMSWinId"
+xmlns:w="http://www.zkoss.org/2005/zk/client" apply="org.mq.marketer.campaign.controller.campaign.LanguageSMSIframeController">
+<style src="/css/campaign.css"/>
+
+	<window id="personalizationTagsWinId" title="HTML Merge Fields" border="normal" mode="overlapped" visible="false" position="center,top">
+	 <zscript>
+	 
+            void insertText(A a){
+                
+                String value = a.getLabel();
+
+                String cp = caretPosTBId.getValue();
+                if (cp == null || cp.length() == 0) {
+                    cp = "0";
+                }
+                try{
+                int caretPos = Integer.parseInt(cp);
+                if (caretPos != -1) {
+                    String currentValue = SMSMsgLangTbId.getValue();
+                    String newValue = currentValue.substring(0, caretPos) + value + currentValue.substring(caretPos);
+                    SMSMsgLangTbId.setValue(newValue);
+                    int charCount = (SMSMsgLangTbId.getValue().length())*2;
+					
+					if(charCount>140) {
+						int msgcount = charCount/140;
+						charCountTbId.setValue(""+charCount+" / "+(msgcount+1));
+						
+					}//if
+					else {
+						charCountTbId.setValue(""+charCount+" / "+1);
+					}//else
+					
+                    sessionScope.put("messageContent", SMSMsgLangTbId.getValue());
+                    personalizationTagsWinId.setVisible(false);
+                    SMSMsgLangTbId.focus();
+                    
+                }
+                }catch(Exception e) {
+                e.printStackTrace();
+                }
+            }
+
+        </zscript>
+        <script>
+        <![CDATA[
+
+                function updateCaretPosition() {
+                	//alert("hai");
+                    // get the zk widgets
+                    var scriptTB = zk.Widget.$(jq('$SMSMsgLangTbId'))
+                    var caretPosTB = zk.Widget.$(jq('$caretPosTBId'))
+
+                    // get the js elements
+                    var jsScriptTB = document.getElementById(scriptTB.uuid)
+                    var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+
+                    // get the caret position
+                    var pos = getCaret(jsScriptTB);
+
+                    // set the caret position in the hidden text field
+                    jsCaretPosTB.value = pos;
+
+                    // trigger an event to send the caret position to the server
+                    if (document.createEvent) {
+                     var evt = document.createEvent('HTMLEvents');
+                     evt.initEvent( 'blur', false, false);
+                     jsCaretPosTB.dispatchEvent(evt);
+
+                     var evt2 = document.createEvent('HTMLEvents');
+                     evt2.initEvent( 'change', false, false);
+                     jsCaretPosTB.dispatchEvent(evt2);
+                    } else if (document.createEventObject) {
+                     jsCaretPosTB.fireEvent('onblur');
+                     jsCaretPosTB.fireEvent('onchange');
+                    }
+                }
+
+				function getCaret(el) {
+                	
+                	if (el.selectionStart) {
+                        return el.selectionStart;
+                    } else if (document.selection) {
+                        el.focus();
+
+                        var r = document.selection.createRange();
+
+                        
+                        if (r == null) {
+                        	
+                        	
+                            return 0;
+                        }
+
+                        var re = el.createTextRange();
+                        	
+                                rc = re.duplicate();
+                        re.moveToBookmark(r.getBookmark());
+                        rc.setEndPoint('EndToStart', re);
+                        return rc.text.length;
+                    }else{
+                    	
+                    	if(el.value.length > 0) {
+                    		
+                    		el.selectionStart = el.value.length;
+                    		 return el.selectionStart;
+                    		
+                    	}
+                    	
+                    }
+                    return 0;
+
+
+                  
+                }
+            ]]>          
+                </script>
+			<caption>
+				<toolbarbutton label="Close" onClick="personalizationTagsWinId.setVisible(false)"/>
+			</caption>
+			
+			<div id="tagsDivId" width="410px" height="140px" style="overflow:auto">
+				<label value="Basic Tags " style="font-weight: bold;font-size: 13px;"/>
+				<h:table >
+				 <h:tr>
+				 	<h:td>
+					 	<h:table >
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Email"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_emailId^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" />
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="First Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_firstName^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_lastName^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Address One"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_addressOne^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Address Two"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_addressTwo^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 	</h:table>
+				 	</h:td>
+				 	<h:td width="20px">
+				 	</h:td>
+				 	<h:td>
+					 	<h:table >
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="City"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_city^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="State"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_state^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Country"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_country^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Pin"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_pin^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Phone"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_phone^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Gender"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_gender^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Birthday"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_birthday^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Anniversary"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_anniversary^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		
+					 		
+					 		
+					 		
+					 	</h:table>
+				 	</h:td>
+				 </h:tr>
+			 	</h:table>
+		</div>
+		</window>
+		
+		
+	<h:table width="550px" >
+  		<h:tr>
+			<h:td align="left" height="30px">
+		
+				<label value="*" sclass="redStar"/>		
+				<label value="Enter Message : " />
+			</h:td>
+			<h:td align="left">
+			
+				<hbox id="translControl" align="center">
+				  <label value="Language:"/>								 	 	
+				  <div id='translControlDiv' /> 
+				  <label value="Ctrl+g to Toggle"  style="padding-left:10px;" />
+				  
+				</hbox>
+			</h:td>
+			<h:td align="right">
+				<a label="Insert Place Holder"  onClick="personalizationTagsWinId.setVisible(true)"/>
+				<textbox id="caretPosTBId" visible="false" />
+			</h:td>
+		</h:tr>
+		<h:tr>
+			<h:td colspan="3">
+				<textbox id="SMSMsgLangTbId" width="550px" rows="12" height="240px" 
+				maxlength="600"   w:onClick="updateCaretPosition()"  w:onChanging="updateCaretPosition()"
+			 	w:onFocus="updateCaretPosition()"/>
+			 	
+			 	<!-- <textbox id="SMSLangMsgTbId" width="600px" rows="12" height="150px" 
+				maxlength="600"  visible="false"/> -->
+		 	
+		
+			</h:td>
+
+		</h:tr>
+		<h:tr>
+			<h:td align="left" >
+				<label value="Character Count :"/>
+				<textbox id="charCountTbId" readonly="true" value="0 / 1" width="70px"/>		
+			</h:td>
+			<h:td>
+				<label id="warnLblId" visible="false" style="margin-left: 10px; color: Red; text-decoration: blink; border: 1px solid Red;"
+					value = "Message will be considered as Long SMS"/>
+			</h:td>
+			
+			<h:td align="right">
+				<a label="Spell Checker" visible="false"/>										
+			</h:td>
+		</h:tr>
+	
+	</h:table>
+</window>
+
+ <script src="http://www.google.com/jsapi?key=AIzaSyA5m1Nc8ws2BbmPRwKu5gFradvD_hgq6G0" type="text/javascript"></script>  
+	
+	 <script  type="text/javascript">
+	  <![CDATA[
+	    /*
+	    *  How to setup a textarea that allows Transliteration from English to Hindi.
+	    */
+	    // Load the Google Transliterate API
+	    google.load("elements", "1", {packages: "transliteration"});
+		
+	    function onLoad() {
+	    	
+	        var options = {
+	          sourceLanguage: 'en',
+	          destinationLanguage: ['hi', 'bn', 'fa', 'gu', 'kn', 'ml', 'mr', 'ne', 'pa', 'ta','te','ur'],
+	          shortcutKey: 'ctrl+g',
+	          transliterationEnabled: true
+	        };
+	        
+	     
+				  var translControl = zk.Widget.$(jq('$translControl'));	
+				  var translControlDiv = document.getElementById(translControl.uuid);
+				  
+				  var SMSMsg = zk.Widget.$(jq('$SMSMsgLangTbId'));	
+				  var SMSMsgTb = document.getElementById(SMSMsg.uuid);
+				  
+				 // var checkbox = zk.Widget.$(jq('$languageRbId'));	
+				 // var checkboxId = document.getElementById(checkbox.uuid);
+				  
+				  var translControlDiv = zk.Widget.$(jq('$translControlDiv'));	
+				  var translControlDivId = document.getElementById(translControlDiv.uuid);
+				  
+				  
+				  // Create an instance on TransliterationControl with the required options.
+				      
+			      control = new google.elements.transliteration.TransliterationControl(options);
+		
+			      // Enable transliteration in the textbox with id
+			      control.makeTransliteratable([SMSMsgTb]);
+			      
+			      control.showControl(translControlDivId);
+		
+          }
+	   
+	   google.setOnLoadCallback(onLoad);
+	    ]]> </script>
+</zk>

@@ -1,0 +1,233 @@
+<zk>
+	<style src="/css/campaign.css"/>
+	<style>
+		.listsLb{
+			color:#073B6F;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+			//padding-left:20px;
+		}
+		.heading{
+			color:#000;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+		}
+
+		div.z-listbox.contactsView tr.z-list-item-seld {
+			background-color:#99C9DF;
+		}
+		div.z-listbox.contactsView {
+			border:1px solid #d9d9d9;
+		}
+	</style>
+	<window id="campMlistWinId" border="0" width="100%" apply="org.mq.marketer.campaign.controller.campaign.CampMlistController" xmlns:h="native"  xmlns:w="client">
+		<!-- <style>
+		.listsLb{
+			color:#073B6F;
+			font-family:verdena,Arial,Sans-serif;
+			font-weight:bold;
+			//padding-left:20px;
+		}
+		.z-listheader-img{
+      background-image: none;
+       width: 0px;
+       height: 0px;
+    }
+    div.z-listbox-header{
+        overflow: visible;
+
+    }
+		</style>		 -->
+		
+		<script type="text/javascript">
+		<![CDATA[
+			function getSelectedListInfo(listbox, label) {
+				var selItems = listbox.getSelectedItems();
+				var selNames = '';
+				if(selItems.length == 0) {
+					zk.Widget.$("$selectedListDivId").hide(); 
+				}else {
+					zk.Widget.$("$selectedListDivId").show(); 
+				}
+					
+				for(i = 0;i < selItems.length; i++) {
+					if(selNames.length != 0) selNames = selNames + ', ';
+					selNames = selNames + selItems[i].getLabel();
+				}
+				label.setValue(selNames);
+			}
+		]]>
+		</script>
+		
+		
+		
+		
+		<div>
+			<label value="Select contact list(s) or segment of list(s) to choose recipients for this campaign." />
+		</div>
+		<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+				<caption label="Select List(s)"  />
+				<radiogroup id="configurelistTabId" />
+				<radio label="Select List(s)" radiogroup="configurelistTabId" selected="true"/>
+				<radio label="Select Segment(s)" radiogroup="configurelistTabId" />
+		
+		
+		<div id="mlDivId" >
+			
+			
+			<div>
+				<h:table cellspacing="10" cellpadding="0" width="100%"  >
+					<h:tr>
+						<h:td width="265"  valign="top">
+							<!-- <listbox id="dispMlLBoxId" width="260px" checkmark="true" multiple="true" rows="8"  sclass="contactsView" > -->
+							<!-- <listhead>
+	                     <listheader label=""  style="width: 260px;">
+	              			<textbox id="searchBoxIdforlist" placeholder="Search List"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }" width="200px" /> </listheader>
+			
+	              			</listhead> -->
+	              			<listbox id="dispMlLBoxId" width="260px" multiple="true" checkmark="true" rows="6" w:onSelect="getSelectedListInfo(this,this.$f('selMlLblId'))" sclass="contactsView">
+									<listhead style="background-color:#488eb0;">
+										<listheader label="List Name" width="100%" align="left" maxlength="30"/>
+									</listhead>
+									<!--<listitem forEach="${uploadConWinId$UploadContactController.mailingLists}" value="${each}" style="line-height:22px;">
+										<listcell  label="${each.listName}" tooltiptext="${each.listName}">
+										</listcell>
+									</listitem>
+								-->
+					   <auxhead id="listFilterAhId">
+               <auxheader style="width: 260px;">
+                <menupopup id="testId" sclass="myfilter" />
+                <toolbarbutton context="testId" tooltiptext="filters|cs" visible="false"/>
+                <textbox sclass="filterSearchVal"  placeholder="Search List" width="200px" />
+               </auxheader>
+               </auxhead>
+							
+							</listbox>
+						</h:td>
+						
+						<h:td style="vertical-align: top;">
+							<div style="padding:10px;" id="selectedListDivId" >
+								<label value="Currently selected Contact List(s) : " style="color:#09719F;font-size:13px;" />
+								<label value="" id="selMlLblId" style="color:#2886B9;word-wrap: break-word;" sclass="listsLb" multiline="true" />
+							</div>
+						</h:td>
+						
+					</h:tr>
+				</h:table>
+			</div>
+			<div style="height:40px;margin:10px 10px 0 10px"  >
+				<h:table cellspacing="10" cellpadding="0"  >
+					<h:tr>
+						<h:td >
+							<image src="/img/icons/icon_i.png" />
+						</h:td>
+						<h:td >
+							<label value="You can send your email to multiple mailing lists at a time. "  />
+						</h:td>
+					</h:tr>
+				</h:table>
+			</div>
+		
+		
+		<groupbox sclass="gbStyle" visible="false" closable="false" style="padding: 15px 5px 5px 0;">
+			<caption label="Sending Options"  />
+				
+				<radiogroup id="listsTypeRgId" orient="vertical">
+					<radio label="Entire list/s" checked="true"/>
+					<radio label="Segments of list(s)" />
+				</radiogroup>
+						
+				<vbox id="segmentRulesVbId" visible="false" style="padding:30px 30px 0 30px;">
+					<hbox align="center" >
+						<label value="Match "/>
+						<listbox id="segRuleOptionLbId" mold="select"  width="100px" style="margin:0 5px;">
+						<listitem label="Any" selected="true"/><listitem label="All" />
+						</listbox> of the following
+						<space width="50px"/>
+						
+					</hbox>
+				</vbox>
+					
+				<toolbarbutton id="addRuleToolbarId" visible="false" 
+					style="font-weight:bold;font-size:13px;margin:10px 0 0 30px;color:#43A0BA;text-decoration: underline;" image="/images/action_add.gif" 
+				 label="Add New rule" sclass="tbbLink" />
+						
+		</groupbox>
+
+		
+		</div>	
+		<div id="segDivId" visible="false">
+		
+		<div>
+			<h:table cellspacing="10" cellpadding="0">
+				<h:tr>
+					<h:td>
+					<listbox id="dispsegmentsLbId" width="260px" checkmark="true" multiple="true" rows="8"  sclass="contactsView"  >
+					<listhead>
+					<!-- <listheader label="" style="width: 260px;">
+	              			<textbox id="searchBoxId" placeholder="Search Segment"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }" width="200px" /> </listheader> -->
+								    </listhead>
+					   <auxhead id="segmentListFilterAhId">
+               <auxheader style="width: 260px;">
+                <menupopup id="testId1" sclass="myfilter" />
+                <toolbarbutton context="testId1" tooltiptext="filters|cs" visible="false"/>
+                <textbox sclass="filterSearchVal"  placeholder="Search Segment" width="200px"/>
+               </auxheader>
+               </auxhead>
+					</listbox>
+						
+					</h:td>
+					<h:td valign="top">
+						<div style="padding:10px;" id="dispRuleDivId" visible="false" >
+							<label value="Currently selected Segment Rule : " style="color:#09719F;font-size:13px;" />
+							<label value="" id="selRuleLblId" style="color:#2886B9;word-wrap: break-word;" sclass="listsLb" multiline="true" />
+							<separator />
+							<label value="On the List :" style="color:#09719F;font-size:13px;"  />
+							<label value="" id="selRuleListLblId" style="color:#2886B9;word-wrap: break-word;" sclass="listsLb" multiline="true" />
+						</div>
+					
+					</h:td>
+				</h:tr>
+				
+				<h:tr>
+				<h:td colspan="2" style="padding:10px 0px;" >
+					<div id="createNewSegDivId" visible="false">
+					<label value="if you want to create a new Segment Rule " /><a id="createNewSegAnchId" label="Click Here" />
+					</div>
+				</h:td>
+				</h:tr>
+				</h:table>
+				</div>
+				
+				<div style="height:40px;margin:10px 10px 0 10px"  >
+				<h:table cellspacing="10" cellpadding="0"  >
+					<h:tr>
+						<h:td >
+							<image src="/img/icons/icon_i.png" />
+						</h:td>
+						<h:td >
+							<label value="You can send your email to multiple segment lists at a time. "  />
+						</h:td>
+					</h:tr>
+				</h:table>
+			</div>
+				
+				</div>
+		
+		</groupbox>
+		<h:table width="100%">
+			<h:tr>
+				<h:td  align="right">
+						<button id="backBtnId" label="Back" sclass="idle70" />
+						<button id="saveAsDraftBtnId" label="Save as Draft" sclass="idle140" />
+						<button label="Next" id="saveBtnId"  sclass="idle140 greenbtn" />
+				</h:td>
+			</h:tr>
+		</h:table>
+		
+	</window>
+</zk>

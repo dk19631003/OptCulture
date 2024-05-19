@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.CouponDiscountGeneration"
+		table="coupon_discount_generation">
+		<id name="couponDisGenId" type="java.lang.Long" column="coupon_dis_gen_Id">
+			<generator class="native" />
+		</id>
+		<many-to-one name="coupons"
+			class="org.mq.captiway.scheduler.beans.Coupons"	 lazy="false" fetch="select">
+			<column name="coupon_id" not-null="true"  />
+		</many-to-one>
+		
+		<property name="discount" type="double" >
+			<column name="discount"  />
+		</property>
+		
+		<property name="itemCategory" type="string" >
+			<column name="item_category"  />
+		</property>
+		
+		<property name="totPurchaseAmount" type="long" >
+			<column name="total_purchase_amt"  />
+		</property>
+	</class>
+</hibernate-mapping>

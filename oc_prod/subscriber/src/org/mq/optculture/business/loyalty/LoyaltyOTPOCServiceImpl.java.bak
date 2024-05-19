@@ -1,0 +1,428 @@
+package org.mq.optculture.business.loyalty;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.OCSMSGateway;
+import org.mq.marketer.campaign.beans.OTPGeneratedCodes;
+import org.mq.marketer.campaign.beans.SMSSettings;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.service.CaptiwayToSMSApiGateway;
+import org.mq.marketer.campaign.dao.SMSSettingsDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.SMSStatusCodes;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.business.helper.GatewayRequestProcessHelper;
+import org.mq.optculture.business.helper.SmsQueueHelper;
+import org.mq.optculture.data.dao.OTPGeneratedCodesDao;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.model.BaseRequestObject;
+import org.mq.optculture.model.BaseResponseObject;
+import org.mq.optculture.model.ocloyalty.LoyaltyOTPRequest;
+import org.mq.optculture.model.ocloyalty.LoyaltyOTPResponse;
+import org.mq.optculture.model.ocloyalty.ResponseHeader;
+import org.mq.optculture.model.ocloyalty.Status;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+
+import com.google.gson.Gson;
+
+/**
+ * === OptCulture Loyalty Program ===
+ * 
+ * Loyalty OTP service.
+ * Input: otp request JSON 
+ * Output: opt response JSON with status
+ * 
+ * @author Venkata Rathnam D
+ *
+ */
+public class LoyaltyOTPOCServiceImpl implements LoyaltyOTPOCService{
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	@Override
+	public BaseResponseObject processRequest(BaseRequestObject baseRequestObject)
+			throws BaseServiceException {
+		
+		logger.info("Started processRequest...");
+		
+		BaseResponseObject responseObject = null;
+		String serviceRequest = baseRequestObject.getAction();
+		String requestJson = baseRequestObject.getJsonValue();
+		String responseJson = null;
+		Gson gson = new Gson();
+		LoyaltyOTPResponse otpResponse = null;
+		LoyaltyOTPRequest otpRequest = null;
+		
+		if(serviceRequest == null || !serviceRequest.equals(OCConstants.LOYALTY_SERVICE_ACTION_OTP)){
+			logger.info("servicerequest is null...");
+			
+			Status status = new Status("101001", ""+PropertyUtil.getErrorMessage(101001, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			otpResponse = new LoyaltyOTPResponse();
+			otpResponse.setStatus(status);
+			responseJson = gson.toJson(otpResponse);
+			responseObject = new BaseResponseObject();
+			responseObject.setAction(serviceRequest);
+			responseObject.setJsonValue(responseJson);
+			logger.info("Exited baserequest due to invalid service");
+			return responseObject;
+		}
+		
+		try{
+			otpRequest = gson.fromJson(requestJson, LoyaltyOTPRequest.class);
+		}catch(Exception e){
+			
+			Status status = new Status("101001", ""+PropertyUtil.getErrorMessage(101001, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			otpResponse = new LoyaltyOTPResponse();
+			otpResponse.setStatus(status);
+			responseJson = gson.toJson(otpResponse);
+			responseObject = new BaseResponseObject();
+			responseObject.setAction(serviceRequest);
+			responseObject.setJsonValue(responseJson);
+			logger.info("Exited baserequest due to invalid JSON ");
+			return responseObject;
+		}
+		
+		try{
+			LoyaltyOTPOCService loyaltyotpService = (LoyaltyOTPOCService) ServiceLocator.getInstance().getServiceByName(OCConstants.LOYALTY_OTP_OC_BUSINESS_SERVICE);
+			otpResponse = loyaltyotpService.processOTPRequest(otpRequest, OCConstants.LOYALTY_ONLINE_MODE, baseRequestObject.getTransactionId(), baseRequestObject.getTransactionDate());
+			responseJson = gson.toJson(otpResponse);
+			responseObject = new BaseResponseObject();
+			responseObject.setAction(serviceRequest);
+			responseObject.setJsonValue(responseJson);
+		}catch(Exception e){
+			logger.error("Exception in loyalty enroll base service.",e);
+			throw new BaseServiceException("Server Error.");
+		}
+		logger.info("Completed processing baserequest... ");
+		return responseObject;
+		
+	}
+	
+	@Override
+	public LoyaltyOTPResponse processOTPRequest(LoyaltyOTPRequest otpRequest,
+			String mode, String transactionId, String transactionDate)
+			throws BaseServiceException {
+		logger.info("Started processing otp request...");
+		LoyaltyOTPResponse otpResponse = null;
+		Status status = null;
+		Users user = null;
+		
+		ResponseHeader responseHeader = new ResponseHeader();
+		responseHeader.setRequestDate(otpRequest.getHeader().getRequestDate());
+		responseHeader.setRequestId(otpRequest.getHeader().getRequestId());
+		responseHeader.setTransactionDate(transactionDate);
+		responseHeader.setTransactionId(transactionId);
+		responseHeader.setSourceType(otpRequest.getHeader().getSourceType() != null && 
+				!otpRequest.getHeader().getSourceType().trim().isEmpty() ? otpRequest.getHeader().getSourceType().trim() : "");
+		
+		try{
+			
+			status = validateOTPJsonData(otpRequest);
+			if(status != null && OCConstants.JSON_RESPONSE_FAILURE_MESSAGE.equals(status.getStatus())){
+				otpResponse = prepareOTPResponse(responseHeader, status);
+				return otpResponse;
+			}
+		
+			user = getUser(otpRequest.getUser().getUserName(), otpRequest.getUser().getOrganizationId(),
+					otpRequest.getUser().getToken());
+			if(user == null){
+				status = new Status("101013", PropertyUtil.getErrorMessage(101013, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				otpResponse = prepareOTPResponse(responseHeader, status);
+				return otpResponse;
+			}
+			if(!user.isEnabled()){
+				status = new Status("111558", PropertyUtil.getErrorMessage(111558, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				otpResponse = prepareOTPResponse(responseHeader, status);
+				return otpResponse;
+			}
+			if(user.getPackageExpiryDate().before(Calendar.getInstance())){
+				status = new Status("111559", PropertyUtil.getErrorMessage(111559, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				otpResponse = prepareOTPResponse(responseHeader, status);
+				return otpResponse;
+			}
+		    
+			String phone = otpRequest.getCustomer().getPhone();
+			Long mblNum = null;
+			phone = phone.trim();
+			phone = Utility.phoneParse(phone, user!=null ? user.getUserOrganization() : null );
+			if(phone != null) {
+				if(!phone.startsWith(user.getCountryCarrier().toString()) && 
+						(phone.length() >= user.getUserOrganization().getMinNumberOfDigits()
+						&& phone.length() <= user.getUserOrganization().getMaxNumberOfDigits())) {
+					phone = user.getCountryCarrier().toString()+phone;
+				}
+				try{
+					mblNum = Long.parseLong(phone);
+				}catch (Exception e) {
+					status = new Status("111552", PropertyUtil.getErrorMessage(111552, OCConstants.ERROR_LOYALTY_FLAG)+" "+otpRequest.getCustomer().getPhone().trim()+".", OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					otpResponse = prepareOTPResponse(responseHeader, status);
+					return otpResponse;
+				}
+			}
+			else{
+				status = new Status("111552", PropertyUtil.getErrorMessage(111552, OCConstants.ERROR_LOYALTY_FLAG)+" "+otpRequest.getCustomer().getPhone().trim()+".", OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				otpResponse = prepareOTPResponse(responseHeader, status);
+				return otpResponse;
+			}
+			
+			if(!user.isEnableSMS()){
+				status = new Status("111550", PropertyUtil.getErrorMessage(111550, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				otpResponse = prepareOTPResponse(responseHeader, status);
+				return otpResponse;
+			}
+			
+			
+			OTPGeneratedCodes otpgeneratedcode = findOTPCodeByPhone(phone, user.getUserId(), OCConstants.OTP_GENERATED_CODE_STATUS_ACTIVE);
+			if(otpgeneratedcode != null){
+				
+				Calendar currCal = Calendar.getInstance();
+				Calendar createdDate = otpgeneratedcode.getCreatedDate();
+				
+				long currtime = currCal.getTimeInMillis()/1000;
+				long createdtime = createdDate.getTimeInMillis()/1000;
+				long timeDiff = currtime - createdtime;
+				long duration = 3*60*60; 
+				
+				if(timeDiff < duration){
+					status = sendOTPCode(user, phone, otpgeneratedcode.getOtpCode());
+					if(status != null){
+						otpResponse = prepareOTPResponse(responseHeader, status);
+						return otpResponse;
+					}
+					
+					otpgeneratedcode.setSentCount(otpgeneratedcode.getSentCount()+1);
+					saveOTPgeneratedcode(otpgeneratedcode);
+					
+					status = new Status("0", PropertyUtil.getErrorMessage(111548, OCConstants.ERROR_LOYALTY_FLAG)+" "+StringUtils.right(phone, 4)+".", OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE);
+					otpResponse = prepareOTPResponse(responseHeader, status);
+					return otpResponse;
+				}
+				else{
+					logger.info(" otp code is expired and saved....");
+					otpgeneratedcode.setStatus(OCConstants.OTP_GENERATED_CODE_STATUS_EXPIRED);
+					saveOTPgeneratedcode(otpgeneratedcode);
+				}
+				
+			}
+			
+			String activeOTPCode = generateOtpCode();
+			
+			otpgeneratedcode = new OTPGeneratedCodes();
+			otpgeneratedcode.setCreatedDate(Calendar.getInstance());
+			otpgeneratedcode.setOtpCode(activeOTPCode);
+			otpgeneratedcode.setPhoneNumber(phone);
+			otpgeneratedcode.setStatus(OCConstants.OTP_GENERATED_CODE_STATUS_ACTIVE);
+			otpgeneratedcode.setUserId(user.getUserId());
+			otpgeneratedcode.setSentCount(1L);
+			
+			status = sendOTPCode(user, phone, otpgeneratedcode.getOtpCode());
+			if(status != null){
+				logger.info("Sending failed..."+status.getMessage());
+				otpResponse = prepareOTPResponse(responseHeader, status);
+				return otpResponse;
+			}
+			
+			saveOTPgeneratedcode(otpgeneratedcode);
+			
+			status = new Status("0", PropertyUtil.getErrorMessage(111548, OCConstants.ERROR_LOYALTY_FLAG)+StringUtils.right(phone, 4), OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE);
+			otpResponse = prepareOTPResponse(responseHeader, status);
+			return otpResponse;
+			
+		}catch(Exception e){
+			logger.error("Exception occuring in loyalty otp service...", e);
+			status = new Status("101000", PropertyUtil.getErrorMessage(101000, OCConstants.ERROR_LOYALTY_FLAG)+" "+e.getMessage(), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			otpResponse = prepareOTPResponse(responseHeader, status);
+			return otpResponse;
+		}
+			
+	}
+		
+	private Users getUser(String userName, String orgId, String userToken) throws Exception{
+			
+			String completeUserName = userName+Constants.USER_AND_ORG_SEPARATOR+orgId;
+			UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			Users user = usersDao.findUserByToken(completeUserName, userToken);
+			return user;
+	}
+		
+	private LoyaltyOTPResponse prepareOTPResponse(ResponseHeader header, Status status) throws BaseServiceException {
+			LoyaltyOTPResponse otpResponse = new LoyaltyOTPResponse();
+			otpResponse.setHeader(header);
+			otpResponse.setStatus(status);
+			return otpResponse;
+	}
+	
+	private Status validateOTPJsonData(LoyaltyOTPRequest otpRequest) throws Exception{
+		logger.info("Entered validate otp Json Data method >>>>");
+		
+		Status status = null;
+		if(otpRequest == null ){
+			status = new Status(
+					"101002", PropertyUtil.getErrorMessage(101002, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(otpRequest.getUser() == null){
+			status = new Status(
+					"101011", PropertyUtil.getErrorMessage(101011, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(otpRequest.getCustomer() == null){
+			status = new Status(
+					"101004", PropertyUtil.getErrorMessage(101004, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(otpRequest.getUser().getUserName() == null || otpRequest.getUser().getUserName().trim().length() <=0 || 
+				otpRequest.getUser().getOrganizationId() == null || otpRequest.getUser().getOrganizationId().trim().length() <=0 || 
+						otpRequest.getUser().getToken() == null || otpRequest.getUser().getToken().trim().length() <=0) {
+			status = new Status("101012", PropertyUtil.getErrorMessage(101012, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		if(otpRequest.getHeader().getStoreNumber() == null || otpRequest.getHeader().getStoreNumber().length() <= 0){
+			status = new Status("111501", PropertyUtil.getErrorMessage(111501, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		
+		if(otpRequest.getCustomer().getPhone() == null || otpRequest.getCustomer().getPhone().trim().isEmpty()){
+			status = new Status("111552", PropertyUtil.getErrorMessage(111552, OCConstants.ERROR_LOYALTY_FLAG)+" "+otpRequest.getCustomer().getPhone().trim()+".", OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		return status;
+	}
+	
+	private OTPGeneratedCodes findOTPCodeByPhone(String phone, Long userId, String status) throws Exception {
+		OTPGeneratedCodesDao otpGenCodesDao = (OTPGeneratedCodesDao)ServiceLocator.getInstance().getBeanByName(OCConstants.OTP_GENERATEDCODES_DAO);
+		return otpGenCodesDao.findOTPCodeByPhone(phone, userId, status);
+	}
+	
+	private void saveOTPgeneratedcode(OTPGeneratedCodes otpgenCode) throws Exception {
+		OTPGeneratedCodesDao otpGenCodesDao = (OTPGeneratedCodesDao)ServiceLocator.getInstance().getBeanByName(OCConstants.OTP_GENERATEDCODES_DAO);
+		otpGenCodesDao.saveOrUpdate(otpgenCode);
+	}
+	
+	private String generateOtpCode() {
+		
+		final long MAX_NUMBER = 999999L;
+		final long MIN_NUMBER = 100000L;
+		String otpCode = "";
+		String randNoStr = "";
+		Long randNo = Long.valueOf(new Random().nextLong());
+		
+		if(randNo.toString().startsWith("-")) {
+			randNoStr = randNo.toString().replace("-", "");
+		}
+		else {
+			randNoStr = randNo.toString();
+		}
+		
+		randNo = Long.valueOf((Long.parseLong(randNoStr) % (MAX_NUMBER-MIN_NUMBER)) + MIN_NUMBER);
+		otpCode = randNo.toString();
+		return otpCode;
+	}
+	
+	private Status sendOTPCode(Users user, String phone, String otpCode) {
+		
+		Status status = null;
+		
+		try{
+			
+			OCSMSGateway ocGateway = GatewayRequestProcessHelper.getOcSMSGateway(user, 
+					SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+			CaptiwayToSMSApiGateway captiwayToSMSApiGateway = (CaptiwayToSMSApiGateway)ServiceLocator.getInstance().getBeanByName("captiwayToSMSApiGateway");
+			if(!ocGateway.isPostPaid() && !captiwayToSMSApiGateway.getBalance(ocGateway, 1)) {
+				status = new Status("111551", PropertyUtil.getErrorMessage(111551, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(!(((user.getSmsCount() == null ? 0 : user.getSmsCount()) - (user.getUsedSmsCount() == null ? 0 : user.getUsedSmsCount())) >=  1)) {
+				status = new Status("111551", PropertyUtil.getErrorMessage(111551, OCConstants.ERROR_LOYALTY_FLAG), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			String msgContent= "";
+			String messageHeader = findMessageHeader(user);
+			
+			if(messageHeader == ""){
+				msgContent= "Hi Customer! Your OTP code for redemption is "+otpCode;
+			}
+			else{
+				msgContent= messageHeader+"Hi Customer! Your OTP code for redemption is "+otpCode;
+			}
+			
+			String senderId = ocGateway.getSenderId();
+			
+			try {
+				captiwayToSMSApiGateway.sendSingleSms(ocGateway, msgContent,
+						phone, senderId);
+				/**
+				 * Update the Used SMS count
+				 */
+				try{
+					UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+					usersDao.updateUsedSMSCount(user.getUserId(), 1);
+				}catch(Exception exception){
+					logger.error("Exception while updating the Used SMS count",exception);
+				}
+				
+				/**
+				 * Update Sms Queue
+				 */
+				SmsQueueHelper smsQueueHelper = new SmsQueueHelper();
+				smsQueueHelper.updateSMSQueue(phone,msgContent,Constants.SMS_MSG_TYPE_OTPSMS, user, senderId);
+			} catch (Exception e) {
+				logger.error("Exception While sending OTP SMS ",e);
+			}
+			logger.debug(">>>>>>> Started LoyaltyOTPOCServiceImpl :: sendOTPCode <<<<<<< ");
+
+			return null;
+		}catch(Exception e){
+			logger.error("Exception in sending otp code ...", e);
+			status = new Status("101000", PropertyUtil.getErrorMessage(101000, OCConstants.ERROR_LOYALTY_FLAG)+" "+e.getMessage(), OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+	}
+	
+	private String findMessageHeader(Users user){
+		
+		String messageHeader = Constants.STRING_NILL;
+		try{
+			
+			List<SMSSettings> smsSettings = null;
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName("smsSettingsDao");
+			
+			if(SMSStatusCodes.optOutFooterMap.get(user.getCountryType())) {
+				
+				smsSettings = smsSettingsDao.findByUser(user.getUserId());
+				if(smsSettings != null) {
+					SMSSettings optinSettings = null;
+			  		SMSSettings optOutSettings = null;
+			  		SMSSettings helpSettings = null;
+			  		
+			  		for (SMSSettings eachSMSSetting : smsSettings) {
+			  			
+			  			if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN)) optinSettings = eachSMSSetting;
+			  			else if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTOUT)) optOutSettings = eachSMSSetting;
+			  			else if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_HELP)) helpSettings = eachSMSSetting;
+			  			
+			  		}
+					if(optinSettings != null && messageHeader.isEmpty()) messageHeader = optinSettings.getMessageHeader();
+					else if(optOutSettings != null && messageHeader.isEmpty()) messageHeader = optOutSettings.getMessageHeader();
+					else if(helpSettings != null && messageHeader.isEmpty()) messageHeader = helpSettings.getMessageHeader();
+				}
+			
+			}
+		}catch(Exception e){
+			logger.error("Exception in find message header...", e);
+			return messageHeader;
+		}
+		return messageHeader;
+		
+	}
+}

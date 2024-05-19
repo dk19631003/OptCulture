@@ -1,0 +1,94 @@
+<?page title="Select file to Upload" contentType="text/html;charset=UTF-8"  ?>
+<zk>
+	<window xmlns:h="native" xmlns:w="client" id="uploadCSVWinId" apply="org.mq.marketer.campaign.controller.contacts.UploadCSVFileController" width="100%">
+			<style>
+				.fieldLB{
+					background:transparent;
+					font-size:10px;
+				}
+				.tbbLink{
+					font-family:verdana,arial,sans-serif;
+					font-size:12px;
+					font-weight:bold;
+					color:#0577A8;
+					text-decoration:none;
+					padding:3px;
+				}
+				.listsLb{
+					color:#073B6F;
+					font-family:verdena,Arial,Sans-serif;
+					font-weight:bold;
+					
+				}
+			</style>
+			
+			<div style="background-color: #F5F8FB;padding:10px;" >
+			<div>	
+				<label value="Selected List(s) :"  style="color:#09719F;" />
+				<label id="selectedListsLblId" style="color:#2886B9;" sclass="listsLb"  multiline="true" />
+			</div>
+				
+			<div>	
+				<label value="Selected Fields :"  style="color:#09719F;" />
+				<label id="fieldListLbId" style="color:#2886B9;" sclass="listsLb"  multiline="true" />
+			</div>
+				
+			</div>
+			<div style="padding-top:10px;">
+				<label value="Please upload the "/>
+				<label value=".CSV " style="font-weight:bold;"/>
+				<label value=" file from which you would like to add contacts."/>
+			</div>
+			<div id="fileUploadDivId" style="padding-top:10px;" >
+			<h:table cellspacing="0" cellpadding="0">
+					<h:tr>
+						<h:td>
+						
+							<label value="Browse .CSV file" sclass="theme-lbHeading"/>
+						
+						</h:td>
+						<h:td style="padding-left:10px;">
+							<textbox id="selectedFileTbId"/>
+						
+						</h:td>
+						<h:td style="padding-left:10px;">
+							<button label="Browse..." height="28px" sclass="idle140" id="brouseUploadBtnId" upload="true,maxsize=-1" />
+							
+						</h:td>
+						<h:td style="padding-left:10px;">
+							<button id="uploadBtnId" sclass="idle140 greenbtn"  label="Upload"></button>
+						
+						</h:td>
+					
+					
+					</h:tr>
+					<h:tr height="100"></h:tr>
+					</h:table>
+					
+					<div align="right">
+						<button label="Back" sclass="idle140" id="backBtnId"/>
+					</div>
+					
+			
+			</div>
+			
+			<div id="uploadResultDivId" visible="false">
+				<h:table width="100%">
+					<h:tr>
+						<h:td>
+							<image src="/img/icons/greenIcon.jpg" style="position:relative;top:5px;"/> 
+							<label value=" File will be uploaded in a moment" style="color:#415F1D;font-family:verdana;font-size:20px;font-weight:bold;"/>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+							<h:br/>
+							<button label="Close"   sclass="idle140" id="closeBtnId" />
+						</h:td>
+					</h:tr>
+				</h:table>
+			</div>
+			
+			
+	</window>
+</zk>

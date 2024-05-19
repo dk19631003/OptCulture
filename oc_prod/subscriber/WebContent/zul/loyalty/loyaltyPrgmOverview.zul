@@ -1,0 +1,1491 @@
+<zk>
+	<style >
+	   .z-overflow-hidden {
+ 		overflow: visible;
+		}
+		div.z-listcell-cnt {
+    	line-height: 10px;
+		}
+	</style>
+	<style>
+		.hovergridcolumn > div.z-column-cnt { 
+		color: #FFFFFF;
+		font-weight: bold;
+		cursor: pointer;
+		}
+	</style>
+	<window id="createLtyPrgmWinId" apply="org.mq.optculture.controller.loyalty.LoyaltyPrgmOverviewController" width="100%" 
+		xmlns:h="http://www.zkoss.org/2005/zk/native"  xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<div>
+			<label value="Review settings of your loyalty or gift program. When ready, click on 'Activate Program' button."/>
+			<separator />
+			<label value="Note: 1) Once activated, a program can't be saved back in 'Draft' status." />
+         	<separator />
+			<label style="padding-left:32px;" value=" 2) Program in 'Draft' or 'Suspended' status can't be transacted upon." />
+		</div>
+		
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption> 
+				<label value="Program Settings"/> 
+				<toolbarbutton id="basicSettingsTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="basicSettingsDivId" visible="true">
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+					<h:td />
+					<h:td colspan="2" />
+					<h:td align="right">
+						<a label="Edit Section" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="editBasicSettingsAnchId" />
+					</h:td>
+				</h:tr>
+				<h:tr  height="30">
+					<h:td valign="top"   width="200">
+						<label value="Program Name:"/>
+					</h:td>
+					
+					<h:td valign="top"  colspan="2">
+						<label  id="prgmNameLblId" value="" />
+					</h:td>
+				</h:tr>
+				<h:tr height="30">
+					<h:td valign="top"  width="200">
+						<label value="Description:"/>
+					</h:td>
+					
+					<h:td valign="top"  colspan="2">
+						<label id="prgmDescLblId" value="" />
+					</h:td>
+				</h:tr>
+				<h:tr height="30">
+					<h:td valign="top" width="200">
+						<label value="Membership Type:"/>
+					</h:td>
+					
+					<h:td valign="top" colspan="2">
+						<label id="prgmTypeLblId" value="" />
+						<div id="ltyPrgmTypeDivId" visible="false">
+							<h:table cellspacing="0" cellpadding="0" width="100%" align="left" >
+								<h:tr height="30" >
+									<h:td width="300" >
+										<label value="Restrict Membership per Customer with Mobile No.:"/>
+									</h:td>
+									
+									<h:td  colspan="2" >
+										<label id="enableUniqueMblNoLblId" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr height="30" >
+									<h:td width="300" >
+										<label value="Restrict Membership per Customer with Email ID.:"/>
+									</h:td>
+									
+									<h:td  colspan="2" >
+										<label id="enableUniqueEmailLblId" value=""/>
+									</h:td>
+								</h:tr>
+								<h:tr height="30">
+									<h:td width="300" >
+										<label value="Issue Virtual Card Numbers from this program:" id="defaultPrgmId"/>
+									</h:td>
+									
+									<h:td  colspan="2" >
+										<label id="enableDefaultLblId" value=""/>
+									</h:td>
+								</h:tr>
+							</h:table>
+						
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr height="30">
+					<h:td  width="200">
+						<label value="Enable Tiered Program:"/>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<label id="enableTierLblId" value="" />
+					</h:td>
+				</h:tr>
+				<!-- <h:tr height="30">
+					<h:td  width="200">
+						<label value="Status:"/>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<label id="prgmStatusLblId" value="" />
+					</h:td>
+				</h:tr> -->
+			</h:table>
+			</div>
+		</groupbox>
+		<groupbox width="95%"  style="margin-top:10px;"	sclass="gbStyle" closable="false">
+			<caption> 
+				<label value="Transactional Settings"/> 
+				<toolbarbutton id="trnxnlSettingsTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="transactionalDivId" visible="true">
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+					<h:td />
+					<h:td colspan="2" />
+					<h:td align="right">
+						<a label="Edit Section" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="editTrnxnlAnchId" />
+					</h:td>
+				</h:tr>
+				<h:tr height="20" />
+				<h:tr height="40">
+					<h:td width="300">
+						<label value="Enrollment Requisites:"/>
+					</h:td>
+					
+					<!-- <h:td width="200" >
+						<listbox  id="regReqLbId"  rows="12" multiple="true"   width="150px"  sclass="contactsView" >
+							<listitem label="First Name" value="firstName" disabled="true" />
+							<listitem label="Last Name" value="lastName" disabled="true" />
+							<listitem label="Email Address" value="emailId" disabled="true" />
+							<listitem label="Mobile Number" value="mobilePhone" disabled="true"  />
+							<listitem label="Address" value="addressOne" disabled="true" />
+							<listitem label="City" value="city" disabled="true" />
+							<listitem label="State" value="state" disabled="true" />
+							<listitem label="Postal Code" value="zip" disabled="true" />
+							<listitem label="Country" value="country" disabled="true" />
+							<listitem label="Birthday" value="birthDay" disabled="true" />
+							<listitem label="Anniversary" value="anniversary" disabled="true"  />
+							<listitem label="Gender" value="gender" disabled="true" />
+						</listbox>
+					</h:td> -->
+					<h:td width="200" colspan="2">
+						<!-- <label value="Selected Field(s):" style="color:#2886B9;" /> -->
+						<label id="selectedFieldsLblId" value="" />
+					</h:td>
+				</h:tr>
+				<div id="otpDivId" visible="false">
+				<h:tr height="40">
+					<h:td  width="300">
+						<label value="Require Authentication by OTP for Redemption:"/>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<label id="enableOTPAuthLblId" value=""/>
+					</h:td>
+				</h:tr>
+				</div>
+			</h:table>
+			</div>
+		</groupbox>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption> 
+				<label value="Privilege Tier"/> 
+				<toolbarbutton id="previlegeTierTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="previlegeTierDivId" visible="true" width="100%" >
+			<h:table cellspacing="0" cellpadding="0"  width="95%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+<!-- 					<h:td /> -->
+<!-- 					<h:td colspan="2" /> -->
+					<h:td align="right">
+						<a label="Add Privilege Tier" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;padding-right=20px;" id="editTierAnchId" />
+					</h:td>
+				</h:tr>
+				<h:tr height="10"></h:tr>
+<!-- 			<div width="100%" align="left" style="padding-left:20px;margin-top:25px;margin-bottom:20px;"> -->
+				<h:tr>
+				<h:td width="100%">
+				<grid emptyMessage="No data available" width="100%" >
+				<columns style="background-color:#488eb0;" id="tierColsId">
+				</columns>
+					<!-- <columns>
+						<column label="Privilege Tier"  width="100px" />
+						<column label="Privilege Name"  width="120px" />
+						<column label="Earn" width="170px" />
+						<column label="Redeem" width="170px" />
+						<column label="Activation" width="130px" />
+						<column label="Pts. Conversion Decision" width="170px" />
+						<column label="Tier Upgrade Rules"	width="130px" />
+						<column label="Actions" />
+					</columns> -->
+					<rows id="tierRowsId" />
+				</grid>
+				</h:td>
+				</h:tr>
+<!-- 			</div> -->
+			</h:table>
+			</div>
+		</groupbox>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption> 
+				<label value="Threshold Bonus"/> 
+				<toolbarbutton id="thresholdBonusTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="thresholdBonusDivId" visible="true" width="100%" >
+			<h:table cellspacing="0" cellpadding="0" width="88%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+					<!-- <h:td />
+					<h:td colspan="2" /> -->
+					<h:td align="right">
+						<a label="Add Bonus" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="addThresholdAnchId" />
+					</h:td>
+				</h:tr>
+				<h:tr height="10"></h:tr>
+				<h:tr>
+				<h:td>
+				<grid emptyMessage="No data available"  width="90%" >
+					<columns  menupopup="auto" sizable="true">
+						<column label="Rule" width="27%"/>
+						<column label="Bonus Amount" id ="sortByBonusAmount" sclass="hovergridcolumn" width="12%"></column>
+						<column label="Bonus Points" id ="sortByBonusPoints" sclass="hovergridcolumn" width="12%"></column>
+						<column label="Expiration Rule" width="27%"/>
+						<column label="Actions"/>
+					</columns>
+					<rows id="levelRowsId" />
+				</grid>
+				</h:td></h:tr>
+			</h:table>
+			</div>
+		</groupbox>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false" id="cardSetGbId">
+			<caption> 
+				<label value="Added Card-Sets"/> 
+				<toolbarbutton id="cardSetTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="addCardSetDivId" visible="true" width="100%" >
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+					<!-- <h:td />
+					<h:td colspan="2" /> -->
+					<h:td align="right">
+						<a label="Add Card-Set" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;padding-right:20px;" id="addCardSetAnchId" />
+					</h:td>
+				</h:tr>
+				<h:tr height="10"></h:tr>
+			<!-- <div width="100%" align="left" style="padding-left:20px;margin-top:25px;margin-bottom:20px;"> -->
+			<h:tr>
+			<h:td>
+			
+			
+				<grid emptyMessage="No card-Set found" width="100%" >
+					<columns>
+						<column label="Card-Set Name" width="200px" />
+						<column label="Quantity " width="100px" />
+						<column label="Card-Set Type" width="150px" />
+						<column label="Card No. Generation Type" width="200px" />
+						<column label="Status" width="100px" />
+						<column label="Linked Tier" width="150px" />
+						<column label="Actions" />
+					</columns>
+					<rows id="cardSetRowsId" />
+				</grid>
+			
+			
+			</h:td>
+			</h:tr>
+			</h:table>
+			<!-- </div> -->
+			</div>
+		</groupbox>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false" id="validitySettingsGbId">
+			<caption> 
+				<label value="Validity Settings"/> 
+				<toolbarbutton id="validityTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="validitySetDivId" visible="true">
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+					<h:td />
+					<h:td colspan="3" />
+					<h:td align="right">
+						<a label="Edit Section" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="editValidityAnchId" />
+					</h:td>
+				</h:tr>
+				<div visible="false" id="rewardsExpDivId">
+				<h:tr height="50" >
+					<h:td width="200" >
+						<label value="Reward Expiration :"/>
+					</h:td>
+					
+					<h:td  colspan="4" >
+						<div id="rewardExpDivId" visible="false">
+							<label id="rewardExpLblId" value="" />
+						</div>
+						<div id="rewardTierDivId" visible="false">
+							<h:table>
+								<h:tr>
+									<h:td width="600">
+										<listbox id="rewardTierLbId" width="99%">
+											<listhead sizable="false">
+												<listheader label="" align="left" width="100px" />
+												<listheader label="" align="left" width="100px" />
+												<listheader label="" align="left" />
+											</listhead>
+										</listbox>
+									</h:td>
+									<h:td>
+										<label value="of earning, at the end of the month" style="display:inline-block;margin-top:5px;" />
+									</h:td>
+								</h:tr>
+							</h:table>
+						</div>
+					</h:td>
+				</h:tr>
+				</div>
+				<div visible="false" id="giftAmtDivId">
+				<h:tr height="20" />
+				<h:tr >
+						<h:td  width="200">
+							<label value="Gift Amount Expiration :"/>
+						</h:td>
+						
+						<h:td  colspan="2">
+							<label id="gftAmtExpLblId" value="" />
+						</h:td>
+				</h:tr>
+				</div>
+				<h:tr height="20" />
+				<h:tr height="50" >
+					<h:td width="200">
+						<label value="Membership Validity Duration :"/>
+					</h:td>
+					
+					<h:td  colspan="4">
+						<div id="membshpExpDivId" visible="false">
+							<label id="membshpExpLblId" value="" />
+						</div>
+						<div id="membshpTierDivId" visible="false">
+							<h:table>
+								<h:tr>
+									<h:td width="500">
+										<listbox id="membshpTierLbId" width="99%">
+											<listhead sizable="false">
+												<listheader label="" align="left" width="100px" />
+												<listheader label="" align="left" width="100px" />
+												<listheader label="" align="left" />
+											</listhead>
+										</listbox>
+									</h:td>
+									<h:td>
+										<label value="of enrollment, at the end of the month" style="display:inline-block;margin-top:5px;" />
+									</h:td>
+								</h:tr>
+							</h:table>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr height="20" />
+				<h:tr >
+					<div id="resetLevelDivId" visible="false">
+						<h:td  width="200">
+							<label value="Reset Validity On Level Upgrade :"/>
+						</h:td>
+						
+						<h:td  colspan="2">
+							<label id="resetValFlagLblId" value="" />
+						</h:td>
+					</div>
+				</h:tr>
+				<div visible="false" id="giftValidityDivId">
+				<h:tr height="20" />
+				<h:tr >
+						<h:td  width="200">
+							<label value="Gift-Card Validity Duration :"/>
+						</h:td>
+						
+						<h:td  colspan="2">
+							<label id="gftCrdExpLblId" value="" />
+						</h:td>
+				</h:tr>
+				</div>
+			</h:table>
+			</div>
+		</groupbox>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false" id="exclusionsSettingsGbId">
+			<caption> 
+				<label value="Loyalty Program Exclusions"/> 
+				<toolbarbutton id="exclusionsTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="exclusionDivId" visible="true">
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+					<h:td />
+					<h:td colspan="2" />
+					<h:td align="right">
+						<a label="Edit Section" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="editExclusionsAnchId" />
+					</h:td>
+				</h:tr>
+				<div id="disallowIssuRemdDivId" visible="false">
+				<h:tr  height="30">
+					<h:td  valign="top" width="350">
+						<label value="Disallow Issuance with Promo / Discounts:"/>
+					</h:td>
+					
+					<h:td valign="top" width="200px" colspan="2">
+						<!-- <div id="issueExclDivId" visible="false">
+							<label id="issueExclblId" value="" />
+						</div> -->
+						<!-- <div id="issueExcLPromoDivId" visible="false"> -->
+							<label id="selectedIssuePromosLblId" value="" />
+							<!-- <listbox id="issueExclLbId" multiple="true" width="150px" height="100px"  sclass="contactsView" /> -->
+						<!-- </div> -->
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr height="30">
+					<h:td valign="top" >
+						<label value="Disallow Redemption with Promo / Discounts:"/>
+					</h:td>
+					
+					<h:td valign="top" width="200px" colspan="2">
+					    <label id="selectedRedeemPromosLblId" value="" />
+						<!-- <div id="redeemExclDivId" visible="false">
+							<label id="redeemExclblId" value="" />
+						</div>
+						<div id="redeemExclPromoDivId" visible="false">
+							<listbox id="redeemExclLbId" multiple="true" width="150px"  height="100px" sclass="contactsView" />
+						</div> -->
+					</h:td>
+				</h:tr>  
+				</div>
+				<h:tr height="10" />
+				<h:tr height="30">
+					<h:td valign="top" >
+						<label value="Exclude Redemptions at Stores:"/>
+					</h:td>
+					
+					<h:td valign="top" colspan="2">
+						<div id="noRedemExcludedStoresDivId" visible="true">
+						<label  id="allselectedRedeemLblId" /></div>
+						<div id="redemExcludedStoresDivId" visible="false"  width="150px" height="100px" style="border: 1px solid #CCCCCC;  overflow: auto;"/>
+						<!-- <listbox id="excludedStoreLbId" multiple="true" width="150px" height="100px"  sclass="contactsView" /> -->
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr height="30">
+					<h:td valign="top" >
+						<label value="Exclude Store Numbers From This Loyalty Program:"/>
+					</h:td>
+					
+					<h:td valign="top" colspan="2">
+						<div id="noExcludedStoresDivId" visible="false">
+						<label  value="No"  /></div>
+						<div id="excludedStoresDivId" visible="false"  width="150px" height="100px" style="border: 1px solid #CCCCCC;  overflow: auto;"/>
+						<!-- <listbox id="excludedStoreLbId" multiple="true" width="150px" height="100px"  sclass="contactsView" /> -->
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr height="30">
+					<h:td valign="top">
+						<label value="Exclude Products From Issuance:"/>
+					</h:td>
+					
+					<h:td valign="top" width="100px" >
+					
+					<div id= "excludeDivId" visible="false">
+					   <listbox id="excProductLbId" width="350px">
+							<listhead	sizable="false">
+								<listheader label="" align="left" width="150px" />
+								<listheader label="" align="left"  />
+							</listhead>
+						</listbox>
+					</div>
+					<div id="excLableDivId" visible="false">
+							<label id="excludedProdTypeLblId" value="" />
+					</div>
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr height="30">
+					<h:td valign="top" >
+						<label value="Exclude Special Day(s) From Issuance:"/>
+					</h:td>
+					
+					<h:td valign="top" colspan="2">
+						<div id="noExcludedDatesDivId" visible="false">
+						<label  value="No" /></div>
+						<div id="excludedDatesDivId" visible="false"  width="150px" height="100px" style="border: 1px solid #CCCCCC;  overflow: auto;"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="30">
+					<h:td valign="top" >
+						<label value="Exclude Redemption on Day(s):"/>
+					</h:td>
+					
+					<h:td valign="top" colspan="2">
+						<div id="noExcludedRedemDatesDivId" visible="false">
+						<label  value="No" /></div>
+						<div id="excludedRedemDatesDivId" visible="false"  width="150px" height="100px" style="border: 1px solid #CCCCCC;  overflow: auto;"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+			</div>
+		</groupbox>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption> 
+				<label value="Configured Auto-Communication"/> 
+				<toolbarbutton id="autoCommTbBtnId" image="/img/icons/icon_minus.png" />
+			</caption>
+			<div id="autoCommDivId" visible="true">
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+				<h:tr height="10" >
+					<h:td />
+					<h:td colspan="2" />
+					<h:td align="right">
+						<a label="Edit Section" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="editAutoCommAnchId" />
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Loyalty Enrollment :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="regEmailLblId" value=" " />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewRegEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editRegEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="regSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewRegSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editRegSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<div visible="false" id="giftIssDivId">
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Gift-Card Issuance :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="gftCrdIssEmailLblId" value=" " />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewGftCrdIssEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editGftCrdIssEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="gftCrdIssSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewGftCrdIssSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editGftCrdIssSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				</div>
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Tier Upgradation :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="tierEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewTierEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editTierEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="tierSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewTierSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editTierSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Earning Bonus :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="thresholdEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewThresholdEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editThresholdEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="tresholdSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewThresholdSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editThresholdSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Reward Expiration :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="rewExpEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewRewExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editRewExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="rewExpSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewRewExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editRewExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<div visible="false" id="giftAmtExpDivId">
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Gift Amount Expiration :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="gftAmtExpEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewGftAmtExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editGftAmtExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="gftAmtExpSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewGftAmtExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editGftAmtExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				</div>
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Membership Expiration :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="memExpEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewMemExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editMemExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="memExpSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewMemExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editMemExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<div visible="false" id="giftMemExpDivId">
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Gift-Card Expiration :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="gftCardExpEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewGftcrdExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editGftcrdExpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="gftCardExpSMSLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewGftcrdExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editGftcrdExpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				</div>
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Loyalty Adjustment :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="loyaltyAdjEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewLoyaltyAdjEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editLoyaltyAdjEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="loyaltyAdjSmsLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewLoyaltyAdjSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editLoyaltyAdjSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Loyalty Issuance :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="loyaltyIssuanceEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewLoyaltyIssuanceEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editLoyaltyIssuanceEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="loyaltyIssuanceSmsLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewLoyaltyIssuanceSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editLoyaltyIssuanceSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Loyalty Redemption :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="loyaltyRedemptionEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewLoyaltyRedemptionEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editLoyaltyRedemptionEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="loyaltyRedemptionSmsLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewLoyaltyRedemptionSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editLoyaltyRedemptionSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Otp Message :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="otpMessageEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewOtpMessageEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editOtpMessageEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="otpMessageSmsLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewOtpMessageSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editOtpMessageSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				
+				
+			
+			<h:tr height="10" />
+				<h:tr  height="20">
+					<h:td  width="200">
+						<label value="Redemption Otp :"/>
+					</h:td>
+					
+					<h:td  width="250" >
+						<label  id="redemptionOtpEmailLblId" value="" />
+					</h:td>
+					
+					<h:td>
+						<image src="/img/theme/preview_icon.png" id="previewRedemptionOtpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editRedemptionOtpEmailImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="20">
+					<h:td  width="200">
+					</h:td>
+					
+					<h:td width="250" >
+						<label  id="redemptionOtpSmsLblId" value="" />
+					</h:td>
+					
+					<h:td>	
+						<image src="/img/theme/preview_icon.png" id="previewRedemptionOtpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Preview" visible="false"/>
+						<image src="/img/icons/small_edit_icon.png" id="editRedemptionOtpSMSImgId" style="margin-left:10px;cursor:pointer;" tooltiptext="Edit" visible="false"/>
+					</h:td>
+				</h:tr>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			</h:table>
+			</div>
+		
+		
+		
+		
+		</groupbox>
+		<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+		<h:tr >
+			<h:td colspan="6" style="padding-right:30px;">
+					<button label="Save as Draft" sclass="idle140" id="draftBtnId" visible="false"/>
+					<button label="Activate Program" sclass="idle140 greenbtn" id="activeBtnId" visible="false"/>
+					<button label="Suspend Program" sclass="idle140" id="suspendBtnId" visible="false"/>
+					<button label="Exit" sclass="idle140 " id="exitBtnId"/>
+			</h:td>
+		</h:tr>
+		</h:table>	
+		
+		<window id="winId" title="Add Cards" border="normal" visible="false" width="600px" height="400px" closable="true" 
+								   onClose="self.setVisible(false); event.stopPropagation();" >
+			<h:table cellspacing="0" cellpadding="0" width="95%"
+				align="left" style="padding-left:20px;">
+
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Card-set Name:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td  colspan="2">
+						<textbox id="cardSetNameTbId" value=""
+							name="cardSetNameTbId" width="250px" maxlength="100" />
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Card-Set Type:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td  colspan="2">
+						<radiogroup id="ltyCardTypeRadioGrId" />
+						<radio label="Physical Cards" id="physicalRadioId" radiogroup="ltyCardTypeRadioGrId"
+							selected="true" value="Physical" />
+						<radio label="Virtual Cards" id="virtualRadioId" radiogroup="ltyCardTypeRadioGrId"
+							 value="Virtual" />
+						<!-- <listbox id="cardsetTypeLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Virtual" value="Virtual" selected="true" />
+							<listitem label="Physical" value="Physical" />
+						</listbox> -->
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Quantity:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td  colspan="2">
+						<textbox id="quantityNameTbId" value=""
+							name="quantityNameTb" width="150px" maxlength="100" />
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Card No. Generation Type:" />
+					</h:td>
+
+					<h:td  colspan="2">
+						<listbox id="genTypeLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Random" value="Random" selected="true"/>
+							<listitem label="Sequential" value="Sequential" />
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Status:" />
+					</h:td>
+
+					<h:td  colspan="2">
+						<listbox id="statusLbId" rows="1" mold="select"	style="position:relative;" width="200px">
+							<listitem label="Active"  value="Active" selected="true"/>
+							<listitem label="Suspended" value="Suspended" />
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td  width="150">
+						<label value="Tier Assignment:" />
+						<label value=" * " style="color:red;" />
+					</h:td>
+
+					<h:td  colspan="2">
+						<radiogroup id="tierAssignmentRadioGrId" />
+						<radio label="Automatic" id="autoAssignRadioId" radiogroup="tierAssignmentRadioGrId"
+							selected="true" value="auto"/>
+						<radio label="Link tier to card-set" id="linkTierRadioId" radiogroup="tierAssignmentRadioGrId"
+							 value="link"/>
+						<listbox id="selTierLbId" width="100px" mold="select" style="position:relative;"  disabled="true" >
+							<listitem label="Select Tier" value="0" selected="true"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<!-- <h:tr height="50">
+					<h:td></h:td>
+					<h:td >
+						<button id="addBtnId" sclass="idle140 greenbtn"
+							label="Add">
+						</button>
+					</h:td>
+				</h:tr>
+				<h:tr height="30"></h:tr> -->
+			</h:table>
+			<h:table cellspacing="2" cellpadding="1" align="right" >
+		    <h:tr height="10"></h:tr>
+					<h:tr >
+						<h:td colspan="6" style="padding-right:30px;">
+							<button id="addBtnId" sclass="idle140 greenbtn"	label="Add" />
+							<button id="cancelBtnId" label="Cancel" sclass="idle140" />
+						</h:td>
+					</h:tr>
+			</h:table>	
+									
+		 </window>	
+		 
+		 <window id="exportWinId" title="Export Card-Set" border="normal" visible="false" width="550px" height="200px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<h:table cellspacing="0" cellpadding="0" width="85%"
+				align="left" style="padding-left:30px;margin-top:10px;">
+
+				<h:tr height="30">
+					<h:td valign="top" width="150" style="margin-top:20px;">
+						<label value="Choose the cards you would like to export:" />
+					</h:td>
+				</h:tr>
+				
+				<h:tr height="40">
+				<h:td valign="top" width="150" style="margin-top:20px;">
+						<label value="Filter by Status:" style="font-weight:bold;"/>
+						<listbox id="statusLbId" rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Inventory" value="Inventory" selected="true"/>
+							<listitem label="Active" value="Activated"/>
+							<listitem label="Enrolled" value="Enrolled"/>
+							<listitem label="Registered" value="Registered" />
+							<listitem label="All" value="All" />
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr height="10"></h:tr>
+			</h:table>
+			<h:table cellspacing="2" cellpadding="1" align="right" >
+		    <h:tr height="10"></h:tr>
+			<h:tr >
+				<h:td colspan="6" style="padding-right:30px;">
+						<button label="Cancel" id="cancelBtnId"  width="50" sclass="idle140 " />
+						<button label="Export as csv" sclass="idle140 greenbtn"  id="exportBtnId" />
+				</h:td>
+			</h:tr>
+		</h:table>
+	</window>
+		 
+		 
+<!-- 		 <window id="tierWinId" title="Add Privilege Tier" border="normal" visible="false" width="780px" height="550px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+								  		<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;" >
+					<h:tr height="50">
+						<h:td  width="200">
+							<label value="Privilege Tier:" />
+						</h:td>
+						<h:td   colspan="2">
+							<listbox id="selTierLbId" width="100px"
+								mold="select" style="position:relative;">
+								<listitem label="Select Tier"
+									selected="true" />
+							</listbox>
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td  width="200">
+							<label value="Privilege Name:" />
+							<label value=" * " style="color:red;" />
+						</h:td>
+
+						<h:td  colspan="2">
+							<textbox id="privilegeNameTbId" value=""
+								name="privilegeNameTb" width="250px" maxlength="50" />
+						</h:td>
+
+					</h:tr>
+					<h:tr height="50">
+						<h:td width="200"
+							>
+							<label value="Earn:"
+								style="display:inline-block;margin-top:15px;" />
+							<label value=" * " style="color:red;" />
+						</h:td>
+						<h:td  colspan="2" >
+						<hbox>
+							<listbox id="earnTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Points"
+									selected="true">
+								</listitem>
+								<listitem label="Amount"
+									>
+								</listitem>
+							</listbox>
+
+							<label value="of" style="padding-left:5px;"  />
+							<listbox id="earnValueTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Percentage"
+									selected="true">
+								</listitem>
+								<listitem label="Value"
+									>
+								</listitem>
+							</listbox>
+							<textbox id="valueTbId" value=""
+								name="valueTb" width="50px" maxlength="50" style="padding-left:5px;"/>
+							<div id="amountDivId" visible="false">
+							<label value="for every $" style="padding-left:5px;"/>
+
+							<textbox id="amountSpentTbId" value=""
+								name="amountSpentTb" width="50px" maxlength="50" style="padding-left:5px;"/>
+
+							<label value="spent" />
+							</div>
+							</hbox>
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td>
+							<label value="Activate After :"
+								style="display:inline-block;margin-top:15px;" />
+						</h:td>
+						<h:td colspan="2">
+							<listbox id="ptsActiveTypeLbId" mold="select"
+								style="margin-top:5px;padding-left:5px;position:relative;">
+								<listitem label="Day(s)"
+									selected="true" />
+								<listitem label="Hour(s)" />	
+								
+							</listbox>
+							<listbox id="ptsActiveValueLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								
+							</listbox>
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td>
+							<label value="Points Conversion Rule:"
+								style="display:inline-block;margin-top:15px;position:relative;" />
+						</h:td>
+						<h:td colspan="2">
+							<label value="every" />
+							<textbox id="coversionfromTbId" value=""
+								name="coversionfromTb" width="50px" maxlength="50" />
+							<label
+								value="points earned is equivalent to $" />
+							<textbox id="conversionToTbId" value=""
+								name="conversionToTb" width="50px" maxlength="50" />
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td width="200">
+							<label value="Points Conversion Decision:"
+								style="display:inline-block;margin-top:15px;" />
+						</h:td>
+						<h:td colspan="2">
+							<radiogroup id="pointsConversionRadioGrId" />
+							<radio
+								label="Auto Convert On Points Accumulation"
+								id="autoConvertRadioId" radiogroup="pointsConversionRadioGrId"
+								selected="true" value="Auto Convert" />
+							<radio label="On-Deamand"
+								id="onDemandRadioId" radiogroup="pointsConversionRadioGrId"
+								value="On Demand" />
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td>
+							<label value="Tier Upgrade Rules:"
+								style="display:inline-block;margin-top:15px;" />
+						</h:td>
+						<h:td colspan="2">
+							<listbox id="ruleTypeId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Lifetime Points"
+									selected="true">
+								</listitem>
+								<listitem label="Lifetime Purchase Amount"
+									>
+								</listitem>
+							</listbox>
+							<label value="Cross-over To Next Tier At" />
+							<textbox id="crossAtValueTbId" value=""
+								name="crossAtValueTb" width="50px" maxlength="50" />
+						</h:td>
+					</h:tr>
+					<h:tr height="50">
+						<h:td></h:td>
+						<h:td colspan="2" >
+							<button id="savBtnId"
+								sclass="idle140 greenbtn" label="Save">
+							</button>
+						</h:td>
+					</h:tr>
+				</h:table>
+		 </window> -->	
+		  <window id="thresholdBonusWinId" title="Add Bonus" border="normal" visible="false" width="1000px" height="450px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+								  <h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+					<h:tr>
+						<h:td width="200">
+							<label value="Bonus On Enrollment:"
+								style="display:inline-block;margin-top:15px;" />
+						</h:td>
+						<h:td colspan="2">
+						<textbox id="bonusThresholdValueTbId" value=""
+								name="bonusValueTb" width="50px" maxlength="50" />
+							<listbox id="bonusThresholdTypeLbId" mold="select"
+								style="margin-top:5px;">
+								<listitem label="Points" value="Points"
+									selected="true">
+								</listitem>
+								<listitem label="Currency" value="Amount"
+									>
+								</listitem>
+							</listbox>
+						 <button id="bonusaddBtnId" sclass="idle140 greenbtn"
+							label="Add">
+						</button>
+						<button id="bonusCancelBtnId" visible="false"
+								sclass="idle140" label="Cancel">
+						</button>
+								
+								</h:td>
+								</h:tr>
+					
+					 <h:tr>
+						<h:td width="200">
+							<label value="Bonus On  Reaching Threshold:"
+								style="display:inline-block;margin-top:15px;" />
+						</h:td>
+						<!-- strt -->
+						
+						<h:td width="500">
+						<label value="On" />
+								<listbox id="levelValueLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Reaching level" value="ReachLevel"
+									selected="true">
+								</listitem>
+								<listitem label="Every increment" value="Increment" visible="false"
+									>
+								</listitem>
+							</listbox>
+						<label value="of" />
+								<textbox id="levelValueTbId" value=""
+								name="levelValueTb" width="50px" maxlength="60" />
+							<listbox id="levelTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Points" value="Points"
+									selected="true">
+								</listitem>
+								<listitem label="Currency" value="Amount"
+									>
+								</listitem>
+								<listitem label="Lifetime Purchase Value" value="LPV"
+									>
+								</listitem>
+							</listbox>
+							</h:td>
+							<h:td>
+						<div id="limitDivId" visible="false">
+						<label value="upto" />
+							<textbox id="thresholdLimitID" value=""
+								name="thresholdLimitValue" width="80px" maxlength="60" />
+							</div>
+							
+								</h:td> 
+					</h:tr>
+					<h:tr>
+						
+						<h:td>
+						</h:td>
+						<h:td>
+							<label value="Give bonus of" />
+							<textbox id="bonusValueTbId" value=""
+							name="bonusValueTb" width="50px" maxlength="60" />
+							<listbox id="bonusTypeLbId" mold="select"
+								style="margin-top:5px;">
+								<listitem label="Points" value="Points"
+									selected="true">
+								</listitem>
+								<listitem label="Currency" value="Amount">
+								</listitem>
+							</listbox>
+							</h:td>
+							</h:tr>
+							<h:tr height="50">
+					<h:td valign="top" width="400">
+						<label value="Auto Communication :" />
+					</h:td>
+					
+					<h:td valign="bottom" colspan="2" width="85%">
+						<vbox>
+						<hbox>
+							<listbox id="selBonusAutoEmailsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+									<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewThresholdEmailImgIdForBonus" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editThresholdEmailImgIdForBonus" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addThresholdEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusEmailAddBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selBonusAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewThresholdSmsImgIdForBonus" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editThresholdSmsImgIdForBonus" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addThresholdSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="bonusSmsAddBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+					<!-- <h:td></h:td> -->
+					</h:tr>
+					
+						<h:tr>
+						<h:td width="17%">
+							<label value="Reward Expiration:" style="display:inline-block;"/>
+						</h:td>
+						<h:td colspan="3">
+						<hbox>
+						<checkbox id="earnedRwrdExpiryCbId"
+								checked="false" style="padding-right:0px;" />
+						<div id="rewardTierDivId" visible="false">
+						<label value="After "/>
+						<listbox id="giftAmtExpTypeLbId" mold="select"	style="padding-left:5px;position:relative;">
+								<listitem label="Month(s)" value="Month" selected="true" />
+							</listbox>
+							<textbox id="giftAmtExpValueTbId" value=""
+								name="giftAmtExpValueTb" width="50px" maxlength="60" />
+							<label value="of earning, at the end of the month"/>
+												<!-- style="display:inline-block;margin-top:5px;" /> -->
+						</div>
+						</hbox>
+						</h:td>
+					
+				</h:tr>
+				</h:table>
+					<div id="expiryAutoCommDiv" visible="false">
+				  <h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+				<h:tr height="50">
+					<h:td valign="top" width="200">
+					<vbox>
+						<label value="Auto Communication :" />
+						<label value="(Reminder sent once at the starting of the month of expiry)"/></vbox>
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selRewardAutoEmailsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Email"
+									selected="true" />
+								<!-- <listitem label="Default Message"/> -->
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewRewExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardEmailPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRewExpEmailImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardEmailEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRewExpEmailImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardEmailAddMsgBtnId" sclass="idle140" />
+							</hbox>
+							<hbox style="margin-top:5px">
+							<listbox id="selRewardAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto Sms"
+									selected="true" />
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewRewExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardSmsPreviewBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editRewExpSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addRewExpSmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="rewardSmsAddMsgBtnId" sclass="idle140" />
+							</hbox>
+						</vbox>
+					</h:td>
+				</h:tr>
+				</h:table>
+				</div>
+				  <h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+				<h:tr>
+							<h:td> </h:td>
+							
+							<h:td style="padding-right:30px;" >
+						<button id="addBtnId" sclass="idle140 greenbtn"
+							label="Save" >
+						</button>
+					</h:td>
+						</h:tr>
+					</h:table>
+					
+				<!-- <h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+				
+				</h:table> -->
+			</window>
+								  
+		<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+			<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+	</window>
+</zk>

@@ -1,0 +1,249 @@
+<zk>
+
+<style>
+ 	 .myLinks {
+		color:#2589BB;
+		font-weight:bold;
+		padding:0 15px;
+     }
+   
+	
+     .boldLabel {
+    	 font-weight:bold;
+     }
+     
+         
+     .compareUp span{
+     	color:#4C9625;
+     	font-weight:bold;
+     }
+     
+     .compareDown span{
+     	color:#CF1D0B;
+     	font-weight:bold;
+     }
+     
+    
+	
+	
+	table.tableBoldData td span{
+	 font-weight:bold;
+	}
+	
+</style>
+
+	<window width="100%" xmlns:h="native" apply="org.mq.marketer.campaign.controller.OptintelDashboardController">
+		
+		<div style="margin:10px;padding:5px 20px; background-color:#E4EBF5;">
+			<label value="POS Data last pulled on:" sclass="boldLabel" style="margin-right:5px;" />
+			<label id="lastFetchedTimeLblId" /> <space width="30px"/>
+ 	<a label="View Logs" id="viewLogsAId" sclass="dashboardMyLinks" />
+		</div>
+		
+		
+		<h:table width="100%"><h:tr>
+		<h:td width="55%">
+		
+		<groupbox closable="false">
+			<caption label="Activity" />
+		 	<div  style="padding-left:10px;">
+			
+			<hbox align="center" style="margin:5px;">
+				<label value="Time period:"  sclass="boldLabel"/>
+				<a label="1d" id="actOneDayAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="1w" id="actOneWeekAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="1m" id="actOneMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="3m" id="actThreeMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="6m" id="actSixMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="1y" id="actOneYrAId" sclass="dashboardMyLinks"/> 
+				 
+				<checkbox id="compToPastChkBxId" label="Compare to past" 
+					style="font-weight:bold;margin-left:10px;display:inline-block;"/>
+			</hbox>
+			<h:br/>
+			<hbox align="center">		
+				<label value="From: " />
+				 <datebox id="activityFilterStartDtBxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" /> <space width="5px"/>
+				<label value="To: " style="margin-left:5px;"/>
+				 <datebox id="activityFilterEndDtBxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			
+				<div id="compareToDivId" style="display:inline" visible="false">	
+					<label value="( Compared to : " style="margin-left:10px;" sclass="boldLabel" />
+					<label id="pastStartAndEndDateLblId" value="" /> 
+					<label value=" )" sclass="boldLabel" />
+				</div>
+			</hbox>
+			<h:br/> 
+			<h:table>
+			<h:tr >	
+      <radiogroup id="taxRadioRgId" />
+								<h:td>
+									<radio id="withtaxRgId" radiogroup="taxRadioRgId" label="With Tax"   checked="true" />
+									<radio id="withouttaxRgId" radiogroup="taxRadioRgId" label="Without Tax " /> 
+									
+								</h:td>
+						</h:tr>	
+					</h:table>	
+			<h:br/>
+			<h:table class="tableBoldData" width="100%">
+			  
+			  <h:tr height="30px">
+			  	<h:td width="180px"><label value="Total Revenue : " /></h:td>  
+			  	<h:td width="40px"><label id="totRevenueLblId" /></h:td> 
+			  	<h:td>
+			  		<div id="pastDatesRevDivId" sclass="compareUp" visible="false">
+			  			<label value="( " /> 
+			  			<label id="pastDatesRevLblId" value="0%" sclass="compareArrow"/> 	
+			  			<label value=" )" /> 
+			  		</div> 
+			  		</h:td>
+			  </h:tr>
+			  
+			  <h:tr height="30">
+			  	<h:td width="180px"><label value="No. of Purchases : " /></h:td> 
+			  	<h:td><label id="noOfPurchaseLblId" /></h:td> 
+			  	<h:td>  
+			  		<div id="noOfPurDivId" sclass="compareDown" visible="false">
+			  			<label value="( " /> <label id="noOfPurLblId" value="0%" sclass="compareArrow"/>
+			  			<label value=" )" /> 
+			  		</div>
+			  	  </h:td>
+			  </h:tr>
+			  
+			  <h:tr height="30">
+			  	<h:td width="220px"><label value="Revenue From Discounts : " /></h:td> 
+			  	<h:td><label id="revenurFromPromosLblId" /></h:td> 
+			  	<h:td >  <div id="revenueFrPromoDivId"  visible="false" >
+			  			<label value="( " /> 
+			  			<label id="pastRevFrPromLblId" value="0%" sclass="compareArrow"/> 	
+			  			<label value=" )" /> 
+			  	</div>  </h:td>
+			  </h:tr>
+			  <h:tr height="30">
+			  	<h:td width="220px"><label value="Total Discount Code Redemptions : " /></h:td> 
+			  	<h:td><label id="totPromoRedemptionsLblId" /></h:td> 
+			  	<h:td >  <div id="totPromoRedtnsDivId" visible="false" >
+			  			<label value="( " /> 
+			  			<label id="pastTotPromRedLblId" value="0%" sclass="compareArrow"/> 	
+			  			<label value=" )" />
+			  	</div>  </h:td>
+			  </h:tr>
+			  <h:tr height="30">
+			  	<h:td width="180px"><label value="Returning Customers : " /></h:td>   
+			  	<h:td><label id="returningCustLblId" />  </h:td>
+			  	<h:td >  <div id="returnCustDivId" visible="false" >
+			  			<label value="( " /> 
+			  			<label id="pastReturnCustLblId" value="0%" sclass="compareArrow"/> 	
+			  			<label value=" )" />
+			  		</div>   </h:td>
+			  </h:tr>
+			  <h:tr height="30">
+			  	<h:td width="180px"><label value="New Customers : " /></h:td>    
+			  	<h:td width="40px"><label id="newCustLblId" /> </h:td>
+			  	<h:td >  <div id="newCustDivId" visible="false" >
+			  			<label value="( " /> 
+			  			<label id="pastNewCustLblId" value="0%" sclass="compareArrow"   /> 	
+			  			<label value=" )" />
+			  	</div>   </h:td>
+			  </h:tr>
+			
+			</h:table> 
+			</div> 
+		</groupbox>
+		
+		</h:td>
+		
+		<h:td valign="top">
+		
+		<groupbox closable="false">
+			<caption label="Trends"> </caption>
+			<div  style="padding:15px;">
+			<hbox style="margin-bottom:10px">
+				<label value="Time Period : "/>
+				<a label="Last Week" id="trendsLstWeekAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="Last Month" id="trendsLstMonthAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="Last 3 Months" id="trendsLstThreeMnthsAId" sclass="dashboardMyLinks"/> <label value="|" />
+				<a label="Last 6 Months" id="trendsLastSixMonthsAId" sclass="dashboardMyLinks"/>  
+			</hbox>
+			
+				<label value="Start Date : " /><datebox id="trendsStartDateId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no future" readonly="true" />
+				<label value="End Date : " /><datebox id="trendsEndDateId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no future" readonly="true"/>
+			
+			<h:br/><h:br/>
+			<h:table class="tableBoldData">
+			  
+			  <h:tr height="30"><h:td width="250">
+			  <label value="Frequently Purchased  Item Category* : " /></h:td>  <h:td><label  id="topSellingItemLblId" style="font-size:bold;" /></h:td> <h:td > </h:td></h:tr>
+			  <h:tr height="30"><h:td><label value="Frequently Purchased Product* : " /></h:td> <h:td><label  id="topSellingProdLblId" style="font-size:bold;" /></h:td> <h:td> </h:td></h:tr>
+			  <h:tr height="30"><h:td><label value="Top Selling Store By Revenue : " /></h:td> <h:td><label  style="font-size:bold;" id="topSellingStoreLblId" /></h:td> <h:td> </h:td></h:tr>
+			  <h:tr height="30"><h:td><label value="Highest Revenue Day : " /></h:td>   <h:td><label  style="font-size:bold;" id="hightestRevDayLblId" />  </h:td> <h:td> </h:td></h:tr>
+			  </h:table>
+			   </div>
+			   <label value="* Based on unique purchases (receipts)." style="margin-left:366px;font-size:10px"/>
+			    </groupbox>
+		
+		</h:td>
+		</h:tr>
+		<h:tr>
+				<h:td>
+						<groupbox closable="false"  >
+							<caption label="Optintel"></caption>
+							
+							<!-- <h:table>
+								<h:tr>
+									<h:td>
+										 <h:table><h:tr>
+												<h:td><image src="img/optDash/OptIntel_reports_icn.png"  /></h:td>
+												<h:td>
+														 <a id="optintelRepImgId" label="Optintel Reports"  sclass=".linksDiv a"></a><h:br/>
+														 <label value="View detailed reports on POS." />
+												 </h:td>
+												</h:tr>
+											</h:table>	
+									</h:td>		
+									<h:td>
+											<h:table ><h:tr>
+												<h:td><image src="img/optDash/OptIntel_Settings_icn.png"  /></h:td>
+													<h:td>
+															<a id="optintelSettingImgId" label="Optintel Settings"  sclass=".linksDiv a"/> <h:br/>
+															<label value="Configure custom fields from POS, change POS list settings and more. " /> 
+													</h:td>
+												</h:tr>
+											</h:table>
+									</h:td>
+								</h:tr>
+								
+							</h:table> -->
+							
+							<div sclass="linksDiv">
+										<image src="img/optDash/OptIntel_reports_icn.png"  align="left" />
+										 <a id="optintelRepImgId" label="Optintel Reports"  sclass=".linksDiv a"></a>
+										 <label value="View detailed reports on POS." />
+								</div>
+					
+								<div sclass="linksDiv">
+								
+									<image src="img/optDash/OptIntel_Settings_icn.png"  align="left" />
+									<a id="optintelSettingImgId" label="Optintel Settings"  sclass=".linksDiv a"/> 
+									<label value="Configure custom fields from POS, change POS list settings and more. " /> 
+													
+								</div>
+							
+						</groupbox>
+				</h:td>
+		</h:tr>
+		</h:table>
+		
+		<window id="viewLogsWinId" title="View Logs" visible="false" width="600px"  border="normal"  closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+			<grid id="viewLogsGridId" height="250px" >
+				<columns>
+					<column label="File Name"></column>
+					<column label="File Type"></column>
+					<column label="Time Of Fetch"></column>	
+				</columns>
+			</grid>
+		</window>
+		
+	</window>
+</zk>

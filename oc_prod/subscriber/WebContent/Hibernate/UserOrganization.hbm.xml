@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserOrganization" table="user_organization" lazy="false">
+		<id name="userOrgId" type="java.lang.Long" column="user_org_id">
+			<generator class="native" />
+		</id>
+		<property name="organizationName" type="string" column="org_name"  />
+		<property name="orgExternalId" type="string" column="org_external_id"  />
+		<property name="createdDate" type="calendar" column="created_date" />
+		
+		<property name="branding" type="string" column="branding"  />
+		<property name="clientType" type="string" column="client_type"  />
+		
+		<property name="msgReceivingNumbers" type="string" column="msg_received_number"  />
+		
+		<property name="toEmailId" type="string" column="to_email_id"  />
+		
+		<property name="loyaltyDisplayTemplate" type="text" column="loyalty_display_template"  />
+		<property name="FBPTemplate" type="text" column="FBP_template"  />
+		
+		<!--to denote  optsync setting user organizations -->	
+		<property name="optSyncKey" type="string" column="opt_sync_key"  />
+		
+		<!--  <property name="enabledOptSyncFlag" type="string">
+			<column name="enabled_opt_sync_flag"  length="16"/>
+		</property>  -->
+				
+		<!--to denote the users and user organizations "Deleted".  -->		
+		 <property name="orgStatus" type="string" >
+			<column name="org_status"  length="16" default="'A'"/>
+		</property>
+	
+		<!-- <property name="enableAlerts" type="boolean">
+			<column name="enable_alerts" default="false"  />
+		</property> -->
+		
+		<property name="maxKeywords" type="java.lang.Integer" >
+		<column name="max_keywords" default="0" />
+		</property>
+		<property name="cardId" type="java.lang.Long">
+			<column name="card_id"></column>
+		</property>
+		<property name="nextCardSeqNo" type="java.lang.Long">
+			<column name="nextcard_seqno"></column>
+		</property>
+		<property name="cardGenerateFlag" type="string">
+			<column name="cardgenerate_flag" length="16" default="'N'"></column>
+		</property>
+		<property name="cardSeqPrefix" type="java.lang.Long">
+			<column name="cardseq_prefix"></column>
+		</property>
+		<property name="cardRandPrefix" type="java.lang.Long">
+			<column name="cardrand_prefix"></column>
+		</property>
+		
+		<property name="minNumberOfDigits" type="java.lang.Integer">
+			<column name="min_number_of_digits" default="0"></column>
+		</property>
+		<property name="maxNumberOfDigits" type="java.lang.Integer">
+			<column name="max_number_of_digits" default="0"></column>
+		</property>
+		
+		<property name="mobilePattern" type="boolean">
+			<column name="mobile_pattern" default="false" />
+		</property>
+		<property name="requireMobileValidation" type="boolean">
+			<column name="require_mobile_validation" default="true" />
+		</property>
+		<property name="crossProgramCardTransfer" type="boolean">
+			<column name="cross_program_card_transfer" default="false"></column>
+		</property>
+		<property name="suspendedProgramTransfer" type="boolean">
+			<column name="suspended_program_transfer" default="false"></column>
+		</property>
+		<property name="multiUser" type="boolean">
+			<column name="multi_user" default="false"></column>
+		</property>
+		<property name="bannerPath" type="string">
+			<column name="banner_image_path" />
+		</property>
+		<property name="sendRealtimeLoyaltyStatus" type="boolean">
+			<column name="send_realtime_loyalty_status" default="true" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,533 @@
+<zk>
+	<window id="sparkBaseWinId" xmlns:w="client" xmlns:h="native"
+		width="100%"
+		apply="org.mq.marketer.campaign.controller.admin.SparkBaseSettingsController">
+		<style>.redStar{ font-size:14px;color:red; }</style>
+
+
+		<grid id="spGridId" emptyMessage="No records found.">
+			<columns menupopup="auto">
+				<column label="Organisation Id" />
+				<column label="UserName" />
+				<column label="System Id" width="100px" />
+				<column label="Client Id" width="100px" sort="auto" />
+				<column label="Integration User Name" />
+				<column label="Integration Password" />
+				<column label="Location Id" width="100px" />
+				<column label="Transaction Location Id " />
+
+				<column label="Terminal Id" visible="false" />
+				<column label="Initiator Type" visible="false" />
+				<column label="Initiator Id" visible="false" />
+				<column label="Initiator Password" visible="false" />
+				<column label="External Id" width="100px" />
+				<column label="Enabled" visible="false" />
+				<column label="Created Date" visible="false" />
+				<column label="User" visible="false" />
+				<column label="Actions" />
+			</columns>
+		</grid>
+		<separator />
+
+		<div height="1px;">
+			<button id="addLocationBtnId" label="Add new Location" />
+		</div>
+		<separator />
+
+		<groupbox id="newLocaitonGbId" visible="false"
+			closable="false">
+			<caption label="Please provide the below details" />
+
+			<hlayout spacing="1px">
+
+				<h:table style="padding:1px;" cellpadding="1">
+					<h:tr>
+						<h:td align="right">
+							<label value="Select Organisation" />
+						</h:td>
+						<h:td align="left">:</h:td>
+						<h:td>
+							<combobox id="orgIdsComboboxId"
+								width="170px" readonly="true" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td align="right">
+							<label value="Select POS List User" />
+							<label value=" *" sclass="redStar" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<combobox id="usersComboboxId" width="170px"
+								readonly="true" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td width="150" align="right">
+							<label value="System Id" />
+							<label value=" *" sclass="redStar" />
+						</h:td>
+						<h:td width="15" align="center">:</h:td>
+						<h:td>
+							<textbox id="systemIdTBId" width="150px"
+								value="SB" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Client Id" />
+							<label value=" *" sclass="redStar" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<textbox id="clientIdTBId" width="150px" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Integration User Name" />
+							<label value=" *" sclass="redStar" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<textbox id="integrationUserNameTBId"
+								width="150px" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Integration Password" />
+							<label value=" *" sclass="redStar" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<textbox id="integrationPasswordTBId"
+								width="150px" type="password" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Location Id" />
+							<label value=" *" sclass="redStar" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<textbox id="LocationIdTBId" width="150px" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Transaction Location Id" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<textbox id="TransactionLocationIdTBId"
+								width="150px" disabled="true" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Terminal Id" />
+							<label value=" *" sclass="redStar" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<textbox id="terminalIdTBId" width="150px" />
+						</h:td>
+					</h:tr>
+					
+
+
+					<!-- 	<h:tr valign="top">
+						<h:td align="right"> <label  value="POS Location"/><label value=" *" sclass="redStar"/>  </h:td>
+						<h:td align="center">:</h:td>
+						<h:td>  
+						<combobox id="posLocationComboBoxId" readonly="true" sclass="cb_200w"/>
+						</h:td>
+						</h:tr> -->
+					<!-- Changes -->
+					
+
+
+  <h:table style="padding:1px;" cellpadding="1">
+
+  <h:tr height="100">
+		<h:td align="right">
+				<label value="Earn"
+						style="display:inline-block;" />
+							<label value=" * " style="color:red;" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td width="270"> 
+ 
+							<listbox id="earnTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Points" value="Points"
+									selected="true">
+								</listitem>
+								<listitem label="Currency"
+									value="Amount">
+								</listitem>
+							</listbox>
+
+							<label value="of" style="padding-left:5px;" />
+							<listbox id="earnValueTypeLbId"
+								mold="select" style="margin-top:5px;position:relative;">
+								<listitem label="Value" value="Value"
+									selected="true">
+								</listitem>
+								<listitem label="Percentage"
+									value="Percentage">
+								</listitem>
+							</listbox>
+							<textbox id="valueTbId" value=""
+								name="valueTb" width="50px" maxlength="60"
+								style="padding-left:1px;"/>
+						</h:td>
+						<h:td>
+							<div id="percentDivId" visible="false"
+								style="display: inline;">
+								<label value="% on every purchase"
+									style="padding-left:1px;" />
+							</div>
+							<div id="amountDivId" visible="true"
+								style="display:inline;">
+								<label value="for every $"
+									style="padding-center:1px;" />
+
+								<textbox id="amountSpentTbId" value=""
+									name="amountSpentTb" width="50px" maxlength="60"
+									style="padding-left:1px;" />
+
+								<label value="spent in a purchase" />
+							</div>
+						</h:td>
+					</h:tr>
+					</h:table>
+ 
+					<!--  					<h:tr height="50">
+						<h:td align="right">
+						<label value="Activate After "
+						style="display:inline-block;" />
+						<h:td align="center">:</h:td>
+						</h:td>
+						<h:td colspan="3">
+						<hbox>
+						<checkbox id="enableDateChkId"/>
+						<div id="activateAfterDivId" visible="false">
+						<listbox id="ptsActiveTypeLbId" mold="select"
+						style="margin-top:5px;padding-left:5px;position:relative;">
+						<listitem label="Day(s)" value="Day"
+						selected="true" />
+						<listitem label="Hour(s)" value="Hour"/>	
+						</listbox>
+						<listbox id="ptsActiveValueLbId" mold="select"
+						style="margin-top:5px;position:relative;">
+						<listitem label="1" value="1" selected="true" />
+						<listitem label="2" value="2"/>
+						<listitem label="3" value="3"/>
+						<listitem label="4" value="4"/>
+						<listitem label="5" value="5"/>
+						<listitem label="6" value="6"/>
+						<listitem label="7" value="7"/>
+						<listitem label="8" value="8"/>
+						<listitem label="9" value="9"/>
+						<listitem label="10" value="10"/>
+						<listitem label="11" value="11"/>
+						<listitem label="12" value="12"/>
+						<listitem label="13" value="13"/>
+						<listitem label="14" value="14"/>
+						<listitem label="15" value="15"/>
+						<listitem label="16" value="16"/>
+						<listitem label="17" value="17"/>
+						<listitem label="18" value="18"/>
+						<listitem label="19" value="19"/>
+						<listitem label="20" value="20"/>
+						<listitem label="21" value="21"/>
+						<listitem label="22" value="22"/>
+						<listitem label="23" value="23"/>
+						<listitem label="24" value="24"/>
+						<listitem label="25" value="25"/>
+						<listitem label="26" value="26"/>
+						<listitem label="27" value="27"/>
+						<listitem label="28" value="28"/>
+						<listitem label="29" value="29"/>
+						<listitem label="30" value="30"/>
+						</listbox>
+						<label value="Day(s)"></label>
+						</div> 
+						</hbox>
+						</h:td>
+						</h:tr>
+						</table>
+					-->
+					
+
+
+					<h:tr height="50">
+						<h:td align="right">
+							<label value="Points Conversion Rule "
+								style="display:inline-block;position:relative;" />
+							<h:td align="center">:</h:td>
+						</h:td>
+						<h:td colspan="2">
+							<label value="Every" />
+							<textbox id="coversionfromTbId" value=""
+								name="coversionfromTb" width="50px" maxlength="60" />
+							<label
+								value="points earned is equivalent to    $" />
+							<textbox id="conversionToTbId" value=""
+								name="conversionToTb" width="50px" maxlength="60" />
+						</h:td>
+					</h:tr>
+
+					<div id="pointsConversionDivId">
+						<h:tr height="50">
+							<h:td width="200" align="right">
+								<label
+									value="Points Conversion Decision "
+									style="display:inline-block;" />
+								<h:td align="center">:</h:td>
+							</h:td>
+							<h:td colspan="2">
+								<label
+									value=" Auto-Convert On Points Accumulation" />
+								<!--		<radiogroup id="pointsConversionRadioGrId" />
+									<radio label="On-Demand (Initiated at store per customer request)"
+									id="onDemandRadioId" radiogroup="pointsConversionRadioGrId"
+									selected="true" value="On Demand" />
+									<radio
+									label="Auto-Convert On Points Accumulation"
+									id="autoConvertRadioId" radiogroup="pointsConversionRadioGrId"
+									value="Auto Convert" />
+								-->
+							</h:td>
+						</h:tr>
+					</div>
+
+
+					<!-- Changes -->
+				</h:table>
+
+
+
+				<h:table style="padding:5px;" cellpadding="5">
+
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Initiator Type" />
+						</h:td>
+						<h:td align="left">:</h:td>
+						<h:td>
+							<listbox id="initiatorTypeLBId"
+								mold="select">
+								<listitem label="Employee" value="E"
+									selected="true" />
+								<listitem label="User" value="U" />
+								<listitem label="Customer" value="C" />
+							</listbox>
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Initiator Id" />
+						</h:td>
+						<h:td align="left">:</h:td>
+						<h:td>
+							<textbox id="initiatorIdTBId" width="120px" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Initiator Password" />
+						</h:td>
+						<h:td align="left">:</h:td>
+						<h:td>
+							<textbox id="initiatorPasswordTBId"
+								width="120px" type="password" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td align="right">
+							<label value="External Id" />
+						</h:td>
+						<h:td align="left">:</h:td>
+						<h:td>
+							<textbox id="externalIdTBId" width="120px" />
+						</h:td>
+					</h:tr>
+
+
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Enabled" />
+						</h:td>
+						<h:td align="left">:</h:td>
+						<h:td>
+							<checkbox id="enabledChkId" checked="true" />
+						</h:td>
+
+					</h:tr>
+
+
+					<h:tr>
+						<h:td align="right">
+							<label value="Enable Alerts" />
+						</h:td>
+						<h:td align="left">:</h:td>
+						<h:td>
+							<checkbox id="enabledChId" checked="false" />
+						</h:td>
+					</h:tr>
+
+					<h:tr>
+						<h:td></h:td>
+						<h:td></h:td>
+						<h:td>
+							<div id="alertDivId" visible="false">
+								<h:table cellpadding="1">
+									<h:tr align="left">
+										<h:td align="left"
+											valign="left">
+											<label value="Alert By" />
+											<label value=" *"
+												sclass="redStar" />
+										</h:td>
+										<h:td align="left"
+											valign="left">
+											:
+										</h:td>
+										<h:td>
+											<checkbox id="emailChkId"
+												checked="false" label="Email" />
+											<checkbox id="smsChkId"
+												checked="false" label="Sms" visible="false" />
+										</h:td>
+									</h:tr>
+									<h:tr align="left">
+										<h:td valign="left"
+											style="padding-top:5px;" align="left">
+											<label value="Alert On" />
+											<label value=" *"
+												sclass="redStar" />
+										</h:td>
+										<h:td align="left"
+											valign="left">
+											:
+										</h:td>
+										<h:td>
+
+
+											<radiogroup
+												id="alertRdgrpId" orient="vertical" />
+
+											<vlayout>
+
+												<hlayout>
+													<radio
+														id="percentRadioBtId" radiogroup="alertRdgrpId" />
+													<label
+														value="% of total cards" />
+													<textbox
+														id="percentTxtbId" disabled="true" />
+
+												</hlayout>
+
+
+												<hlayout>
+
+													<radio
+														id="numRadioBtId" radiogroup="alertRdgrpId" />
+													<span
+														style="align:left">
+														<label
+															value="No of cards" />
+													</span>
+													<textbox
+														id="numTxtbId" disabled="true" />
+
+
+												</hlayout>
+
+											</vlayout>
+
+										</h:td>
+
+									</h:tr>
+
+								</h:table>
+							</div>
+						</h:td>
+
+					</h:tr>
+
+					<h:tr>
+						<h:td align="center">
+							<label value="Using Phone As Account Id" />
+						</h:td>
+						<h:td align="center">:</h:td>
+						<h:td>
+							<checkbox id="phoneChId" checked="false" />
+						</h:td>
+					</h:tr>
+
+				</h:table>
+
+
+
+			</hlayout>
+
+			<div align="right" style="padding:5px;">
+				<button id="addBtnId" label="Add"
+					sclass="idle140 greenbtn" />
+				<button id="updateBtnId" label="Update"
+					sclass="idle140 greenbtn" visible="false" />
+				<button id="cancelBtnId" label="Cancel" sclass="idle70"
+					onClick="newLocaitonGbId.setVisible(false);addLocationBtnId.setVisible(true);" />
+			</div>
+		</groupbox>
+
+		<window title="Upload Cards" id="uploadCardsWindId"
+			visible="false" width="350px" height="280px" closable="true"
+			onClose="self.setVisible(false); event.stopPropagation();">
+			<vbox style="padding: 20px;">
+
+				<label value="Note : please upload only a csv file." />
+				<label
+					value="Please select Upload CSV file columns Format : " />
+
+				<radiogroup id="formatRdBtnId">
+					<radio selected="true" value="3"
+						label="Id, Card Id, Card Pin">
+					</radio>
+					<radio label="Card Id, Card Pin" value="2"></radio>
+				</radiogroup>
+
+				<label value="Please specify the type of cards : " />
+
+				<radiogroup id="typeRdBtnId">
+					<radio selected="true" value="physical"
+						label="Physical">
+					</radio>
+					<radio label="Virtual" value="virtual"></radio>
+				</radiogroup>
+
+				<button id="uploadBtnId" label="Upload Cards" />
+			</vbox>
+		</window>
+
+
+	</window>
+</zk>
+

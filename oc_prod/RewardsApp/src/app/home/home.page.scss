@@ -1,0 +1,203 @@
+.background
+{
+ //   --ion-background-color: #f5ce23;
+    margin-left: 24px;
+    margin-right: 23px;
+}
+
+.welcome-background{
+    --ion-background-color: #f5ce23
+}
+
+.buttonwhitebg{
+  --background: white;
+}
+.Username
+{
+   
+    font-size: 20px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.35;
+    letter-spacing: normal;
+    text-align: left;
+    color: #FFFFFF;
+}
+.TEXT
+{
+ 
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.42;
+  letter-spacing: normal;
+  text-align: left;
+  color: #16161d;
+}
+
+
+.current {
+  position: absolute;
+  color: rgb(10, 10, 10);
+  font-weight: 10;
+  line-height: 0.5;
+}
+
+.progress-wrapper {
+  position: relative;
+  margin:  auto;
+}
+.balance_text{
+    font-size: 15px;
+    font-weight: bold;
+}
+.balance_point{
+    font-size: 35px;
+    font-weight: bold; 
+    color: #16161d;
+}
+.AED_text{
+    font-size: 12px;
+}
+
+
+.bottom {
+    position: fixed;
+    bottom: 0;
+}
+.progressBar{
+    --progress-background: black;
+    height: 7px;
+    --buffer-background:#d4d2d2;
+  }
+  .tierText{
+    
+    font-size: 12px;
+    color: black;
+  }
+  .offerTxtLine{
+    --min-height: 35px;
+  }
+  .imgHeight{
+    height: 88%;
+}
+.gap{
+    margin-right: 10%;
+    // margin-left: 10%;
+}
+img {
+    width: 100%;
+    height: 100%;
+}
+.col1{
+    padding-bottom: 0px;
+    padding-top:0px;
+}
+
+.pgborder{
+    border-radius: 20px;
+}
+.grid{
+    padding : 15px 15px 15px 15px;
+}
+.cardbg{
+    // --background: white;
+    margin-top: 0px;
+    box-shadow: 8px 5px 8px 3px rgba(0, 0, 0, 0.2), 9px 6px 20px 4px rgba(0, 0, 0, 0.19);
+}
+
+.cover{
+    background-size: 100% 100% !important;
+}
+
+ion-progress-bar{
+    progress-buffer-bar {
+        height: 5px;
+    }
+}
+
+.imgClass{
+    height: 15%;
+    text-align: center;
+    width:100%;
+    background-size: 100% 100% !important;
+}
+
+.wdheight{
+    width: 100%;
+    height: 100%;
+}
+
+.ht100{
+    height: 100%;
+}
+
+// .bgimage{
+//     background: url(./../../assets/images/background_image.jpg) no-repeat center;
+//     max-width: 100%;
+//     max-height: 100%;
+// }
+
+.titleText {
+    
+    font-weight: bold;
+    font-size: 34px !important;
+    // color: black;
+}
+
+.wd100{
+    width:100%;
+}
+
+.offerstxt{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.ht25{
+    height: 25px;
+}
+ion-button {
+	ion-badge {
+		position: absolute;
+		top: -0.2rem;
+		right: -0.2rem;
+		opacity: 0.9;
+
+		& ~ ion-icon {
+			margin-right: 1.2rem;
+		}
+	}
+}
+
+#notification-button {            
+    position: relative;
+    width: 42px;
+    top:1px;
+    right: 1px;
+    overflow: visible!important;
+}
+
+
+#notifications-badge {
+    background-color: red;
+    position: absolute;
+    top: 1px;
+    right: 3px;
+    border-radius: 100%;
+}
+
+.bluecolor{
+  color: blue;
+}
+
+
+ 
+
+
+
+
+
+
+

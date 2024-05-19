@@ -1,0 +1,982 @@
+package org.mq.captiway.scheduler.services;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.TimerTask;
+import java.util.TreeMap;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.captiway.scheduler.beans.Contacts;
+import org.mq.captiway.scheduler.beans.ContactsLoyalty;
+import org.mq.captiway.scheduler.beans.CustomTemplates;
+import org.mq.captiway.scheduler.beans.EmailQueue;
+import org.mq.captiway.scheduler.beans.EventTrigger;
+import org.mq.captiway.scheduler.beans.MailingList;
+import org.mq.captiway.scheduler.beans.Messages;
+import org.mq.captiway.scheduler.beans.OCSMSGateway;
+import org.mq.captiway.scheduler.beans.POSMapping;
+import org.mq.captiway.scheduler.beans.SMSSettings;
+import org.mq.captiway.scheduler.beans.SparkBaseCard;
+import org.mq.captiway.scheduler.beans.SparkBaseLocationDetails;
+import org.mq.captiway.scheduler.beans.UserOrganization;
+import org.mq.captiway.scheduler.beans.Users;
+import org.mq.captiway.scheduler.dao.ContactsDao;
+import org.mq.captiway.scheduler.dao.ContactsDaoForDML;
+import org.mq.captiway.scheduler.dao.ContactsLoyaltyDao;
+import org.mq.captiway.scheduler.dao.ContactsLoyaltyDaoForDML;
+import org.mq.captiway.scheduler.dao.CustomTemplatesDao;
+import org.mq.captiway.scheduler.dao.EmailQueueDao;
+import org.mq.captiway.scheduler.dao.EmailQueueDaoForDML;
+import org.mq.captiway.scheduler.dao.EventTriggerDao;
+import org.mq.captiway.scheduler.dao.MailingListDao;
+import org.mq.captiway.scheduler.dao.MailingListDaoForDML;
+import org.mq.captiway.scheduler.dao.MessagesDao;
+import org.mq.captiway.scheduler.dao.MessagesDaoForDML;
+import org.mq.captiway.scheduler.dao.POSMappingDao;
+import org.mq.captiway.scheduler.dao.SMSSettingsDao;
+import org.mq.captiway.scheduler.dao.SparkBaseCardDao;
+import org.mq.captiway.scheduler.dao.SparkBaseCardDaoForDML;
+import org.mq.captiway.scheduler.dao.SparkBaseLocationDetailsDao;
+import org.mq.captiway.scheduler.dao.SparkBaseLocationDetailsDaoForDML;
+import org.mq.captiway.scheduler.dao.UsersDao;
+import org.mq.captiway.scheduler.dao.UsersDaoForDML;
+import org.mq.captiway.scheduler.utility.Constants;
+import org.mq.captiway.scheduler.utility.MyCalendar;
+import org.mq.captiway.scheduler.utility.PropertyUtil;
+import org.mq.captiway.scheduler.utility.SMSStatusCodes;
+import org.mq.captiway.scheduler.utility.Utility;
+import org.mq.captiway.sparkbase.SparkBaseAdminService;
+import org.mq.captiway.sparkbase.SparkBaseTransactionsView;
+import org.mq.captiway.sparkbase.sparkbaseAdminWsdl.BalancesViewResponse;
+import org.mq.captiway.sparkbase.sparkbaseAdminWsdl.Customer;
+import org.mq.captiway.sparkbase.sparkbaseAdminWsdl.CustomersViewResponse;
+import org.mq.optculture.business.helper.GatewayRequestProcessHelper;
+import org.mq.optculture.business.helper.SmsQueueHelper;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.utils.OCConstants;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
+public class RusselsSparkBaseCardsController extends TimerTask implements ApplicationContextAware{
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SCHEDULER_LOGGER);
+	private SparkBaseLocationDetailsDao sparkBaseLocationDetailsDao;
+	private SparkBaseLocationDetailsDaoForDML sparkBaseLocationDetailsDaoForDML;
+	private SparkBaseCardDao sparkBaseCardDao;
+	private SparkBaseCardDaoForDML sparkBaseCardDaoForDML; 
+	private ContactsLoyaltyDao contactLoyaltyDao;
+	private ContactsLoyaltyDaoForDML contactLoyaltyDaoForDML;
+	private ContactsDao contactsDao;
+	private ContactsDaoForDML contactsDaoForDML;
+	private ApplicationContext context;
+	private MailingListDao mailingListDao;
+	private MailingListDaoForDML mailingListDaoForDML;
+	private ContactsLoyaltyDao contactsLoyaltyDao;
+	private UsersDao usersDao;
+	private UsersDaoForDML usersDaoForDML;
+	private PurgeList purgeList;
+	private MessagesDao messagesDao;
+	private MessagesDaoForDML messagesDaoForDML;
+	@Override
+	public void setApplicationContext(ApplicationContext context)
+			throws BeansException {
+		
+		this.context = context;
+	}
+	
+	//added for autoresponder events(EVENT TRIGGER)
+	private EventTriggerEventsObservable eventTriggerEventsObservable;
+	private EventTriggerEventsObserver eventTriggerEventsObserver;
+	private EventTriggerDao eventTriggerDao;
+	private boolean isEnableContactEvent ;
+	//private boolean isEnableSalesEvent;
+	private Long startId ;
+	private Long endId ;
+	
+	
+	@Override
+	public void run() {
+		
+		try {
+			
+			logger.info("-------Entered into Loyalty Synching-------");
+			
+			sparkBaseLocationDetailsDao = (SparkBaseLocationDetailsDao)context.getBean("sparkBaseLocationDetailsDao");
+			sparkBaseLocationDetailsDaoForDML =  (SparkBaseLocationDetailsDaoForDML)context.getBean("sparkBaseLocationDetailsDaoForDML");
+			sparkBaseCardDao = (SparkBaseCardDao)context.getBean("sparkBaseCardDao");
+			sparkBaseCardDaoForDML = (SparkBaseCardDaoForDML)context.getBean("sparkBaseCardDaoForDML");
+			contactLoyaltyDao = (ContactsLoyaltyDao)context.getBean("contactsLoyaltyDao");
+			contactsDao = (ContactsDao)context.getBean("contactsDao");
+			contactsDaoForDML = (ContactsDaoForDML)context.getBean("contactsDaoForDML");
+			contactLoyaltyDaoForDML = (ContactsLoyaltyDaoForDML)context.getBean("contactsLoyaltyDaoForDML");
+			mailingListDao = (MailingListDao)context.getBean("mailingListDao");
+			mailingListDaoForDML = (MailingListDaoForDML)context.getBean("mailingListDaoForDML");
+			usersDao = (UsersDao)context.getBean("usersDao");
+			usersDaoForDML = (UsersDaoForDML)context.getBean("usersDaoForDML");
+			purgeList = (PurgeList)context.getBean("purgeList");
+			contactsLoyaltyDao = (ContactsLoyaltyDao)context.getBean("contactsLoyaltyDao");
+			messagesDao = (MessagesDao)context.getBean("messagesDao");
+			messagesDaoForDML = (MessagesDaoForDML)context.getBean("messagesDaoForDML");
+			
+			//added for event trigger 
+			eventTriggerEventsObservable = (EventTriggerEventsObservable)context.getBean("eventTriggerEventsObservable");
+			eventTriggerEventsObserver = (EventTriggerEventsObserver)context.getBean("eventTriggerEventsObserver");
+			eventTriggerDao = (EventTriggerDao)context.getBean("eventTriggerDao");
+			eventTriggerEventsObservable.addObserver(eventTriggerEventsObserver);
+			
+			
+			List<SparkBaseLocationDetails> list = sparkBaseLocationDetailsDao.findAllActiveLocByTimeDiff(Constants.USER_AND_ORG_SEPARATOR+"oc_rww");
+			
+			if(list == null || list.size() == 0) {
+				logger.debug("....No Spark Base Locations exist ...");
+				return;
+			} 
+			
+			logger.debug("....Got sparkBaseLocationDetails list of size : "+ list.size());
+			Object object = null;
+			
+			for (SparkBaseLocationDetails sbLocationDetails : list) {
+
+				Calendar currCal = Calendar.getInstance();
+				Users msgUser = null;
+				
+				Messages messages = null;
+				boolean msgstatus  = false;
+				StringBuffer sbmessages = new StringBuffer();
+				/*sbmessages.append("The following CARDs are in INVENTORY and their SparkBase customer info(Email ID) already exists " +
+						"In POS list. So the given cards data are not fetched from SparkBase \r\n");
+				sbmessages.append("Location Id : "+sbLocationDetails.getLocationId());*/
+				
+				Users users = usersDao.findByUserId(sbLocationDetails.getOrgUserId());
+				MailingList mlList = null;
+				mlList = mailingListDao.findListTypeMailingList(Constants.MAILINGLIST_TYPE_POS ,sbLocationDetails.getOrgUserId());
+				if(mlList == null || users.getUserId().longValue() != mlList.getUsers().getUserId().longValue()) {
+					logger.debug("User "+ users.getUserName() + " does not contain a POS list .");
+					continue;
+				}
+				logger.debug("User "+ users.getUserName() + "contains POS list..."+mlList.getListId()+" listname="+mlList.getListName());
+				msgUser = users;
+				
+				
+				try {
+					
+
+					logger.debug("...Navigating cards for location : "+ sbLocationDetails.getLocationId());
+					
+					String transLocationId = sbLocationDetails.getTransactionLocationId();
+					
+					if(transLocationId==null || transLocationId.trim().isEmpty()) {
+						logger.debug("....Transaction Location id not found for location id..."+sbLocationDetails.getLocationId());
+						continue;
+					}
+					//List<SparkBaseCard> cardList = sparkBaseCardDao.findAllByLocId(sparkBaseLocationDetails.getSparkBaseLocationDetails_id());
+					SparkBaseTransactionsView sparkBaseTransactionsViewObj = new SparkBaseTransactionsView();
+					
+					sparkBaseTransactionsViewObj.setLastFetchTotalCount(0);
+					sparkBaseTransactionsViewObj.setCurrOffset(0);
+
+				while(sparkBaseTransactionsViewObj.getCurrOffset() <= sparkBaseTransactionsViewObj.getLastFetchTotalCount()) {
+					
+					Calendar cal  = sbLocationDetails.getLastFetchedTime();
+					cal.add(Calendar.MINUTE, -90);
+					
+					Calendar sbcal = Calendar.getInstance(TimeZone.getTimeZone("EST"), Locale.US);
+					sbcal.setTime(cal.getTime());					
+					Map<String, String> transCardMap =	sparkBaseTransactionsViewObj.fetchTransactionCardsByLocationId(transLocationId,
+					sbcal, null);
+					
+					logger.debug("CurrTotal == "+sparkBaseTransactionsViewObj.getLastFetchTotalCount());
+					logger.debug("CurrOfset == "+sparkBaseTransactionsViewObj.getCurrOffset());
+						
+					sparkBaseTransactionsViewObj.setCurrOffset(sparkBaseTransactionsViewObj.getCurrOffset() + 1000);
+					
+					if(transCardMap==null || transCardMap.isEmpty()) {
+						logger.debug("No transaction in the given period for transLocationId : "+transLocationId);
+						continue; // Skip if there are no transactions.
+					}
+					
+					//set of sb cards
+					Set<String> setOfKeys = transCardMap.keySet();
+					
+					StringBuffer transCardsSb=new StringBuffer();
+					for(String eachStr : setOfKeys){
+						if(transCardsSb.length()>0) transCardsSb.append(',');
+						transCardsSb.append(eachStr);
+					}
+					
+					//TODO need to handle the new Cards which are not there in DB
+					
+					List<SparkBaseCard> cardList = sparkBaseCardDao.findCardsByTransAndLocId(
+							sbLocationDetails.getSparkBaseLocationDetails_id(), transCardsSb.toString());
+					
+					if(cardList==null || cardList.isEmpty()) {
+						logger.debug("----- Local Card list is empty for : "+sbLocationDetails.getSparkBaseLocationDetails_id());
+						continue;
+					}
+					
+					logger.debug(">>>>>>>>>>>  CardList Size =="+cardList.size());
+					
+					UserOrganization userOrg = sbLocationDetails.getUserOrganization();
+						
+						logger.debug("<<< Cards for location id : "+ sbLocationDetails.getSparkBaseLocationDetails_id() 
+								+ " are : "+  cardList.size());
+						
+						List<EventTrigger> contactTypeeventTriggers = null;
+						
+						for (SparkBaseCard sparkBaseCard : cardList) {
+							
+							try {
+								
+								String accountId = transCardMap.get(sparkBaseCard.getCardId()+"");
+								logger.debug("...Checking spark base card Id : "+ sparkBaseCard.getCardId()+">>AccountId>>>"+accountId);
+								
+								ContactsLoyalty contactsLoyalty = contactLoyaltyDao.findContLoyaltyByCardId(sparkBaseCard.getCardId());
+								
+								if(contactsLoyalty != null) {
+									logger.debug(" Card is already activated ...");
+									
+									if(!contactsLoyalty.getLocationId().trim().equals(sbLocationDetails.getLocationId().trim())){
+										sparkBaseCard.setComments(Constants.SPARKBASE_CARD_COMMENTS_LOCATION_INVALID);
+										sparkBaseCardDaoForDML.saveOrUpdate(sparkBaseCard);
+										continue;
+									}
+									
+									object = SparkBaseAdminService.fetchData(SparkBaseAdminService.BALANCESVIEW, accountId, contactsLoyalty,true);
+									if(object != null && object instanceof BalancesViewResponse ) {
+										logger.debug("...BalancesViewResponse object returned");
+										contactLoyaltyDaoForDML.saveOrUpdate(contactsLoyalty);
+										if(sparkBaseCard.getStatus().equals(Constants.SPARKBASE_CARD_STATUS_INVENTORY)){
+											sparkBaseCard.setStatus(Constants.SPARKBASE_CARD_STATUS_ACTIVATED);
+											sparkBaseCard.setComments(Constants.SPARKBASE_CARD_COMMENTS_INVENTORY);
+											sparkBaseCard.setActivationDate(Calendar.getInstance());
+											sparkBaseCardDaoForDML.saveOrUpdate(sparkBaseCard);
+										}
+										logger.debug("...Saved the contact loyalty object");
+										
+									} else {
+										logger.debug("Errors returned from balancesView SB API... "+object);
+										sparkBaseCard.setComments(Constants.SPARKBASE_CARD_COMMENTS_SBERROR);
+										sparkBaseCardDaoForDML.saveOrUpdate(sparkBaseCard);
+										 continue;
+									}
+								}// card is activated
+								
+								else if(contactsLoyalty == null && (sparkBaseCard.getStatus().equals(Constants.SPARKBASE_CARD_STATUS_INVENTORY) 
+										|| sparkBaseCard.getStatus().equals(Constants.SPARKBASE_CARD_STATUS_ACTIVATED))) {
+								
+									contactTypeeventTriggers = eventTriggerDao.findAllUserAutoRespondTriggers(msgUser.getUserId().longValue(),
+											(Constants.ET_TYPE_ON_CONTACT_OPTIN_MEDIUM+Constants.DELIMETER_COMMA+Constants.ET_TYPE_ON_CONTACT_ADDED));
+									isEnableContactEvent = (contactTypeeventTriggers != null && contactTypeeventTriggers.size() > 0);
+									
+									boolean isEnableEvent = false;
+									logger.debug("Contact loyalty is not available...");
+									ContactsLoyalty contactsLoyalty2 = new ContactsLoyalty();
+									contactsLoyalty2.setCardNumber(sparkBaseCard.getCardId());
+									contactsLoyalty2.setCreatedDate(Calendar.getInstance());
+									contactsLoyalty2.setCardPin(sparkBaseCard.getCardPin());
+									contactsLoyalty2.setUserId(msgUser.getUserId());
+//									contactsLoyalty2.setOptinMedium(Constants.CONTACT_LOYALTY_TYPE_POS);
+									contactsLoyalty2.setContactLoyaltyType(Constants.CONTACT_LOYALTY_TYPE_POS);
+									contactsLoyalty2.setLocationId(sbLocationDetails.getLocationId());
+									contactsLoyalty2.setPosStoreLocationId(sbLocationDetails.getLocationId());
+									contactsLoyalty2.setLastFechedDate(Calendar.getInstance());
+									
+									sparkBaseCard.setFromSource(Constants.SPARKBASE_CARD_FROMSOURCE_POS);
+									sparkBaseCard.setStatus(Constants.SPARKBASE_CARD_STATUS_ACTIVATED);
+									sparkBaseCard.setActivationDate(Calendar.getInstance());
+									sparkBaseCard.setComments(Constants.SPARKBASE_CARD_COMMENTS_SBLOYALTY_ADDED);
+									
+									contactLoyaltyDaoForDML.saveOrUpdate(contactsLoyalty2);
+									sparkBaseCardDaoForDML.saveOrUpdate(sparkBaseCard);
+									logger.debug("loyalty and sparkbase cards are saved...");
+									object = SparkBaseAdminService.fetchData(SparkBaseAdminService.CUSTOMERINFO, accountId, contactsLoyalty2,true);
+									
+										if(object != null && object instanceof CustomersViewResponse) {
+											CustomersViewResponse custResponse = (CustomersViewResponse)object;
+											Customer customer = custResponse.getCustomers().getCustomers().get(0);
+											List<Customer> customerList = custResponse.getCustomers().getCustomers();
+											if(customer == null) {
+												logger.debug("Customer Object is null... ");
+												
+												object = SparkBaseAdminService.fetchData(SparkBaseAdminService.BALANCESVIEW, accountId, contactsLoyalty2,true);
+												if(object != null && object instanceof BalancesViewResponse){
+													contactLoyaltyDaoForDML.saveOrUpdate(contactsLoyalty2);
+												}
+												
+												continue;
+											}
+											else if(customerList.size() > 1){
+												logger.info("card do not have customer info");
+												continue;
+											}
+											
+											
+												Contacts contact = null;
+												Contacts inputContact = new Contacts();	
+												inputContact.setUsers(msgUser);
+												inputContact.setOptinMedium(Constants.CONTACT_OPTIN_MEDIUM_POS);
+												inputContact = setInputData(inputContact, customer);
+												
+												boolean updateMLFlag = true;
+												TreeMap<String, List<String>> prioMap= getPriorityMap(msgUser.getUserId(), Constants.POS_MAPPING_TYPE_CONTACTS, null);
+												contact = contactsDao.findContactByUniqPriority(prioMap, inputContact, msgUser.getUserId());
+												
+												if(contact != null){
+													if(contact.getMlBits().longValue() == 0l) {
+														contact.setMlBits(mlList.getMlBit());
+														isEnableEvent = true;
+														updateMLFlag = true;
+														contact.setOptinMedium(Constants.CONTACT_OPTIN_MEDIUM_POS);
+														//contact.setLoyaltyCustomer((byte)1);
+														logger.info("deleted contacts...");
+													}//if
+													else {
+														if( (contact.getMlBits().longValue() & mlList.getMlBit().longValue()) == 0) {
+															updateMLFlag = true;
+															contact.setMlBits(contact.getMlBits().longValue() | mlList.getMlBit().longValue());
+															
+														}//if
+													}
+													
+													logger.info("existing contact ...");
+												}
+												else if(contact == null) {
+													contact = inputContact;
+													contact.setUsers(msgUser);
+													contact.setEmailStatus(Constants.CONT_STATUS_PURGE_PENDING);
+													contact.setCreatedDate(Calendar.getInstance());
+													//contact.setLoyaltyCustomer((byte)1);
+													contact.setPurged(false);
+													contact.setOptinMedium(Constants.CONTACT_OPTIN_MEDIUM_POS);
+													contact.setMlBits(mlList.getMlBit());
+													isEnableEvent = true;
+													updateMLFlag = true;
+													
+													purgeList.checkForValidDomainByEmailId(contact);
+													logger.info("new contact ...");
+												}	
+													contact.setLoyaltyCustomer((byte)1);
+													contactsDaoForDML.saveOrUpdate(contact);
+													contactsLoyalty2.setContact(contact);
+													contactsLoyalty2.setCustomerId(contact.getExternalId());
+													contactLoyaltyDaoForDML.saveOrUpdate(contactsLoyalty2);
+													//send Loyalty template mail configured in the Users POS List
+													if (contact.getEmailId() != null && !contact.getEmailId().trim().isEmpty() && mlList.isCheckLoyaltyOptin()){
+														sendLoyaltyTemplateMail(mlList.getLoyaltyCutomTempId(), msgUser, contactsLoyalty2.getCardNumber(),
+																contactsLoyalty2.getCardPin(), contact.getContactId(), contact.getFirstName(), contact.getEmailId());
+													}
+													
+													if(updateMLFlag) {
+														mlList.setLastModifiedDate(new Date());
+														mailingListDaoForDML.saveOrUpdate(mlList);
+													}
+													
+													if(isEnableContactEvent && isEnableEvent) {
+														if(startId == null) {
+															startId = contact.getContactId();
+														}
+														endId = contact.getContactId();
+													}//if
+												
+													object = SparkBaseAdminService.fetchData(SparkBaseAdminService.BALANCESVIEW, accountId, contactsLoyalty2,true);
+													if(object != null && object instanceof BalancesViewResponse){
+														contactLoyaltyDaoForDML.saveOrUpdate(contactsLoyalty2);
+													}//if BalancesView
+											}//if object instance of customersViewResponse
+										}//card is in inventory 
+								
+							} catch (Exception e) {
+								//logger.error("Exception in sparkbase card list", e);
+								logger.error("Exception ::::" , e);
+								continue;
+							}
+							
+						} //  Cards Loop
+						if(isEnableContactEvent && startId != null && endId	!= null) {
+							
+							eventTriggerEventsObservable.notifyToObserver(contactTypeeventTriggers, startId, 
+									endId, msgUser.getUserId(), Constants.POS_MAPPING_TYPE_CONTACTS);
+						}//if
+
+						startId = null;
+						endId = null;
+						
+					
+					logger.debug("CurrTotal == "+sparkBaseTransactionsViewObj.getLastFetchTotalCount());
+					logger.debug("CurrOfset == "+sparkBaseTransactionsViewObj.getCurrOffset());
+					
+				} // while(SparkBaseTransactionsView.currOffset < SparkBaseTransactionsView.lastFetchTotalCount);
+					
+				} catch (Exception e) {
+					// SB location Loops
+					logger.info("Exception sb location list....");
+					logger.error("Exception ::::" , e);
+					continue;
+				}
+				finally {
+					sbLocationDetails.setLastFetchedTime(currCal);
+					sparkBaseLocationDetailsDaoForDML.saveOrUpdate(sbLocationDetails);
+				}
+				
+				if (msgstatus) {
+					//Users user = usersDao.find(sbLocationDetails.getUserId());
+					messages = new Messages("Loyalty Cards",
+							"Loyalty Cards Synch Update",
+							sbmessages.toString(), Calendar.getInstance(),
+							"Inbox", false, "Info", msgUser);
+					//messagesDao.saveOrUpdate(messages);
+					messagesDaoForDML.saveOrUpdate(messages);
+					logger.debug("Message is sent to user...."+msgUser.getUserId());
+				}
+				
+			} // SB location loops
+			
+		} catch(Exception e) {
+			logger.info("Exception in updatesparkbase controller....");
+			logger.error("Exception ::::" , e);
+			
+		}
+		finally {
+			logger.info("=========== Completed Loyalty Card Synching =========");
+		}
+		
+	}
+	
+	private void sendLoyaltyTemplateMail(Long templateId, Users user, String cardNumber,
+			String cardPin, Long contactId, String firstName, String emailId){
+		CustomTemplatesDao customTemplatesDao = (CustomTemplatesDao)context.getBean("customTemplatesDao");
+		EmailQueueDao emailQueueDao = (EmailQueueDao)context.getBean("emailQueueDao");
+		EmailQueueDaoForDML emailQueueDaoForDML = (EmailQueueDaoForDML)context.getBean("emailQueueDaoForDML");
+			 CustomTemplates custTemplate = null;
+			  String message = PropertyUtil.getPropertyValueFromDB("loyaltyOptinMsgTemplate");
+			  
+			  if(templateId != null) {
+				  
+				  custTemplate = customTemplatesDao.findCustTemplateById(templateId);
+				  message = custTemplate.getHtmlText();
+			  }
+			  logger.debug("-----------email----------"+emailId);
+			  
+			  message = message.replace("<OrganisationName>", user.getUserOrganization().getOrganizationName())
+					  .replace("[CardNumber]", ""+cardNumber).replace("[CardPin]", cardPin);
+			  
+			  EmailQueue testEmailQueue = new EmailQueue(custTemplate,Constants.EQ_TYPE_TEST_LOYALTY_DETAILS_MAIL, message, "Active",
+					  				emailId, user, new Date(), "Loyalty Card Details.",
+					  				null, firstName, null, contactId);
+					
+				logger.info("testEmailQueue"+testEmailQueue.getChildEmail());
+				
+				//emailQueueDao.saveOrUpdate(testEmailQueue);
+				emailQueueDaoForDML.saveOrUpdate(testEmailQueue);
+	}
+	
+	public String performMobileOptIn(Contacts inputContactObj, boolean isNew, Contacts existingContact) throws BaseServiceException{
+		String mobileStatus = Constants.CON_MOBILE_STATUS_ACTIVE;
+		
+		Users user = inputContactObj.getUsers();
+		if(!user.isEnableSMS()) return mobileStatus;
+		
+		SMSSettingsDao smsSettingsDao = (SMSSettingsDao)context.getBean("smsSettingsDao");
+		SMSSettings smsSettings = null;
+		
+		if(SMSStatusCodes.smsProgramlookupOverUserMap.get(user.getCountryType())) smsSettings = smsSettingsDao.findByUser(user.getUserId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN);
+		else  smsSettings = smsSettingsDao.findByOrg(user.getUserOrganization().getUserOrgId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN);
+		
+		
+		/*SMSSettings smsSettings = smsSettingsDao.findByUser(inputContactObj.getUsers().getUserId(),
+				OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN );*/
+		
+		if(smsSettings == null ) {
+			return mobileStatus;
+			
+			
+		}
+		//Users user = smsSettings.getUserId();
+		OCSMSGateway ocsmsGateway = GatewayRequestProcessHelper.getOcSMSGateway(smsSettings.getUserId(), 
+				SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+		if(ocsmsGateway == null) {
+			
+			return mobileStatus;
+		}
+		
+		
+		String optinMedium = null;
+			
+			if(inputContactObj.getMobilePhone() != null && !inputContactObj.getMobilePhone().isEmpty()) {
+				
+				//if
+				boolean isDifferentMobile = false;
+				String mobile = inputContactObj.getMobilePhone();
+				
+				if(existingContact != null) {
+					
+					String conMobile = existingContact.getMobilePhone();
+					optinMedium = existingContact.getOptinMedium();
+				//to identify whether entered one is same as previous mobile
+					if(conMobile != null ) {
+						
+						if(!mobile.equals(conMobile)) {
+							
+							if( (mobile.length() < conMobile.length() && !conMobile.endsWith(mobile) ) ||
+									(conMobile.length() < mobile.length() && !mobile.endsWith(conMobile)) || mobile.length() == conMobile.length()) {
+								
+								isDifferentMobile = true;
+								
+							}//if
+							
+							
+						}//if
+						
+					}//if
+					else{
+						existingContact.setMobilePhone(inputContactObj.getMobilePhone());
+						isDifferentMobile = true;
+						
+					}
+				}//if
+				else{
+					
+					optinMedium = inputContactObj.getOptinMedium();
+					
+					
+				}
+				//contact.setPhone(mPhoneIBoxId.getValue());
+				//Users currentUser = inputContactObj.getUsers();
+				Users currentUser = smsSettings.getUserId();
+				
+				boolean canProceed = false;
+				//do only when the existing phone number is not same with the entered
+				byte optin = 0;
+				if(optinMedium != null) {
+					
+					if(optinMedium.equalsIgnoreCase(Constants.CONTACT_OPTIN_MEDIUM_ADDEDMANUALLY) ) {
+						optin = 1;
+					}
+					else if(optinMedium.startsWith(Constants.CONTACT_OPTIN_MEDIUM_WEBFORM) ) {
+						optin = 2;
+					}
+					else if(optinMedium.equalsIgnoreCase(Constants.CONTACT_OPTIN_MEDIUM_POS) ) {
+						optin = 4;
+					}
+					
+				}//if
+				
+				
+				
+				Byte userOptinVal =	smsSettings.getOptInMedium();
+				
+				userOptinVal = ( SMSStatusCodes.userOptinMediumMap.get(user.getCountryType()) && user.getOptInMedium() != null) ? 
+						 user.getOptInMedium() : userOptinVal;
+						
+				if(smsSettings.isEnable() && 
+						userOptinVal != null && 
+						(userOptinVal.byteValue() & optin ) > 0 ) {									
+					
+					if( (existingContact != null && 
+							(existingContact.getLastSMSDate() == null && existingContact.isMobileOptin() != true) ||
+							(existingContact != null  && isDifferentMobile) )  ) {
+						
+							mobileStatus = Constants.CON_MOBILE_STATUS_OPTIN_PENDING;
+							existingContact.setMobileStatus(Constants.CON_MOBILE_STATUS_OPTIN_PENDING);
+							existingContact.setLastSMSDate(Calendar.getInstance());
+							existingContact.setMobileOptin(false);
+							canProceed = true;
+							
+						
+						
+					}
+					if(canProceed || isNew) {	
+						CaptiwayToSMSApiGateway captiwayToSMSApiGateway = new CaptiwayToSMSApiGateway(context);//(CaptiwayToSMSApiGateway)context.getBean("captiwayToSMSApiGateway");
+						
+						if(!ocsmsGateway.isPostPaid() && !captiwayToSMSApiGateway.getBalance(ocsmsGateway, 1)) {
+							
+							logger.debug("low credits with clickatell");
+							return mobileStatus;
+						}
+						
+						if( (  (currentUser.getSmsCount() == null ? 0 : currentUser.getSmsCount()) - (currentUser.getUsedSmsCount() == null ? 0 : currentUser.getUsedSmsCount() ) ) >=  1) {
+							
+							UsersDao usersDao = (UsersDao)context.getBean("usersDao");
+							UsersDaoForDML usersDaoForDML = (UsersDaoForDML)context.getBean("usersDaoForDML");
+							
+							String msgContent = smsSettings.getAutoResponse();
+							if(msgContent != null) {
+								if(SMSStatusCodes.optOutFooterMap.get(currentUser.getCountryType())){
+									
+									msgContent = smsSettings.getMessageHeader() + " "+ msgContent;
+								}
+								//msgContent = smsSettings.getMessageHeader() + " "+ msgContent;
+							}
+							
+							//clickaTellApi.sendAutoResponse(PropertyUtil.getPropertyValueFromDB(Constants.SMS_SENDERID), mobile, msgContent);
+							//clickaTellApi.sendAutoResponse(PropertyUtil.getPropertyValueFromDB(Constants.SMS_SENDERID), mobile, msgContent);
+							mobileStatus = captiwayToSMSApiGateway.sendSingleMobileDoubleOptin(ocsmsGateway, mobile, msgContent, smsSettings);
+							if(mobileStatus == null) {
+								mobileStatus = Constants.CON_MOBILE_STATUS_OPTIN_PENDING;
+							}
+							if(!mobileStatus.equals(Constants.CON_MOBILE_STATUS_OPTIN_PENDING)) {
+								
+								contactsDaoForDML.updatemobileStatus(mobile, mobileStatus, currentUser);
+								
+							}
+							
+							if(canProceed) { 
+								
+								existingContact.setMobileStatus(mobileStatus);
+							}
+							if(isNew) {
+								
+								inputContactObj.setMobileStatus(mobileStatus);
+							}
+							
+							
+							
+							
+							
+							
+							/*if(currentUser.getParentUser() != null) {
+								currentUser = currentUser.getParentUser();
+							}*/
+							/*currentUser.setUsedSmsCount((currentUser.getUsedSmsCount() == null ? 0 : currentUser.getUsedSmsCount()) +1);
+							usersDao.saveOrUpdate(currentUser);*/
+							//usersDao.updateUsedSMSCount(currentUser.getUserId(), 1);
+							usersDaoForDML.updateUsedSMSCount(currentUser.getUserId(), 1);
+							
+							/**
+							 * Update SMS Queue.
+							 */
+							SmsQueueHelper smsQueueHelper = new SmsQueueHelper();
+							smsQueueHelper.updateSMSQueue(mobile, msgContent, Constants.SMS_MSG_TYPE_OPTIN, currentUser, smsSettings.getSenderId());
+							
+						}else {
+							logger.debug("low credits with user...");
+							return mobileStatus;
+							
+						}
+						
+					}//if
+				}//if
+				else {
+					
+					if(existingContact != null) {
+						
+						if(existingContact.getMobilePhone() != null && isDifferentMobile ){
+							
+							existingContact.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+							mobileStatus = Constants.CON_MOBILE_STATUS_ACTIVE;
+						}
+						existingContact.setMobileOptin(false);
+						
+					}//if existing contact
+					else {
+						
+						if(inputContactObj.getMobilePhone() != null){
+							
+							inputContactObj.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+							
+						}
+						inputContactObj.setMobileOptin(false);
+						mobileStatus = Constants.CON_MOBILE_STATUS_ACTIVE;
+						
+						
+					}//if is new contact
+					
+				}//else
+				
+			}
+			
+			return mobileStatus;
+			
+			
+			
+		}//performMobileOptIn
+
+
+	public  TreeMap<String, List<String>> getPriorityMap(long userId,String mappingType, POSMappingDao posMappingDao) {
+	  
+	  try {
+		  logger.info("UserId is ::"+userId+" ::MappingType is ::"+mappingType);
+		TreeMap<String, List<String>> prioMap = new TreeMap<String, List<String>>();
+		  if(posMappingDao == null) {
+			  
+			  posMappingDao= (POSMappingDao)context.getBean("posMappingDao");
+		  }
+				  
+		  List<POSMapping> posmapList = posMappingDao.getPriorityMapByUserId(userId , "'"+mappingType+"'");
+		  
+		  logger.info("POSMap List size is ::"+posmapList.size());
+		  if(posmapList == null || posmapList.size()==0) return null;
+		  
+		  for (POSMapping posMapObj : posmapList) {
+			  	
+			  String dataTypeStr = posMapObj.getDataType().toLowerCase();
+			  
+			  if(dataTypeStr.startsWith("date")) {
+					dataTypeStr = "string"; 
+			  }
+			  
+			
+			  String priorStr = posMapObj.getCustomFieldName()+"|"+dataTypeStr;
+			  
+			  
+			  List<String> valList = prioMap.get(""+posMapObj.getUniquePriority());
+			  if(valList==null){
+				  valList = new ArrayList<String>();
+			  }
+			  
+			 if(!valList.contains(priorStr)) {
+						valList.add(priorStr);
+			}
+			  
+			 prioMap.put(""+posMapObj.getUniquePriority(), valList);
+			 
+			 
+		  }
+		  
+		  return prioMap;
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		logger.error("Exception ::::" , e);
+		return null;
+	}
+	  
+ } //getPriorityMap
+
+
+	public Contacts setInputData(Contacts inputContact, Customer customerInfo) {
+		
+		if(customerInfo.getEmail() != null) {
+			String email = customerInfo.getEmail().toString().trim();
+			if(email != null && !Utility.validateEmail(email) ) {
+				inputContact.setEmailId(null);
+			}else{
+				inputContact.setEmailId(email);
+			}
+		}
+		
+		if(customerInfo.getFirstName() != null && !customerInfo.getFirstName().toString().trim().isEmpty()){
+			inputContact.setFirstName(customerInfo.getFirstName().toString().trim());
+		}
+			
+		if(customerInfo.getLastName() != null && !customerInfo.getLastName().toString().trim().isEmpty()) {
+			inputContact.setLastName(customerInfo.getLastName().toString().trim());
+		}
+		
+		if(customerInfo.getAddress1() != null && !customerInfo.getAddress1().toString().trim().isEmpty()) {
+			inputContact.setAddressOne(customerInfo.getAddress1().toString().trim());
+		}
+			
+		if(customerInfo.getAddress2() != null && !customerInfo.getAddress2().toString().trim().isEmpty()) {
+			
+			inputContact.setAddressTwo(customerInfo.getAddress2().toString().trim());
+		}
+		
+		if(customerInfo.getCity() != null && !customerInfo.getCity().toString().trim().isEmpty()) {
+			
+			inputContact.setCity(customerInfo.getCity().toString().trim());
+		}
+		
+		if(customerInfo.getState() != null && !customerInfo.getState().toString().trim().isEmpty()) {
+			
+			inputContact.setState(customerInfo.getState().toString().trim());
+		}
+		
+		if(customerInfo.getCountry() != null && !customerInfo.getCountry().toString().trim().isEmpty()) {
+			
+			inputContact.setCountry(customerInfo.getCountry().toString().trim());
+			
+		}
+		
+		if(customerInfo.getPostal() != null) {
+			try {
+				if(customerInfo.getPostal().toString().trim().length() > 0) {
+					inputContact.setZip(customerInfo.getPostal().toString().trim());
+				}	
+			} catch(Exception e) {
+				logger.info("Error while adding the pin number ..");
+			}	
+		}
+		
+		if(customerInfo.getBirthday() != null ) {
+			try {
+				if(customerInfo.getBirthday().toString().trim().length() > 0) {
+					Calendar cal = MyCalendar.dateString2Calendar(customerInfo.getBirthday().toString().trim());
+					inputContact.setBirthDay(cal);
+				}
+			} catch(Exception e) {
+				logger.info("Exception : Error occured while setting the Birthday : "+  customerInfo.getBirthday());
+			}
+		}
+		
+		if(customerInfo.getAnniversary() != null && customerInfo.getAnniversary().toString().trim().length() > 0) {
+			
+			Calendar cal = MyCalendar.dateString2Calendar(customerInfo.getAnniversary().toString().trim());
+			inputContact.setAnniversary(cal);
+		
+		}
+		if( customerInfo.getGender() != null && !customerInfo.getGender().toString().trim().isEmpty()) {
+			
+			inputContact.setGender(customerInfo.getGender().toString().trim());
+		}	
+		
+		
+		if( customerInfo.getPhone() != null && customerInfo.getPhone().toString().trim().length() > 0) {
+			try {
+				Users users = inputContact.getUsers();
+				UserOrganization organization=  users!=null ? users.getUserOrganization() : null ;
+				String phoneStr = Utility.phoneParse(customerInfo.getPhone().toString().trim(),organization);
+				if(phoneStr != null ) {
+					inputContact.setMobilePhone(phoneStr);
+					if(inputContact.getUsers().isEnableSMS() && inputContact.getUsers().isConsiderSMSSettings()){
+						try {
+							inputContact.setMobileStatus(performMobileOptin(inputContact, inputContact.getUsers()));
+							//performMobileOptIn(inputContact, false, contactObj);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							logger.error("Exception while performing mobile optin",e);
+							if(inputContact.getMobileStatus() == null)inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+						}
+					}else{
+						inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+					}
+				}else {
+					inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_NOT_A_MOBILE);
+				}
+			} catch(Exception e) {
+				logger.error("Exception in phone parse", e);
+			}	
+		}
+		else{
+			inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_NOT_A_MOBILE);
+			inputContact.setMobileOptin(false);
+		}
+		
+		return inputContact;
+	}
+	
+	public String performMobileOptin(Contacts contact, Users currentUser) throws BaseServiceException{
+		if(!currentUser.isEnableSMS()) {
+			
+			contact.setMobileOptin(false);
+			return Constants.CON_MOBILE_STATUS_ACTIVE;
+		}
+		
+		SMSSettingsDao smsSettingsDao = (SMSSettingsDao)context.getBean("smsSettingsDao");
+		SMSSettings smsSettings = null;
+		
+		if(SMSStatusCodes.smsProgramlookupOverUserMap.get(currentUser.getCountryType())) smsSettings = smsSettingsDao.findByUser(currentUser.getUserId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN);
+		else  smsSettings = smsSettingsDao.findByOrg(currentUser.getUserOrganization().getUserOrgId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN);
+		
+		//smsSettingsDao.findByUser(currentUser.getUserId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN );
+		
+		if(smsSettings == null) {
+			contact.setMobileOptin(false);
+			return Constants.CON_MOBILE_STATUS_ACTIVE;
+			
+		}
+		//Users user = smsSettings.getUserId();
+		OCSMSGateway ocsmsGateway = GatewayRequestProcessHelper.getOcSMSGateway(smsSettings.getUserId(), 
+				SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(currentUser.getCountryType()));
+		if(ocsmsGateway == null) {
+			contact.setMobileOptin(false);
+			return Constants.CON_MOBILE_STATUS_ACTIVE;
+		}
+		
+		currentUser = smsSettings.getUserId();//to avoid lazy=false from contacts
+		//do only when the existing phone number is not same with the entered
+		byte optin = 0;
+		String phone = contact.getMobilePhone();
+		String mobileStatus = Constants.CON_MOBILE_STATUS_ACTIVE;
+		if(contact.getOptinMedium() != null) {
+			
+			if(contact.getOptinMedium().equalsIgnoreCase(Constants.CONTACT_OPTIN_MEDIUM_ADDEDMANUALLY) ) {
+				optin = 1;
+			}
+			else if(contact.getOptinMedium().startsWith(Constants.CONTACT_OPTIN_MEDIUM_WEBFORM) ) {
+				optin = 2;
+			}
+			else if(contact.getOptinMedium().equalsIgnoreCase(Constants.CONTACT_OPTIN_MEDIUM_POS) ) {
+				optin = 4;
+			}
+		}
+		
+		Users contactOwner = contact.getUsers();
+		Byte userOptinVal =	smsSettings.getOptInMedium();
+		
+		userOptinVal = ( SMSStatusCodes.userOptinMediumMap.get(contactOwner.getCountryType()) && contactOwner.getOptInMedium() != null) ? 
+				contactOwner.getOptInMedium() : userOptinVal;
+					
+		if(smsSettings.isEnable() && 
+				userOptinVal != null && 
+				(userOptinVal.byteValue() & optin ) > 0 ) {		
+			//TODO after the above todo done consider only one among these two conditions on contact
+			if(contact.getLastSMSDate() == null && contact.isMobileOptin() != true) {
+				
+				mobileStatus = Constants.CON_MOBILE_STATUS_OPTIN_PENDING;
+				contact.setMobileStatus(mobileStatus);
+				contact.setLastSMSDate(Calendar.getInstance());
+				CaptiwayToSMSApiGateway captiwayToSMSApiGateway = new CaptiwayToSMSApiGateway(context);//(CaptiwayToSMSApiGateway)ServiceLocator.getInstance().("captiwayToSMSApiGateway");//(CaptiwayToSMSApiGateway)context.getBean("captiwayToSMSApiGateway");
+				if(!ocsmsGateway.isPostPaid() && !captiwayToSMSApiGateway.getBalance(ocsmsGateway, 1)) {
+					
+					logger.debug("low credits with clickatell");
+					return mobileStatus;
+				}
+				
+				if( (  (currentUser.getSmsCount() == null ? 0 : currentUser.getSmsCount()) - (currentUser.getUsedSmsCount() == null ? 0 : currentUser.getUsedSmsCount() ) ) >=  1) {
+					
+					String msgContent = smsSettings.getAutoResponse();
+					if(msgContent != null) {
+						if(SMSStatusCodes.optOutFooterMap.get(currentUser.getCountryType())){
+							
+							msgContent = smsSettings.getMessageHeader() + " "+ msgContent;
+						}
+						//msgContent = smsSettings.getMessageHeader() + " "+ msgContent;
+					}
+					
+					mobileStatus = captiwayToSMSApiGateway.sendSingleMobileDoubleOptin(ocsmsGateway,  phone, msgContent, smsSettings);
+					if(mobileStatus == null) {
+						mobileStatus = Constants.CON_MOBILE_STATUS_OPTIN_PENDING;
+					}
+					if(!mobileStatus.equals(Constants.CON_MOBILE_STATUS_OPTIN_PENDING)) {
+						contactsDaoForDML.updatemobileStatus(phone, mobileStatus, currentUser);
+					}
+					
+					/*currentUser.setUsedSmsCount( (currentUser.getUsedSmsCount() == null ? 0 : currentUser.getUsedSmsCount()) +1);
+					usersDao.saveOrUpdate(currentUser);*/
+					//usersDao.updateUsedSMSCount(currentUser.getUserId(), 1);
+					usersDaoForDML.updateUsedSMSCount(currentUser.getUserId(), 1);
+					
+					/**
+					 * Update SMS Queue.
+					 */
+					SmsQueueHelper smsQueueHelper = new SmsQueueHelper();
+					smsQueueHelper.updateSMSQueue(phone, msgContent, smsSettings.getType(),  currentUser, smsSettings.getSenderId());
+					
+				}else {
+					logger.debug("low credits with user...");
+					return mobileStatus;
+				}
+			}//if
+		}//if
+		
+		else{
+			
+			if(contact.getMobilePhone() != null) {
+				mobileStatus = Constants.CON_MOBILE_STATUS_ACTIVE;
+				contact.setMobileStatus(mobileStatus);
+			}
+		}
+		
+		return mobileStatus;
+	}
+	
+	
+}

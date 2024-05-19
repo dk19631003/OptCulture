@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:53:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.Vmta"
+		table="vmta" lazy="false">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<property name="vmtaName" type="string" column="vmta_name"
+			length="64" />
+		<property name="status" type="string" column="status"/>
+		<property name="description" type="string" column="description"/>
+		<property name="pooledVmtas" type="string" column="pooled_vmtas"/>
+		<property name="accountName" type="string" column="account_name"/>
+		<property name="accountAPIName" type="string" column="account_api_name"/>
+		<property name="accountPwd" type="string" column="account_pwd"/>
+		<property name="host" type="string" column="host"/>
+	</class>
+</hibernate-mapping>
+

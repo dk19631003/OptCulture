@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.loyality.common.hbmbean.LoginDetails" table="Portal_Login_Details">
+		
+		<id name="loginId" type="java.lang.Long" column="login_id">
+			<generator class="native" />
+		</id>
+		
+		<property name="sessionId" type="java.lang.String" column="session_id"></property>
+		<property name="userId" type="java.lang.String">
+			<column name="user_id" />
+		</property>
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_id" />
+		</property>
+		<property name="clientIp" type="string">
+			<column name="client_Ip" />	
+		</property>
+		<property name="reffUrl" type="string">
+			<column name="target_url" />
+		</property>
+		<property name="loginDate" type="calendar">
+			<column name="login_date" />
+		</property>
+		<property name="modDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+				<property name="loyaltyId" type="java.lang.Long">
+			<column name="loyalty_id" />
+		</property>
+		
+    </class>
+</hibernate-mapping>

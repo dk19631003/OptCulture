@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 17, 2011 17:07:04 PM -->
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ContactScores" 
+	table="contact_score" >
+		  
+		<id name="id" type="java.lang.Long" >
+			<column name="id"/>
+			<generator class="native" />
+		</id>
+		
+		<property name="emailId" type="string" >
+			<column name="email_Id" />
+		</property>
+		
+		<property name="phone" type="string" >
+			<column name="phone" />
+		</property>
+		
+		<property name="pageVisitedCount" type="java.lang.Integer" >
+			<column name="page_visited_count" />
+		</property>
+		
+		<property name="downLoadedCount" type="java.lang.Integer" >
+			<column name="down_loaded_count" />
+		</property>
+		
+		<property name="sourceOfVisitCount" type="java.lang.Integer" >
+			<column name="source_of_visited_count" />
+		</property>
+		
+		<property name="emailOpenedCount" type="java.lang.Integer" >
+			<column name="email_opened_count" />
+		</property>
+		
+		<property name="emailClickedCount" type="java.lang.Integer" >
+			<column name="email_clicked_count" />
+		</property>
+		
+		<property name="emailNotOpenedCount" type="java.lang.Integer" >
+			<column name="email_not_opened_count" />
+		</property>
+		
+			<property name="emailUnsubscribedCount" type="java.lang.Integer" >
+			<column name="email_unsubscribed_count" />
+		</property>
+		
+		<property name="formSubmittedCount" type="java.lang.Integer" >
+			<column name="form_submitted_count" />
+		</property>
+	
+		
+		<property name="formAbondonedCount" type="java.lang.Integer" >
+		<column name="form_abondoned_count" />
+		</property>
+		
+		
+		
+		
+		<property name="formFillRatioCount" type="java.lang.Integer" >
+			<column name="form_fill_ratio_count" />
+		</property>
+	
+		<property name="lastModifiedDate" type="calendar">
+			<column name="last_modified_date"></column>
+		</property>
+		
+		
+		 <property name="total" type="java.lang.Long"  >
+			<column name="total" length="20"  />
+		</property>
+		
+		
+		
+		<many-to-one name="user"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"
+			fetch="select">
+			<column name="user_id" not-null="true" />
+		</many-to-one>
+		
+		
+		</class>
+</hibernate-mapping>

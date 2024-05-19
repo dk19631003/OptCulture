@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SocialCampaignReport"
+		table="social_campaign_reports">
+		
+		<id name="reportId" type="java.lang.Long">
+			<column name="report_id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="campaignId" type="java.lang.Long">
+			<column name="campaign_id" length="255" not-null="true" />
+		</property>
+		
+		<property name="scheduleId" type="java.lang.Long">
+			<column name="schedule_id" length="255" not-null="true" />
+		</property>
+		
+		<property name="campaignName" type="java.lang.String">
+			<column name="campaign_name" length="255" not-null="true" />
+		</property>
+		
+		<property name="providerType" type="java.lang.String">
+			<column name="provider_type" length="255" not-null="true"/>
+		</property>
+		
+		<property name="sentDate" type="calendar">
+			<column name="sent_date" length="50" not-null="true"/>
+		</property>
+		
+		
+		<property name="campaignStatus" type="java.lang.String">
+			<column name="campaign_status" length="255" not-null="true" />
+		</property>
+		
+		<property name="providerToken" type="java.lang.String">
+			<column name="provider_token" length="255" not-null="true" />
+		</property>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" length="255" not-null="true" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

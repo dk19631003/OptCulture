@@ -1,0 +1,1156 @@
+<zk xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:h="http://www.w3.org/1999/xhtml">
+<window id="createCouponWinId" apply="org.mq.marketer.campaign.controller.admin.CreateCouponController" width="100%" >
+<style>
+	.req_step_completed:HOVER {
+	     text-decoration:none !important; 
+	     color: #222222 !important; 
+	}
+</style>    
+    
+    <div id="navigationDivId" visible="true">
+		<hlayout style="margin:10px 0 15px 0;">
+		
+			<div id="couponBasicSettingsFirstId" sclass="req_step_current">
+				<label  value="1" style="color:#222222;padding-right:12px;" />					
+				<label  value="Basic Settings"/>					
+			</div>
+		
+			<div id="promotionRulesSecondId" sclass="req_step_incomplete" style="margin-left: 3px;">
+				<label style="color:#222222;padding-right:12px;" value="2"/>					
+				<label  value="Discount Code Rules" />					
+			</div>
+		
+			<div id="mobileOfferThirdId" visible="false" sclass="req_step_incomplete" style="margin-left: 3px;background-color: #dfdfdf;width:204px !important;">
+				<label  value="3" style="color:#222222;padding-right:12px;"/>					
+				<label  value="Display options (optional)"/>					
+			</div>
+		
+		</hlayout>
+	</div>
+    
+				  		
+ 					<groupbox>
+ 						<caption label="Discount Code Settings" style="font-weight:bold;font-size:12px;" ></caption>
+ 						<h:table cellspacing="2" cellpadding="2" width="100%">
+				  		  <h:tr height="2"/>
+				  			
+				  			<h:tr>
+				  				<h:td width="200"><label  value="Discount Code Name: "/> </h:td>
+				  				<h:td><textbox  id="couponNameTxtBxId" width="300px" style="margin-right:10px;"/>
+				  				<image src="/img/icons/icon_q.png" tooltip="bcname"/>
+		  								<popup id="bcname" style="bgcolor:#CCCCCC;"  >
+											<label  value="( _, space ) are not allowed." sclass="labelPos" />
+										</popup>
+										</h:td>
+				  			</h:tr>
+				  			
+				  			<h:tr>
+				  				<h:td ><label visible="false"  value="Description: "/> </h:td>
+				  				<h:td ><textbox visible="false"  id="coupDescTxtBxId" rows="2" height="40px" width="300px"/></h:td>
+				  			</h:tr>
+				  			
+				  		</h:table>
+				  		<h:table width="40%">
+				 		<h:tr>
+		  					<h:td ><label  value="Discount to be given on: "/> </h:td>
+		  					<h:td >
+		  						<radiogroup  id="discountRadioGrId" />
+		  						<radio label=" Receipt" id="tpaRadioId"  radiogroup="discountRadioGrId" value="Total Purchase Amount" selected="true"/>
+		  					   	<radio label=" Product" id="skuRadioId"  radiogroup="discountRadioGrId"  value="SKU" style="margin-left:14px;" />
+		  					</h:td>
+		  				</h:tr>
+		  				</h:table>	
+		  			<h:table>
+		  				<h:tr height="4"/>
+				 		<h:tr>
+		  					<h:td width="200px"><label  value="Discount Code Type: "/> </h:td>
+		  					<h:td >
+		  						<listbox id="discountTypeLbId" mold="select">
+		  							<listitem label="promotions" value="promotions" selected="true"/>
+									<listitem label="coupons" value="coupons" />
+									<listitem label="against loyalty points/reward codes" value="loyaltyRewards" />
+									<listitem label="frequent buyer purchase" value="purchases" visible="false"/>
+									<!-- <listitem label="Discounts againts Points/Rewards" value="DiscRewards" />
+									<listitem label="Discounts against Purchases" value="DiscPurchases" /> -->
+		  						</listbox>
+		  					
+		  					</h:td>
+		  				</h:tr> 
+		  				</h:table>
+		  				<separator height="10px"/>
+		  			<!-- 						<h:table>
+		  										<h:tr>
+		  				
+													<h:td><checkbox id="onlylpChkBxId"  label="Redeemable By Loyalty Rewards " /></h:td>
+													<div id="valueCodeDivId" visible="false">
+													<h:td>
+														<listbox rows="1" mold="select" id="valueCodeListboxId" style="padding:1px;" visible="false">
+															<listitem label="Points" selected="false" />
+														</listbox>
+													</h:td>
+													</div>
+													<h:td colspan="3">
+														<hbox align="center"  id="loyatyPntshboxId" visible="false">
+								  							<label value="Value required" style="padding-right:5px;"/>
+								  							<intbox id="lpIBxId" width="100px" />
+							  							</hbox>
+			  										</h:td>
+												</h:tr>
+				  						 </h:table>	 -->
+				  						 <!-- <div id="excludeDiv" visible="false">
+				  						 <h:table  width="21%">
+				  						
+				  						 <h:tr >
+							<h:td><label  value="Exclude already discounted items: "/> 
+			  				</h:td>
+			  				
+			  				<h:td>
+			  				<checkbox id="discountedItemsCoupChkBxId"/>
+			  				</h:td>
+			  			</h:tr>
+				  						 
+				  						 </h:table>	
+				  						 </div> -->
+				  						 
+		
+					<div id="loyaltyRewardsDivId" visible="false">
+										<h:table>
+		  										<h:tr>
+		  				
+ 								<h:td><label value="Redeemable By Loyalty Points/Rewards "/></h:td>
+ 												
+ 												<div id="productvalueCodeDivId" visible="true">
+													<h:td>
+														<listbox rows="1" mold="select" id="productvalueCodeListboxId" style="padding:1px;" visible="true">
+															<listitem label="Points" selected="true" />
+														</listbox>
+													</h:td>
+													</div>
+													<h:td colspan="3">
+														<hbox align="center"  id="productloyatyPntshboxId" visible="true">
+								  					<!--		<label value="Value required" style="padding-right:5px;"/>
+								  							<intbox id="productlpIBxId" width="100px" /> -->
+								  								<listbox rows="1" mold="select" id="productvalueCode2ListboxId" style="padding:1px;" visible="true">
+															<listitem label="Value" value="Value" selected="true" />
+															<listitem label="Multiplier" value="Multiplier"  />
+														
+														</listbox>
+													<textbox id="productlpIBxId" width="100px" />
+								  <label value="X points of the discount value are required from the available Loyalty/Quota Points." id="multiId" visible="false" style="padding-right:5px;"/>
+							  							</hbox>
+			  										</h:td>
+												</h:tr>
+												</h:table>
+												</div>
+												<div id="purchasesDivId" visible="false">
+												<h:table>
+												
+												<h:tr>
+		  				
+												<!-- <h:td><radio id="fbrId"   label="Redeemable on purchase of items, same rules as discount code " radiogroup="productredeemRadioId"/></h:td> -->
+												<h:td><label value="Redeemable on purchase of items, same rules as discount code "/></h:td>
+												<h:td colspan="3" >
+														<hbox align="center"  id="quantityhboxId" visible="true">
+								  							<label value="Quantity" style="padding-right:5px;"/>
+								  							<doublebox id="quantityBxId" width="100px" />
+							  							</hbox>
+							  							</h:td>
+												</h:tr>
+				  						 </h:table>	
+				  						 </div>
+		
+	                 
+	                 
+	                 <div id="useasreferralId" visible="false">
+	                 
+	              	    	<h:table cellspacing="2" cellpadding="2" width="100%" >
+			  		
+					  <h:tr height="20"/>	
+												
+						
+						<h:tr>	
+						<h:td width="216px" ><label visible="true" value="Use as referral code: "/> 
+						<image src="/img/icons/icon_q.png" tooltip="CouponCodeAuthPop34uiId"  style="padding-left:5px;" />
+			
+						<popup id="CouponCodeAuthPop34uiId" width="300px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="Validity Period applies on the basis of ReferralProgram"
+											sclass="labelPos" />
+					 	
+					 					</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+						</h:td>
+					
+					
+					
+					
+					
+					 	<h:td width="0px">
+				     			<checkbox id="userefcodeChkBxId" checked="false" style="margin-left:0px;" />
+			  			</h:td>	 
+		  					
+						</h:tr>			  		  	
+			  		<h:tr height="20"/>
+			  		
+			  	</h:table>
+			  	</div>
+			
+				  						 <div id="excludeAlreadyDiscountedItemsDiv" visible="false">
+				  						 
+				  						 <h:table>
+				  						 <h:tr>
+											<h:td><label  value="Exclude already discounted items: "/> </h:td>
+			  								<h:td colspan="3" ><checkbox id="discountedItemsCoupChkBxId"/>
+			  							</h:td>				  						 
+				  						 </h:tr>
+				  						 </h:table>
+				  						 <h:table>
+				  						 <h:tr>
+			 							<h:td>
+			 							<label value="Note: " style="font-weight:bold"/>
+										<label value="Product Rules on “Minimum Receipt Total”, “Item Price”, “Item Quantity to Discount”, and “Eligible Items” will work only with latest plug-ins." />
+										</h:td>
+										</h:tr>
+				  						 </h:table>
+				  						 </div>
+				  						 
+			  		</groupbox>
+			  	
+			  		
+			  	<separator height="10px"/>
+			  	
+		<!-- <button id="submitBtnId" label="Submit" style="width: max-content;margin-left:217px;" sclass="idle140" visible="true" />
+		<button id="clearBtnId" label="Clear" style="width: max-content;" sclass="idle140" visible="true" /> -->
+		
+		<separator height="10px"/>
+					  			
+		<div id="rulesDivId">	  		
+				<groupbox id="rulesGBId" visible="false">
+ 					<caption label="Define Discount Rules" style="font-weight:bold;font-size:12px;" ></caption>				
+
+				
+				<!--  <h:table>
+				 <h:tr height="5"/>
+		  		  	<h:tr>
+					<h:td colspan="2">
+					<label value="Select Item Attribute/s:" style="font-weight:bold;font-size:12px;"></label>
+					</h:td>
+					</h:tr>
+					<h:tr>
+					 <h:td width="265">
+					 <listbox id="itemAttributeLbId" width="260px" checkmark="true" rows="4"  multiple="true" >
+					 </listbox>
+					 </h:td>
+					 </h:tr>
+				</h:table>
+				<h:table>
+		  		  	<h:tr>
+					<h:td >
+					</h:td>
+					</h:tr>
+				</h:table> -->
+				
+					<!-- <groupbox id="selectCriteriaGBId" open="false">
+ 						<caption label="Select discount Criteria " style="font-weight:bold;font-size:12px;" ></caption>
+						<div  style="border:0px solid #CCC;">
+							<h:table width="100%" height="230px" >
+						<h:tr>
+							<h:td valign="top"  style="display:flex;">
+							<div width="1200px" height="230px" style="overflow-x: visible;overflow-y: hidden; padding-bottom:15px;">
+							<hbox id="listBoxesDivId">
+							 <listbox id="vendorCodeFilterLBId" height="230px" 
+							  checkmark="true" multiple="true" emptyMessage="No vendor codes" visible="false">
+							  <listhead>
+									<listheader id="listHeaderId7" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader label="Vendor Code"  value="1" />
+								</listhead>
+								<auxhead id="vendorFilterAhId"> 
+								<auxheader>
+									<checkbox id="auxCheckBox7"></checkbox>
+								</auxheader>
+				             		  <auxheader> <checkbox id="vendorCheckboxid"/> </auxheader>
+                                      <auxheader>
+                                           <menupopup id="vendorCodeMpId" />
+                                           <toolbarbutton context="vendorCodeMpId"  visible="false"/>
+                                           <textbox id="vendorCodeTBId"  width="85px" />
+                                      		<image id="vendorFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+                                     </auxheader>
+				             	</auxhead>
+			  					</listbox>	
+			  					 <separator/><separator/>
+			  					 <listbox id="descriptionFilterLBId" height="230px" 
+							  checkmark="true" multiple="true" emptyMessage="No description" visible="false" >
+							  <listhead>
+									<listheader id="listHeaderId6" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader label="Description"  value="7" />
+								</listhead>
+								<auxhead id="descriptionAhId"> 
+				             		 <auxheader>
+				             		 	<checkbox id="auxCheckBox6"></checkbox>
+				             		 </auxheader>
+				             		
+                                      <auxheader>
+                                             <menupopup id="descriptionMpId" />
+                                             <toolbarbutton context="descriptionMpId"  visible="false"/>
+                                              <textbox id="descriptionTBId"  width="85px"/>
+                                               <image id="descriptionFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+                                               <image id="descriptionFilterImage" src="/img/theme/search_icn.png" />
+                                     </auxheader>
+				             	</auxhead>
+			  					</listbox>
+			  					 <separator/><separator/>
+			  					 <listbox id="deptCodeFilterLBId" height="230px" 
+							  checkmark="true" multiple="true" emptyMessage="No department codes" visible="false" >
+							  <listhead>
+									<listheader id="listHeaderId8" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader label="Dept. Code"  value="2" />
+								</listhead>
+								<auxhead>
+				              		<auxheader>
+				              			<checkbox id="auxCheckBox8"></checkbox>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="deptCodeMpId"/>
+		             					<toolbarbutton context="deptCodeMpId"  visible="false"/>
+				             			<textbox id="deptCodeTBId"  width="85px" />
+				             			<image id="deptCodeFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+			  					 <listbox id="itemCategoryFilterLBId"  height="230px" checkmark="true"   width="20%"
+							  		 multiple="true" emptyMessage="No item categories" visible="false">
+								  <listhead>
+										<listheader id="listHeaderId" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+										<listheader label="Item Category" value="3" />
+									</listhead>
+									<auxhead>
+				              		<auxheader>
+											<checkbox id="auxCheckBox"></checkbox>
+					             		</auxheader> 
+					             		<auxheader>
+					            			<menupopup id="itemCatMpId"  />
+		             						<toolbarbutton context="itemCatMpId"  visible="false"/>
+					             			<textbox id="itemCategoryTBId"  width="85px"  />
+					             			<image id="itemCategoryFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+					             		</auxheader>
+					             	</auxhead>
+			  					</listbox>
+			  					  <listbox id="dcsFilterLBId"  height="230px" checkmark="true" width="20%"
+							  		 multiple="true" emptyMessage="No DCS codes" visible="false" >
+								  <listhead>
+										<listheader id="listHeaderId1" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+										<listheader label="DCS"  value="4" />
+									</listhead>
+									<auxhead>
+					              		<auxheader>
+					              			<checkbox id="auxCheckBox1"></checkbox>
+					             		</auxheader> 
+					             		<auxheader>
+					            			<menupopup id="dcsMpId"  />
+		             						<toolbarbutton context="dcsMpId"  visible="false"/>
+					             			<textbox id="dcsTBId"  width="85px"  />
+					             			<image id="dcsFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+					             		</auxheader>
+					             	</auxhead>
+			  					</listbox>
+			  					 <listbox id="classFilterLBId" height="230px" width="20%"
+							  checkmark="true" multiple="true" emptyMessage="No class codes" visible="false">
+							  <listhead>
+									<listheader id="listHeaderId2" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader label="Class "  value="5" />
+								</listhead>
+								<auxhead>
+				              		<auxheader>
+				              			<checkbox id="auxCheckBox2"></checkbox>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="classCodeMpId"  />
+		             					<toolbarbutton context="classCodeMpId"  visible="false"/>
+				             			<textbox id="classTBId"  width="85px" />
+				             			<image id="classFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+			  					  <listbox id="subClassFilterLBId" height="230px" 
+							  checkmark="true" multiple="true" emptyMessage="No sub-class" visible="false">
+							  <listhead>
+									<listheader id="listHeaderId3" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader label="Sub-Class "  value="6" />
+								</listhead>
+								<auxhead>
+				              		<auxheader>
+				              			<checkbox id="auxCheckBox3"></checkbox>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="subClassCodeMpId"  />
+		             					<toolbarbutton context="subClassCodeMpId"  visible="false"/>
+				             			<textbox id="subClassTBId"  width="85px" />
+				             			<image id="subClassFilterImage"  src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px"/>
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+			  					<listbox id="listPriceFilterLBId" height="230px" width="50%"
+							  checkmark="true" multiple="true" emptyMessage="No class codes" visible="false">
+							  <listhead>
+									<listheader id="listHeaderId9" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader label="List Price "  value="9" />
+								</listhead>
+								<auxhead>
+				              		<auxheader>
+				              			<checkbox id="auxCheckBox9"></checkbox>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="listPriceMpId"  />
+		             					<toolbarbutton context="listPriceMpId"  visible="true"/>
+		             					<toolbarbutton context="listPriceMpId" tooltiptext="filters|eq|ne|-|lt|gt|le|gt|" visible="true"/>
+                                           <textbox id="listPriceTBId" sclass="filterSearchVal"   width="130px" />
+				             			 <textbox id="listPriceTBId"  width="85px" />
+				        				<image id="liFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+				             			 
+				             			<image id="listPriceFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+			  					 <listbox id="skuFilterLBId" height="230px" 
+							  checkmark="true" multiple="true" emptyMessage="No sku" visible="false">
+							  <listhead>
+									<listheader id="listHeaderId5" width="30px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader label="SKU "  value="6" />
+								</listhead>
+								<auxhead>
+				              		<auxheader>
+				              			<checkbox id="auxCheckBox5"></checkbox>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="sKUMpId" />
+		             					<toolbarbutton context="skuMpId"  visible="false"/>
+				             			<textbox id="skuTBId"  width="85px" />
+				             			<image id="skuFilterImage"  src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px"/>
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+			  					</hbox>
+			  				</div>
+							</h:td>
+							<h:td valign="top"   >
+							<div width="400px" style="border:1px solid #CCC;" id="skuDivId" visible="false">
+							<h:table width="100%" >
+							<h:tr>
+							<h:td  width="100%">
+							<listbox id="viewSKULbId" emptyMessage="No SKUs Found" checkmark="true" multiple="true"  
+							height="230px" width="100%" style="position: relative;" visible="true" >
+								<listhead >
+									<listheader id="listHeaderId4" width="40px" style="opacity: 0; pointer-events: none; " align="center"/>
+									<listheader  label="SKU" value="8" width="175"/>
+									<listheader  label="Price" />
+									<listheader label="Description" />
+									
+								</listhead>
+								<auxhead id="skuFilterAhId" >
+				              		<auxheader align="center">
+				             			<toolbarbutton  />
+				             			<checkbox id="auxCheckBox4"></checkbox>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="skuMpId"  />
+             							<toolbarbutton context="skuMpId"  visible="false"/>
+				             			<textbox id="viewSkuTBId" width="85px"/>
+				             			<image id="viewSKUFilterImage" src="/images/all_segment_icn.png" style="margin-top:2px;" width="18px" />
+				             		</auxheader> 
+				             	</auxhead>
+							</listbox>	
+							</h:td>
+							</h:tr>
+								<h:tr>
+								<h:td  width="100%">
+										 <button id="selectAllSKUBtnId" label="Select All"  style="width:80px;" />
+										<button id="deSelectAllSKUBtnId" label="Reset"  style="width:80px;" visible = "false"/>
+									<paging id="skuPaging" detailed="true" pageSize="10" width="350px" class="contactsViewPaging" style="border:none;" />
+									</h:td>
+						  </h:tr>
+						  </h:table> 
+						  </div>
+							</h:td>
+							</h:tr>
+							</h:table>
+						<h:table>
+						
+							<h:tr>
+							
+							
+							
+    
+							<h:td align="left" >
+								<button id="applyFilterBtnId" label="Filter across Attributes" style="width: max-content;" sclass="idle140" visible="true" />
+							</h:td>
+							
+							<h:td align="left" >
+								<div id="resetAnchDivId" visible="true">
+				  				  <a label="Reset" id="resetAnchId" />
+							  </div>
+							</h:td>
+							
+							<h:td>
+		  						<radiogroup  id="addCriteriaRadioId" />
+		  						<radio label=" add selected criteria as Multiple Single Rules. "  style="margin-left:250px;" id="multipleSingleId"  radiogroup="addCriteriaRadioId"  value="multiple"/>
+		  						<separator height="2px"/>
+		  						<radio label=" add selected criteria as ONE Combination Rule. " style="margin-left:250px;" id="oneCombinationId"  radiogroup="addCriteriaRadioId" value="oneCombination"/>
+		  					</h:td>
+							
+							 
+							
+							
+		  					</h:tr>
+						</h:table>		
+							<h:table width="100%">
+								<h:tr>
+							<h:td align="left">
+								<button id="addCritiraBtnId" label="Add"  style="margin-left:510px;" sclass="idle140 greenbtn" visible="false" />
+								<button id="clearFilterBtnId" label="Clear Filter" sclass="idle140" style="margin-right:20px;"/>
+							</h:td>
+							</h:tr>
+							</h:table>
+						</div>
+						</groupbox> -->
+						
+						
+				 <h:table width="100%" cellspacing="5">
+				 <h:tr>
+				 	<h:td style="border:1px solid #CCC;" valign="top">
+				 	
+				 		<div id="mpvDivId" visible="false" style="text-align:center;margin-top:126px;" width="450px">
+				 			<h:table>
+				 				<h:tr>
+				 					
+				 					<h:td width="100px" align="right">
+					 					<checkbox id="mpvChkBoxId" style="padding-right:0px;"/>
+				 					</h:td>
+				 					<h:td>
+				 					
+								 		<label value="Minimum Purchase Amount"  id="mintAmtTxtLblId"/>
+								 		<!-- <label value=" $ " id="totAmtDollerLblId"/> --> 
+								 		<label id="totAmtDollerLblId"/>
+								 		<longbox id="totPurAmtLngBxId" maxlength="8"/>
+				 					</h:td>
+				 				</h:tr>
+				 			</h:table>
+				 			
+				 		</div>
+				 	
+				 				<div id="skuVisibleDivId" visible="true" width="99%" >
+								
+								<listbox id="addedSKULBId" emptyMessage="No Records found" checkmark="true" multiple="true" height="350px" >
+								<listhead >
+									<listheader width="40px" align="center"/>
+									<listheader width="300px" label="Rule"  />
+									<!-- <listheader width="100px" label="Code"  />
+									<listheader width="100px" label="Type" />
+									<listheader label="No. of items in it"   /> -->
+									<listheader label="Actions"  />
+								
+								</listhead>
+								</listbox>
+							
+								</div>			 	
+				 	</h:td>
+
+					<h:td style="border:1px solid #CCC;" >
+						<div style="text-align:center;"  width="300px">
+						<!-- 	<label value="Discount Type:"/>
+							<separator/>
+		  					
+		  					
+		  					<radiogroup  id="discTypeRadioId" />
+		  					<radio label="%" id="percentRadioId"  radiogroup="discTypeRadioId" selected="true" style="margin-left: 15px;" tooltiptext="Percentage"/>
+		  					<radio id="dollerRadioId"  radiogroup="discTypeRadioId" tooltiptext="Value"/>
+		  					<h:table align="center"><h:tr>
+		  					
+		  					<h:td >
+		  					<doublebox id="discountDblBxId" width="80px" maxlength="8"/>
+		  					</h:td>
+		  					
+		  					</h:tr></h:table> -->
+		  					
+		  					
+		  					<separator/>
+		  					<div id="numberEligibleDivId"  width="100%" visible="false">
+								<h:table>
+									<h:tr  valign="top">
+									<h:td valign="top" style="padding-top:1px;" width="25%">
+										<label  value="Eligible items:"/>
+									</h:td>
+									</h:tr>
+									<h:tr>
+									 <h:td valign="top">
+									<listbox  mold="select" id="eligibleItemRadioId" width="200px">
+		  								<listitem label="all items"  id="AllEligileItemsRadioId"  selected="true" value="ALLEI"/>
+		  								<listitem label="highest priced items" id="higestPriceRadioId"   value="HPIWD"/>
+		  								<listitem label="highest priced non-discounted items" id="higestPricewithoutRadioId"   value="HPIWOD" />
+										<listitem label="lowest priced items" id="lowestPriceRadioId"   value="LPIWD" />
+										<listitem label="lowest priced non-discounted items" id="lowestPricewithoutRadioId"   value="LPIWOD" />
+									</listbox>
+									
+		  							</h:td>	
+		  						</h:tr>
+		  						</h:table>
+		  					</div>
+
+		  					
+		  					
+							<div id="maximumDiscountDivId" visible="false">
+							
+		  					<separator height="20px"/>
+		  					<label id="onReceiptLabelId" visible="false"/>
+		  					<label value="Maximum % Discount" id="onProductLabelId" visible="false"/>
+		  					<separator/>
+		  					<label value="(only when accumulating):"/>
+							<separator/>
+		  					
+		  					<h:table align="center"><h:tr>
+		  					
+		  					<h:td >
+		  					<doublebox id="maxDiscountDblBxId" width="80px" maxlength="8"/>
+		  					</h:td>
+		  					
+		  					</h:tr></h:table>
+		  					</div>
+		  					<div id="quantityDivId" visible="true">
+							
+		  					<separator height="20px"/>
+		  					<label id="onReceiptQuantityLabelId" visible="false"/>
+		  					<label value="Discount quantity per item :" id="onProductQuantityLabelId"/>
+		  					<separator/>
+		  					
+		  					<h:table align="center"><h:tr>
+		  					<h:td>
+		  					 <listbox mold="select" id="comparisionLbId" visible="true">
+									<listitem label="Maximum" value="LTE" selected="true"/>
+									<listitem label="Equals" value="ET"/>
+									<listitem label="Minimum" value="GTE"/>
+									<!-- <listitem label="Multiple" value="M"/>		 -->							
+		  					 </listbox>
+		  					</h:td>
+		  					
+		  					<h:td >
+		  					<doublebox id="quantityDblBxId" width="80px" maxlength="8"/>
+		  					</h:td>
+		  					
+		  					</h:tr></h:table>
+		  					</div>
+		  					
+		  					<separator height="20px"/>
+		  					
+		  					<label value="Discount Type:"/>
+							<separator/>
+		  					
+		  					
+		  					<radiogroup  id="discTypeRadioId" />
+		  					<radio label="%" id="percentRadioId"  radiogroup="discTypeRadioId" selected="true" style="margin-left: 15px;" tooltiptext="Percentage"/>
+		  					<radio id="dollerRadioId"  radiogroup="discTypeRadioId" tooltiptext="Value"/>
+		  					<h:table align="center"><h:tr>
+		  					
+		  					<h:td >
+		  					<doublebox id="discountDblBxId" width="80px" maxlength="8"/>
+		  					</h:td>
+		  					
+		  					</h:tr></h:table>
+		  					
+		  					<separator height="20px"/>
+					  		<button id="selectBtnId" label="Apply Discount" />
+		  				</div>
+					</h:td>
+					<!-- <h:td align="left" valign="top" width="500px">
+	  					<grid emptyMessage="No Records found"  width="500px" height="351px" > 
+	  						<columns  >
+	  							<column id="column1Id" label="%" width="50px"/>
+	  							<column id="column2Id" label =" Rule"/>
+	  							<column id="column2Id" label =" Type"/>
+	  							<column id="column3Id" label =" Code"/>
+	  							<column id="column4Id" label ="No. of codes" visible="false"/>
+	  							<column id="column5Id" label ="Max Discount" width="100px"/>
+	  							<column id="column6Id" width="70px" label ="Quantity" />
+	  							<column label ="Actions" align="center"/>
+	  						</columns>
+	  						<rows id="discountGenRowsId" />
+	  					</grid>
+			  				
+					</h:td> -->
+
+				 </h:tr>
+				 </h:table>
+				
+				<separator height="5px"/>
+				
+				
+				  <groupbox closable="false" open="true" visible="false">	
+				<caption label="Advanced Settings" style="font-weight:bold;font-size:12px;">
+				  <toolbarbutton id="advancedSettingsTbBtnId" image="/img/icons/icon_plus.png" /> 	
+				</caption>
+			 		
+				<div id="smartPromoDivId" visible="false">
+				<h:table>
+				<h:tr><h:td><label value="Note: " style="font-weight:bold"/>
+				<label value="Latest plug-ins are required. Not available for Retail Pro v8. " />
+				</h:td>
+				</h:tr>
+				</h:table>
+				<h:table >
+					<!-- <h:tr height="20"/> -->
+						<h:tr >
+							<h:td><label  value="Accumulate with other promotions : "/>
+			  				</h:td>
+			  				<h:td>
+			  				<checkbox id="accumulateCoupChkBxId" checked="false"/>
+			  				</h:td>
+			  			</h:tr>
+			  			<h:tr >
+							<h:td><label  value="Exclude discounted items from this promotion: "/> 
+			  				</h:td>
+			  				<h:td>
+			  				<!-- <checkbox id="discountedItemsCoupChkBxId"/> -->
+			  				</h:td>
+			  			</h:tr>
+			  			<h:tr>
+						</h:tr>
+				</h:table>	
+			  				<!-- <div id="numberEligibleDivId"  width="100%" visible="false">
+								<h:table>
+									<h:tr  valign="top">
+									<h:td valign="top" style="padding-top:1px;" width="25%">
+										<label  value="Number of eligible items to apply to :"/>
+									</h:td>
+									<h:td valign="top" style="padding-left:58px;">
+										<radiogroup  id="eligibleItemRadioId" />
+		  								<div id="discountDivId" >	
+		  									<radio label="Only highest-priced item" id="higestPriceRadioId"  radiogroup="eligibleItemRadioId"  value="HPIWD"/>
+		  								</div>
+		  								<separator height="1px"/>
+		  								<radio label="Only highest-priced non-discounted item" id="higestPricewithoutRadioId"  radiogroup="eligibleItemRadioId"  value="HPIWOD" />
+		  								<separator height="1px"/>
+		  								<radio label="All eligible items" id="AllEligileItemsRadioId"  radiogroup="eligibleItemRadioId"  value="ALLEI"/>
+		  							</h:td>	 
+		  						</h:tr>
+		  						</h:table>
+		  					</div> -->
+			  	</div>		  		
+			</groupbox>	
+			<groupbox id="receiptVisibleGBID" visible="false">
+			<caption label="Redeemable By Loyalty Points/Rewards?" style="font-weight:bold;font-size:12px;" ></caption>
+									<h:table>
+								<h:tr>
+		  				
+													<h:td><checkbox id="onlylpChkBxId"  label="Redeemable By Loyalty Points/Rewards " /></h:td>
+													<div id="valueCodeDivId" visible="false">
+													<h:td>
+														<listbox rows="1" mold="select" id="valueCodeListboxId" style="padding:1px;" visible="false">
+															<listitem label="Points" selected="true" />
+														</listbox>
+													</h:td>
+													</div>
+													<h:td colspan="3">
+														<hbox align="center"  id="loyatyPntshboxId" visible="false">
+								  							<label value="Value required" style="padding-right:5px;"/>
+								  							<intbox id="lpIBxId" width="100px" />
+							  							</hbox>
+			  										</h:td>
+												</h:tr>
+												</h:table>
+												</groupbox>	
+
+			</groupbox>
+			<groupbox id="rulesGBIdNew" visible="true">
+ 					<caption label="Define Discount Rules" style="font-weight:bold;font-size:12px;" ></caption>	
+						
+				<div id="productDetailtaDivId">
+				<h:table width="100%" cellspacing="0" cellpadding="0">
+				<h:tr>
+					
+					<h:td width="225" valign="middle" >
+					
+						<groupbox sclass="gbStyle"   closable="false" >
+							<caption label="Attribute Categories" />
+							
+							<tabbox mold="accordion" height="auto" style="margin:5px;">
+								<tabs>
+									<tab sclass="segmentHead" visible="true" id="purchaseAttrTabId" label="Purchase Attributes" />
+									<tab sclass="segmentHead" visible="false" id="discountAttrTabId" label="Discount Attributes" />
+									<tab sclass="segmentHead" visible="true" id="EligibilityAttrTabId" label="Eligibility Criteria Attributes" /> 
+								<!--	 <tab sclass="segmentHead"  label="Interaction Attributes" /> -->
+								
+								</tabs>
+								<tabpanels>
+								
+									<tabpanel style="border:0 none; padding:1px 0;">
+									
+										<listbox style="border:0px;" id="purchaseAttrLbId" sclass="segmentList" height="auto">
+											</listbox>
+									</tabpanel>
+									
+									
+									<tabpanel  style="border:0 none; padding:1px 0;">
+										<listbox  style="border:0px;" id="discountAttrLbId" sclass="segmentList" height="auto">
+									</listbox>
+									</tabpanel>
+									
+									<tabpanel  style="border:0 none; padding:1px 0;">
+										<listbox  style="border:0px;" id="EligibilityAttrLbId" sclass="segmentList" height="auto">
+									</listbox>
+									</tabpanel>
+									
+									
+									
+								</tabpanels>
+							</tabbox>
+						</groupbox>
+						
+					</h:td>
+					
+					<h:td width="10" />
+					
+					<h:td valign="top">
+					
+					<groupbox  closable="false">
+						<caption label="Discount Code Rules" />
+							
+				<!-- 		<groupbox  mold="3d" sclass="darkgroupbox"  >
+							<caption label="Profile Attribute Rules" >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop Profile Attributes to create segment rules"/> </h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+							
+							
+							<div id="profileAttributeDivId" droppable="profileSegment" style="min-height:10px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+									<label value="AND"  
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />
+									<label value="Drag Profile Attributes here to create AND combination rule" />
+								</div>
+							</div>
+						</groupbox>
+						
+						<label value="AND" style="display:block;font-weight:bold; margin:10px;" /> -->
+						<separator height="5px" />
+						<div id="validateDiv">
+							<button id="validateButtonId" label="Validate" style="margin-left: 10px;"/>
+							<label value="No. of valid items: "  style="margin-left: 58%;"> </label>
+							<label id="itemCountLblId"> </label>
+							<button  label="Export" sclass="idle140 " id="exportBtnId" style="margin-left: 4%;"/>
+						</div>
+						<separator height="10px" />
+						
+						<groupbox  mold="3d" sclass="darkgroupbox" >
+							<caption label="Purchase Attribute Rules"  >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop Purchase Attributes to create discount rules"/> 
+									</h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+								
+							
+							<div id="purIntAttributeDivId" droppable="purIntSegment" style="min-height:10px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+								<label value="AND" 
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />	
+								<label value="Drag Purchase Attributes here to create AND combination rule" />
+								</div>
+							</div>
+						</groupbox>
+						
+						<groupbox  mold="3d" sclass="darkgroupbox" >
+							<caption label="Discount Attribute Rules"  >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop Discount Attributes to create discount rules"/> 
+									</h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+								
+							
+							<div id="discountAttributeDivId" droppable="DisSegment" style="min-height:10px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+								<label value="AND" 
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />	
+								<label value="Drag Discount Attributes here to create AND combination rule" />
+								</div>
+							</div>
+						</groupbox>
+						<groupbox  mold="3d" sclass="darkgroupbox" >
+							<caption label="Eligibility Criteria Attribute Rules"  >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop Eligibility Criteria Attributes to create discount rules"/> 
+									</h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+								
+							
+							<div id="EligibilityAttributeDivId" droppable="purInt1Segment" style="min-height:10px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+								<label value="AND" 
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />	
+								<label value="Drag Eligibility Criteria Attributes here to create AND combination rule" />
+								</div>
+							</div>
+						</groupbox>
+					</groupbox> 
+					
+					</h:td>
+				</h:tr>	
+				
+			</h:table>
+			
+			
+			
+			<button id="addDiscountButtonId" label="Add Discount Rule" style="width: max-content;margin-left:980px;" sclass="idle180 greenbtn" />
+				
+				</div>
+				
+							 	
+	
+				 
+				 <h:table width="100%" cellspacing="5">
+				 <h:tr>
+				 	<h:td>
+				 	
+				 		<div id="skuVisibleDivIdNew" visible="false">
+								
+								<listbox id="addedSKUSegmentLBId" emptyMessage="No Records found" checkmark="true" multiple="true" >
+								<listhead >
+									<listheader width="40px" align="center"/>
+									<listheader label="MinReceiptTotal"  />
+									<listheader label="DiscQty"  />
+									<listheader label="ItemPrice"   />
+									<listheader label="ItemAttribute" />
+									<!-- <listheader label="Disc"  />
+									<listheader label="EligibleItems"  /> -->
+									<listheader label="Actions"  />
+								
+								</listhead>
+								</listbox>
+							
+								</div>			 	
+				 	</h:td>
+
+					
+					<h:td>
+	  					<grid id="productDiscGrid" emptyMessage="No Records found" visible="false"> 
+	  						<columns  >
+	  							<column id="column1Id" label="%" width="10%"/>
+	  							<column id="rule" label ="Rule" width="25%"/>
+	  							<column id="discQtyPerItem" label ="Quantity" width="10%"/>
+	  							<column id="tierName" label ="Tier" width="20%"/>
+	  							<column id="CardName" label ="CardSet" width="20%"/>
+	  							<column label ="Actions" align="center"/>
+	  						</columns>
+	  						<rows id="productDiscountGenRowsId" />
+	  					</grid>
+			  			<grid id="receiptDiscGrid" emptyMessage="No Records found" visible="false"> 
+	  						<columns  >
+	  							<column id="column2Id" label="%" width="10%"/>
+	  							<column id="minPurchaseAmount" label ="Minimum Purchase Amount" width="20%"/>
+	  							<column id="TierName" label ="Tier" width="20%"/>
+	  							<column id="cardName" label ="CardSet" width="20%"/>
+	  							<column label ="Actions" align="center"/>
+	  						</columns>
+	  						<rows id="receiptDiscountGenRowsId" />
+	  					</grid>	
+					</h:td>
+
+				 </h:tr>
+				 </h:table>
+				
+				<separator height="5px"/>
+	
+ 			</groupbox>
+			<separator height="10px"/>
+			<!-- <groupbox id="discountCodeGenerationGBId" visible="false">
+ 					<caption label="Discount Code Generation" style="font-weight:bold;font-size:12px;" ></caption>	
+					<h:table>		  					
+						<h:tr height="20"/>
+						  	<h:tr>
+					
+							<h:td valign="top" 	>
+									<label value="Discount Code generation:" />
+							</h:td>
+							<h:td colspan="2">
+								<groupbox width="600px">
+									<h:table width="700px" 
+									style="background-color: #F8F8F8; border-bottom: 1px solid #CCCCCC; box-shadow: 0 0 2px #CCCCCC; padding: 10px;">
+										
+										<radiogroup  id="coupGenRadioGrId">
+										<radiogroup	id="triggerTypeRGId">
+											<h:tr>
+												<h:td valign="top"
+													 align="left">
+													
+													<radio label="Single Discount Code" id="singRadioId" selected="true" radiogroup="coupGenRadioGrId" />
+													
+												</h:td>
+												<h:td valign="top"
+													 align="left">
+													<radio label="Multiple and Random Discount Codes" id ="multRadioId"  radiogroup="coupGenRadioGrId"/>
+												</h:td>
+												
+											</h:tr>
+										</radiogroup>
+									</h:table>
+									
+									<div height="150px">
+										<div visible="true" id="singleSelCoupDivId">
+											<h:table>
+												<h:tr>
+													<h:td><label value=" Enter Discount Code:"/></h:td>
+													<h:td><textbox id="singCoupTxtBxId"   width="100px" maxlength="20"  style="font-size:11px;"/></h:td>
+						  							w:onClick="javascript: if(this.getValue()=='Enter Code') {  this.setValue(''); }" 
+											      	w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Code'); }" focus="true"/></h:td>
+												</h:tr>
+												<h:tr>
+									  				<h:td ><label visible="true" value="Description : "/> </h:td>
+									  				<h:td ><textbox visible="true" id="coupDescTxtBxId" rows="2" height="40px" width="300px"/></h:td>
+									  			</h:tr>
+												<h:tr>
+													<h:td><label value=" Issue to:"/></h:td>
+													<h:td><longbox id="singlelimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="singCoupChkBxId" label="Unlimited Subscribers" style="display:inline-block;"/></h:td>
+												</h:tr>
+												
+												<h:tr>
+													<h:td><label value=" Redemption Limit:"/></h:td>
+													<h:td><longbox id="redeemdlimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="redeemdsingCoupChkBxId" label="Unlimited Redemptions " style="display:inline-block;"/></h:td>
+												</h:tr>
+												
+												<h:tr>
+													<h:td><label value=" Per Subscription Use Limit:"/></h:td>
+													<h:td><longbox id="perSubUselimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="unlimitSubChkBxId" label="Unlimited " 
+													style="display:inline-block;" onCheck="perSubUselimitLongbxId.setDisabled(unlimitSubChkBxId.isChecked())"/></h:td>
+												</h:tr>
+												
+											
+												 <h:tr>
+													<h:td><checkbox id="multiplePerReceiptChkBxId"  label="Allow multiple use per receipt:" /></h:td>
+												</h:tr>
+											</h:table>
+				  						</div>
+										
+										<div id="multiSelCoupDivId" style=" margin-top: 10px;">
+					  						<hbox align="center" spacing="10px">
+					  						</hbox>
+					  						<h:table>
+					  							<h:tr>
+							  						<h:td>
+							  							<label value="No. of codes generated"/>
+							  						</h:td>
+							  						<h:td width="40px">
+							  							<image src="/img/icons/icon_q.png" tooltip="help"/>
+						  								<popup id="help" style="bgcolor:#CCCCCC;"  >
+															<label  value="6 digits,alpha-numeric codes will be generated." sclass="labelPos" />
+														</popup>
+							  						</h:td>
+					  								<h:td>
+					  									<longbox id="multiCodLimitLongBxId" width="100px" maxlength="6"/>
+					  								</h:td>
+					  							</h:tr>
+					  							<h:tr>
+					  								<h:td /><h:td />
+					  								<h:td >
+							  							<checkbox id="multiCoupChkBxId" label="Auto-add Discount Codes"/>
+					  								</h:td>
+					  								<h:td align="left">
+							  							<image src="/img/icons/icon_q.png" tooltip="help1"/>
+							  							
+							  							<popup id="help1" style="bgcolor:#CCCCCC;" >
+															<label  value="Automatically add more Discount Codes when running low." sclass="labelPos" />
+														</popup>
+					  								
+					  								</h:td>
+							  						
+					  							</h:tr>
+					  						</h:table>
+					  							
+			  							</div>
+									
+									</div>									
+								</groupbox>
+							</h:td>
+						</h:tr>
+						</h:table>	  		
+			  </groupbox>	 -->
+			  </div>	
+			
+			   <window id="itemEditWindow" title="Edit" border="normal" visible="false" width="600px" height="250px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+						
+				<h:table cellspacing="5" cellpadding="5" width="100%"
+					align="left" style="padding-left:20px;">
+					<h:tr>
+						<h:td width="20%">
+							<label value="Discount value" style="display:inline-block;"/>	
+						</h:td>
+						
+						<h:td>
+							<doublebox id="discountDblBxId" width="80px" maxlength="8"/>
+						</h:td>
+						
+					</h:tr>
+					
+					<h:tr>
+						<h:td width="20%">
+							<label value="Quantity" style="display:inline-block;"/>	
+						</h:td>
+						
+						<h:td>
+		  					<doublebox id="quantityDblBxId" width="80px" maxlength="8"/>
+						</h:td>
+						
+					</h:tr>
+					<h:tr>
+					<h:td>
+					
+					<button id="submitInEdit" label="Save" style="width: max-content;margin-left:217px;" sclass="idle140" />
+					
+					</h:td>
+					<h:td>
+					</h:td>
+					</h:tr>
+				</h:table>	 
+								 
+				</window>
+			  	
+			  	<div align="right">
+			  		<h:br/>
+			  		<button label="Next" id="nextCoupBtnId" />
+			  		<button label="Save and Continue " id="saveContBtnId" sclass="idle180 greenbtn" />
+				 </div>
+	
+</window>
+</zk>

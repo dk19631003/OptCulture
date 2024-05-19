@@ -1,0 +1,128 @@
+package org.mq.marketer.campaign.controller.service;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimerTask;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.CouponCodes;
+import org.mq.marketer.campaign.beans.Coupons;
+import org.mq.marketer.campaign.dao.ContactsDao;
+import org.mq.marketer.campaign.dao.CouponCodesDao;
+import org.mq.marketer.campaign.dao.CouponCodesDaoForDML;
+import org.mq.marketer.campaign.dao.CouponsDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+import org.zkoss.zkplus.spring.SpringUtil;
+
+public class UpdateCouponsTimer extends TimerTask {
+	
+private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+		
+	@Override
+	public void run() {
+		try{
+			
+			CouponsDao couponsDao = null;
+			couponsDao = (CouponsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.COUPONS_DAO);
+			int totCouponCount = couponsDao.getDynamicCoupons();
+			logger.info("totalDynamicCouponsCount is :: "+totCouponCount);
+			if( totCouponCount == 0){
+				logger.info(">>> No  Promo-codes exists for Upadting the Status");
+				return;
+			}
+			
+			int i = 0;
+			while(i <= totCouponCount) {
+				int k =100;
+				UpdateCoupStatus(i, k);
+				
+				if(i == 0) i = k;	else  i= i+k;
+				
+				
+			}
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			logger.error("Exception ::" , e);
+		}
+	}
+
+	private void UpdateCoupStatus(int j, int k) {
+		
+		CouponsDao couponsDao = null;
+		CouponCodesDao couponCodesDao = null;
+		CouponCodesDaoForDML couponCodesDaoForDML = null;
+		ContactsDao contactsDao = null;
+		try {
+			couponsDao = (CouponsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.COUPONS_DAO);
+			couponCodesDao = (CouponCodesDao) ServiceLocator.getInstance().getDAOByName(OCConstants.COUPONCODES_DAO);
+			couponCodesDaoForDML = (CouponCodesDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.COUPONCODES_DAOForDML);
+			contactsDao = (ContactsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_DAO);
+		} catch (Exception e) {
+			logger.error("Exception while creating couponCodesDao ..:",e);
+		}
+		
+		List<Coupons> list =  couponsDao.getAllDynamicCoupons(j,k);
+		if(list == null || list.size() == 0 ) {
+			logger.info(">>> No  Promo-codes exists for Upadting the Status");
+			return;
+		}
+		
+		
+		for (Coupons coupObj : list) {
+
+			String expiryType = coupObj.getExpiryDetails();
+			String [] strArr = expiryType.split(Constants.ADDR_COL_DELIMETER);//
+			int numOfDays = Integer.parseInt(strArr[1]);
+
+
+			
+
+			CouponCodes couponCodes = couponCodesDao.find(coupObj.getCouponId());
+
+			if(couponCodes != null && couponCodes.getContactId() != null){
+
+			//	Contacts contacts = contactsDao.find(couponCodes.getContactId());
+
+				List<CouponCodes> codeList = couponCodesDao.getAllActiveCon(couponCodes);
+
+
+				if("I".equals(strArr[0])){
+
+					//couponCodesDao.updatePromoStatus(coupObj, numOfDays);
+					couponCodesDaoForDML.updatePromoStatus(coupObj, numOfDays);
+				}
+				else if("B".equals(strArr[0])){
+					
+					for (CouponCodes couponCodes2 : codeList) {
+						
+						Contacts contacts = contactsDao.findById(couponCodes2.getContactId());
+						Calendar bday = contacts.getBirthDay();
+						//couponCodesDao.updateCouponByBday(couponCodes2, bday, numOfDays);
+						couponCodesDaoForDML.updateCouponByBday(couponCodes2, bday, numOfDays);
+					}
+
+				}
+				else if("A".equals(strArr[0])){
+					
+					for (CouponCodes couponCodes2 : codeList) {
+						
+						Contacts contacts = contactsDao.findById(couponCodes2.getContactId());
+						Calendar annv = contacts.getAnniversary();
+						//couponCodesDao.updateCouponByAnnv(couponCodes2, annv, numOfDays);
+						couponCodesDaoForDML.updateCouponByAnnv(couponCodes2, annv, numOfDays);
+					}
+
+				}
+
+			}//if couponCodes != null && couponCodes.getContactId() != null
+
+		}//for-loop
+		
+	}
+
+}

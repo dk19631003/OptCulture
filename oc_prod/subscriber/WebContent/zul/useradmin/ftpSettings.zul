@@ -1,0 +1,86 @@
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.useradmin.FTPSettingsController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+	<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px" id="createListGroupBoxId">
+				<caption label="Create FTP Settings"  />
+				<separator height="15px"/>
+				<grid width="90%">
+						<columns menupopup="auto" sizable="true" >
+							<column label="Host Address" width="21%" />
+							<column label="User Name" width="17%" />
+							<column label="Password" width="17%"  />
+							<column label="Directory Location" width="26%" />
+							<column label="Port" width="12%" />
+							<column label="Actions" width="10%" />
+						</columns>
+						<rows id="ftpSettingsRowsId"/>
+					</grid>
+						<separator height="15px"/>
+				<h:table>
+				<h:tr>
+				<h:td> <label value="Set time of day :"></label></h:td>
+				<h:td><listbox id="timeListId" width="80px" mold="select"></listbox></h:td>
+				</h:tr>
+				<h:tr height="40px">
+				<h:td> <label value="Time-Zone settings :"></label></h:td>
+				<h:td>
+				 <listbox id="TimesZonesLbId" mold="select" rows="1">
+		 	
+		 	<listitem label="--select--" selected="true" />
+		 	<listitem label="(GMT -12:00) Eniwetok, Kwajalein" value="-720" />
+		 	<listitem label="(GMT -11:00) Midway Island, Samoa" value="-660" />
+		 	<listitem label="(GMT -10:00) Hawaii" value="-600" />
+		 	<listitem label="(GMT -9:00) Alaska" value="-540" />
+		 	<listitem label="(GMT -8:00) Pacific Time (US &amp; Canada)" value="-480" />
+		 	<listitem label="(GMT -7:00) Mountain Time (US &amp; Canada)" value="-420" />
+		 	<listitem label="(GMT -6:00) Central America, El Salvador" value="-360" />
+		 	<listitem label="(GMT -6:00) Central Time (US &amp; Can.), Mexico" value="-360" />
+		 	<listitem label="(GMT -5:00) Eastern Time (US &amp; Can.)" value="-300" />
+		 	<listitem label="(GMT -4:30) Caracas" value="-270" />
+		 	<listitem label="(GMT -4:00) Atlantic Time (Can.)" value="-240" />
+		 	<listitem label="(GMT -3:30) Newfoundland" value="-210" />
+		 	<listitem label="(GMT -3:00) Brazil, Buenos Aires, Georgetown" value="-180" />
+		 	<listitem label="(GMT -2:00) Mid-Atlantic" value="-120" />
+		 	<listitem label="(GMT -1:00 hour) Azores" value="-60" />
+		 	<listitem label="(GMT) Reykjavik" value="0" />
+		 	<listitem label="(GMT) Western Europe Time, London, Lisbon" value="0" />
+		 	<listitem label="(GMT +1:00 hour) Brussels, Copenhagen, Madrid" value="60" />
+		 	<listitem label="(GMT +2:00) South African Standard Time" value="120" />
+		 	<listitem label="(GMT +2:00) Athens, Cairo" value="120" />
+		 	<listitem label="(GMT +3:00) Baghdad, Moscow, Riyadh" value="180" />
+		 	<listitem label="(GMT +3:30) Tehran" value="210" />
+		 	<listitem label="(GMT +4:00) Abu Dhabi, Muscat" value="240" />
+		 	<listitem label="(GMT +4:30) Kabul" value="270" />
+		 	<listitem label="(GMT +5:00) Islamabad, Karachi" value="300" />
+		 	<listitem label="(GMT +5:30) Bombay, Calcutta, Colombo, New Delhi" value="330" />
+		 	<listitem label="(GMT +6:00) Almaty, Dhaka" value="360" />
+		 	<listitem label="(GMT +7:00) Bangkok, Hanoi, Jakarta" value="420" />
+		 	<listitem label="(GMT +8:00) Beijing, Perth, Singapore, Hong Kong" value="480" />
+		 	<listitem label="(GMT +9:00) Tokyo, Seoul, Osaka" value="540" />
+		 	<listitem label="(GMT +9:30) Adelaide" value="570" />
+		 	<listitem label="(GMT +10:00) Canbera, Melbourne, Sydney" value="600" />
+		 	<listitem label="(GMT +10:00) Brisbane" value="600" />
+		 	<listitem label="(GMT +10:30) Lord Howe Island" value="630" />
+		 	<listitem label="(GMT +11:00) Solomon Isl., New Caledonia" value="660" />
+		 	<listitem label="(GMT +12:00) Auckland, Fiji, Kamchatka" value="720" />
+		 	<listitem label="(GMT +12:45) Chatham Islands" value="765" />
+		 	<listitem label="GMT +13:00) New Zealand Daylight Time, Tonga" value="780" />
+		 
+		 </listbox>
+				</h:td>
+				</h:tr>
+				</h:table>	
+				 <h:table>
+			<h:tr>
+			<h:td style="padding:30px;">
+				<button label="Save" sclass="idle140 greenbtn" id="saveBtnId"  />
+			</h:td>
+
+			</h:tr>
+		</h:table>
+	</groupbox>
+			</window>
+			
+</zk>			
+			

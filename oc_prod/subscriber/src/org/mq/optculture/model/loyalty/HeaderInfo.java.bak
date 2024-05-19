@@ -1,0 +1,29 @@
+package org.mq.optculture.model.loyalty;
+
+import javax.xml.bind.annotation.XmlElement;
+public class HeaderInfo {
+	private String REQUESTID;
+	private String PCFLAG;
+	private String STORENUMBER;
+	public String getREQUESTID() {
+		return REQUESTID;
+	}
+	@XmlElement(name = "REQUESTID")
+	public void setREQUESTID(String rEQUESTID) {
+		REQUESTID = rEQUESTID;
+	}
+	public String getPCFLAG() {
+		return PCFLAG;
+	}
+	@XmlElement(name = "PCFLAG")
+	public void setPCFLAG(String pCFLAG) {
+		PCFLAG = pCFLAG;
+	}
+	public String getSTORENUMBER() {
+		return STORENUMBER;
+	}
+	public void setSTORENUMBER(String sTORENUMBER) {
+		STORENUMBER = sTORENUMBER;
+	}
+	
+}

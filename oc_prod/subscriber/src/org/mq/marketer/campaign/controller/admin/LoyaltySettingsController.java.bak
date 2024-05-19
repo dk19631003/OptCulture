@@ -1,0 +1,1517 @@
+package org.mq.marketer.campaign.controller.admin;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.clapper.util.io.FileUtil;
+import org.mq.marketer.campaign.beans.EmailQueue;
+import org.mq.marketer.campaign.beans.LoyaltySettings;
+import org.mq.marketer.campaign.beans.LoyaltyThresholdAlerts;
+import org.mq.marketer.campaign.beans.UserEmailAlert;
+import org.mq.marketer.campaign.beans.UserOrganization;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.EmailQueueDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.EncryptDecryptLtyMembshpPwd;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageUtil;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.data.dao.LoyaltySettingsDao;
+import org.mq.optculture.data.dao.LoyaltyThresholdAlertsDao;
+import org.mq.optculture.data.dao.UserEmailAlertDao;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+import org.zkoss.util.media.Media;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.UploadEvent;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Groupbox;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Radio;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
+
+
+public class LoyaltySettingsController extends GenericForwardComposer {
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	private Listbox selOrgLbId,ltyTypeId,hoursdailyLbId,hoursWeeklyLbId,hoursMonthlyLbId,daysWeeklyLbId,whichDayMonthlyLbId,hoursLbId,daysLbId,whichDayLbId;
+	private Textbox logoTbId,urlTbId,changePwdWinId$currPwdTbId,changePwdWinId$newPwdTbId,changePwdWinId$retypePwdTbId,emailTbId,mobileTbId, percentTbId, valueTbId,emailAddTxtBxId;
+	private Window previewWin,changePwdWinId;
+	Media gMedia = null;
+	private Combobox themeId;
+	private Div orgDivId, alertsDivId, previewWin$contentDivId,alertMailDivId,allThreeLbDivId,dailyLbDivId,weeklyLbDivId,monthlyLbDivId,ltyRprtDivId;
+	private Div dailyDivId,weeklyDivId,monthlyDivId;
+	private Groupbox ltySecurityGbId, ltyAlertsGbId;
+	private Checkbox enableAlertsChkId,ltyReportAlertsDailyChkId,ltyReportAlertsWeeklyChkId,ltyReportAlertsMonthlyChkId;
+	private Radio percentRadioBtId,valueRadioBtId;
+	private LoyaltySettings loyaltySettings;
+	private String menuSrc;
+
+	public static Map<String,String> THEMES_MAP = new HashMap<String, String>();
+	
+	static{
+		THEMES_MAP.put("Default", "/images/loyalty/previewtheme/Default.jpg");
+		THEMES_MAP.put("Blue1", "/images/loyalty/previewtheme/Blue1.jpg");
+		THEMES_MAP.put("Blue2", "/images/loyalty/previewtheme/Blue2.jpg");
+		THEMES_MAP.put("Brown", "/images/loyalty/previewtheme/Brown.jpg");
+		THEMES_MAP.put("Cyan", "/images/loyalty/previewtheme/Cyan.jpg");
+		THEMES_MAP.put("Green", "/images/loyalty/previewtheme/Green.jpg");
+		THEMES_MAP.put("Green1", "/images/loyalty/previewtheme/Green Ocur.jpg");
+		THEMES_MAP.put("Orange", "/images/loyalty/previewtheme/orange.jpg");
+		THEMES_MAP.put("Pink", "/images/loyalty/previewtheme/pink.jpg");
+		THEMES_MAP.put("Purple", "/images/loyalty/previewtheme/Purple.jpg");
+		THEMES_MAP.put("Red", "/images/loyalty/previewtheme/Red.jpg");
+		THEMES_MAP.put("White", "/images/loyalty/previewtheme/white.jpg");
+	}
+	
+	public LoyaltySettingsController() {
+		String style = "font-weight:bold;font-size:15px;color:#313031;font-family:Arial,Helvetica,sans-serif;align:left";
+		PageUtil.setHeader("Loyalty Settings","",style,true);
+		
+		menuSrc = (String) Sessions.getCurrent().getAttribute("menuSrc");
+	}
+	
+	@Override
+	public void doAfterCompose(Component comp) throws Exception  {
+		super.doAfterCompose(comp);
+		try {
+			logger.debug("------------------menuSrc:::::::"+menuSrc);
+			setUserOrg();
+			setThemes();
+			if("MyAccount".equalsIgnoreCase(menuSrc)){
+
+				setDefaultPortalSettings();
+
+				orgDivId.setVisible(false);
+				ltySecurityGbId.setVisible(true);
+				ltyAlertsGbId.setVisible(true);
+
+				setDefaultAlertSettings();
+			}
+			else if("Administrator".equalsIgnoreCase(menuSrc)){
+				orgDivId.setVisible(true);
+				ltySecurityGbId.setVisible(false);
+				ltyAlertsGbId.setVisible(false);
+			}
+			
+			setDefaultLoyaltyReportSetting();
+			//emailAddTxtBxId.setValue(PropertyUtil.getPropertyValueFromDB("LtyRepAlrtEmailId"));
+		} catch (Exception e) {
+			logger.error("Exception  ::", e);
+		} 
+	}
+
+	private void setDefaultLoyaltyReportSetting(){
+		try{
+			boolean dailyFlag = false;
+			boolean weeklyFlag = false;
+	//		boolean monthlyFlag = false;
+			int strTime = 0;
+			int strDay = 0;
+		//	int strDayOfMonth = 0;
+			String emailAddrs = null;
+			
+			Users user = GetUser.getUserObj();	
+			UserEmailAlertDao userEmailAlertDao = (UserEmailAlertDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USER_EMAIL_ALERT_DAO);
+			List<UserEmailAlert> userEmailAlertObjList = userEmailAlertDao.findListByUserId(user.getUserId());
+			
+			if(userEmailAlertObjList != null && userEmailAlertObjList.size() > 0){
+				
+			for (UserEmailAlert userEmailAlertLstObj : userEmailAlertObjList) {
+				
+				setAttributeForCheckBoxIds(ltyReportAlertsDailyChkId, userEmailAlertLstObj, "daily");
+				setAttributeForCheckBoxIds(ltyReportAlertsWeeklyChkId, userEmailAlertLstObj, "weekly");
+				
+				if(userEmailAlertLstObj.getFrequency().equals(OCConstants.LTY_SETTING_REPORT_FRQ_DAY) && userEmailAlertLstObj.isEnabled() ){ 
+					dailyFlag = true;
+					strTime = Integer.parseInt(userEmailAlertLstObj.getTriggerAt());
+					emailAddrs = userEmailAlertLstObj.getEmailId();
+		//			ltyReportAlertsDailyChkId.setAttribute("daily", userEmailAlertLstObj);
+					}
+				if(userEmailAlertLstObj.getFrequency().equals(OCConstants.LTY_SETTING_REPORT_FRQ_WEEK) && userEmailAlertLstObj.isEnabled() ){ 
+					weeklyFlag = true;
+					String strWeek = userEmailAlertLstObj.getTriggerAt();
+					String strWeekArr[] = strWeek.split(Constants.ADDR_COL_DELIMETER);
+					strDay = Integer.parseInt(strWeekArr[1]);
+					emailAddrs = userEmailAlertLstObj.getEmailId();
+		//			ltyReportAlertsWeeklyChkId.setAttribute("weekly", userEmailAlertLstObj);
+					}
+				/*if(userEmailAlertLstObj.getFrequency().equals(OCConstants.LTY_SETTING_REPORT_FRQ_MONTH) && userEmailAlertLstObj.isEnabled()){ 
+					monthlyFlag = true;
+					String strMonth = userEmailAlertLstObj.getTriggerAt();
+					String strMonthArr[] = strMonth.split(Constants.ADDR_COL_DELIMETER);
+					strDayOfMonth = Integer.parseInt(strMonthArr[1]);
+					emailAddrs = userEmailAlertLstObj.getEmailId();
+					setAttributeForCheckBoxIds(ltyReportAlertsMonthlyChkId, userEmailAlertLstObj, "monthly");
+			//		ltyReportAlertsMonthlyChkId.setAttribute("monthly", userEmailAlertLstObj);
+					}*/
+				
+				}
+		
+			
+			/*if(dailyFlag == true && weeklyFlag == true && monthlyFlag == true){
+				dailyDivId.setVisible(true);
+				weeklyDivId.setVisible(true);
+				monthlyDivId.setVisible(true);
+				
+				ltyReportAlertsDailyChkId.setChecked(true);
+				ltyReportAlertsWeeklyChkId.setChecked(true);
+				ltyReportAlertsMonthlyChkId.setChecked(true);
+				
+				hoursLbId.setSelectedIndex(strTime);
+				daysLbId.setSelectedIndex(strDay);
+				whichDayLbId.setSelectedIndex(strDayOfMonth);
+				
+			}
+			else*/ 
+			if(dailyFlag == true && weeklyFlag == true){
+				dailyDivId.setVisible(true);
+				weeklyDivId.setVisible(true);
+				ltyRprtDivId.setVisible(true);
+		//		monthlyDivId.setVisible(false);
+				
+				ltyReportAlertsDailyChkId.setChecked(true);
+				ltyReportAlertsWeeklyChkId.setChecked(true);
+		//		ltyReportAlertsMonthlyChkId.setChecked(false);
+				
+				hoursLbId.setSelectedIndex(strTime);
+				daysLbId.setSelectedIndex(strDay);
+			}
+			/*else if(weeklyFlag == true && monthlyFlag == true){
+				dailyDivId.setVisible(true);
+				weeklyDivId.setVisible(true);
+				monthlyDivId.setVisible(true);
+				
+				ltyReportAlertsDailyChkId.setChecked(false);
+				ltyReportAlertsWeeklyChkId.setChecked(true);
+				ltyReportAlertsMonthlyChkId.setChecked(true);
+				
+				hoursLbId.setSelectedIndex(strTime);
+				daysLbId.setSelectedIndex(strDay);
+				whichDayLbId.setSelectedIndex(strDayOfMonth);
+			}
+			else if(dailyFlag == true && monthlyFlag == true){
+				dailyDivId.setVisible(true);
+				weeklyDivId.setVisible(false);
+				monthlyDivId.setVisible(true);
+				
+				ltyReportAlertsDailyChkId.setChecked(true);
+				ltyReportAlertsWeeklyChkId.setChecked(false);
+	//			ltyReportAlertsMonthlyChkId.setChecked(true);
+				
+				hoursLbId.setSelectedIndex(strTime);
+				whichDayLbId.setSelectedIndex(strDayOfMonth);
+			}*/
+			else if(dailyFlag == true){
+				dailyDivId.setVisible(true);
+				weeklyDivId.setVisible(false);
+				ltyRprtDivId.setVisible(true);
+		//		monthlyDivId.setVisible(false);
+				
+				ltyReportAlertsDailyChkId.setChecked(true);
+				ltyReportAlertsWeeklyChkId.setChecked(false);
+		//		ltyReportAlertsMonthlyChkId.setChecked(false);
+				
+				hoursLbId.setSelectedIndex(strTime);
+			}
+			else if(weeklyFlag == true){
+				dailyDivId.setVisible(true);
+				weeklyDivId.setVisible(true);
+				ltyRprtDivId.setVisible(true);
+		//		monthlyDivId.setVisible(false);
+				
+				ltyReportAlertsDailyChkId.setChecked(false);
+				ltyReportAlertsWeeklyChkId.setChecked(true);
+			//	ltyReportAlertsMonthlyChkId.setChecked(false);
+				
+				hoursLbId.setSelectedIndex(strTime);
+				daysLbId.setSelectedIndex(strDay);
+			}
+			/*else if(monthlyFlag == true){
+				dailyDivId.setVisible(true);
+				weeklyDivId.setVisible(false);
+				monthlyDivId.setVisible(true);
+				
+				ltyReportAlertsDailyChkId.setChecked(false);
+				ltyReportAlertsWeeklyChkId.setChecked(false);
+				ltyReportAlertsMonthlyChkId.setChecked(true);
+				
+				hoursLbId.setSelectedIndex(strTime);
+				whichDayLbId.setSelectedIndex(strDayOfMonth);
+			}*/
+			
+			int mailIdCount = 1;
+			String emailAddrArry[] = new String[1];
+			logger.info("email ids are ==="+ emailAddrs);
+			if(!emailAddrs.contains(Constants.ADDR_COL_DELIMETER)){
+				emailAddrArry[0] = emailAddrs;
+			}else {
+				emailAddrArry = emailAddrs.split(Constants.ADDR_COL_DELIMETER);
+			}
+			
+			if(emailAddrArry != null && emailAddrArry.length > 0){
+
+				for (String emailIds : emailAddrArry) {
+					if(mailIdCount == 1) {
+						emailAddTxtBxId.setText(emailIds);
+					}
+					else {
+
+						Div alertDiv = new Div();
+						Textbox alertTextBx = new Textbox();
+						alertTextBx.setText(emailIds);
+						alertTextBx.setParent(alertDiv);
+						alertTextBx.setWidth("250px");
+						alertTextBx.setStyle("margin-left:85px;margin-top: 10px;margin-right:7px ;");
+
+						Image delImg = new Image();
+						delImg.setAttribute("TYPE", "ALERT_DEL");
+						delImg.setSrc("/images/action_delete.gif");
+						delImg.setStyle("cursor:pointer;color:#2886B9;font-weight:bold;text-decoration: underline;");
+						delImg.setTooltiptext("Delete");
+						delImg.addEventListener("onClick", this);
+						delImg.setParent(alertDiv);
+
+						alertDiv.setParent(alertMailDivId);
+
+					}
+					mailIdCount ++;
+				}
+			}
+			}
+			else if(userEmailAlertObjList == null){
+				ltyReportAlertsDailyChkId.setAttribute("daily", userEmailAlertObjList);
+				ltyReportAlertsWeeklyChkId.setAttribute("weekly", userEmailAlertObjList);
+		//		ltyReportAlertsMonthlyChkId.setAttribute("monthly", userEmailAlertObjList);
+			}
+			
+		}catch(Exception e){
+			logger.error("Exception while setting loyalty report data...",e);
+		}
+	}
+	
+	private void setAttributeForCheckBoxIds(Checkbox checkbox, UserEmailAlert userEmailAlertObj, String type){
+		logger.info("========== 4 ===========");
+		checkbox.setAttribute(type, userEmailAlertObj);
+	}
+	
+	private void setDefaultAlertSettings() {
+		try{
+			LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+			LoyaltyThresholdAlerts alertsObj = loyaltyThresholdAlertsDao.findByUserId(GetUser.getUserObj().getUserId());
+			if(alertsObj != null && alertsObj.getEnableAlerts() == OCConstants.FLAG_YES){
+				enableAlertsChkId.setChecked(true);
+				alertsDivId.setVisible(true);
+
+				emailTbId.setValue(alertsObj.getAlertEmailId() != null ? alertsObj.getAlertEmailId() : "");
+				mobileTbId.setValue(alertsObj.getAlertMobilePhn() != null ? alertsObj.getAlertMobilePhn() : "");
+				if(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_PERCENTAGE.equalsIgnoreCase(alertsObj.getCountType())){
+					percentRadioBtId.setChecked(true);
+					valueRadioBtId.setChecked(false);
+					percentTbId.setValue(alertsObj.getCountValue());
+					valueTbId.setValue("");
+					percentTbId.setDisabled(false);
+					valueTbId.setDisabled(true);
+				}
+				else if(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_VALUE.equalsIgnoreCase(alertsObj.getCountType())){
+					percentRadioBtId.setChecked(false);
+					valueRadioBtId.setChecked(true);
+					percentTbId.setValue("");
+					valueTbId.setValue(alertsObj.getCountValue());
+					percentTbId.setDisabled(true);
+					valueTbId.setDisabled(false);
+				}
+			}
+			else{
+				enableAlertsChkId.setChecked(false);
+				alertsDivId.setVisible(false);
+			}
+		}catch(Exception e){
+			logger.error("Exception while setting alert data...",e);
+		}
+
+	}
+	
+	/*private String fetchHtml(String urlStr) {
+		try {
+			try {
+				StringBuffer pageSb = new StringBuffer();
+				URL url = new URL(urlStr);
+				URLConnection conn = url.openConnection();
+				logger.debug("Connection opened to the specified url :" + urlStr);
+				DataInputStream in = new DataInputStream (conn.getInputStream ()) ;
+				BufferedReader d = new BufferedReader(new InputStreamReader(in));
+				logger.debug("Reader obj created");
+
+				String lineStr=null;
+
+				while( (lineStr = d.readLine()) != null ) {
+					pageSb.append(lineStr+" ");
+				} // while
+
+				logger.debug("Read the data from the URL, data length:" + pageSb.length());
+				in.close();
+				d.close();
+
+				String content = pageSb.toString(); 
+
+				if(content == null) {
+					Messagebox.show("Invalid HTML: Unable to fetch HTML content from the specified URL.",
+							"Error", Messagebox.OK, Messagebox.ERROR);
+					return null;
+				}
+				return content;
+
+			} catch (MalformedURLException e) {
+				Messagebox.show("Malformed URL: Unable to fetch the web-page from the specified URL.",
+						"Error", Messagebox.OK, Messagebox.ERROR);
+				logger.error("MalformedURLException : ", e);
+			} catch (IOException e) {
+				Messagebox.show("Network problem experienced while fetching the page. "
+						, "Error", Messagebox.OK, Messagebox.ERROR);
+				logger.error("IOException : ", e);
+			}
+		} catch (Exception e) {
+			Messagebox.show("Unknown exception occurred while fetching the page. "
+					, "Error", Messagebox.OK, Messagebox.ERROR);
+			logger.error("Exception : ", e);
+		}
+		return null;
+	}//fetchHtml
+*/
+	private void setDefaultPortalSettings() {
+		try{
+			Long orgId= GetUser.getUserObj().getUserOrganization().getUserOrgId();
+			List<Listitem> orgList = selOrgLbId.getItems();
+			for (Listitem listitem : orgList) {
+				if(listitem.getValue() != null && (Long)listitem.getValue() == orgId.longValue()) {
+					selOrgLbId.setSelectedItem(listitem);
+					logger.debug("Selected orgId::::" +listitem.getValue());
+					break;
+				}
+			}
+			LoyaltySettingsDao loyaltySettingsDao = (LoyaltySettingsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_SETTINGS_DAO);
+			loyaltySettings = loyaltySettingsDao.findByOrgId(orgId);
+			if(loyaltySettings != null){
+				String url = loyaltySettings.getUrlStr().replace("http://", "");
+				urlTbId.setValue(url);
+
+				setColor();
+
+				String path = PropertyUtil.getPropertyValue("loyaltyPortalParentDirectory").trim()+"/" +selOrgLbId.getSelectedItem().getLabel()+"/";
+				String imgName = loyaltySettings.getPath().replace(path, "");
+				logoTbId.setValue(imgName);
+				logoTbId.setDisabled(true);
+
+				List<Listitem> typeList = ltyTypeId.getItems();
+				for (Listitem type : typeList) {
+					if(type.getValue() != null && type.getValue().toString().equalsIgnoreCase(loyaltySettings.getLoyaltyType())) {
+						ltyTypeId.setSelectedItem(type);
+						break;
+					}
+				}
+			}
+		}catch(Exception e){
+			logger.error("Exception while setting portal details...",e);
+		}
+	}
+
+	private void setThemes() {
+		Comboitem ci = null;
+		
+		ci = new Comboitem();
+		ci.setLabel("Select theme");
+		ci.setValue(null);
+		ci.setParent(themeId);
+		themeId.setSelectedItem(ci);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Default.jpg");
+		ci.setLabel("Default");
+		ci.setValue("#DBDBDB");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Blue1.jpg");
+		ci.setLabel("Blue1");
+		ci.setValue("#035398");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Blue2.jpg");
+		ci.setLabel("Blue2");
+		ci.setValue("#035398");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Brown.jpg");
+		ci.setLabel("Brown");
+		ci.setValue("#420001");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/cayn.jpg");
+		ci.setLabel("Cyan");
+		ci.setValue("#0B92C9");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Green1.jpg");
+		ci.setLabel("Green");
+		ci.setValue("#598925");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Green Occur.jpg");
+		ci.setLabel("Green1");
+		ci.setValue("#628A81");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/orange.jpg");
+		ci.setLabel("Orange");
+		ci.setValue("#D24205");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/pink.jpg");
+		ci.setLabel("Pink");
+		ci.setValue("#CB0153");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Purple.jpg");
+		ci.setLabel("Purple");
+		ci.setValue("#581656");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/Red1.jpg");
+		ci.setLabel("Red");
+		ci.setValue("#90171C");
+		ci.setParent(themeId);
+		
+		ci = new Comboitem();
+		ci.setImage("/images/loyalty/white2.jpg");
+		ci.setLabel("White");
+		ci.setValue("#FFFFFF");
+		ci.setParent(themeId);
+		
+	}
+
+	private void setUserOrg() {
+		try {
+			Components.removeAllChildren(selOrgLbId);
+			UsersDao usersDao = (UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			List<UserOrganization> orgList	= usersDao.findAllOrganizations();
+			
+			if(orgList == null) {
+				logger.debug("no organization list exist from the DB...");
+				return;
+			}
+			
+			Listitem tempList = new Listitem("--Select--");
+			tempList.setParent(selOrgLbId);
+
+			Listitem tempItem = null;
+			for (UserOrganization userOrganization : orgList) {
+				//set Organization Name
+				if(userOrganization.getOrganizationName() == null || userOrganization.getOrganizationName().trim().equals("")) continue;
+				tempItem = new Listitem(userOrganization.getOrganizationName().trim(),userOrganization.getUserOrgId());
+				
+				tempItem.setParent(selOrgLbId);
+			} // for
+			selOrgLbId.setSelectedIndex(0);
+		} // setUserOrg()
+		catch(Exception e) {
+			logger.error("Exception ::",e);
+		}
+	}
+	
+	public void onSelect$selOrgLbId() {
+		try {
+			LoyaltySettingsDao loyaltySettingsDao = (LoyaltySettingsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_SETTINGS_DAO);
+
+			loyaltySettings = loyaltySettingsDao.findByOrgId(Long.parseLong(selOrgLbId.getSelectedItem().getValue().toString()));
+			if(loyaltySettings != null){
+
+				List<Listitem> orgList = selOrgLbId.getItems();
+				for (Listitem listitem : orgList) {
+					if(listitem.getValue() == loyaltySettings.getUserOrgId()) {
+						selOrgLbId.setSelectedItem(listitem);
+						break;
+					}
+				}
+
+				String url = loyaltySettings.getUrlStr().replace("http://", "");
+				urlTbId.setValue(url);
+
+				setColor();
+
+				String path = PropertyUtil.getPropertyValue("loyaltyPortalParentDirectory").trim()+"/" +selOrgLbId.getSelectedItem().getLabel()+"/";
+				String imgName = loyaltySettings.getPath().replace(path, "");
+				logger.info("path"+path+"  ::"+imgName);
+				logoTbId.setValue(imgName);
+				logoTbId.setDisabled(true);
+
+				List<Listitem> typeList = ltyTypeId.getItems();
+				for (Listitem type : typeList) {
+					if(type.getValue() != null && type.getValue().toString().equalsIgnoreCase(loyaltySettings.getLoyaltyType())) {
+						ltyTypeId.setSelectedItem(type);
+						break;
+					}
+				}
+			}else {
+				gMedia = null;
+				themeId.setSelectedIndex(0);
+				urlTbId.setValue("");
+				logoTbId.setValue("");
+				ltyTypeId.setSelectedIndex(0);
+				logoTbId.setDisabled(false);
+			}
+		}
+		catch(Exception e) {
+			logger.error("Exception ::",e);
+		}
+	}
+	
+	private void setColor() {
+		List<Comboitem> list = themeId.getItems();
+		for(Comboitem ci : list) {
+			if(ci.getValue() != null && loyaltySettings.getColorCode().equalsIgnoreCase(ci.getValue().toString())) {
+				themeId.setSelectedItem(ci);
+				break;
+			}
+		}
+	}
+
+	public void onUpload$browseBtnId(UploadEvent event) {
+		browse(event.getMedia());
+	}
+	
+	public void browse(Media media) {
+		logger.info("Browse is called");
+		logoTbId.setValue(media.getName());
+		logoTbId.setDisabled(true);
+		gMedia = media;
+	}
+	
+	/*public void onClick$uploadBtnId() {
+		upload();
+	}*/
+	
+	public boolean upload(){
+		
+		MessageUtil.clearMessage();
+		Media media = gMedia; 
+		
+		/*if(media == null) {
+			MessageUtil.setMessage("Please select a file.", "color:red", "TOP");
+			return;
+		}*/
+		logger.info("File name : " + media.getName());
+		String ext = FileUtil.getFileNameExtension(media.getName());
+		if(ext == null) {
+			MessageUtil.setMessage("Upload  jpg or png or gif files only.","color:red","TOP");
+			return false;
+		}
+		if(!ext.equalsIgnoreCase("jpeg") && !ext.equalsIgnoreCase("jpg") && 
+				  !ext.equalsIgnoreCase("gif") && !ext.equalsIgnoreCase("png") &&
+					 !ext.equalsIgnoreCase("bmp")) {
+			MessageUtil.setMessage("Upload jpg or png or gif file only.","color:red","TOP");
+			return false;
+		}
+		uploadLogo(media);
+		return true;
+	}
+	
+	public void uploadLogo(Media media) {
+		try {
+			if(logger.isDebugEnabled()) logger.debug("-- Just entered--");
+			MessageUtil.clearMessage();
+			Media m = (Media)media;
+			/*if(selOrgLbId.getSelectedItem().getLabel().equalsIgnoreCase("--Select--")) {
+				MessageUtil.setMessage("Please select the organization to upload the selected image.","color:red","TOP");
+				return;
+			}*/
+			String path = PropertyUtil.getPropertyValue("loyaltyPortalParentDirectory").trim() +"/"+selOrgLbId.getSelectedItem().getLabel();
+			copyDataFromMediaToFile(path,m);
+		} catch(Exception e) {
+			logger.error("** Exception :",e);
+		}
+	}
+	
+	public boolean copyDataFromMediaToFile(String path,Media m){
+		/*String ext = FileUtil.getFileNameExtension(m.getName());
+		if(ext != null && !ext.equalsIgnoreCase("jpeg") && !ext.equalsIgnoreCase("jpg") && 
+				  !ext.equalsIgnoreCase("gif") && !ext.equalsIgnoreCase("png") &&
+					 !ext.equalsIgnoreCase("bmp")){
+			MessageUtil.setMessage("Upload jpg or png or gif file only.","color:red","BOTTOM");
+			return false;
+		}*/
+		try{
+			File file = new File(path);
+			if(!file.exists()) {
+				file.mkdirs();
+			}
+			byte[] fi = m.getByteData();
+			BufferedInputStream in = new BufferedInputStream (new ByteArrayInputStream (fi)); 
+			FileOutputStream out = new FileOutputStream (new File(file.getPath()+"/"+logoTbId.getValue()));
+			//Copy the contents of the file to the output stream
+			byte[] buf = new byte[1024];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0){
+				out.write(buf, 0, count);
+			}
+			in.close();
+			out.close();
+			
+		}catch(Exception e){
+			logger.error("Exception :: error occured while Uploading the Image");
+			logger.error("Exception ::", e);
+		}
+		return true;
+	}
+	
+	public void onClick$chckAvailbilityBtnId() {
+		checkAvailbility(true);
+	}
+	
+	private boolean checkAvailbility(boolean flag) {
+		try {
+			String url = urlTbId.getValue().trim();
+			if(flag && (url == null || url.isEmpty())) {
+				MessageUtil.setMessage("Please enter the url", "color:red", "TOP");
+				return false;
+			}
+			url = "http://"+url;
+			LoyaltySettingsDao loyaltySettingsDao = (LoyaltySettingsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_SETTINGS_DAO);
+			List<LoyaltySettings> list = loyaltySettingsDao.findByUrl(url);
+
+			if(list == null || list.size() == 0
+					|| (list.size() == 1 && (Long)selOrgLbId.getSelectedItem().getValue() == list.get(0).getUserOrgId().longValue())) {
+				if(flag) {
+					MessageUtil.setMessage("The url entered is available.", "color:blue", "TOP");
+				}
+				return true;
+			}else {
+				MessageUtil.setMessage("The url entered is not available. Please enter a different url.", "color:red", "TOP");
+				urlTbId.setFocus(true);
+				return false;
+			}
+		}catch(Exception e) {
+			logger.info("Exception ::",e);
+			return false;
+		}
+	}
+
+	public void onClick$themePreviewBtnId() {
+		if(themeId.getSelectedItem().getValue() != null) {
+			previewWin.setVisible(true);
+			previewWin.setPosition("center");
+			previewWin.doHighlighted();
+			setPreviewThemes(themeId.getSelectedItem().getLabel().toString());
+		}
+		else {
+			MessageUtil.setMessage("Please select the theme to preview.", "color:red", "TOP");
+			return;
+		}
+	}
+	
+	private void setPreviewThemes(String value) {
+		logger.info(" ::value ::"+value+" THEMES_MAP "+THEMES_MAP.get(value));
+		Components.removeAllChildren(previewWin$contentDivId);
+		Image img = new Image(THEMES_MAP.get(value));
+		img.setStyle("margin-left:10px;");
+		img.setParent(previewWin$contentDivId);
+	}
+
+	public void onClick$saveBtnId() {
+		
+		try {
+
+			if(!validateFields()) {
+				return;
+			}
+			
+			//String url = "http://"+urlTbId.getValue();
+		   // String isValidUrl = fetchHtml(url);
+		   // InetAddress isValidUrl = validateUrl(url);
+		   
+		   /* if(isValidUrl == null) {
+		    	return;
+		    }*/
+			
+			if(loyaltySettings == null) {
+				loyaltySettings = new LoyaltySettings();
+			}
+			if(selOrgLbId.getSelectedItem().getValue() != null) {
+				loyaltySettings.setUserOrgId(Long.parseLong(selOrgLbId.getSelectedItem().getValue().toString()));
+			}
+			
+			UsersDao usersDao = (UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			Long ownerUserId =	usersDao.getOwnerofOrg(Long.parseLong(selOrgLbId.getSelectedItem().getValue().toString()));
+			if(ownerUserId == null){
+				MessageUtil.setMessage("There is no users for selected organization. Please select different organization.", "color:red", "TOP");
+				selOrgLbId.setFocus(true);
+				return;
+			}
+			
+			loyaltySettings.setOrgOwner(ownerUserId);
+			loyaltySettings.setColorCode(themeId.getSelectedItem().getValue().toString());
+			
+			if(!checkAvailbility(false)) {
+				return;
+			}
+			loyaltySettings.setUrlStr("http://"+urlTbId.getValue());
+			
+			if(loyaltySettings != null) {
+				String newPath = PropertyUtil.getPropertyValue("loyaltyPortalParentDirectory").trim()+"/" 
+									+selOrgLbId.getSelectedItem().getLabel()+"/"+logoTbId.getValue();
+				String oldPath = loyaltySettings.getPath();
+				if(!newPath.equalsIgnoreCase(oldPath)) {
+					boolean isUploadSucess = upload();
+					if(!isUploadSucess) return;
+				}
+			}
+			else {
+				boolean isUploadSucess = upload();
+				if(!isUploadSucess) return;
+			}
+			
+			String path = PropertyUtil.getPropertyValue("loyaltyPortalParentDirectory").trim()+"/" 
+					+selOrgLbId.getSelectedItem().getLabel()+"/"+logoTbId.getValue();
+			loyaltySettings.setPath(path);
+
+			if(ltyTypeId.getSelectedItem().getValue() != null) {
+				loyaltySettings.setLoyaltyType(ltyTypeId.getSelectedItem().getValue().toString());
+			}
+			loyaltySettings.setUserId(GetUser.getUserObj().getUserId());
+			LoyaltySettingsDao loyaltySettingsDao = (LoyaltySettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_SETTINGS_DAO);
+			loyaltySettingsDao.saveOrUpdate(loyaltySettings);
+			MessageUtil.setMessage("Portal settings saved successfully.", "color:blue", "TOP");
+//			resetFields();
+		}
+		catch(Exception e) {
+			logger.error("Exception ::",e);
+		}
+	}
+
+	private boolean validateFields() {
+		if(selOrgLbId.getSelectedItem().getValue() == null || selOrgLbId.getSelectedIndex() == 0) {
+			MessageUtil.setMessage("Please select the organization.", "color:red","TOP");
+			return false;
+		}
+		if(urlTbId.getValue() == null || urlTbId.getValue().trim().isEmpty()) {
+			MessageUtil.setMessage("Please enter the url.", "color:red","TOP");
+			return false;
+		}
+		
+		if(themeId.getSelectedItem().getValue() == null || themeId.getSelectedIndex() == 0) {
+			MessageUtil.setMessage("Please select the theme.", "color:red","TOP");
+			return false;
+		}
+		if(logoTbId.getValue() == null || logoTbId.getValue().trim().isEmpty()) {
+			MessageUtil.setMessage("Please upload the logo.", "color:red","TOP");
+			return false;
+		}
+		if(ltyTypeId.getSelectedItem().getValue() == null || ltyTypeId.getSelectedIndex() == 0) {
+			MessageUtil.setMessage("Please select the loyalty type.", "color:red","TOP");
+			return false;
+		}
+		return true;
+	}
+
+	/*private void resetFields() {
+		gMedia = null;
+		selOrgLbId.setSelectedIndex(0);
+		themeId.setSelectedIndex(0);;
+		urlTbId.setValue("");
+		logoTbId.setValue("");
+		ltyTypeId.setSelectedIndex(0);
+		logoTbId.setDisabled(false);
+	}*/
+	
+	public void onClick$changePwdAId() {
+		changePwdWinId.setVisible(true);
+		changePwdWinId.setPosition("center");
+		changePwdWinId.doHighlighted();
+		changePwdWinId$currPwdTbId.setValue("");
+		changePwdWinId$newPwdTbId.setValue("");
+		changePwdWinId$retypePwdTbId.setValue("");
+	}
+	
+	public void onClick$updateBtnId$changePwdWinId() {
+		try {
+			if(logger.isDebugEnabled()) logger.debug("--Just Entered updatePassword()");
+			
+			String current = changePwdWinId$currPwdTbId.getValue();
+			String newPassword = changePwdWinId$newPwdTbId.getValue();
+			String reTypePassword = changePwdWinId$retypePwdTbId.getValue();
+			
+			if(current.trim().equals("")){
+				MessageUtil.setMessage("Current password field cannot be left empty.", "color:red","TOP");
+				changePwdWinId$currPwdTbId.setFocus(true);
+				return;
+			}
+			if(newPassword.trim().equals("")) {
+				MessageUtil.setMessage("New password field cannot be left empty.", "color:red","TOP"); 
+				changePwdWinId$newPwdTbId.setFocus(true);
+				return;
+			}
+			if(reTypePassword.trim().equals("")) {
+				MessageUtil.setMessage("Retype password field cannot be left empty.", "color:red","TOP");
+				changePwdWinId$retypePwdTbId.setFocus(true);
+				return;
+			}
+			
+			if(newPassword ==null || newPassword.trim().length() <= 3 
+					|| reTypePassword ==null || reTypePassword.trim().length() <= 3) {
+				MessageUtil.setMessage("Password must be greater than 3 characters.", "color:red","TOP");
+				changePwdWinId$newPwdTbId.setFocus(true);
+				return;
+			}
+			
+			String encCurrPwd = EncryptDecryptLtyMembshpPwd.encrypt(changePwdWinId$currPwdTbId.getValue());
+			String encNewPwd = EncryptDecryptLtyMembshpPwd.encrypt(changePwdWinId$newPwdTbId.getValue());
+			
+			LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+			LoyaltyThresholdAlerts loyaltyThresholdAlerts = loyaltyThresholdAlertsDao.findByUserId(GetUser.getUserObj().getUserId());
+			if(loyaltyThresholdAlerts != null && loyaltyThresholdAlerts.getLtySecurityPwd() != null && !loyaltyThresholdAlerts.getLtySecurityPwd().isEmpty()){
+				if(!encCurrPwd.equals(loyaltyThresholdAlerts.getLtySecurityPwd())){
+					MessageUtil.setMessage("Current password is incorrect.", "color:red","TOP");
+					changePwdWinId$currPwdTbId.setFocus(true);
+					return;
+				}
+			}
+			else {
+				MessageUtil.setMessage("Password does not exist.", "color:red","TOP");
+				changePwdWinId$currPwdTbId.setFocus(true);
+				return;
+			}
+			if(!newPassword.equals(reTypePassword)) {
+				 MessageUtil.setMessage("Both passwords must match.", "color:red","TOP");
+				 changePwdWinId$retypePwdTbId.setFocus(true);
+				 return;
+			}
+			
+			MessageUtil.clearMessage(); 
+			loyaltyThresholdAlerts.setLtySecurityPwd(encNewPwd);
+			try {
+				loyaltyThresholdAlertsDao.saveOrUpdate(loyaltyThresholdAlerts);
+			} catch (Exception e) {
+				logger.error("**Error while updating database**");
+			}
+			changePwdWinId$currPwdTbId.setValue("");
+			changePwdWinId$newPwdTbId.setValue("");
+			changePwdWinId$retypePwdTbId.setValue("");
+			MessageUtil.setMessage("Your password has been updated successfully.", "color:blue","TOP");
+			
+			//send email to user with updated password
+			Users user = GetUser.getUserObj();
+			
+			int serverTimeZoneValInt = Integer.parseInt(PropertyUtil.getPropertyValueFromDB(Constants.SERVER_TIMEZONE_VALUE));
+			int timezoneDiffrenceMinutesInt = 0;
+			String timezoneDiffrenceMinutes = user.getClientTimeZone();
+			
+			if(timezoneDiffrenceMinutes != null)  timezoneDiffrenceMinutesInt = Integer.parseInt(timezoneDiffrenceMinutes);
+			timezoneDiffrenceMinutesInt = timezoneDiffrenceMinutesInt - serverTimeZoneValInt;
+			
+			Calendar time = Calendar.getInstance();
+			time.add(Calendar.MINUTE, timezoneDiffrenceMinutesInt);
+			
+			String message = PropertyUtil.getPropertyValueFromDB("loyaltyProgramChangePwd");
+			message = message.replace("[fname]", user.getFirstName() == null ? "" : user.getFirstName());
+			message = message.replace("[time]",MyCalendar.calendarToString(time, MyCalendar.FORMAT_DATETIME_STYEAR));
+			message = message.replace("[password]", EncryptDecryptLtyMembshpPwd.decrypt(loyaltyThresholdAlerts.getLtySecurityPwd()));
+			message = message.replace("[username]",  user.getUserName());
+			message = message.replace("[orgid]", user.getUserOrganization().getOrgExternalId());
+
+			String subject = "OptCulture - Your loyalty program’s password has been updated successfully";
+
+			EmailQueueDao emailQueueDao = (EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			EmailQueue emailQueue = new EmailQueue(subject, message, Constants.EQ_TYPE_LOYALTY_EMAIL_ALERTS, Constants.EQ_STATUS_ACTIVE, GetUser.getUserObj().getEmailId(), MyCalendar.getNewCalendar(), user);
+			emailQueueDao.saveOrUpdate(emailQueue);
+			
+			changePwdWinId.setVisible(false);	
+		} catch (WrongValueException wve) {
+			logger.error("** Exception : Wrong Value - "+wve+" **");
+		}catch (Exception e) {
+			logger.error("** Exception : Error while updating Password - "+ e +" **");
+		}
+		
+	}
+	
+	public void onClick$forgotPwdAId() {
+		try{
+
+			LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+			LoyaltyThresholdAlerts loyaltyThresholdAlerts = loyaltyThresholdAlertsDao.findByUserId(GetUser.getUserObj().getUserId());
+			if(loyaltyThresholdAlerts != null && (loyaltyThresholdAlerts.getLtySecurityPwd() == null ||
+					loyaltyThresholdAlerts.getLtySecurityPwd().isEmpty())){
+				MessageUtil.setMessage("Password does not exist.", "color:red", "TOP");
+				return;
+			}else if(loyaltyThresholdAlerts == null){
+				MessageUtil.setMessage("Password does not exist.", "color:red", "TOP");
+				return;
+			}
+			else {
+				Users user = GetUser.getUserObj();
+				String message = PropertyUtil.getPropertyValueFromDB("loyaltyProgramForgotPwd");
+				message = message.replace("[fname]", user.getFirstName() == null ? "" : user.getFirstName());
+				message = message.replace("[password]", EncryptDecryptLtyMembshpPwd.decrypt(loyaltyThresholdAlerts.getLtySecurityPwd()));
+				message = message.replace("[username]",  user.getUserName());
+				message = message.replace("[orgid]", user.getUserOrganization().getOrgExternalId());
+
+				String subject = "OptCulture - Your loyalty program’s password";
+
+				EmailQueueDao emailQueueDao = (EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+				EmailQueue emailQueue = new EmailQueue(subject, message, Constants.EQ_TYPE_LOYALTY_EMAIL_ALERTS, Constants.EQ_STATUS_ACTIVE, GetUser.getUserObj().getEmailId(), MyCalendar.getNewCalendar(), user);
+
+				emailQueueDao.saveOrUpdate(emailQueue);
+				MessageUtil.setMessage("Password has been sent to your configured email address.", "color:blue", "TOP");
+			}
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template email in email queue...", e);
+		}
+	}
+				
+	
+	public void onClick$cancelBtnId$changePwdWinId() {
+		changePwdWinId$currPwdTbId.setValue("");
+		changePwdWinId$newPwdTbId.setValue("");
+		changePwdWinId$retypePwdTbId.setValue("");
+		changePwdWinId.setVisible(false);
+	}
+			
+	public void onCheck$enableAlertsChkId(){
+		try{
+
+			if(enableAlertsChkId.isChecked()){
+				alertsDivId.setVisible(true);
+
+				LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+				LoyaltyThresholdAlerts alertsObj = loyaltyThresholdAlertsDao.findByUserId(GetUser.getUserObj().getUserId());
+				if(alertsObj != null && alertsObj.getEnableAlerts() == OCConstants.FLAG_YES){
+					emailTbId.setValue(alertsObj.getAlertEmailId() != null ? alertsObj.getAlertEmailId() : "");
+					mobileTbId.setValue(alertsObj.getAlertMobilePhn() != null ? alertsObj.getAlertMobilePhn() : "");
+					if(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_PERCENTAGE.equalsIgnoreCase(alertsObj.getCountType())){
+						percentRadioBtId.setChecked(true);
+						valueRadioBtId.setChecked(false);
+						percentTbId.setValue(alertsObj.getCountValue());
+						valueTbId.setValue("");
+						percentTbId.setDisabled(false);
+						valueTbId.setDisabled(true);
+					}
+					else if(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_VALUE.equalsIgnoreCase(alertsObj.getCountType())){
+						percentRadioBtId.setChecked(false);
+						valueRadioBtId.setChecked(false);
+						percentTbId.setValue("");
+						valueTbId.setValue(alertsObj.getCountValue());
+						percentTbId.setDisabled(true);
+						valueTbId.setDisabled(false);
+					}
+				}
+				else{
+					Users user = GetUser.getUserObj();
+					emailTbId.setValue(user.getEmailId() != null ? user.getEmailId() : "");
+					mobileTbId.setValue(user.getPhone() != null ? user.getPhone() : "");
+					percentRadioBtId.setChecked(true);
+					valueRadioBtId.setChecked(false);
+					percentTbId.setValue("");
+					valueTbId.setValue("");
+					percentTbId.setDisabled(false);
+					valueTbId.setDisabled(true);
+				}
+
+			}
+			else{
+				alertsDivId.setVisible(false);
+			}
+
+		}catch(Exception e){
+			logger.error("Exception:::",e);
+		}
+	}
+	
+	public void onClick$percentRadioBtId(){
+		try{
+			percentTbId.setDisabled(false);
+			valueTbId.setDisabled(true);
+			
+			LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+			LoyaltyThresholdAlerts alertsObj = loyaltyThresholdAlertsDao.findByUserId(GetUser.getUserObj().getUserId());
+			if(alertsObj != null && alertsObj.getEnableAlerts() == OCConstants.FLAG_YES &&
+					OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_PERCENTAGE.equalsIgnoreCase(alertsObj.getCountType())){
+				percentTbId.setValue(alertsObj.getCountValue());
+				valueTbId.setValue("");
+			}
+			else{
+				percentTbId.setValue("");
+				valueTbId.setValue("");
+			}
+		}catch(Exception e){
+			logger.error("Exception:::",e);
+		}
+	}
+	
+	public void onClick$valueRadioBtId(){
+		try{
+			percentTbId.setDisabled(true);
+			valueTbId.setDisabled(false);
+			
+			LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+			LoyaltyThresholdAlerts alertsObj = loyaltyThresholdAlertsDao.findByUserId(GetUser.getUserObj().getUserId());
+			if(alertsObj != null && alertsObj.getEnableAlerts() == OCConstants.FLAG_YES &&
+					OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_VALUE.equalsIgnoreCase(alertsObj.getCountType())){
+				percentTbId.setValue("");
+				valueTbId.setValue(alertsObj.getCountValue());
+			}
+			else{
+				percentTbId.setValue("");
+				valueTbId.setValue("");
+			}
+		}catch(Exception e){
+			logger.error("Exception:::",e);
+		}
+	}
+	
+	public void onClick$saveAlertsBtnId() {
+		try{
+			Users user = GetUser.getUserObj();
+			
+			LoyaltyThresholdAlertsDao loyaltyThresholdAlertsDao = (LoyaltyThresholdAlertsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_THRESHOLD_ALERTS_DAO);
+			LoyaltyThresholdAlerts alertsObj = loyaltyThresholdAlertsDao.findByUserId(user.getUserId());
+			UserEmailAlertDao userEmailAlertDao = (UserEmailAlertDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USER_EMAIL_ALERT_DAO);
+			List<UserEmailAlert> userEmailAlertObjList = userEmailAlertDao.findListByUserId(user.getUserId());
+			
+			if(userEmailAlertObjList != null && userEmailAlertObjList.size()> 0){
+				for (UserEmailAlert userEmailAlert : userEmailAlertObjList) {
+					if(userEmailAlert.getFrequency().equals(OCConstants.LTY_SETTING_REPORT_FRQ_DAY) && userEmailAlert.isEnabled()){
+						setAttributeForCheckBoxIds(ltyReportAlertsDailyChkId, userEmailAlert, "daily");
+					}
+					if(userEmailAlert.getFrequency().equals(OCConstants.LTY_SETTING_REPORT_FRQ_WEEK) && userEmailAlert.isEnabled()){
+						setAttributeForCheckBoxIds(ltyReportAlertsWeeklyChkId, userEmailAlert, "weekly");
+					}
+					/*if(userEmailAlert.getFrequency().equals(OCConstants.LTY_SETTING_REPORT_FRQ_MONTH) && userEmailAlert.isEnabled()){
+					setAttributeForCheckBoxIds(ltyReportAlertsMonthlyChkId, userEmailAlert, "monthly");
+				}*/
+				}
+			}
+			
+			UserEmailAlert userEmailAlertDaily = (UserEmailAlert) ltyReportAlertsDailyChkId.getAttribute("daily");
+			UserEmailAlert userEmailAlertWeekly = (UserEmailAlert) ltyReportAlertsWeeklyChkId.getAttribute("weekly");
+	//		UserEmailAlert userEmailAlertMonthly = (UserEmailAlert) ltyReportAlertsMonthlyChkId.getAttribute("monthly");
+			
+			String emailIdStr = null;
+			long numberVal = 0l;
+			
+			if(userEmailAlertDaily == null && ltyReportAlertsDailyChkId.isChecked()){
+				UserEmailAlert userEmailAlertObj = new UserEmailAlert();
+				
+				userEmailAlertObj.setCreatedDate(Calendar.getInstance());
+				userEmailAlertObj.setCreatedBy(user.getUserId());
+				userEmailAlertObj.setFrequency(OCConstants.LTY_SETTING_REPORT_FRQ_DAY);
+				userEmailAlertObj.setType(OCConstants.LTY_SETTING_REPORT_TYPE);
+				emailIdStr = prepareEmailIdStr();
+				userEmailAlertObj.setEmailId(emailIdStr);
+				
+			//	numberVal = Long.parseLong((String)hoursdailyLbId.getSelectedItem().getValue());
+				String val = hoursLbId.getSelectedItem().getValue();
+				userEmailAlertObj.setTriggerAt(val);
+				userEmailAlertObj.setUserId(user.getUserId());
+				userEmailAlertObj.setEnabled(true);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertObj);
+				
+			}
+			else if(userEmailAlertDaily != null && ltyReportAlertsDailyChkId.isChecked()){
+				userEmailAlertDaily.setModifiedDate(Calendar.getInstance());
+				userEmailAlertDaily.setModifiedBy(user.getUserId());
+				emailIdStr = prepareEmailIdStr();
+				userEmailAlertDaily.setEmailId(emailIdStr);
+				String val = hoursLbId.getSelectedItem().getValue();
+				logger.info("---- For dailyListBox time is---"+val);
+				userEmailAlertDaily.setTriggerAt(val);
+				userEmailAlertDaily.setEnabled(true);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertDaily);
+				
+			}
+			else if(userEmailAlertDaily != null && !ltyReportAlertsDailyChkId.isChecked()){
+				userEmailAlertDaily.setEnabled(false);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertDaily);
+			}
+			
+			if(userEmailAlertWeekly == null && ltyReportAlertsWeeklyChkId.isChecked()){
+				UserEmailAlert userEmailAlertObj = new UserEmailAlert();
+				 
+				userEmailAlertObj.setCreatedDate(Calendar.getInstance());
+				userEmailAlertObj.setCreatedBy(user.getUserId());
+				userEmailAlertObj.setFrequency(OCConstants.LTY_SETTING_REPORT_FRQ_WEEK);
+				userEmailAlertObj.setType(OCConstants.LTY_SETTING_REPORT_TYPE);
+				emailIdStr = prepareEmailIdStr();
+				userEmailAlertObj.setEmailId(emailIdStr);
+				
+				numberVal = Long.parseLong((String)hoursLbId.getSelectedItem().getValue());
+				String str = daysLbId.getSelectedItem().getValue();
+				userEmailAlertObj.setTriggerAt(numberVal+Constants.ADDR_COL_DELIMETER+str);
+				userEmailAlertObj.setUserId(user.getUserId());
+				userEmailAlertObj.setEnabled(true);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertObj);
+				
+			}
+			else if(userEmailAlertWeekly != null && ltyReportAlertsWeeklyChkId.isChecked()){
+				userEmailAlertWeekly.setModifiedDate(Calendar.getInstance());
+				userEmailAlertWeekly.setModifiedBy(user.getUserId());
+				emailIdStr = prepareEmailIdStr();
+				userEmailAlertWeekly.setEmailId(emailIdStr);
+				numberVal = Long.parseLong((String)hoursLbId.getSelectedItem().getValue());
+				String str = daysLbId.getSelectedItem().getValue();
+				logger.info("---- For weeklyListBox time is---"+numberVal+"and"+str);
+				userEmailAlertWeekly.setTriggerAt(numberVal+Constants.ADDR_COL_DELIMETER+str);
+				userEmailAlertWeekly.setEnabled(true);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertWeekly);
+				
+			}
+			else if(userEmailAlertWeekly != null && !ltyReportAlertsWeeklyChkId.isChecked()){
+				userEmailAlertWeekly.setEnabled(false);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertWeekly);
+			}
+			
+			/*if(userEmailAlertMonthly == null && ltyReportAlertsMonthlyChkId.isChecked()){
+				UserEmailAlert userEmailAlertObj = new UserEmailAlert();
+				 
+				userEmailAlertObj.setCreatedDate(Calendar.getInstance());
+				userEmailAlertObj.setCreatedBy(user.getUserId());
+				userEmailAlertObj.setFrequency(OCConstants.LTY_SETTING_REPORT_FRQ_MONTH);
+				userEmailAlertObj.setType(OCConstants.LTY_SETTING_REPORT_TYPE);
+				emailIdStr = prepareEmailIdStr();
+				userEmailAlertObj.setEmailId(emailIdStr);
+				
+				numberVal = Long.parseLong((String)hoursLbId.getSelectedItem().getValue());
+				String str = whichDayLbId.getSelectedItem().getValue();
+				userEmailAlertObj.setTriggerAt(numberVal+Constants.ADDR_COL_DELIMETER+str);
+				userEmailAlertObj.setUserId(user.getUserId());
+				userEmailAlertObj.setEnabled(true);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertObj);
+				
+			}
+			else if(userEmailAlertMonthly != null && ltyReportAlertsMonthlyChkId.isChecked()){
+				userEmailAlertMonthly.setModifiedDate(Calendar.getInstance());
+				userEmailAlertMonthly.setModifiedBy(user.getUserId());
+				emailIdStr = prepareEmailIdStr();
+				userEmailAlertMonthly.setEmailId(emailIdStr);
+				numberVal = Long.parseLong((String)hoursLbId.getSelectedItem().getValue());
+				String str = whichDayLbId.getSelectedItem().getValue();
+				logger.info("---- For monthlyListBox time is---"+numberVal+"and"+str);
+				userEmailAlertMonthly.setTriggerAt(numberVal+Constants.ADDR_COL_DELIMETER+str);
+				userEmailAlertMonthly.setEnabled(true);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertMonthly);
+				
+			}
+			else if(userEmailAlertMonthly != null && !ltyReportAlertsMonthlyChkId.isChecked()){
+				userEmailAlertMonthly.setEnabled(false);
+				userEmailAlertDao.saveOrUpdate(userEmailAlertMonthly);
+			}*/
+			
+			
+			if(alertsObj == null && enableAlertsChkId.isChecked()){
+				if(!validAlertFields()) return;
+				
+				alertsObj = new LoyaltyThresholdAlerts();
+				
+				alertsObj.setUserId(user.getUserId());
+				alertsObj.setOrgId(user.getUserOrganization().getUserOrgId());
+				
+				alertsObj.setEnableAlerts(OCConstants.FLAG_YES);
+				alertsObj.setAlertEmailId(emailTbId.getValue());
+				alertsObj.setAlertMobilePhn(mobileTbId.getValue());
+				if(percentRadioBtId.isChecked()){
+					alertsObj.setCountType(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_PERCENTAGE);
+					alertsObj.setCountValue(percentTbId.getValue());
+				}
+				else if(valueRadioBtId.isChecked()){
+					alertsObj.setCountType(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_VALUE);
+					alertsObj.setCountValue(valueTbId.getValue());
+				}
+				
+				loyaltyThresholdAlertsDao.saveOrUpdate(alertsObj);
+			}
+			else if(alertsObj != null && enableAlertsChkId.isChecked()){
+				
+				if(!validAlertFields()) return;
+				alertsObj.setEnableAlerts(OCConstants.FLAG_YES);
+				alertsObj.setAlertEmailId(emailTbId.getValue());
+				alertsObj.setAlertMobilePhn(mobileTbId.getValue());
+				if(percentRadioBtId.isChecked()){
+					alertsObj.setCountType(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_PERCENTAGE);
+					alertsObj.setCountValue(percentTbId.getValue());
+				}
+				else if(valueRadioBtId.isChecked()){
+					alertsObj.setCountType(OCConstants.LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_VALUE);
+					alertsObj.setCountValue(valueTbId.getValue());
+				}
+				
+				loyaltyThresholdAlertsDao.saveOrUpdate(alertsObj);
+			}
+			else if (alertsObj != null && !enableAlertsChkId.isChecked()) {
+				alertsObj.setEnableAlerts(OCConstants.FLAG_NO);
+				alertsObj.setAlertEmailId("");
+				alertsObj.setAlertMobilePhn("");
+				alertsObj.setCountType(null);
+				alertsObj.setCountValue(null);
+				
+				loyaltyThresholdAlertsDao.saveOrUpdate(alertsObj);
+			}
+			else if(alertsObj == null && !enableAlertsChkId.isChecked()) return;
+			MessageUtil.setMessage("Alert settings saved successfully.", "color:blue", "TOP");
+		}catch(Exception e){
+			logger.error("Exception :::",e);
+		}
+	}
+
+	private boolean validAlertFields() {
+
+		if(emailTbId.getValue().trim().length() == 0 && mobileTbId.getValue().trim().length() == 0) {
+			MessageUtil.setMessage("Please enter either email or mobile to send alerts.", "red");
+			return false;
+		}
+		
+		if(emailTbId.getValue().trim().length() > 0){
+			if(!Utility.validateEmail(emailTbId.getValue().trim())){
+				MessageUtil.setMessage("Please enter valid email address.", "red");
+				return false;
+			}
+		}
+		
+		if(mobileTbId.getValue().trim().length() > 0){
+			if((Utility.phoneParse(mobileTbId.getValue().trim(),GetUser.getUserObj().getUserOrganization())==null)){
+			//if(!Utility.validateUserPhoneNum(mobileTbId.getValue().trim())){
+				MessageUtil.setMessage("Please enter valid phone number.", "red");
+				return false;
+			}
+		}
+		
+		if(!percentRadioBtId.isChecked() && !valueRadioBtId.isChecked()) {
+			MessageUtil.setMessage("Please check the alert on radio button.", "red");
+			return false;
+		}
+
+
+		if(percentRadioBtId.isChecked()) {
+			if(percentTbId.getValue().trim().length() > 0) {
+				if(percentTbId.getValue().trim().startsWith("-") || percentTbId.getValue().trim().startsWith("+") || !checkIfNumber(percentTbId.getValue().trim())) {
+					MessageUtil.setMessage("Please provide valid number value for % of total cards.", "red");
+					return false;
+				}
+
+			}
+			else if(percentTbId.getValue().trim().length() == 0) {
+				MessageUtil.setMessage("Please provide the value for % of total cards.", "red");
+				return false;
+			}
+		}
+
+		else if(valueRadioBtId.isChecked()) {
+			if(valueTbId.getValue().trim().length() > 0) {
+				if(valueTbId.getValue().trim().startsWith("-") || valueTbId.getValue().trim().startsWith("+") || !checkIfNumber(valueTbId.getValue().trim())) {
+					MessageUtil.setMessage("Please provide valid number value for no of cards.", "red");
+					return false;
+				}
+			}
+
+			else if(valueTbId.getValue().trim().length() == 0) {
+				MessageUtil.setMessage("Please provide the  value for no of cards.", "red");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean checkIfNumber(String in) {
+        try {
+            Long.parseLong(in);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+        return true;
+    }// checkIfNumber
+	
+	public void onClick$addMoreEmailTBId(){
+		
+		Div alertDiv = new Div();
+		Textbox alertTextBx = new Textbox();
+		alertTextBx.setParent(alertDiv);
+		alertTextBx.setWidth("250px");
+		alertTextBx.setStyle("margin-left:85px;margin-top: 10px;margin-right:7px ;");
+		
+		Image delImg = new Image();
+		delImg.setAttribute("TYPE", "ALERT_DEL");
+		delImg.setSrc("/images/action_delete.gif");
+		delImg.setStyle("cursor:pointer;color:#2886B9;font-weight:bold;text-decoration: underline;");
+		delImg.setTooltiptext("Delete");
+		delImg.addEventListener("onClick", this);
+		delImg.setParent(alertDiv);
+		
+		alertDiv.setParent(alertMailDivId);
+	}
+	
+	@Override
+	public void onEvent(Event event) throws Exception {
+		
+		// TODO Auto-generated method stub
+			super.onEvent(event);
+			
+			if(event.getTarget() instanceof Image) {
+				Image img =(Image)event.getTarget();
+				Row temRow = null;
+				String imgAction = (String)img.getAttribute("TYPE");
+				
+				if("ALERT_DEL".equals(imgAction)){
+					Div tempDiv= (Div)img.getParent();
+					logger.info("ALERT@@");
+					alertMailDivId.removeChild(tempDiv);
+				}
+			}
+					
+	}
+	
+	private void displayDivComponents() {
+		ltyRprtDivId.setVisible(true);
+		if(!ltyReportAlertsDailyChkId.isChecked() && !ltyReportAlertsWeeklyChkId.isChecked()){
+			ltyRprtDivId.setVisible(false);
+		}
+		else if(ltyReportAlertsDailyChkId.isChecked() && ltyReportAlertsWeeklyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(true);
+		}
+		else if(ltyReportAlertsDailyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(false);
+		}
+		else if(ltyReportAlertsWeeklyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(true);
+		}
+		else if(!ltyReportAlertsDailyChkId.isChecked() && !ltyReportAlertsWeeklyChkId.isChecked()){
+			ltyRprtDivId.setVisible(false);
+		}	
+	}
+	
+	public void onCheck$ltyReportAlertsDailyChkId(){
+		displayDivComponents();
+		
+	}
+	/*private void displayDivComponents() {
+		
+		ltyRprtDivId.setVisible(true);
+		if(!ltyReportAlertsDailyChkId.isChecked() && !ltyReportAlertsWeeklyChkId.isChecked() && !ltyReportAlertsMonthlyChkId.isChecked()){
+			ltyRprtDivId.setVisible(false);
+		}
+		else if(ltyReportAlertsDailyChkId.isChecked() && ltyReportAlertsWeeklyChkId.isChecked() && ltyReportAlertsMonthlyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(true);
+			monthlyDivId.setVisible(true);
+			
+		}
+		else if(ltyReportAlertsDailyChkId.isChecked() && ltyReportAlertsWeeklyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(true);
+			monthlyDivId.setVisible(false);
+		}
+		else if(ltyReportAlertsWeeklyChkId.isChecked() && ltyReportAlertsMonthlyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(true);
+			monthlyDivId.setVisible(true);
+		}
+		else if(ltyReportAlertsDailyChkId.isChecked() && ltyReportAlertsMonthlyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(false);
+			monthlyDivId.setVisible(true);
+		}
+		else if(ltyReportAlertsDailyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(false);
+			monthlyDivId.setVisible(false);
+		}
+		else if(ltyReportAlertsWeeklyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(true);
+			monthlyDivId.setVisible(false);
+		}
+		else if(ltyReportAlertsMonthlyChkId.isChecked()){
+			dailyDivId.setVisible(true);
+			weeklyDivId.setVisible(false);
+			monthlyDivId.setVisible(true);
+		}
+		else if(!ltyReportAlertsDailyChkId.isChecked() && !ltyReportAlertsWeeklyChkId.isChecked() && !ltyReportAlertsMonthlyChkId.isChecked()){
+			ltyRprtDivId.setVisible(false);
+		}	
+		
+	}*/
+	
+	public void onCheck$ltyReportAlertsWeeklyChkId(){
+		displayDivComponents();
+	}
+	
+	/*public void onCheck$ltyReportAlertsMonthlyChkId(){
+		displayDivComponents();
+	}*/
+	
+	private String prepareEmailIdStr() {
+		String emailIdStr = null;
+		List<Component> tempDivList = alertMailDivId.getChildren();
+		if(emailAddTxtBxId.getValue() != null && !emailAddTxtBxId.getValue().trim().isEmpty()){
+			if(!Utility.validateEmail(emailAddTxtBxId.getValue().trim())){
+				MessageUtil.setMessage("Please enter valid email address.","color:red","TOP");
+				return emailIdStr;
+			}
+			emailIdStr = emailAddTxtBxId.getValue().trim();
+		}
+		if(tempDivList != null && tempDivList.size() > 0){
+			for (Component tempDiv : tempDivList) {
+				Textbox tempTb = (Textbox) tempDiv.getFirstChild();
+				
+				if(tempTb.getValue() != null && !tempTb.getValue().trim().isEmpty()){
+					if(!Utility.validateEmail(tempTb.getValue().trim())){
+						MessageUtil.setMessage("Please enter valid email address.","color:red","TOP");
+						return emailIdStr;
+					}
+					if(emailIdStr == null || emailIdStr.isEmpty()){
+						emailIdStr = tempTb.getValue().trim();
+					}
+					else{
+						emailIdStr += Constants.ADDR_COL_DELIMETER + tempTb.getValue().trim();
+					}
+				}
+			}
+		}
+
+		return emailIdStr;
+	}
+	
+	
+}

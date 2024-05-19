@@ -1,0 +1,297 @@
+<zk>
+<window  id="detailRepWinId" width="100%" apply ="org.mq.marketer.campaign.controller.report.DetailedReportController" xmlns:h="native">
+
+ <!-- <zscript>
+<![CDATA[
+	import org.mq.marketer.campaign.beans.CampaignReport;
+	import org.mq.marketer.campaign.custom.MyCalendar;
+	CampaignReport cr = (CampaignReport)sessionScope.get("campaignReport");
+	if(cr == null) {
+		org.mq.marketer.campaign.general.Redirect.goTo(PageListEnum.RM_HOME);
+	}
+	//String dateStr = MyCalendar.calendarToString(cr.getSentDate(),null,(TimeZone)sessionScope.get("clientTimeZone"));
+	]]> 
+</zscript> -->
+	<h:table cellspacing="0" cellpadding="4"  width="100%" border="0" bgcolor="#F2F6F9" style="padding:3px;border-solid:1px;border-color:#FFFFFF">
+		<h:tr bgcolor="#F2F6F9">
+			
+			<h:td width="385" ><label value="Campaign Name : " style="font-weight:bold;" /><label id="campNamelblId" maxlength="50"/></h:td>
+			
+			<h:td width="385" ><label value="Subject : " style="font-weight:bold;" /><label id="subjectlblId" maxlength="50"/></h:td>
+			
+			<h:td width="200px" ><label value="Date : " style="font-weight:bold;" /><label   id="dateLblId" /> </h:td>
+			
+			<h:td  >
+   				<a label="View Email" style="font-weight:bold;color:#43A0BA;" id="viewEmailBtnId" />
+	   			<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+					</caption>
+					<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+						<html id="html" />
+					</div>
+				</window>
+	   		</h:td>	
+		
+		</h:tr>
+		
+		</h:table >
+		
+		<h:table cellspacing="0" cellpadding="4"  width="100%" border="0">
+		
+		
+		<h:tr>
+		
+		<h:td valign="top" width="235">
+		
+		
+		
+			<groupbox sclass="gbStyle" closable="false" >
+			<caption label="Campaign Reports"  />
+				
+					<h:table cellspacing="0px" cellpadding="0px"  align="center"  >
+					
+						 <h:tr >  
+					     <!--<h:td valign="top" style="padding-top:3px;padding-right:2px;padding-left:3px;">
+					       <image src="/img/icons/snapshot.png" />
+					     </h:td>
+					     -->
+					     
+					     <h:td  valign="center">  
+					       <toolbarbutton label="Snapshot" image="/img/icons/snapshot.png" style="font-weight:bold;color:#6EB6CB;padding-left:2px;" id="snapShotToolbarBtnId"/>
+							<div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Summary of sent campaign"/>
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   <h:tr height="20" />
+					   
+					   <h:tr ><!--
+					     <h:td valign="top" style="padding-top:3px;padding-right:2px;padding-left:3px;">
+					        <image src="/img/icons/recipient.gif" />
+					     </h:td>
+					     -->
+					        <h:td valign="center"  >   
+					       <toolbarbutton label="Recipient Activity Report" image ="/img/icons/recipient.gif" style="font-weight:bold;color:#6EB6CB;" id="recipientActivityReporttoolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext"  value="Tracks delivered emails, opens, clicks, opt-outs and more" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					   <h:tr ><!--
+					     <h:td valign="top" style="padding-top:3px;padding-right:2px;padding-left:3px;">
+					     	<image src="/img/icons/urls_clicked.gif" />
+					     </h:td>
+					     --><h:td  valign="center" >	
+					       <toolbarbutton label="URLs Clicked Report" image ="/img/icons/urls_clicked.gif" style="font-weight:bold;color:#6EB6CB;" id="urlClickedReportToolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Tracks URLs clicked in the email." />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					    
+					   <h:tr >
+					     <!--<h:td valign="top" style="padding-top:3px;padding-right:2px;padding-left:3px;" >
+					     	<image src="/img/icons/opensnclicks.gif" />
+					     </h:td>
+					     --><h:td valign="center">	
+					       <toolbarbutton label="Opens and Clicks Report" image ="/img/icons/opensnclicks.gif" style="font-weight:bold;color:#6EB6CB;" id="opensAndClicksToolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Tracks opens and clicks of campaign recipients" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					   
+					   <h:tr >
+					     <!--<h:td valign="top" style="padding-top:3px;padding-right:2px;padding-left:3px;">
+					     	<image src="/img/icons/emailclient_usage.gif" />
+					     </h:td>
+					     --><h:td valign="bottom">	
+					       <toolbarbutton label="Email Client Usage Report" image ="/img/icons/emailclient_usage.gif" style="font-weight:bold;color:#6EB6CB;" id="emailClientUsageReportToolbarBtnId"/>
+					       <div style="padding-left:23px;">  
+					       <label sclass="lefttext" value="Shows popularity of various email clients amongst campaign recipients" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <h:tr height="20" />
+					   
+					   <h:tr >
+					     <!--<h:td valign="top" style="padding-top:3px;padding-right:2px;padding-left:3px;">
+					     	<image src="/img/icons/bouncereport.gif" />
+					     </h:td>
+					     --><h:td valign="center">	
+					        <toolbarbutton label="Non-Delivery Report" image ="/img/icons/bouncereport.gif" style="font-weight:bold;color:#6EB6CB;" id="bouncereportToolbarBtnId"/>
+					        <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Tracks bounced email IDs" />
+					       </div>
+					     </h:td>
+					   </h:tr> 
+					   
+					    <h:tr height="20" />
+					   
+					 <!--  <h:tr ><h:td valign="center">	
+					        <toolbarbutton label="Suppressed Contacts Reports" image="/images/suppressed_contacts.png" style="font-weight:bold;color:#6EB6CB;" id="suppressedreportToolbarBtnId"/>
+					        <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Shows email IDs suppressed in this campaign"  />
+					       </div>
+					     </h:td>
+					   </h:tr>   
+					
+					<h:tr height="20" /> -->
+					
+					
+					</h:table>
+				
+			
+			
+			</groupbox>
+		
+		
+		</h:td>
+		
+		
+		<h:td colspan="2" valign="top" height="100%">
+			
+				<include id="rightId" width="100%" 
+					src="/zul/report/snapshot.zul" use="org.mq.marketer.campaign.controller.IncludeController"/>
+				
+		
+		</h:td>
+		
+		</h:tr>
+		
+	</h:table>
+	<div align="right" style="padding:10px 10px;">
+		
+				<button label="Back to Reports"  sclass="idle140" id="backBtnId" />
+		</div>
+	
+	
+	
+	
+	
+	
+	<!--<borderlayout width="100%" height="620px">
+		<west border="normal" maxsize="250" autoscroll="true" size="250px" 
+											flex="true" splittable="false" collapsible="true" >
+												 		
+	 	   			<h:table  cellspacing="3px" cellpadding="0px" width="234px" align="center"   >
+					  <h:tr>
+					     <h:td align="center" colspan="2" valign="middle" >
+					      <label value="Campaign Reports" sclass="reportHeader" />
+					      <h:hr/>
+					    </h:td>
+					  </h:tr>
+					  
+					  
+					  <h:tr style="height:50px;">  
+					     <h:td>
+					       <image src="/img/icons/snapshot.png"   style="margin:5px;"/>
+					     </h:td>
+					     <h:td>  
+					       <toolbarbutton label="Snap Shot" style="font-weight:bold;color:#222;" id="snapShotToolbarBtnId"/><h:br/>
+					       <label sclass="lefttext" value="Summary of email sent to date"/>
+					     </h:td>
+					   </h:tr>
+					   
+					   
+					   <h:tr style="height:50px;">
+					     <h:td>
+					        <image src="/img/icons/recipient.gif"   style="margin:5px;"/>
+					     </h:td>
+					     <h:td>   
+					       <toolbarbutton label="Receipient Activity Report" style="font-weight:bold;color:#222;" id="recipientActivityReporttoolbarBtnId"/><h:br/>
+					       <label sclass="lefttext" value="Tracks opens,clicks,opt-outs and mails marked as spam." />
+					     </h:td>
+					   </h:tr>
+					   
+					   
+					   <h:tr style="height:50px;">
+					     <h:td>
+					     	<image src="/img/icons/urls_clicked.gif"   style="margin:5px;"/>
+					     </h:td>
+					     <h:td>	
+					       <toolbarbutton label="URLs Clicked Report" style="font-weight:bold;color:#222;" id="urlClickedReportToolbarBtnId"/><h:br/>
+					       <label sclass="lefttext" value="Tracks which URLs were clicked, by whom and at what time." />
+					     </h:td>
+					   </h:tr>
+					   <h:tr style="height:50px;">
+					     <h:td>
+					     	<image src="/img/icons/opensnclicks.gif"   style="margin:5px;"/>
+					     </h:td>
+					     <h:td>	
+					       <toolbarbutton label="Opens and Clicks Over Time" style="font-weight:bold;color:#222;" id="opensAndClicksToolbarBtnId"/><h:br/>
+					       <label sclass="lefttext" value="When did subscribers open and click." />
+					     </h:td>
+					   </h:tr>
+					   <h:tr style="height:50px;">
+					     <h:td>
+					     	<image src="/img/icons/emailclient_usage.gif"   style="margin:5px;"/>
+					     </h:td>
+					     <h:td>	
+					       <toolbarbutton label="Email Client Usage Report" style="font-weight:bold;color:#222;" id="emailClientUsageReportToolbarBtnId"/><h:br/>  
+					       <label sclass="lefttext" value="Track which email client are used." />
+					     </h:td>
+					   </h:tr>
+					   <h:tr style="height:50px;">
+					     <h:td>
+					     	<image src="/img/icons/bouncereport.gif"   style="margin:5px;"/>
+					     </h:td>
+					     <h:td>	
+					        <toolbarbutton label="Bounce Report" style="font-weight:bold;color:#222;" id="bouncereportToolbarBtnId"/><h:br/>
+					       <label sclass="lefttext" value="Track bounces and check report." />
+					     </h:td>
+					   </h:tr>  
+					   <h:tr>
+					    	<h:td colspan="2" align="center">
+					   			<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+									<caption>
+										<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+									</caption>
+									<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+										<html id="html" />
+									</div>
+								</window>
+					    		<h:div style="margin-top:60px;margin-bottom:10px;">
+					   				<button label="View Email"  id="viewEmailBtnId" />
+					   			</h:div>
+					   		</h:td>	
+					   </h:tr>
+					</h:table>
+					
+					
+					</west>
+					
+		<center>
+			<borderlayout>
+				<center  autoscroll="true" >
+				<include id="rightId" width="100%" 
+					src="/zul/report/snapshot.zul" use="org.mq.marketer.campaign.controller.IncludeController"/>
+				</center>
+				
+				<north border="0"  autoscroll="true" size="45px" flex="false" splittable="false" collapsible="false">
+					<h:table width="100%">
+        			<h:tr>
+        				<h:td class="subpagehead"><label id="subjectlblId" width="100px"/></h:td>
+		    			<h:td align="right" ><label   id="dateLblId"/><space/> </h:td>
+					</h:tr>
+					</h:table>	
+				</north>
+		</borderlayout>
+		</center>
+	</borderlayout>	-->				
+					
+					
+        	
+    
+    
+    <style src="/css/reports.css" />
+  </window>
+</zk>

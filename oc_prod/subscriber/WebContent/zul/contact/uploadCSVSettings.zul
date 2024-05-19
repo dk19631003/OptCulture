@@ -1,0 +1,140 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window xmlns:h="native" xmlns:w="client" width="100%" apply="org.mq.marketer.campaign.controller.contacts.UploadCSVContactsController">
+	
+	
+	<div style="background-color: #F5F8FB;padding:10px;" >
+				<label value="Selected List(s) :"  style="color:#09719F;" />
+				<label id="selectedListsLblId" style="color:#2886B9;" sclass="listsLb"  multiline="true" />
+			<!-- <div>	
+			</div> -->
+				
+			<!-- <div>	
+				<label value="Selected Fields :"  style="color:#09719F;" />
+				<label id="fieldListLbId" style="color:#2886B9;" sclass="listsLb"  multiline="true" />
+			</div> -->
+				
+	</div>
+	
+	<div id="fileUploadDivId" style="padding-top:10px;"  >
+	
+			<div style="padding-top:10px;">
+				<label value="Please upload the "/>
+				<label value=".CSV " style="font-weight:bold;"/>
+				<label value=" file from which you would like to add contacts."/>
+			</div>
+			<h:table cellspacing="0" cellpadding="0">
+					<h:tr>
+						<h:td>
+						
+							<label value="Browse .CSV file" sclass="theme-lbHeading"/>
+						
+						</h:td>
+						<h:td style="padding-left:10px;">
+							<textbox id="selectedFileTbId"/>
+						
+						</h:td>
+						<!-- <h:td style="padding-left:10px;">
+							<button label="Browse..." height="28px" sclass="idle140" id="brouseUploadBtnId" upload="true,maxsize=-1" />
+							
+						</h:td> -->
+						<h:td style="padding-left:10px;">
+							
+							<button id="uploadBtnId" sclass="idle greenbtn" label="Browse" 
+								  upload="true" height="28px" width="140px" />
+							<!-- <button id="uploadBtnId" sclass="idle140 greenbtn" upload="true" label="Browse"></button> -->
+											
+						</h:td>
+						
+						<h:td style="padding-left:10px;">
+						
+							<button id="cancelBtnId" sclass="idle140" label="Cancel"></button>
+						
+						</h:td>
+					
+					
+					</h:tr>
+					
+					<h:tr >
+					<h:td>	</h:td>
+
+					<h:td valign="top" style="padding-top:5px;">	
+						<image src="/img/icons/icon_i.png"  />	
+						<label value="The first row of your CSV file should be header row. " sclass="labelPos" />
+					</h:td>
+					
+					<!-- <h:td valign="top" style="padding-top:3px;"> 	
+					</h:td> -->
+					
+				</h:tr>
+					
+					<h:tr height="100"></h:tr>
+					</h:table>
+			
+			</div>
+	
+	
+	<div id="listMappingDivId" visible="false">
+			<!-- Contacts POS Mapping -->
+			
+			<div>
+				<label value="Please confirm mapping, display labels and data types." style="font-weight:bold;"/>
+			</div>
+			<separator height="15px"/>
+			
+				
+			<div align="right" height="10">
+			<!-- Since fields are automatically fetched from the uploaded file's header row, adding new row is not needed anymore. -->
+		 	<toolbarbutton image="/images/action_add.gif"  label="Add Contact Row" id="addContactMapBtnId" visible = "false"/> 
+			</div>
+			<grid>
+				<columns>
+					<column label="CSV File Header Attribute" width="250px"/>
+					<column label="OptCulture Attribute" width="300px"></column>
+					<column label="Display Label" width="300px"></column>
+					<column label="Data Type" />
+					<!-- <column label="Preconfigured Values" width="200px"/> --> 
+					<!-- <column label="Display Label"></column> -->
+					<column label="Unique Priority" width="20px" visible="false"></column>
+					<!-- <column label="Action" width="60px;" />  -->
+				</columns>
+				<rows id="contactRowsId"/>
+			</grid>
+			
+
+			<h:table width="100%">
+				<h:tr>
+					<h:td align="right">
+						<button label="Back" id="backBtnId" />
+						<button label="Save &amp; Continue" id="saveContinueBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+								
+	</div>
+			<separator height="15px"/>	
+	
+			
+			
+			
+			<div id="uploadResultDivId" visible="false">
+				<h:table width="100%">
+					<h:tr>
+						<h:td>
+							<image src="/img/icons/greenIcon.jpg" style="position:relative;top:5px;"/> 
+							<label value="File will be uploaded in a moment" style="color:#415F1D;font-family:verdana;font-size:20px;font-weight:bold;"/>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+							<h:br/>
+							<button label="Close"   sclass="idle140" id="closeBtnId" />
+						</h:td>
+					</h:tr>
+				</h:table>
+			</div>
+	
+	
+	
+</window>
+</zk>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ErrorLog"
+		table="captiway_logs">
+		<id name="refId" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="message" type="text">
+			<column name="message" not-null="true" />
+		</property>
+		<property name="source" type="string">
+			<column name="source" length="100" />
+		</property>
+		<property name="date" type="calendar">
+			<column name="date" />
+		</property>
+		<many-to-one name="users"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"
+			fetch="select">
+			<column name="user_id" not-null="true" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>

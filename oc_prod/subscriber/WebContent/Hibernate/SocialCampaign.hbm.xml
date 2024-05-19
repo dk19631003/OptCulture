@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SocialCampaign" table="social_campaigns">
+	
+		<id name="campaignId" type="java.lang.Long">
+			<column name="campaign_id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="campaignName" type="java.lang.String">
+			<column name="campaign_name" not-null="true"/>
+		</property>
+		
+		<property name="description" type="java.lang.String">
+			<column name="description" />
+		</property>
+		
+		<property name="providers" type="java.lang.Byte">
+			<column name="providers" not-null="true" />
+		</property>
+		
+		<property name="fbPageIds" type="java.lang.String">
+			<column name="fbPageIds"  />
+		</property>
+		
+		<property name="twitterContent" type="java.lang.String">
+			<column name="twitterContent"  />
+		</property>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" not-null="true" />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date" not-null="true" />
+		</property>
+		
+		<property name="lastModifiedDate" type="calendar">
+			<column name="last_modified_date" />
+		</property>
+		
+		<property name="campaignStatus" type="java.lang.String">
+			<column name="campaign_status" />
+		</property>
+		
+		<set name="socialCampSchedules" table="social_campaign_schedules" 
+				inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="campaign_id" not-null="true" />
+            </key>
+            <one-to-many class="org.mq.marketer.campaign.beans.SocialCampaignSchedule" />
+        </set>
+        
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+.background
+{
+    --ion-background-color: transparent !important;
+    margin-left: 24px;
+    margin-right: 23px;
+}
+.ion-input
+{
+    --background-color : white;
+}
+
+.checkbox-item{
+    --padding-start:0px
+}
+.titleText{
+    
+    font-weight: bold;
+    font-size: 34px;
+  }
+  .placeHolderText{
+    --placeholder-font-style:'Raleway', sans-serif !important;
+  }
+
+  .keyboard-up{
+    height: auto !important;
+  }
+
+  ion-item{
+    --ripple-color: transparent;
+  }

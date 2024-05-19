@@ -1,0 +1,36 @@
+.background
+{
+    --ion-background-color:transparent !important;
+}
+.otp {
+    color: black ;
+    border-style: none;
+    
+    font-size: 40px;
+    
+  }
+  .table
+  {
+    width: 100%;
+    margin-top: 10px;
+  }
+    td {   
+      width: 15%;
+    height: 15%;
+    border: 1px solid black;
+    border-radius: 10px !important;
+  }
+  table { border-collapse: separate; border-spacing: 10px; }
+
+  .titleText{
+    
+    font-weight: bold;
+    font-size: 34px;
+  }
+
+  .mr-top-10{
+    margin-top: 10%;
+  }
+
+  
+ 

@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.ContactsLoyalty" table="contacts_loyalty">
+
+   <id name="loyaltyId" type="java.lang.Long">
+      <column name="loyalty_id"/>
+      <generator class="native"/>
+    </id>
+    
+    <many-to-one name="contact" class="org.mq.captiway.scheduler.beans.Contacts"
+			foreign-key="contactId" fetch="select" lazy="false">
+			<column name="contact_id"  />
+	</many-to-one>
+		
+    <property name="customerId" type="string">
+      <column name="customer_id"/>
+    </property>
+
+    <property name="accountId" type="long">
+            <column name="account_id" />
+   </property>
+    
+    <property name="cardNumber" type="string">
+            <column name="card_number" />
+   </property>
+    <property name="mobilePhone" type="string">
+		<column name="mobile_phone"  />
+	</property>
+    <property name="membershipType" type="string">
+		<column name="membership_type"  />
+	</property>
+	<property name="serviceType" type="string">
+		<column name="service_type"  />
+	</property>
+	<property name="cardPin" type="string">
+      <column name="card_pin"/>
+    </property>
+    
+    <property name="locationId" type="string">
+      <column name="location_id"/>
+    </property>
+    <property name="posStoreLocationId" type="string">
+      <column name="pos_location_id"/>
+    </property>
+    
+    <property name="empId" type="string">
+      <column name="emp_id"/>
+    </property>
+    
+    <property name="totalLoyaltyEarned" type="double">
+         <column name="total_loyalty_earned" />
+   </property>
+    <property name="totalLoyaltyRedemption" type="double">
+            <column name="total_loyalty_redemption" />
+   </property>
+   
+     <property name="loyaltyBalance" type="double">
+            <column name="loyalty_balance" />
+   </property>
+    
+     <property name="valueCode" type="string">
+      <column name="value_code"/>
+    </property>
+    
+	<property name="totalGiftcardAmount" type="double">
+      <column name="total_giftcard_amount"/>
+    </property>
+    
+    <property name="totalGiftcardRedemption" type="double">
+      <column name="total_giftcard_redemption"/>
+    </property>
+    
+    <property name="giftcardBalance" type="double">
+      <column name="giftcard_balance"/>
+    </property>
+    
+    <property name="totalGiftAmount" type="double">
+      <column name="total_gift_amount"/>
+    </property>
+    <property name="totalGiftRedemption" type="double">
+      <column name="total_gift_redemption"/>
+    </property>
+    <property name="giftBalance" type="double">
+      <column name="gift_balance"/>
+    </property>
+        
+    <property name="holdPointsBalance" type="double">
+      <column name="holdpoints_balance"/>
+    </property>
+    <property name="holdAmountBalance" type="double">
+      <column name="holdAmount_balance"/>
+    </property>
+	<property name="optinDate" type="calendar">
+       <column name="optin_date"/>
+    </property>
+    
+    
+	<!-- <property name="optinMedium" type="string">
+      <column name="optin_medium"/>
+    </property> -->
+    
+	<property name="lastRedumptionDate" type="calendar">
+       <column name="last_redumption_date"/>
+    </property>
+    
+    <property name="cardType" type="string">
+      <column name="card_type"/>
+    </property>
+    
+    <property name="loyaltyType" type="string">
+      <column name="loyalty_type"/>
+    </property>
+       
+ <property name="lastFechedDate" type="calendar">
+       <column name="last_feched_date"/>
+    </property>
+     
+ <property name="createdDate" type="calendar">
+       <column name="created_date"/>
+    </property>
+     
+     <property name="contactLoyaltyType" type="string">
+       <column name="contact_loyalty_type"/>
+    </property>
+      <property name="userId" type="java.lang.Long">
+       <column name="user_id"/>
+    </property>
+    <property name="orgId" type="java.lang.Long">
+       <column name="org_id"/>
+    </property>
+    <property name="isRegistered" type="java.lang.Byte" >
+    	<column name="is_registered" default="0" />
+    </property>
+    <property name="mode" type="string">
+       <column name="mode"/>
+    </property>
+    <property name="programTierId" type="java.lang.Long">
+       <column name="program_tier_id"/>
+    </property>
+   <!--  <property name="programTierName" type="string">
+       <column name="program_tier_name"/>
+    </property> -->
+    <property name="tierUpgradedDate" type="calendar">
+       <column name="tier_upgraded_date"/>
+    </property>
+    <property name="tierUpgradeReason" type="string">
+       <column name="tier_upgrade_reason"/>
+    </property>
+    <property name="programId" type="java.lang.Long">
+       <column name="program_id"/>
+    </property>
+    <!--  <property name="membershipExpirationDate" type="calendar">
+       <column name="membership_expiration_date"/>
+    </property> -->
+    <!-- <property name="cardStatus" type="string">
+       <column name="card_status"/>
+    </property> -->
+    
+   <!--  <property name="storeNumber" type="string">
+       <column name="store_number"/>
+    </property> -->
+    <!-- <property name="cardNumberType" type="string">
+		<column name="card_number_type"  />
+	</property> -->
+	<property name="membershipStatus" type="string">
+		<column name="membership_status"  />
+	</property>
+	<property name="cardSetId" type="java.lang.Long">
+		<column name="card_set_id" />
+	</property>
+	<property name="expiredPoints" type="java.lang.Long">
+       <column name="expired_points"/>
+    </property>
+	<property name="expiredRewardAmount" type="double">
+      <column name="expired_reward_amount"/>
+    </property>
+    <property name="expiredGiftAmount" type="double">
+      <column name="expired_gift_amount"/>
+    </property>
+	<property name="rewardFlag" type="string">
+		<column name="reward_flag"  />
+	</property>
+	<property name="membershipPwd" type="string">
+		<column name="membership_pwd" />
+	</property>
+	<property name="lastLoggedInTime" type="calendar">
+		<column name="last_logged_in_time"  />
+	</property>
+	<property name="transferedTo" type="java.lang.Long">
+       <column name="transfered_to"/>
+    </property>
+    <property name="transferedOn" type="calendar">
+		<column name="transfered_on"  />
+	</property>
+ </class>
+</hibernate-mapping>
+
+

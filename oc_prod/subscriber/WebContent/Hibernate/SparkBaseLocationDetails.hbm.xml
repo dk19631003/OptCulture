@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 17, 2011 17:07:04 PM -->
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SparkBaseLocationDetails" 
+		table="sparkbase_location_details" >
+		  
+		<id name="sparkBaseLocationDetails_id" type="java.lang.Long" >
+			<column name="sparkbase_location_details_id"/>
+			<generator class="native" />
+		</id>
+		
+		<property name="batchId" type="string" >
+			<column name="batch_id" />
+		</property>
+		
+		<property name="clientId" type="string" >
+			<column name="client_id" />
+		</property>
+		
+		<property name="externalId" type="string" >
+			<column name="external_id" />
+		</property>
+		
+		<property name="initiatorId" type="string" >
+			<column name="initiator_id" />
+		</property>
+		
+		<property name="initiatorPassword" type="string" >
+			<column name="initiator_password" />
+		</property>
+		
+		<property name="initiatorType" type="string" >
+			<column name="initiator_type" />
+		</property>
+		
+		<property name="integrationPassword" type="string" >
+			<column name="integration_password" />
+		</property>
+		
+		<property name="integrationUserName" type="string" >
+			<column name="integration_username" />
+		</property>
+		
+		<property name="localeId" type="string" >
+			<column name="locale_id" />
+		</property>
+		
+		<property name="locationId" type="string" >
+			<column name="location_id" />
+		</property>
+		
+		<property name="transactionLocationId" type="string" >
+			<column name="transaction_location_id" />
+		</property>
+		
+		<property name="systemId" type="string" >
+			<column name="system_id" />
+		</property>
+		
+		<property name="terminalId" type="string" >
+			<column name="terminal_id" />
+		</property>
+		
+		
+		<many-to-one name="userOrganization"
+			class="org.mq.marketer.campaign.beans.UserOrganization" foreign-key="orgId"
+			fetch="select" lazy="false">
+			<column name="user_organization" />
+		</many-to-one>
+		
+		<!-- <many-to-one name="storeLocation"
+			class="org.mq.marketer.campaign.beans.OrganizationStores" foreign-key="storeId"
+			fetch="select" lazy="false">
+			<column name="store_location" />
+		</many-to-one> -->
+		
+		<!-- <one-to-one name="storeLocation" class="org.mq.marketer.campaign.beans.OrganizationStores" 
+			property-ref="storeId" />
+		 -->
+		
+		<property name="userId" type="long" >
+			<column name="user_id" />
+		</property>
+		
+		<property name="enabled" type="boolean">
+			<column name="enabled" />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+		 	<column name="created_date"/>
+		</property>
+		
+		
+		<!-- Changes -->
+		<property name="conversionType" type="string">
+			<column name="conversion_type" length="60"/>
+		</property>
+		
+		<!-- <property name="ptsActiveDateValue" type="java.lang.Long">
+			<column name="pts_active_date_value" />
+		</property>
+		
+		<property name="activationFlag" type="char">
+			<column name="activation_flag"  />
+		</property>
+		 -->
+		<property name="convertToAmount" type="long">
+			<column name="convert_to_amount"/>
+		</property>
+		
+		<property name="convertFromPoints" type="long">
+			<column name="convert_from_points"/>
+		</property>
+		
+		<property name="earnOnSpentAmount" type="long">
+		 	<column name="earn_on_spent_amount"/>
+		</property>
+		
+		<property name="earnValue" type="long">
+		 	<column name="earn_value"/>
+		</property>
+		
+		<property name="earnType" type="string">
+		 	<column name="earn_type"/>
+		</property>
+		
+		<property name="earnValueType" type="string">
+		 	<column name="earn_value_type"/>
+		</property>
+		
+		
+		<!-- Changes -->
+		
+		
+		<property name="lastFetchedTime" type="calendar">
+		 	<column name="last_fetched_time"/>
+		</property>
+		<property name="fetchFreqInMin" type="long" >
+			<column name="fetch_freq_in_min" default = "0"/>
+		</property>
+		
+		<property name="enableAlerts" type="boolean">
+			<column name="enable_alerts" default = "0"/>
+		</property>
+		<property name="emailAlerts" type="boolean">
+			<column name="email_alerts"  default = "0"/>
+		</property>
+		
+		<property name="smsAlerts" type="boolean">
+			<column name="sms_alerts" default = "0"/>
+		</property>
+		
+		<property name="countType" type="string">
+			<column name="count_type" />
+		</property>
+		<property name="countValue" type="string">
+			<column name="count_value" />
+		</property>
+		
+		<property name="loyaltyAlertsSentDate" type="calendar">
+			<column name="loyalty_alerts_sent_date" />
+		</property>
+		<property name="orgUserId" type="java.lang.Long">
+			<column name="org_user_id" />
+		</property>
+		<property name="orgUserName" type="string">
+			<column name="org_user_name" />
+		</property>
+		
+		<!-- <one-to-many name="userSparkbaseCardsSet"
+			class="org.mq.marketer.campaign.beans.UserSparkBaseCard"  cascade="all">
+			 <key column="sparkbase_prop_id" not-null="true" />
+		</one-to-many> -->
+		
+		<!-- <set name="userSparkbaseCardsSet" table="user_sparkbase_card" 
+				inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sparkbase_prop_id" not-null="true" />
+            </key>
+            <one-to-many class="org.mq.marketer.campaign.beans.UserSparkBaseCard" />
+        </set>
+		 -->
+		<property name="mobileUnique" type="boolean">
+			<column name="is_mobile_unique" default = "0"/>
+		</property>
+		</class>
+</hibernate-mapping>

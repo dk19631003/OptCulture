@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.TempActivityData"
+		table="temp_activity_data">
+		<id name="tempActId" type="java.lang.Long">
+			<column name="temp_act_id" />
+			<generator class="native" />
+		</id>
+		
+		
+		<property name="contactId" type="java.lang.Long">
+			<column name="contact_id" />
+		</property>
+		<property name="componentId" type="java.lang.Long">
+			<column name="component_id" />
+		</property>
+
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id" />
+		</property>
+		
+		
+		
+		<property name="componentWinId" type="string">
+			<column name="component_win_id" />
+		</property>
+		
+		<property name="label" type="string">
+			<column name="label" />
+		</property>
+		
+		<property name="modeAttribute" type="int">
+			<column name="mode_attribute" />
+		</property>
+	</class>
+</hibernate-mapping>

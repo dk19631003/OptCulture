@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.loyality.common.hbmbean.CountryCodes" table="country_codes">
+    
+    <id name="countryCodesId" type="java.lang.Long">
+     <column name="country_codes_id"/>
+      <generator class="native"/>
+    </id>
+    
+	
+	<property name="countryName" type="string">
+      <column name="country_name" length="100"/>
+    </property>
+	<property name="callingCode" type="string">
+      <column name="calling_code" length="100"/>
+    </property> 
+    <property name="geoCode" type="string">
+      <column name="geo_code" length="100"/>
+    </property> 
+    
+ </class>
+ 
+</hibernate-mapping>

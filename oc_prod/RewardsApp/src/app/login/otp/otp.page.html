@@ -1,0 +1,133 @@
+
+
+<ion-content dir="{{textDir}}"  forceOverscroll="false">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0">
+    <div [style.background]="'url(' + imageurl +  ')'" class="imgClass" >
+        <ion-toolbar  color="#ffe000" *ngIf="!sendingOTP">
+            <ion-buttons slot="start" >
+                <ion-button  (click)="backButtonEvent()">
+                  <ion-icon mode="md" color="light" slot="icon-only" name="arrow-back"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+         
+        </ion-toolbar>
+        <!-- <ion-item lines="none" class="color-background" text-center >
+            <img src="assets/images/be-xclusive.png" height="40" [ngClass]=" !sendingOTP ? 'mr-top-10': 'mr-top-25' " class="logo " >
+        </ion-item> -->
+    
+    </div>
+
+    <div  class="mr-right-5 mr-left-5">
+      <div *ngIf="sendingOTP">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+                <ion-label position="stacked" class="Mobile-Number">{{'EmailorPhoneNumber' | translate}} </ion-label>
+                <ion-item class="box-border">
+                    <ion-input type="text" name="phone" [(ngModel)]="mobileNumber" required></ion-input>
+                  </ion-item>
+            </ion-col>
+          </ion-row>
+          <br/>
+          <ion-row>
+             <ion-col>
+              <ion-button expand="full" type="button" shape="round"   class="Login-Button text_transform" (click)="sendOTP('Issue')"> 
+                <ion-text class="Login-Button-Text">{{'getOTP' | translate}}</ion-text>
+              </ion-button>
+             </ion-col>
+          </ion-row>
+
+          <div class="textCenter">
+            <ion-text class="BY-TEXT">{{'OR' | translate}}</ion-text>
+         </div>
+         <ion-row>
+           <ion-col>  
+            <ion-button expand="full" type="button" fill="outline" shape="round"  class="Login-Button text_transform" (click)="loginUsingPassword()">
+              <ion-text class="Login-Button-Text">{{'LoginUsingPwd' | translate}}</ion-text>
+          </ion-button>
+           </ion-col>
+         </ion-row>
+        </ion-grid>
+      
+
+         
+
+
+        <ion-grid>
+            <ion-row>
+               <ion-col size="7">
+                  <ion-text class="textFont right">{{ 'Donothaveanaccount' | translate }} </ion-text>
+               </ion-col>
+               <ion-col size="5">
+                  <a (click)="navigateToSignUp()" class="textFont blue"> {{'RegisterNow' | translate}} </a>  
+               </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
+        <div *ngIf="!sendingOTP">
+          <ion-item lines="none">
+              <ion-label position="stacked" class="Mobile-Number">{{'EnterOTP' | translate}} </ion-label>
+            <table class="table" dir="ltr" >
+                <tr>
+                  <td class="textCenter">
+                    <ion-input type="tel" #otp1 class="otp"  [(ngModel)]="digit1" maxlength="1" size="1" (keyup)="next(otp2,$event.target.value,1)" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                    </ion-input>
+                  </td>
+                  <td class="textCenter">
+                    <ion-input type="tel" #otp2 class="otp" [(ngModel)]="digit2" maxlength="1" size="1" (keyup)="next(otp3,$event.target.value,2)" oninput="this.value=this.value.replace(/[^0-9]/g,'');" (keydown.backspace)="back(otp1,$event.target.value)">
+                    </ion-input>
+                  </td>
+                  <td class="textCenter">
+                    <ion-input type="tel" #otp3 class="otp" [(ngModel)]="digit3" maxlength="1" size="1" (keyup)="next(otp4,$event.target.value,3)" oninput="this.value=this.value.replace(/[^0-9]/g,'');"  (keydown.backspace)="back(otp2,$event.target.value)">
+                    </ion-input>
+                  </td>
+                  <td class="textCenter">
+                    <ion-input type="tel" #otp4 class="otp" maxlength="1" [(ngModel)]="digit4"    size="1" (keydown.backspace)="back(otp3,$event.target.value)"  oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                    </ion-input>
+                  </td>
+                </tr>
+              </table>   
+          </ion-item>
+          
+              <ion-grid>
+                  <ion-row>
+                    <ion-col >
+                        <ion-text class="Mobile-Number">
+                          {{'wehavesentOTP' | translate}} 
+                          <b *ngIf="!spacesNumber">{{mobileNumber}}</b>
+                          <b *ngIf="spacesNumber">{{spacesNumber}}</b>
+                        </ion-text><br/>
+                        <div>
+                          <ion-text class="Mobile-Number">
+                            {{'notRecieved' | translate}} 
+                          </ion-text>
+                          <ion-text *ngIf="counter > 0">
+                            {{'resendin' | translate}} 0:{{counter}}
+                          </ion-text>
+                          <a (click)="resendOTP()" class="Mobile-Number blue" *ngIf="counter <= 0"><b>{{'Resend' | translate}}</b>  </a>  
+                        </div>
+                        </ion-col>
+                  </ion-row>
+              </ion-grid>
+            <ion-button expand="full" type="button" shape="round"   class="Login-Button text_transform" (click)="checkOTP()"> 
+                  <ion-text class="Login-Button-Text">{{'Enter' | translate}}</ion-text>
+           </ion-button>
+        </div>
+
+      </div>
+
+      <div class="bottom mr-right-5 mr-left-5" *ngIf="!isKeyboardOpen">
+      
+          <!-- <div class="textCenter">
+              <ion-text class="BY-TEXT">{{ 'BY' | translate }}</ion-text>
+           </div>
+          <ion-item lines="none" text-center ><img src="assets/images/beside.png" height="13" class="logo"></ion-item> -->
+      </div>
+    </ion-col>
+    <ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+    </ion-row>
+    </ion-grid>
+</ion-content>

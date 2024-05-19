@@ -1,0 +1,154 @@
+<?page title="eventTriggEmailPageId" contentType="text/html;charset=UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:n="http://www.zkoss.org/2005/zk/native"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<style>
+.triggerOpt {
+ padding:10px;
+ margin-left:20px;
+ margin-top:10px;
+ 
+}
+
+.dashboardMyLinks {
+		color:#2589BB;
+		font-weight:bold;
+		padding:0 5px;
+		display:inline-block;
+		
+     }
+</style>
+
+	<window id="eventTriggerNewReportWinId" width="100%"
+		xmlns:w="http://www.zkoss.org/2005/zk/client"
+		apply="org.mq.marketer.campaign.controller.report.EventTriggerNewReportController">
+		            <h:table cellspacing="0" cellpadding="4" width="98%" border="0"
+			bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+			<h:tr bgcolor="#F4F5F9">
+				
+				<h:td width="425" style="padding: 5px 0px 15px 5px;">
+					<label value="Date:" sclass="theme-lbHeading" />
+					<space />
+					<label value="From" />
+					<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+						format="dd-MMM-yyyy" constraint="no future" />
+					<space />
+					<label value="To " />
+					<datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox"  readonly="true"
+						format="dd-MMM-yyyy" />
+						
+						<!-- <image src="/img/icons/icon_q.png" tooltip="help2"  style="padding-left:12px;" id="helpImgId" visible="true"/>
+						<popup id="help2"   width="210px" style="bgcolor:#CCCCCC" >
+								<h:table >
+									<h:tr>
+										<h:td>
+											<label  value="You can modify From and To dates" sclass="labelPos" />
+										</h:td>
+									</h:tr>
+									
+								</h:table>								
+							
+							</popup> -->
+						
+				<!-- </h:td>
+				<h:td> -->
+				</h:td>
+				<!-- <h:td width="4500" style="padding: 5px 0px 15px 5px;"> -->
+				<h:td style="padding: 5px 0px 15px 5px;">
+					<label value="Status:" sclass="theme-lbHeading" />
+						<listbox id="statusLbId" rows="1" mold="select">
+						<listitem label="All" selected="true" value="All" />
+						<listitem label="Active" value="Active" />
+						<listitem label="InActive" value="InActive" />
+					</listbox>
+				</h:td>
+				<h:td width="425" align="right" style="padding: 5px 175px 15px 5px;">
+				<space spacing="40px" />
+					<button label="Get Reports"
+						sclass="idle140 greenbtn" id="getBetweenDatesBtnId" />
+					<a label="Reset" id="resetAnchId"
+						style="margin-left:20px;" />
+				</h:td>
+			</h:tr>
+		</h:table>
+			
+					<h:table width="100%">
+						<h:tr>
+							<h:td>
+								<grid id="existingTriggersGrdId" width="98%" 
+									
+									emptyMessage="No reports available.">
+									<columns>
+										<column width="20%">
+											Event Trigger Name
+										</column>
+										<!-- <column width="15%">
+											Last Modified Date
+										</column> -->
+										<column width="10%">
+											Status
+										</column>
+										<column width="20%">
+											Last Sent on
+										</column>
+										 <column width="15%">
+											Emails Sent
+										</column> 
+										<column width="10%">
+											Emails Delivered
+										</column>
+										<column width="15%">
+											Emails Opened
+										</column>
+										<column width="15%">
+											SMS Sent
+										</column>
+										<column width="15%">
+											SMS Delivered
+										</column>
+									</columns>
+									 <rows id="triggerRowsId" />
+									
+								</grid>
+							</h:td>
+						</h:tr>
+					</h:table>
+					
+				   <h:table width="98%" bgcolor="#F9F9F9">
+				<h:tr >
+		        	<h:td align="left">
+							<div id="exportEventTriggerDivId" >
+								<label value="Export as a " />
+								<listbox id="exportEventTriggerLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<label value="file" />
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnEventTriggerId" />
+							</div>
+					</h:td>
+		
+					<h:td align="right">
+			   			<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   			<listbox rows="1" mold="select" id="memberPerPageLBId" style="margin-right:30px;">
+							<listitem label="5" selected="true" />
+							<listitem label="10"  />
+							<listitem label="15"/>
+						</listbox>
+					</h:td>
+					<h:td width="280px"  >
+						<paging id="triggerPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+					</h:td>
+			</h:tr>
+		</h:table>
+								
+					
+					
+	</window>
+
+</zk>
+

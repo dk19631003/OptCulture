@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="351px" height="204px" viewBox="0 0 351 204" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>120 copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0.5" y="0" width="311" height="164" rx="10"></rect>
+        <filter x="-10.6%" y="-16.5%" width="121.2%" height="140.2%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="6" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.199164117 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="120-copy" transform="translate(19.000000, 14.000000)">
+            <g id="Group-2">
+                <g id="Group-4" transform="translate(0.500000, 0.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Mask">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    </g>
+                    <path d="M-2.5,155 C77.343269,137.752222 146.470753,132.002962 204.882452,137.752222 C263.294151,143.501481 299.166667,132.584074 312.5,105 L312.5,196 L-2.5,196 L-2.5,155 Z" id="Path-2" fill="#000000" opacity="0.0203683036" mask="url(#mask-2)"></path>
+                    <path d="M253.964,73.649919 C253.964,75.986919 252.069,77.881919 249.732,77.881919 C247.394,77.881919 245.5,75.986919 245.5,73.649919 C245.5,71.311919 247.394,69.417919 249.732,69.417919 C252.069,69.417919 253.964,71.311919 253.964,73.649919" id="Fill-103" fill="#FFE000" mask="url(#mask-2)"></path>
+                    <path d="M76.964,0.232 C76.964,2.569 75.069,4.464 72.732,4.464 C70.394,4.464 68.5,2.569 68.5,0.232 C68.5,-2.106 70.394,-4 72.732,-4 C75.069,-4 76.964,-2.106 76.964,0.232" id="Fill-103-Copy" fill="#FFE000" mask="url(#mask-2)"></path>
+                    <path d="M230.964,132.232 C230.964,134.569 229.069,136.464 226.732,136.464 C224.394,136.464 222.5,134.569 222.5,132.232 C222.5,129.894 224.394,128 226.732,128 C229.069,128 230.964,129.894 230.964,132.232" id="Fill-103-Copy-2" fill="#FFE000" mask="url(#mask-2)"></path>
+                    <path d="M268.74,18.615 L267.135,18.615 L267.135,17.01 C267.135,15.9 266.235,15 265.125,15 C264.015,15 263.115,15.9 263.115,17.01 L263.115,18.615 L261.51,18.615 C260.4,18.615 259.5,19.515 259.5,20.625 C259.5,21.735 260.4,22.635 261.51,22.635 L263.115,22.635 L263.115,24.24 C263.115,25.35 264.015,26.25 265.125,26.25 C266.235,26.25 267.135,25.35 267.135,24.24 L267.135,22.635 L268.74,22.635 C269.85,22.635 270.75,21.735 270.75,20.625 C270.75,19.515 269.85,18.615 268.74,18.615" id="Fill-105" fill="#000000" opacity="0.0914248512" mask="url(#mask-2)"></path>
+                    <path d="M12.74,29.615 L11.135,29.615 L11.135,28.01 C11.135,26.9 10.235,26 9.125,26 C8.015,26 7.115,26.9 7.115,28.01 L7.115,29.615 L5.51,29.615 C4.4,29.615 3.5,30.515 3.5,31.625 C3.5,32.735 4.4,33.635 5.51,33.635 L7.115,33.635 L7.115,35.24 C7.115,36.35 8.015,37.25 9.125,37.25 C10.235,37.25 11.135,36.35 11.135,35.24 L11.135,33.635 L12.74,33.635 C13.85,33.635 14.75,32.735 14.75,31.625 C14.75,30.515 13.85,29.615 12.74,29.615" id="Fill-105-Copy-2" fill="#000000" opacity="0.0914248512" mask="url(#mask-2)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

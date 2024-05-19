@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Change Logger Levels</title>
+</head>
+<body>
+        <h2>Change Logger Levels</h2>
+        <form action="../ConfigureLoggerLevels" method="get">
+            Application:
+        	<select name="Application">
+    			<option value="subscriber" selected>subscriber</option>
+    			<option value="Scheduler">Scheduler</option>
+			</select>
+			<br>
+			<br>
+			<br>
+			Logger Levels:
+			<select name="LoggerLevels">
+    			<option value="debug" selected>debug</option>
+    			<option value="info">info</option>
+    			<option value="warn">warn</option>
+    			<option value="error">error</option>
+    			<option value="fatal">fatal</option>
+			</select>
+			<br>
+			<br>
+			<button type="submit" name="submit" label="Submit" >Submit</button>
+        </form>
+</body>
+</html>

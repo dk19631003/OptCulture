@@ -1,0 +1,125 @@
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.useradmin.OrganizationZoneController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+	<tabbox id="zoneTabBoxId" >
+			<tabs>
+				<tab label="Zones" id="zoneTabId"/>
+				<tab label="Create Zone" id="addStoreLocTabId" />
+			</tabs>	
+			<tabpanels>
+				<tabpanel>
+			<div id="zoneDivId">
+			<h:table>
+			<h:tr width="150" >
+									<h:td style="padding-top:5px;">
+										<label  value="Org. Unit ID :    " sclass="theme-lbHeading" />
+									</h:td>
+									<h:td style="padding-top:5px;">
+										<listbox id="orgunitTb" width="140px" mold="select" height="30%">
+										<listitem label="All" selected="true"/>
+										</listbox>
+									</h:td>
+								</h:tr>
+						</h:table>
+						<div height="10px"></div>
+							<menupopup id="zonemenuId" />
+		  <listbox id="zoneLbId" emptyMessage="No zone  exist.." width="100%">
+			<listhead sizable="false"  style="background-color:#488eb0;" menupopup="auto">
+				
+			<listheader label="Zone Name" id="zoneName" sclass="hovergridcolumn" width="20%" align="center" sort="auto"/> 
+			<listheader label="Created Date" id="createdDate" sclass="hovergridcolumn" width="20%" align="center" sort="auto"/> 
+			<listheader label="Group Of " id="groupOf" sclass="hovergridcolumn" width="40%" align="center" /> 
+			<listheader label="Actions" id="edit" sclass="hovergridcolumn" width="20%" align="center"/> 
+						</listhead>
+						</listbox>
+					<h:table>
+					<h:tr>
+					<h:td width="70%"></h:td>
+						<h:td width="20%">
+				   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+				   		<listbox rows="1" mold="select" id="reportsPerPageLBId" style="margin-right:30px;">
+							<listitem label="10" selected="true"/>
+							<listitem label="20" />
+							<listitem label="30"/>
+						</listbox>
+						</h:td>
+						<h:td width="10%">
+						
+						<paging id="zoneReportPagingId" detailed="true" pageSize="5" width="360px" 
+							class="contactsViewPaging" style="border:none;"  />
+							
+					</h:td>
+					</h:tr>
+						</h:table>	
+					</div>
+						
+						 </tabpanel>
+						 <tabpanel>
+					<h:table>
+								<h:tr >
+								<h:td style="padding-top:5px;font-size:15px;width:90px;">
+										<label value="Zone Name  :" sclass="theme-lbHeading"/>
+										<label value=" * " style="color:red;"/>
+									</h:td>
+
+									<h:td 
+										style="padding-top:5px;">
+										<textbox id="zoneNameTb"
+											width="130px" value="" maxlength="200">
+										</textbox>
+										<label id="zoneNamelabel" style="color:red;"/>
+									</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td style="padding-top:5px;">
+										<label value="Description :" sclass="theme-lbHeading"/>
+									</h:td>
+									<h:td 
+										style="padding-top:5px;">
+										<textbox id="descriptionTb"
+											width="130px" value="" maxlength="200">
+										</textbox>
+										
+									</h:td>
+
+									</h:tr>
+										<h:tr width="150" >
+									<h:td style="padding-top:5px;">
+										<label  value="Org. Unit ID :    " sclass="theme-lbHeading" />
+										<label value=" * " style="color:red;"/>
+									</h:td>
+									<h:td style="padding-top:5px;">
+										<listbox id="orgunitzoneTb" width="140px" mold="select" height="30%">
+										<listitem label="Select" selected="true"/>
+										</listbox>
+									</h:td>
+								</h:tr>
+									
+					<h:tr height="30"></h:tr>	
+						
+								
+						</h:table>
+	
+	 <grid id="subsidiaryGridId" width="352px" >
+						<columns >
+							<column label="" width="50px"/>
+							<!-- <column width="5%" style="padding-left:15px;" align="center">
+							</column> -->
+							<column label="Subsidiary"  />
+							<!-- <column label="Subsidiary Name" /> -->
+						</columns>
+					<rows id="subsandStoreRowId">
+					</rows>
+				</grid>
+				
+				<button label="Create Zone" sclass = "idle140 greenbtn" id="saveBtnId" />
+	
+				
+						</tabpanel>
+						</tabpanels>	
+			</tabbox>
+			</window>
+			
+</zk>			
+			

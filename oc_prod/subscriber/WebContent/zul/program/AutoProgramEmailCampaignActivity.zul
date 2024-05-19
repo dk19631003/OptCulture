@@ -1,0 +1,54 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="autoProgramEmailCampaignActivityWinId" apply="org.mq.marketer.campaign.controller.program.AutoProgramEmailCampaignActivityController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native" width="520px" height="300px" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+		<div id="centerDivId" height="300px"> 
+			<h:table width="100%" height="100%" >
+				<h:tbody>
+					
+					<h:tr>
+						<h:td style="padding:20px; background-color: #F4F8FC;">
+							<label width="150px" multiline="true" style="font-family:arial;font-size:12px;">
+							
+								->This component tries to send Your configured Email Campaign to the contact(s).
+							
+								->The Drop Down consists of all Your created Email Campaigns among which You need to 
+								  select one Campaign and configure to this component.
+								
+							</label>
+						</h:td>
+					</h:tr>
+					<h:tr >
+						<h:td >
+							<label value="Email Campaigns:"/>
+							<listbox id="userEmailCampaignsLbId"  mold="select"  
+							  sclass="contactsView" >
+							  <listitem label="--Select--" selected="true"/>
+							  <listitem  forEach="${autoProgramEmailCampaignActivityWinId$AutoProgramEmailCampaignActivityController.campaigns}" 
+							  	label="${each.campaignName}" value="${each}" style="line-height:22px;">
+							  	
+								</listitem>
+							  
+							  
+							  
+							  </listbox>
+						</h:td>
+					</h:tr>
+					
+				</h:tbody>
+			</h:table>
+		</div>
+		
+		
+		<!-- <h:hr/>
+		<div id="bottomDivId" align="right" height="60px" >
+			<button label="Cancel" width="80px" onClick="propertiesWinId.setVisible(false);" />
+			<button label="Save" width="80px" />
+		</div> -->
+		
+		
+		
+		
+	</window>
+</zk>

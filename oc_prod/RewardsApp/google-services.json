@@ -1,0 +1,159 @@
+{
+  "project_info": {
+    "project_number": "759427207028",
+    "firebase_url": "https://oc-beside.firebaseio.com",
+    "project_id": "oc-beside",
+    "storage_bucket": "oc-beside.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759427207028:android:49562d9ae1919639",
+        "android_client_info": {
+          "package_name": "com.mq.loyalty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mQIin6SKp25Ob2-eHy6BPUHZ7kiPsAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "759427207028-bh7mgb476urejse1tdir7tnb15hqast6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mq.shoppers",
+                "app_store_id": "1484299786"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759427207028:android:974203deeca92afd682621",
+        "android_client_info": {
+          "package_name": "com.mq.martins"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mQIin6SKp25Ob2-eHy6BPUHZ7kiPsAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "759427207028-bh7mgb476urejse1tdir7tnb15hqast6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mq.shoppers",
+                "app_store_id": "1484299786"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759427207028:android:4513be3db5d7a40c682621",
+        "android_client_info": {
+          "package_name": "com.mq.shoppers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mQIin6SKp25Ob2-eHy6BPUHZ7kiPsAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "759427207028-bh7mgb476urejse1tdir7tnb15hqast6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mq.shoppers",
+                "app_store_id": "1484299786"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759427207028:android:209803616eafae2a682621",
+        "android_client_info": {
+          "package_name": "com.mq.wakefeild"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mQIin6SKp25Ob2-eHy6BPUHZ7kiPsAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759427207028-qe8b90v7jiatt6hj78b8elnivkoc3or3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "759427207028-bh7mgb476urejse1tdir7tnb15hqast6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mq.shoppers",
+                "app_store_id": "1484299786"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

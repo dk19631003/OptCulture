@@ -1,0 +1,116 @@
+
+  
+  <ion-content  dir="{{textDir}}">
+    <ion-grid fixed class="padding0 margin0 wd100 ht100">
+      <ion-row class="ht100">
+        <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent">
+      <div>
+          <ion-toolbar>
+              <ion-buttons slot="start" >
+                  <ion-button  (click)="backButtonEvent()">
+                    <ion-icon mode="md" color="dark" slot="icon-only" name="arrow-back"></ion-icon>
+                  </ion-button>
+              </ion-buttons>
+            <!-- <ion-title>{{ 'Forgot Password' | translate }} </ion-title> -->
+          </ion-toolbar>
+          <ion-item lines="none"  >
+              <!-- <p class="titleText"> -->
+                <ion-label text-wrap class="titleText navy">
+                    {{ 'Transactions' | translate }}
+                </ion-label>
+                 
+              <!-- </p> -->
+              </ion-item>
+      </div>
+    
+    <ion-list class="mr-right-5 mr-left-5" *ngIf="!showNoTransactions || rows">
+      <ng-container *ngFor="let row of rows">
+        <ion-grid *ngIf="row.amount.type === 'Issuance' || row.amount.type === 'Return' || row.amount.type === 'Bonus' || row.amount.type == 'Redemption' || row.amount.type === 'Adjustment' ">
+        <ion-row >
+          <ion-col>
+              <ion-text class="textFont coolGrey">{{splitEST(row.date) | date:'dd MMM y'  }}</ion-text>
+          </ion-col>
+          </ion-row>
+           <ion-row>
+             <ion-col size="6">
+                <ion-label class="headerText bold" >{{row.amount.type}}</ion-label>
+                <!-- <ion-label class="headerText bold" *ngIf="(row.amount.type === 'Issuance' || row.amount.type === 'Return' || row.amount.type === 'Bonus' || row.amount.type === 'Adjustment' )">Loyalty earned</ion-label> -->
+             </ion-col>
+              <ion-col size="6">
+                  <ng-container   *ngIf="row.amount.type === 'Redemption'">
+                    <ng-container *ngFor="let balance of row.balances">
+                      <ion-row >
+                        <ion-col class="right padding0">
+                          <span *ngIf="balance.valueCode=='Points'" class="textFont red right bold" >
+                            - {{balance.amount}} Points</span> 
+                        </ion-col>
+                      </ion-row>
+                      <ion-row >
+                        <ion-col class="right padding0">
+                          <span *ngIf="balance.valueCode=='Currency' && balance.type=='Reward' && !(balance.amount === '')" class="textFont red right bold" >
+                            {{balance.amount}} USD</span>
+                          <span *ngIf="balance.valueCode=='Currency' && balance.type=='Gift' && !(balance.amount === '')" class="textFont red right bold" >
+                            {{balance.amount}} USD</span>
+                        </ion-col>
+                      </ion-row>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="(row.amount.type === 'Issuance' || row.amount.type === 'Return' || row.amount.type === 'Bonus' || row.amount.type === 'Adjustment' )">
+                    <ng-container *ngFor="let balance of row.balances">
+                      <ion-row >
+                        <ion-col class="right padding0">
+                          <span *ngIf="balance.valueCode=='Points' && !(balance.amount === '')" class="textFont red green right bold" >
+                            {{balance.amount}} Points</span>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row >
+                        <ion-col class="right padding0">
+                          <span *ngIf="balance.valueCode=='Currency' && balance.type=='Reward' && !(balance.amount === '')" class="textFont red green right bold" >
+                            {{balance.amount}} USD</span>
+                          <span *ngIf="balance.valueCode=='Currency' && balance.type=='Gift' && !(balance.amount === '')" class="textFont red green right bold" >
+                            {{balance.amount}} USD</span>
+                        </ion-col>
+                      </ion-row>
+                    </ng-container>
+                  </ng-container>
+                </ion-col>
+           </ion-row>
+           <ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-label class="textFont coolGrey">Receipt No.: {{row.receiptNumber}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-row>
+           <ion-row>
+             <ion-col size="8">
+                <ion-label class="headerText">$ {{row.amount.enteredValue}}</ion-label>
+             </ion-col>
+             <ion-col size="4" *ngIf="!(row.amount.type === 'Bonus' || row.amount.type === 'Adjustment' )">
+                <a class="notificationText blue text_transform right" (click)="openViewRecieptPopup(row.eReceiptURL)">
+                    view receipt
+                </a>
+             </ion-col>
+            </ion-row>
+            <ion-item  class="line" lines="full">
+            </ion-item>
+          </ion-grid>
+      </ng-container>
+    </ion-list>
+
+    <ion-grid *ngIf="showNoTransactions " class="mrtop50">
+      <ion-row>
+        <ion-col class="textCenter">
+             <ion-label class="headerText">{{'SorryNoTransactionsFound!'|translate}}</ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  <!-- <button  (click)="openViewRecieptPopup(row)">
+  popOver
+  </button> -->
+</ion-col>
+<ion-col *ngIf="!isMobile" class="bgimage"></ion-col>
+</ion-row>
+</ion-grid>
+  </ion-content>
+  

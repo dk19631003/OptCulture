@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyCardSet"
+		table="loyalty_card_set">
+		<id name="cardSetId" type="java.lang.Long" column="card_set_id">
+			<generator class="native" />
+		</id>
+		<property name="cardSetName" type="string">
+			<column name="card_set_name" not-null="true" length="60"/>
+		</property>
+		<property name="quantity" type="java.lang.Long">
+			<column name="quantity" not-null="true"/>
+		</property>
+		<property name="generationType" type="string">
+			<column name="generation_type" length="60" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="60" not-null="true"/>
+		</property>
+		<property name="programId" type="java.lang.Long">
+	      <column name="program_id" not-null="true"/>
+	    </property>
+	    <property name="createdDate" type="calendar">
+			<column name="created_date" not-null="true"/>
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="60" not-null="true"/>
+		</property>
+		<property name="modifiedBy" type="string">
+			<column name="modified_by" length="60"/>
+		</property>
+		<property name="migratedFlag" type="char">
+			<column name="migrated_flag" />
+		</property>
+		<property name="cardSetType" type="string">
+			<column name="card_set_type" length="60" not-null="true"/>
+		</property>
+		<property name="linkedTierLevel" type="java.lang.Integer">
+			<column name="linked_tier_level" default="0"/>
+		</property>
+		<property name="cardGenerationType" type="string">
+			<column name="card_generation_type" length="60"/>
+		</property>
+	</class>
+</hibernate-mapping>
+

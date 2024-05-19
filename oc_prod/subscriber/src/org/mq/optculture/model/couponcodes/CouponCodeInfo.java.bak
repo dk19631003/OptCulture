@@ -1,0 +1,88 @@
+package org.mq.optculture.model.couponcodes;
+
+import javax.xml.bind.annotation.XmlElement;
+
+public class CouponCodeInfo {
+	private String COUPONNAME;
+	private String COUPONCODE;
+	private String STORENUMBER;
+	private String CUSTOMERID;
+	private String PHONE;
+	private String EMAIL;
+	private String DOCSID;
+	private String SOURCETYPE;
+	
+	public String getSOURCETYPE() {
+		return SOURCETYPE;
+	}
+	@XmlElement(name = "SOURCETYPE")
+	public void setSOURCETYPE(String sOURCETYPE) {
+		SOURCETYPE = sOURCETYPE;
+	}
+
+	public CouponCodeInfo() {
+	}
+	
+	public CouponCodeInfo(String cOUPONNAME, String cOUPONCODE, String sTORENUMBER,
+			String cUSTOMERID, String pHONE, String eMAIL, String dOCSID) {
+		COUPONNAME = cOUPONNAME;
+		COUPONCODE = cOUPONCODE;
+		STORENUMBER = sTORENUMBER;
+		CUSTOMERID = cUSTOMERID;
+		PHONE = pHONE;
+		EMAIL = eMAIL;
+		DOCSID = dOCSID;
+	}
+
+	public String getCOUPONNAME() {
+		return COUPONNAME;
+	}
+	@XmlElement(name = "COUPONNAME")
+	public void setCOUPONNAME(String cOUPONNAME) {
+		COUPONNAME = cOUPONNAME;
+	}
+
+	public String getCOUPONCODE() {
+		return COUPONCODE;
+	}
+	@XmlElement(name = "COUPONCODE")
+	public void setCOUPONCODE(String cOUPONCODE) {
+		COUPONCODE = cOUPONCODE;
+	}
+	public String getSTORENUMBER() {
+		return STORENUMBER;
+	}
+	@XmlElement(name = "STORENUMBER")
+	public void setSTORENUMBER(String sTORENUMBER) {
+		STORENUMBER = sTORENUMBER;
+	}
+	public String getCUSTOMERID() {
+		return CUSTOMERID;
+	}
+	@XmlElement(name = "CUSTOMERID")
+	public void setCUSTOMERID(String cUSTOMERID) {
+		CUSTOMERID = cUSTOMERID;
+	}
+	public String getPHONE() {
+		return PHONE;
+	}
+	@XmlElement(name = "PHONE")
+	public void setPHONE(String pHONE) {
+		PHONE = pHONE;
+	}
+	public String getEMAIL() {
+		return EMAIL;
+	}
+	@XmlElement(name = "EMAIL")
+	public void setEMAIL(String eMAIL) {
+		EMAIL = eMAIL;
+	}
+	public String getDOCSID() {
+		return DOCSID;
+	}
+	@XmlElement(name = "DOCSID")
+	public void setDOCSID(String dOCSID) {
+		DOCSID = dOCSID;
+	}
+	
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.AutoProgramComponents"
+		table="auto_program_components">
+		<id name="compId" type="java.lang.Long">
+			<column name="comp_id" />
+			<generator class="native" />
+		</id>
+		<property name="supportId" type="java.lang.Long">
+			<column name="support_id"   />
+		</property>
+		<many-to-one name="autoProgram"
+			class="org.mq.captiway.scheduler.beans.AutoProgram"
+			foreign-key="AutoProgramrefKey" fetch="select" lazy="false">
+			<column name="program_id" not-null="true" />
+		</many-to-one>
+		
+		<property name="title" type="string">
+			<column name="title" />
+		</property>
+		
+		<property name="message" type="string">
+			<column name="message"/>
+		</property>
+		
+		<property name="footer" type="string">
+			<column name="footer"/>
+		</property>
+		<property name="coordinates" type="string">
+			<column name="coordinates"/>
+		</property>
+		<property name="previousId" type="string">
+			<column name="previous_id"/>
+		</property>
+		<property name="nextId" type="string">
+			<column name="next_id"/>
+		</property>
+		<property name="compType" type="string">
+			<column name="comp_type"/>
+		</property>
+		
+		<property name="componentWinId" type="string">
+			<column name="comp_win_id"/>
+		</property>
+		
+		<property name="stage" type="int">
+		
+			<column name="stage"/>
+		</property>
+		
+		<property name="label" type="string">
+			<column name="label"/>
+		</property>
+		
+	</class>
+</hibernate-mapping>

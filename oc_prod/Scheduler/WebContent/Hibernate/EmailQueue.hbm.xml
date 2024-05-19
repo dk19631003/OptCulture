@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.EmailQueue" table="email_queue">
+    <id name="id" type="java.lang.Long">
+      <column name="id"/>
+      <generator class="native"/>
+    </id>
+    
+    <property name="campaignId" type="java.lang.Long">
+			<column name="campaign_id"  />
+		</property>
+		<property name="customTemplateId" type="java.lang.Long">
+			<column name="cust_temp_id"  />
+		</property>
+	<!-- <many-to-one name="campaign" class="org.mq.captiway.scheduler.beans.Campaigns" foreign-key="CampaignsentFkey"  fetch="select" lazy="false">
+    	<column name="campaign_id"/>
+    </many-to-one>
+    <many-to-one name="customTemplates" class="org.mq.captiway.scheduler.beans.CustomTemplates" 
+    	foreign-key="custTempFkey"  fetch="select" lazy="false">
+    	<column name="cust_temp_id"/>
+    </many-to-one> -->
+	<many-to-one name="user" class="org.mq.captiway.scheduler.beans.Users" fetch="select" lazy="false">
+    	<column name="user_id" />
+    </many-to-one>
+    <property name="type" type="string" >
+    	<column name="type" length="20" not-null="true"/>
+    </property>
+    <property name="status" type="string" >
+    	<column name="status" length="20" not-null="true"/>
+    </property>
+    <property name="toEmailId" type="string">
+    	<column name="to_email_id" length="100" />
+    </property>
+    <property name="subject" type="string">
+    	<column name="subject" length="200" />
+    </property>
+    
+    <property name="childEmail" type="string">
+			<column name="child_email" length="200" />
+		</property>
+		<property name="childFirstName" type="string">
+			<column name="child_first_name" length="200" />
+		</property>
+		<property name="dateOfBirth" type="string">
+			<column name="date_of_birth" length="200" />
+		</property>
+    <property name="message" type="string">
+    	<column name="message" />
+    </property>
+	<property name="sentDate" type="timestamp">
+		<column name="sent_date" />
+	</property>
+	
+	<property name="contactId" type="java.lang.Long">
+			<column name="contact_id"  />
+	</property>
+		
+	<property name="ccEmailId" type="string">
+    	<column name="cc_email_id" length="100" />
+    </property>
+    
+    <property name="bccEmailId" type="string">
+    	<column name="bcc_email_id" length="100" />
+    </property>
+
+    
+    <property name="loyaltyId" type="java.lang.Long">
+			<column name="loyalty_id"  />
+	</property>
+     <property name="deliveryStatus" type="java.lang.String">
+			<column name="delivery_status"  />
+	</property>
+	 
+	<property name="opens" type="int">
+			<column name="opens" default="0"/>
+	</property>
+		
+	<property name="clicks" type="int">
+			<column name="clicks" default="0"/>
+	</property>
+	<property name="custTempName">
+	<column name="cust_temp_name" />
+	</property>
+ </class>
+</hibernate-mapping>

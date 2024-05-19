@@ -1,0 +1,81 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	
+	<window id="autoProgramSMSCampaignActivityWinId" apply="org.mq.marketer.campaign.controller.program.AutoProgramSMSCampaignActivityController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native" width="520px" height="300px" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+		<!-- <div id="topDivId" height="80px" >
+			<h:table width="100%" height="100%" border="0">
+			<h:tbody>
+			<h:tr style="vertical-align:top;text-align:left;">
+				<h:td style="color: darkgray; text-align:right;" width="20%">
+				<label id="titleLblId" value="Stage Title :" />
+				</h:td>
+				<h:td style="color: darkgray;">
+				<textbox id="titleTbId" width="150px" maxlength="15" />
+				</h:td>
+			</h:tr>
+			
+			<h:tr style="height:20px;vertical-align:top; text-align:left;">
+				<h:td style="color: darkgray; text-align:right;" >
+				<label id="messageLblId" value="Message :" />
+				</h:td>
+				
+				<h:td style="color: darkgray;">
+				<textbox id="messageTbId" width="150px" maxlength="25" rows="2" />
+				</h:td>
+			</h:tr>
+			
+			</h:tbody>
+			</h:table>
+		</div> -->
+		
+		
+		
+		<div id="centerDivId" height="300px"> 
+			<h:table width="100%" height="100%" >
+			<h:tbody>
+			
+			
+			<h:tr>
+				<h:td style="padding:20px; background-color: #F4F8FC;">
+					<label width="150px" multiline="true" style="font-family:arial;font-size:12px;">
+						->This component tries to send Your configured SMS to the contact(s).
+								
+						->The Drop Down consists of all Your created SMS Campaigns among which You need to 
+						  select one SMS and configure to this component.
+					</label>
+				</h:td>
+			</h:tr>
+			<h:tr >
+				<h:td >
+					<label value="SMS Campaigns:"/>
+					<listbox id="userSMSCampaignsLbId"  mold="select"  
+					  sclass="contactsView" >
+					  <listitem label="--Select--" selected="true"/>
+					  <listitem  forEach="${autoProgramSMSCampaignActivityWinId$AutoProgramSMSCampaignActivityController.smsCampaigns}" 
+					  	label="${each.smsCampaignName}" value="${each}" style="line-height:22px;">
+					  	
+						</listitem>
+					  
+					  
+					  
+					  </listbox>
+				</h:td>
+			</h:tr>
+			</h:tbody>
+			</h:table>
+		</div>
+		
+		
+		<!-- <h:hr/>
+		<div id="bottomDivId" align="right" height="60px" >
+			<button label="Cancel" width="80px" onClick="propertiesWinId.setVisible(false);" />
+			<button label="Save" width="80px" />
+		</div> -->
+		
+		
+		
+		
+	</window>
+</zk>

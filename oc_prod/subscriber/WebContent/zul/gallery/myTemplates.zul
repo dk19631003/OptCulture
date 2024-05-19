@@ -1,0 +1,359 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<window id="myTemplatesWinId" border="0"  
+	apply="org.mq.marketer.campaign.controller.gallery.MyTemplatesController" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%" xmlns:w="http://www.zkoss.org/2005/zk/client">
+
+	<style>
+		.myGbStyle {
+		
+		
+	 	background: url("../images/accd-hm-mouseover.png") #DCF0FB;
+	 	color: #1B6AA3;
+
+
+		
+		}
+	
+	</style>
+	
+		<!-- <window id="newFolderWinId" visible="false" position="center" onClose="self.setVisible(false); event.stopPropagation();"  
+				  		 width="500px" height="200px"  title="" closable="true" >
+		  	
+			<h:table border="0" width="75%" cellspacing="10px;" align="center" >
+				
+				<h:tr>
+					<h:td width="200px" align="right">Folder Name:</h:td>
+					<h:td > <textbox id="folderTbId" value=" " maxlength="20"/></h:td>
+				</h:tr>
+				
+				
+				<h:tr>
+					<h:td align="right">
+						<button sclass="idle70 greenbtn" label="Modify" id="modifyBtnId" />
+					</h:td>
+					<h:td align="left">
+						<button  label="Cancel" sclass="idle" id="cancelModifyBtnId" onClick="newFolderWinId.setVisible(false)"/>
+					</h:td>
+				</h:tr>	
+				
+				<h:tr>
+					
+					<h:td align="center" colspan="2">  
+						<h:div ><label value="" id="modifyFolderErrorMsgLblId" style="color:red;"/></h:div>
+					</h:td>
+				
+				</h:tr>
+			</h:table>
+			
+			
+	</window>	 -->
+	
+		<window id="newMyTemplatesSubWinId" visible="false" position="center" onClose="self.setVisible(false); event.stopPropagation();"  
+				  		 width="500px" height="200px"  title="" closable="true" >
+		  	
+			<div visible="false" id="createFolderDivId">
+				<h:table border="0" width="75%" cellspacing="10px;" align="center" >
+					<h:tr height="20px;">
+			  				<h:td></h:td><h:td></h:td>
+			  			</h:tr>
+					<h:tr>
+						<h:td width="200px" align="right">Folder Name:</h:td>
+						<h:td > <textbox id="newFolderTbId" value=" " maxlength="20"/></h:td>
+					</h:tr>
+					
+					
+					<h:tr>
+						<h:td align="right">
+							<button sclass="idle70 greenbtn" label="Add Folder" id="okBtnId" />
+						</h:td>
+						<h:td align="left">
+							<button  label="Cancel" sclass="idle" id="modifyCancelBtnId" onClick="newMyTemplatesSubWinId.setVisible(false)"/>
+						</h:td>
+					</h:tr>	
+					
+					<h:tr>
+						
+						<h:td align="center" colspan="2">  
+							<h:div ><label value="" id="folderErrorMsgLblId" style="color:red;"/></h:div>
+						</h:td>
+					
+					</h:tr>
+				</h:table>
+			</div>
+			
+			
+	</window>	
+					<h:table cellspacing="0" cellpadding="2" width="100%" >
+						<h:tr >
+							<h:td valign="top">
+					
+								<label value="You can create new email templates here.Saved templates can be used in your email campaigns"/><h:br/>
+								
+							</h:td>
+							
+							<h:td align="right">
+								<label value="Templates per rows:"/>
+								<listbox rows="1" mold="select"	id="templatePerPageLBId" style="margin-right:30px;">
+									<listitem label="10" selected="true" />
+									<listitem label="15" />
+									<listitem label="20" />
+								</listbox>
+							</h:td>
+							<h:td>
+								<paging id="templatePagingId" detailed="true" pageSize="10" width="255px" class="contactsViewPaging" style="border:none;background: none;" />
+							</h:td>	
+							
+						
+							<h:td width="310" align="right" vailgn="bottom">
+									<toolbarbutton id="createTemplateTBarBtnId" label="Create New Template"    image="/images/create_new_template_icon.png"    />
+									<!-- <toolbarbutton id="viewAllTemplatesTBarBtnId" label="View All My Templates"   	image="/images/veiw-all-templates-icon.png"   /> -->				
+							</h:td>
+						</h:tr>
+					</h:table>
+					
+					<menupopup id="manageFolderMpId"  sclass="myfilter">
+						<menuitem label="View Details" id="viewFolderMId"/>
+						<menuitem label="Change Folder Name" id="changeFolderMId"/>
+						<menuitem label="Delete Folder" id="deleteFolderMId"/>
+					</menupopup>
+					
+					
+					<hlayout>
+						<div width="260px" style="position:relative;" >
+						<!-- <image src="/img/theme/preview_icon.png" id="viewAllImgId" tooltiptext="View All Templates" 
+						style="position: absolute; z-index: 100; top: 5px; left: 238px; cursor:pointer;" />
+							
+						
+						<separator bar="true" orient="vertical"  style="position: absolute; z-index: 100; top: 5px; left: 220px;" /> -->
+						
+							<image src="/img/icons/add.gif" id="folderImgId" tooltiptext="Create New Folder"  
+									style="position: absolute; z-index: 100; top: 5px; left: 190px; cursor:pointer;"/>
+							
+						<!-- <separator bar="true" orient="vertical"  style="position: absolute; z-index: 100; top: 135px; left: 220px;" />
+						
+								<image src="/img/theme/preview_icon.png" id="viewAllMyTempImgId" tooltiptext="View All Templates"  
+									style="position: absolute; z-index: 100; top: 135px; left: 238px; cursor:pointer;"/> -->
+							
+							<tabbox mold="accordion" id="tabBoxId">
+							<tabs>
+							<tab label="Drag &amp; Drop Editor Templates"  > </tab>
+							<tab label="Legacy Editor"> </tab>
+							<!-- <tab label="Global Templates" ></tab> -->
+							
+							 </tabs>
+		
+								<tabpanels>
+								<tabpanel> 
+									<listbox id="newEditorTemplatesListId" width="250px" sclass="templateList" />
+										
+								</tabpanel>
+								<tabpanel> 
+						
+							
+									<listbox id="myTemplatesListId" width="250px" sclass="templateList" />
+										
+								</tabpanel>
+								<!-- <tabpanel>
+									<listbox id="systemTemplatesListId" width="250px" sclass="templateList" />
+								</tabpanel> -->
+								
+								</tabpanels>
+							</tabbox>
+						</div>
+					
+						<groupbox  id="templatesGBoxId" visible="true"  closable="false" hflex="1">
+						 	<caption label=" Templates" style="fony-weight:bold;" />
+								<div id="templListDivId"  style="overflow:auto;" width="100%" />
+						</groupbox>
+
+					</hlayout>
+					
+
+					
+					<!-- <h:table cellpadding="0" cellspacing="0" border="0"  style="margin:10px 0 10px 0; padding:10px;" width="100%">
+						<h:tr >
+								<h:td valign="top" width="300px" align="left">
+									<div>
+										<groupbox mold="3d" width="260px" open="false" id="myTempGbId" closable="false" >
+											<caption label="My Templates"   >
+												<h:table cellpadding="0" cellspacing="0" border="0">
+												<h:tr>
+												
+													<h:td width="20">
+													 <separator bar="true" orient="vertical" style="" />  
+													</h:td> 
+													<h:td>
+													</h:td> 
+												</h:tr>
+												</h:table>
+											</caption>
+										
+										
+											
+				
+										</groupbox >
+									<groupbox mold="3d" width="260px" open="false" sclass="myGbStyle" id="sysTemGbId" >
+									<caption label="System Templates" />
+									
+												
+			
+									</groupbox>
+									</div>
+							</h:td>
+						
+							<h:td valign="top">
+							
+							
+							</h:td>
+						</h:tr>
+					</h:table> -->
+						
+							
+							
+							<!-- <tabbox mold="accordion" id="tabBoxId">
+								<tabs>
+									<tab width="300px" sclass="segmentHead" 
+										label="My Templates" >
+									</tab>
+									<tab width="300px" sclass="segmentHead"
+										label="System Templates" id="systemTemplatesTabId">
+									</tab>
+								</tabs>
+								<tabpanels>
+									<tabpanel>
+										<listbox id="myTemplatesListId" sclass="templateList">
+											<listhead>
+											<listheader image="/img/icons/add.gif"  id="folderImgId"  tooltiptext="Create New Folder"  />
+											<listheader image="/img/icons/delt_icn.png" id="folderDelImgId" tooltiptext="Delete Folder" visible="false" style="align:end;" />
+											</listhead>
+											
+
+										</listbox>
+									</tabpanel>
+									<tabpanel>
+										<listbox id="systemTemplatesListId" sclass="templateList" />
+
+									</tabpanel>
+								</tabpanels>
+							</tabbox> -->
+
+
+					<!-- 	<vbox width="100%" style="padding:20px;"  >
+							<groupbox  id="templatesGBoxId" visible="true"  closable="false">
+							 	<caption label=" My Templates" style="fony-weight:bold;" />
+									<div id="templListDivId"  style="overflow:auto; padding-bottom:5px;" width="100%" />
+							</groupbox>
+						</vbox> -->
+
+	<popup id="myPopupId" width="200px" >
+		<listbox id="optionsLbId">
+			<listitem label="Change Folder Name"  />
+			<listitem label="Delete Folder"  />
+			<listitem label="View Details"  />
+		
+		</listbox>
+	
+	</popup>
+	<window id="viewAllFolderWinId"  title="View Details" visible="false" width="420px"  border="normal"  closable="true"  onClose="self.setVisible(false); event.stopPropagation();" >
+		
+				<h:table width="400px"  >
+					<h:tr>
+						<h:td height="30px" width="180px"><label value="Folder Name : "  /></h:td> <h:td><label id="folderNameLblId"/></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td height="30px"><label value="Number of Templates : "/> </h:td> <h:td><label id="tempCountLblId"/></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td height="30px"><label value="Last Accessed on Date : " /> </h:td> <h:td><label id="lastAccLblId"/></h:td>
+					</h:tr>
+				</h:table>
+							
+		
+		
+		</window>	
+		<window id="winId" title="Save in My Templates" border="normal" visible="false" width="550px" height="200px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+				
+				<h:table>
+					<h:tr>
+						<h:td colspan="3">
+						
+						<textbox id="htmlStuffId3" value="test"  visible="false"/>
+						
+			        	<label id="resLbId" visible="false" style="font-style:verdena;size:11px;color:red"/>
+			        	
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>
+		        		<label value="Name :"/> <textbox id="templatNameTbId" maxlength="25"  />
+						</h:td>
+						<h:td>
+			        	<label value="Select folder:"/>
+					     <listbox id="myTempListId" width="150px" sclass="templateList" rows="1" mold="select"/>
+						</h:td>
+						<h:td>
+		        		<button label="Submit" sclass="idle70" id="myTemplatesSubmtBtnId" />
+						</h:td>
+						</h:tr>
+				</h:table>
+									
+		 </window>				
+			<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false)" />
+		</caption>
+		<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+		<iframe id="iframeId" width="100%" height="100%"/>
+		</div>
+		</window>
+		<window id="testWinId" visible="false" closable="true"
+			title="Send Test Mail" height="200px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<!-- xmlns:h="http://www.zkoss.org/2005/zk/native"
+			> -->
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="3">
+						<label id="msgLblId"
+							style="color:red;font-family:verdana;font-size:11px;" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="1">
+						<label value="Email address:" />
+					</h:td>
+					<h:td colspan="2">
+						<textbox id="testTbId" width="160px" />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td />
+
+					<h:td colspan="2" valign="center">
+						<image src="/img/icons/icon_i.png"
+							style="vertical-align:bottom;" />
+						<label
+							value="To send a test email to multiple email addresses, enter the addresses comma separated."
+							style="vertical-align:bottom;" sclass="labelPos" />
+					</h:td>
+
+
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td>
+						<button label="Send" id="sendTestMailBtnId" />
+					</h:td>
+					<h:td>
+						<button label="Cancel"
+							id="cancelSendTestMailBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+		</window>					
+		
+</window>
+</zk>

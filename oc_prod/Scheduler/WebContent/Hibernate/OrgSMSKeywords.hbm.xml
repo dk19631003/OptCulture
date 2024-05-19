@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.OrgSMSkeywords" table="org_sms_keywords">
+    <id name="keywordId" type="java.lang.Long" column="keyword_id">
+      <generator class="native"/>
+    </id>
+	<property name="keyword" type="string" column="keyword" />
+    <property name="validUpto" type="calendar" column="valid_upto"/>
+    <property name="orgId" type="java.lang.Long" column="org_id" />
+    
+    
+	<property name="autoResponse" type="text" column="auto_response" />
+	<property name="status" type="string" column="status" />
+    <property name="createdDate" type="calendar" column="created_date"/>
+    <property name="startFrom" type="calendar" column="start_from"/>
+    <many-to-one name="user"
+		class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId"
+		fetch="select" >
+		<column name="user_id"  />
+	</many-to-one>
+    <property name="shortCode" type="string" column="short_code" length="15"/>
+    
+     <property name="senderId" type="string" column="sender_id" length="15"/>
+  </class>
+</hibernate-mapping>
+
+
+ 

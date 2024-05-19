@@ -1,0 +1,353 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+	<window id="campListWinId" width="100%"
+		apply="org.mq.optculture.controller.loyalty.LoyaltyFraudAlertsController"
+		style="margin:0px;" xmlns:h="native" xmlns:w="client">
+	<tabbox id="fraudAlertsTabBoxId" >
+			<tabs>
+				<tab label="Current Alerts" />
+				<tab label="Create Rule" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<grid id="alertReportgrdId"
+						emptyMessage="No Data available" width="100%">
+						<columns>
+							<column label="Rule Name" width="15%"/>
+							<column label="Rule Description" width="35%"/>
+							<column label="Date Range" width="25%"/>
+							<column label="Email Frequency" width="20%" />
+							<column label="Actions" width="15%"/>
+						</columns>
+						<rows id="alertReportTrxRowId" />
+
+					</grid>
+					
+					
+				</tabpanel>
+				<tabpanel>
+				<div id="displayRuleDivId">
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+			   style="padding:3px;border-radius:5px;">
+				<h:tr>
+				<h:td  width="100%">  <label value=" Rule Name " sclass="theme-lbHeading" ></label><label value="*" style="color:red;"/>
+				
+				 <textbox id="rulenametxboxId" />
+				</h:td>
+				</h:tr>
+			</h:table>
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+			   style="padding:3px;border-radius:5px;">
+				<h:tr>
+				<h:td width="8%">
+				  <label value="Create Rule On :" sclass="theme-lbHeading" ></label>
+				</h:td>
+					<h:td width="8%">
+						<div id="ValueDivId">	
+						<listbox id="trxAmtPtLbId" rows="1"
+							mold="select">
+							<listitem label="Transactions"
+								selected="true" value="trx" />
+							<listitem label="Amount"
+								 value="amount" />
+							<listitem label="Points" value="point" />
+
+						</listbox>
+						</div>
+						</h:td>
+						
+				<h:td width="10%">
+				  <label value="For " sclass="theme-lbHeading" ></label>
+                     <listbox id="ltyTypeLbId" rows="1" mold="select">
+						<listitem label=" Issuance " selected="true"
+							value="Issuance" />
+						<listitem label="Redemption" value="Redemption" />
+						<listitem label="Both" value="both" />
+					</listbox>
+					</h:td>
+					<h:td width="13%">
+					<listbox id="trxcriteriaLbId" rows="1" mold="select">
+						<listitem label="More than" selected="true"
+							value="morethan" />
+						<listitem label="Equal to" value="equals" />
+
+					</listbox>
+					<textbox id="trxTbId" width="60px" />
+
+                  
+
+				</h:td>
+						
+					<h:td width="8%">
+					<listbox id="trxTdateypeLbId" rows="1"
+							mold="select">
+							<listitem label="Within last"
+								selected="true" value="withinlast" />
+							<listitem label="Period" value="period" />
+
+						</listbox>
+						</h:td>
+						<h:td width="27%">
+			           <div id="listboxDivId" visible="false">
+			        
+						  <textbox id="withinTbId" width="40px"/>
+						 
+						  <listbox id="trxDWMLbId" rows="1"
+							mold="select">
+							<listitem label="Days" selected="true"
+								value="day" />
+							<listitem label="Weeks" value="week" />
+							<listitem label="Months" value="month" />
+						</listbox>
+						
+						</div>
+					
+						
+						<div id="dateDivId" visible="false">
+						
+						<label value="From" sclass="theme-lbHeading" />
+						<space width="2px"></space>
+						<datebox id="fromDateId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+						format="dd-MMM-yyyy" constraint="no future" />
+						<space width="2px"></space>
+						<label Value="To" sclass="theme-lbHeading" />
+						<space width="2px"></space>
+						<datebox id="toDateId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+						format="dd-MMM-yyyy" constraint="no future" style="margin-right: 0px;" />
+						</div>
+						</h:td>
+							<h:td width="10%">
+							<button label="Create" id="saveAllDetailsBtnId"	sclass="idle140 greenbtn" style="margin-right: 0px;" />
+							</h:td>
+							</h:tr>
+	                    
+     </h:table>
+   
+	  </div> 
+		
+					<grid id="storeRedmGridId"
+						emptyMessage="No Data available">
+						<columns>
+							<column label="No. of transactions" />
+							<column label="Card number" />
+							<column label=" Issuance Count" />
+							<column label="Redemption Count"/>
+							
+							<column label="Total Issued Points" />
+							<column label="Total Issued Amt." />
+							<column label="Total Redeemed Amt." />
+						</columns>
+						<rows id="fraudAlertTrxRowId" />
+
+					</grid>
+					
+					<div id="pagingStoreDivId">
+						<h:table width="100%" bgcolor="#F9F9F9">
+							<h:tr>
+								<h:td align="left">
+									<div id="exportFraudAlertTrxDivId">
+										<label value="Export as a " />
+										<listbox
+											id="exportFraudAlertTrxLbId" mold="select" width="100px">
+											<listitem label=".csv file "
+												selected="true" value="csv" />
+												<listitem label=".xls file"
+												 value="xls" />
+										</listbox>
+										
+										<button label="Export"
+											 id="exportBtnFraudAlertTrxId" sclass="idle140 greenbtn" />
+									</div>
+								</h:td>
+
+								<h:td align="right">
+									<label value="Items per page:"
+										style="padding-right:5px;font-size:11px;" />
+									<listbox rows="1" mold="select"
+										id="fraudAlertPageSizeLBId" style="margin-right:30px;">
+										<listitem label="5"
+											selected="true" />
+										<listitem label="10"  />
+										<listitem label="15" />
+									</listbox>
+								</h:td>
+								<h:td width="280px">
+									<paging id="fraudAlertTrxPagingId"
+										detailed="true" pageSize="5" width="280px"
+										class="contactsViewPaging" style="border:none;" />
+								</h:td>
+							</h:tr>
+						</h:table>
+					</div>
+					<h:br />
+					<div id="displayEmailFrqDivId">
+					  <h:table>
+	     <h:tr>
+	     <h:td>
+	            <checkbox label= "Create email alerts on the above rule: " id="ltyfraudrtAlertsChkId" checked="false" value="1" visible="true"/>
+	             </h:td>
+	             <h:td>
+	             <div id="checkDivId" visible="false">
+					<checkbox label= "Daily" id="ltyfraudAlertsDailyChkId" checked="false" value="1" />			
+		           	  <checkbox label= "Weekly" id="ltyfraudAlertsWeeklyChkId" checked="false" value="2" />
+		      
+			</div>
+			</h:td>
+			</h:tr>
+			</h:table> 
+          <div id="ltyfraudDivId" visible = "false" height="40">
+			<h:table>
+			<h:tr>
+				<h:td width="220"/>
+				
+				<h:td width="150" >
+			
+				<div id="dailyDivId" visible="false">
+				
+					<label value="Time :"/>
+					<listbox mold="select" id="hoursLbId">
+											<listitem label="1 AM" value = "1" selected="true" />
+											<listitem label="2 AM" value = "2"  />
+											<listitem label="3 AM" value = "3" />
+											<listitem label="4 AM" value = "4" />
+											<listitem label="5 AM" value = "5" />
+											<listitem label="6 AM" value = "6" />
+											<listitem label="7 AM" value = "7" />
+											<listitem label="8 AM" value = "8" />
+											<listitem label="9 AM" value = "9" />
+											<listitem label="10 AM" value = "10" />
+											<listitem label="11 AM" value = "11" />
+											<listitem label="12 PM" value = "12"/>
+											<listitem label="1 PM" value = "13"  />
+											<listitem label="2 PM" value = "14"  />
+											<listitem label="3 PM" value = "15" />
+											<listitem label="4 PM" value = "16" />
+											<listitem label="5 PM" value = "17" />
+											<listitem label="6 PM" value = "18" />
+											<listitem label="7 PM" value = "19" />
+											<listitem label="8 PM" value = "20" />
+											<listitem label="9 PM" value = "21" />
+											<listitem label="10 PM" value = "22" />
+											<listitem label="11 PM" value = "23" />
+										</listbox>
+										
+					</div>
+					
+					 </h:td>
+					</h:tr>
+					<h:tr>
+					<h:td width="220" > </h:td>
+				    <h:td width="150"> 	
+                    <div id="weeklyDivId" visible="false">
+					<label value="Day :"  />
+					<space width="2px"></space>
+					<listbox mold="select" id="daysLbId">
+											<listitem label="Sunday"  value = "0"/>
+											<listitem label="Monday" selected="true" value = "1" />
+											<listitem label="Tuesday" value = "2" />
+											<listitem label="Wednesday"  value = "3" />
+											<listitem label="Thursday"  value = "4" />
+											<listitem label="Friday"  value = "5" />
+											<listitem label="Saturday" value = "6" />
+										</listbox>
+				 </div>	
+				</h:td>
+		      
+			</h:tr>
+			</h:table>
+			
+			
+			<h:table>
+			<h:tr height="30" />
+			
+			<h:tr>
+				<h:td width="220" />
+				
+				<h:td>
+					<label value="Email Address :"  />
+					<textbox id="emailAddTxtBxId"  width="200px" />
+					<toolbarbutton id="addMoreEmailTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+						<div id="alertMailDivId" />
+				</h:td>
+			</h:tr>
+			</h:table>
+				 
+			</div>
+			<div id="emailSavebtnDivID" visible="false">
+			<h:table>
+			<h:tr>
+				<h:td width="220"/>
+				<h:td>
+					<button label="Save" id="saveSendEmailDetailsBtnId"	sclass="idle140 greenbtn" />
+				</h:td>
+			</h:tr>
+			<h:tr height="20" />
+		</h:table>
+		</div>
+		
+		</div>
+			</tabpanel>
+			</tabpanels>
+		</tabbox>		
+				
+						<window id="custExport" title="Select Fields to Export" border="normal"  width="600px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+					<div id="chkDivId" width="580px" style="margin:15px;" />
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td >
+					 <a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />  
+					 <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);"  />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+			
+			
+   </window>
+  
+   <window id="fraudTrxDetailsSubWinId" title="" closable="false" 
+			visible="false" border="normal" width="80%" height="300px" position="center" >
+				<caption>
+					<toolbarbutton label="Close" onClick="fraudTrxDetailsSubWinId.setVisible(false)"/>
+				</caption>
+				<div id="viewFraudTrxDetailsDivId" >
+			<!-- 	<grid emptyMessage="No Data available" height="300px">
+						<columns>
+							<column label="Processed Time"/>
+							<column label="Receipt No."/>
+							<column label="Store No."/>
+							<column label="Transaction Type"/>
+							<column label="Amount Diff."/>
+							<column label="Points Diff."/>
+							<column label="Amount Entered" align="left" visible="false"/>
+							<column label="Balance Curr." align="left" visible="false"/>
+						</columns>
+						<rows id="viewAllFraudTrx"/>
+					</grid>  -->
+					 <listbox id="viewAllFraudTrxListId" emptyMessage="No transactions found." sclass="contactsView" height="340px">
+									<listhead menupopup="auto">
+										<listheader label="Processed Time" />
+										<listheader label="Receipt No." />
+										<listheader label="Store No." />
+										<listheader label="Transaction Type"  />
+										<listheader label="Amount Diff."/>
+										<listheader label="Points Diff."/>
+										<listheader label="Amount Entered" align="left" visible="false"/>
+										<listheader label="Balance Curr." align="left" visible="false"/>
+									</listhead>
+								</listbox> 
+							
+				</div>
+				
+    </window>
+
+	</window>
+</zk>

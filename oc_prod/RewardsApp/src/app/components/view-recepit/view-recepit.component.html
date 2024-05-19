@@ -1,0 +1,54 @@
+<!-- <ion-content class="height">
+<ion-list *ngIf="transactionsList">
+	<ion-item>
+		Receipt# : {{transactionsList.receiptNumber}}
+		<ion-button slot="end" (click)="dismiss()">
+			<ion-icon mode="md" color="dark" slot="icon-only" name="close-circle-outline"></ion-icon>
+		  </ion-button>
+	</ion-item>
+	<ion-item>
+		Date  : {{transactionsList.date}}
+	</ion-item>
+</ion-list>
+  <table>
+		<thead>
+		<tr>
+			<th>Item#</th>
+			<th>DCS</th>
+			<th>Quantity</th>
+			<th>Unit Price</th>
+			<th>Total Price</th>
+		</tr>
+		</thead>
+		<tbody *ngIf="transactionsList">
+		<tr *ngFor="let item of transactionsList.items">
+			<td>{{item.skuNumber}}</td>
+			<td>{{item.DCS}}</td>
+			<td>{{item.quantity}}</td>
+			<td>{{item.billedUnitPrice}}</td>
+			<td>{{item.quantity * item.billedUnitPrice}}</td>
+		</tr>
+  </tbody>
+  </table>
+
+  <ion-list lines="none" *ngIf="transactionsList">
+      <ion-item slot="end">
+          Recepit Amount: {{transactionsList.receiptAmount}}
+     </ion-item>
+    <ion-item>
+         Payment Mode: {{transactionsList.payment.mode}}
+    </ion-item>
+    <ion-item>
+         Payment Amount : {{transactionsList.payment.amount}}
+    </ion-item>
+  </ion-list>
+</ion-content> -->
+<ion-toolbar>
+	<ion-buttons slot="end" >
+		<ion-button  (click)="dismiss()">
+		  <ion-icon mode="md" color="dark" slot="icon-only" name="close-circle-outline"></ion-icon>
+		</ion-button>
+	</ion-buttons>
+  <!-- <ion-title>{{ 'Forgot Password' | translate }} </ion-title> -->
+</ion-toolbar>
+<iframe width="100%" height="100%" frameBorder="10" [src]="urlSafe"></iframe>

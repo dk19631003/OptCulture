@@ -1,0 +1,69 @@
+package org.mq.optculture.data.dao;
+
+
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.HibernateException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.mq.marketer.campaign.beans.OTPGeneratedCodes;
+import org.mq.marketer.campaign.dao.AbstractSpringDao;
+import org.mq.marketer.campaign.dao.AbstractSpringDaoForDML;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+
+@SuppressWarnings({"unchecked","unused"})
+public class OTPGeneratedCodesDaoForDML extends AbstractSpringDaoForDML implements Serializable {
+    
+	public OTPGeneratedCodesDaoForDML() {}
+    private SessionFactory sessionFactory;
+    private JdbcTemplate jdbcTemplate;
+    
+    public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+/*	public OTPGeneratedCodes findOTPCodeByPhone(String phone, Long userId, String status){
+		
+		String queryStr = null;
+		List list = null;
+		
+		try{
+			
+			queryStr = "FROM OTPGeneratedCodes WHERE userId = "+userId+" AND phoneNumber = '"+phone+"'"
+					+ " AND status = '"+status+"'";
+			list = getHibernateTemplate().find(queryStr);
+			if(list != null && list.size() > 0) return (OTPGeneratedCodes)list.get(0);
+			else return null;
+			
+		}catch(Exception e){
+			logger.error("Exception in find otp code by phone ...", e);
+			return null;
+		}
+		
+	}*/
+	
+	
+   
+   
+}

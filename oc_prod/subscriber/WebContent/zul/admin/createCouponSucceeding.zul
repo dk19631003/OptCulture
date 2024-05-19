@@ -1,0 +1,618 @@
+<zk xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:h="http://www.w3.org/1999/xhtml">
+<window id="createCouponSucceedingWinId" apply="org.mq.marketer.campaign.controller.admin.CreateCouponSucceedingController" width="100%" >
+<style>
+	.req_step_completed:HOVER {
+	     text-decoration:none !important; 
+	     color: #222222 !important; 
+	}
+</style>
+    
+			<script > 
+			<![CDATA[
+			 function setScreenSize(){
+				 var width = screen.width;
+					var result = (width * 60)/100;
+					var label = (zk.Widget.$(jq('$screenSizeTBId')));
+					varJSLabel = document.getElementById(label.uuid);
+					varJSLabel.value=result;
+					label.value=result;
+					label=result;
+			 }        
+			]]>
+			</script>
+	
+		  
+			<div id="navigationDivId" visible="true">
+				<hlayout style="margin:10px 0 15px 0;">
+				
+					<div id="couponBasicSettingsFirstId" sclass="req_step_completed">
+						<label  value="1" style="color:#222222;padding-right:12px;"  />					
+						<label  value="Basic Settings" />					
+					</div>
+				
+					<div id="promotionRulesSecondId" sclass="req_step_current" style="margin-left: 3px;">
+						<label  value="2" style="color:#222222;padding-right:12px;"  />					
+						<label  value="Discount Code Rules"/>					
+					</div>
+				
+					<div id="mobileOfferThirdId" visible="false" sclass="req_step_incomplete" style="margin-left: 3px;background-color: #dfdfdf;width:204px !important;">
+						<label  value="3" style="color:#222222;padding-right:12px;"  />					
+						<label  value="Display options (optional)"/>					
+					</div>
+				
+				</hlayout>
+			</div>
+			 
+			 <groupbox>
+ 					<caption label="Define Discount Code Settings" style="font-weight:bold;font-size:12px;" ></caption>
+			  		<h:table cellspacing="2" cellpadding="2" width="100%" visible="true">
+			  		  <h:tr height="2"/>
+						  	<h:tr>
+						  	<h:td>
+					
+							
+								<groupbox id="discountCodeGenerationGBId" visible="true">
+ 					<caption label="Discount Code Generation" style="font-weight:bold;font-size:12px;" ></caption>	
+					<h:table>		  					
+						  	<h:tr>
+					
+							 <!-- <h:td valign="top" 	>
+									<label value="Discount Code generation:" />
+							</h:td>  -->
+							<h:td colspan="2">
+						<!-- 		<groupbox width="600px"> -->
+									<h:table width="700px" >
+									<!-- style="background-color: #F8F8F8; border-bottom: 1px solid #CCCCCC; box-shadow: 0 0 2px #CCCCCC; padding: 10px;"> -->
+										
+										<radiogroup  id="coupGenRadioGrId">
+											<h:tr>
+												<h:td valign="top"
+													 align="left">
+													
+													<radio label="Single Discount Code" id="singRadioId" selected="true" radiogroup="coupGenRadioGrId" />
+													
+												</h:td>
+												<h:td valign="top"
+													 align="left">
+													<radio label="Multiple and Random Discount Codes" id ="multRadioId"  radiogroup="coupGenRadioGrId"/>
+												</h:td>
+												
+											</h:tr>
+										</radiogroup>
+									</h:table>
+									
+									<div height="150px">
+										<div visible="true" id="singleSelCoupDivId">
+											<h:table>
+												<h:tr>
+													<h:td><label value=" Enter Discount Code:"/></h:td>
+													<h:td><textbox id="singCoupTxtBxId"   width="100px" maxlength="20"  style="font-size:11px;"/></h:td>
+						  							<!-- w:onClick="javascript: if(this.getValue()=='Enter Code') {  this.setValue(''); }" 
+											      	w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Code'); }" focus="true"/></h:td> -->
+												</h:tr>
+												<!-- <h:tr>
+									  				<h:td ><label visible="true" value="Description : "/> </h:td>
+									  				<h:td ><textbox visible="true" id="coupDescTxtBxId" rows="2" height="40px" width="300px"/></h:td>
+									  			</h:tr> -->
+												<h:tr>
+													<h:td><label value=" Issue to:"/></h:td>
+													<h:td><longbox id="singlelimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="singCoupChkBxId" label="Unlimited Subscribers" style="display:inline-block;"/></h:td>
+												</h:tr>
+												
+												<h:tr>
+													<h:td><label value=" Redemption Limit:"/></h:td>
+													<h:td><longbox id="redeemdlimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="redeemdsingCoupChkBxId" label="Unlimited Redemptions " style="display:inline-block;"/></h:td>
+												</h:tr>
+												
+												<h:tr>
+													<h:td><label value=" Per Subscription Use Limit:"/></h:td>
+													<h:td><longbox id="perSubUselimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="unlimitSubChkBxId" label="Unlimited " 
+													style="display:inline-block;" onCheck="perSubUselimitLongbxId.setDisabled(unlimitSubChkBxId.isChecked())"/></h:td>
+												</h:tr>
+												
+											
+												<!--  <h:tr>
+													<h:td><checkbox id="multiplePerReceiptChkBxId"  label="Allow multiple use per receipt:" /></h:td>
+												</h:tr> -->
+											</h:table>
+				  						</div>
+										
+										<div id="multiSelCoupDivId" style=" margin-top: 10px;">
+					  						<hbox align="center" spacing="10px">
+					  						</hbox>
+					  						<h:table>
+					  							<h:tr>
+							  						<h:td>
+							  							<label value="No. of codes generated"/>
+							  						</h:td>
+							  						<h:td width="40px">
+							  							<image src="/img/icons/icon_q.png" tooltip="help"/>
+						  								<popup id="help" style="bgcolor:#CCCCCC;"  >
+															<label  value="6 digits,alpha-numeric codes will be generated." sclass="labelPos" />
+														</popup>
+							  						</h:td>
+					  								<h:td>
+					  									<longbox id="multiCodLimitLongBxId" width="100px" maxlength="6"/>
+					  								</h:td>
+					  							</h:tr>
+					  							<h:tr>
+					  								<h:td /><h:td />
+					  								<h:td >
+							  							<checkbox id="multiCoupChkBxId" label="Auto-add Discount Codes"/>
+					  								</h:td>
+					  								<h:td align="left">
+							  							<image src="/img/icons/icon_q.png" tooltip="help1"/>
+							  							
+							  							<popup id="help1" style="bgcolor:#CCCCCC;" >
+															<label  value="Automatically add more Discount Codes when running low." sclass="labelPos" />
+														</popup>
+					  								
+					  								</h:td>
+							  						
+					  							</h:tr>
+					  						</h:table>
+					  							
+			  							</div>
+									
+									</div>									
+								<!-- </groupbox> -->
+							</h:td>
+						</h:tr>
+						</h:table>	  		
+			  </groupbox>	
+							</h:td>
+						</h:tr>
+						
+<!-- 						<h:tr height="20"/>	
+ -->						<!-- <h:tr>	
+						<h:td ><label visible="true" value="Description: "/> </h:td>
+						<h:td ><textbox visible="true" id="coupDescTxtBxId" rows="2" style="overflow-x:hidden;overflow-y:auto;" height="40px" width="300px"/></h:td>
+						</h:tr>	 -->		  		  	
+			  		   <h:tr height="20"/>
+						
+					
+			  	</h:table>
+			  	<h:table cellspacing="2" cellpadding="2" width="100%" >
+			  		<h:tr height="20"/>	
+						<h:tr>	
+						<h:td ><label visible="true" value="Description: "/> </h:td>
+						<h:td ><textbox visible="true" id="coupDescTxtBxId" rows="2" style="overflow-x:hidden;overflow-y:auto;" height="40px" width="300px"/></h:td>
+						</h:tr>			  		  	
+			  		<h:tr height="20"/>
+			  	</h:table>
+			  
+			  	
+			  	
+			  	<h:table>
+		  			<h:tr>
+		  				<h:td valign="top" width="216px" style="padding-top:5px;">
+		  					<label  value="Validity Period: "/> 
+		  				</h:td>
+		  				
+		  				<h:td  >
+						<div id="promoValidityPeriodDivId">
+		  				
+		  					<radiogroup id="promoRgId"  orient="vertical"/>
+		  					<vlayout>
+		  						<hlayout>
+		  							<radio id="staticRadio" radiogroup="promoRgId" selected="true" label="Fixed validity"/>
+		  							<label value="From:" style="position: relative; top: 3px;" />
+		  							<datebox id="createDateBxId"
+		  					 			readonly="true"  style="marging:right-10px;"/>
+		  					
+		  							<label Value="To:" style="position: relative; top: 3px;" />
+		  							<datebox id="expiryDateBxId"  readonly="true" />
+		  						</hlayout>
+		  						
+		  						<separator height="10px"/>
+							</vlayout>
+		  				</div>	
+						<div id="promoValidityPeriodDivIdDynamic">
+							<vlayout>	
+		  						<hlayout>
+		  							<radio id="dynamicRadio" radiogroup="promoRgId" label="Dynamic validity" />
+		  					<!-- changes start 2.5.3.0 -->
+		  								<textbox id="dynamicValidityTbId" cols="25" maxlength="45" value="" width = "80px">
+		  								<attribute w:name="doKeyDown_"><![CDATA[
+			function (evt) {
+				var keyCode = event.keyCode;
+				if( keyCode == 8 // back space
+					|| keyCode == 13 // enter
+					|| keyCode == 16 // enter
+					|| (keyCode >= 35 && keyCode <= 40) // home, end, arrows
+					|| keyCode == 46) { // Delete
+					this.$doKeyDown_(evt);
+				} else if ( !evt.shiftKey &&  // only do without shift key
+					(keyCode >= 48 && keyCode <= 57)
+					|| (keyCode >= 96 && keyCode <= 105)) {// number range
+					this.$doKeyDown_(evt);
+				} else {
+					evt.stop();
+					return;
+				}
+			}
+		]]></attribute>
+						    <!-- changes end 2.5.3.0 -->
+		  								</textbox>
+		  								<label value="days, starting from" style="position: relative; top: 6px;" />
+		  								
+		  								<listbox id="dynamicValidityLbId" width="200px" mold="select">
+		  									<listitem label="Date of issue of discount code" value="1" selected="true" />
+											<listitem label="Birthday" value="2" />
+											<listitem label="Anniversary" value="3" />
+		  								</listbox>
+		  						</hlayout>
+		  						
+		  					</vlayout>
+		  				</div>
+		  				</h:td>
+		  				
+		  				 
+		  			</h:tr>
+		  		</h:table>
+		  		
+		  		<separator height="10px"/>
+		  		<div id="productDetailtaDivId">
+				 	</div>
+				 	
+				 	
+				 <div id="storeSelectDivId">
+				 <h:table>
+				 		<h:tr>
+		  					<h:td ><label  value="Run Discount Code in: " style="margin-right:90px;"/> </h:td>
+		  					<h:td></h:td>
+		  					<h:td >
+		  						<radiogroup  id="storesID" />
+		  						<radio label=" All Stores" id="allStoresChkBxId"  radiogroup="storesID" value="All Stores"/>
+		  					   	<radio label=" Selected Stores" id="selectedStoresId"  radiogroup="storesID"  value="Selected" style="margin-left:7px;" />
+		  					</h:td>
+		  				</h:tr> 
+				   </h:table>
+				   	<div id="selectedStoreDivId" >
+						 	<h:table>
+							 	<h:tr>
+							 		<h:td width="140px" />
+							 		<h:td>
+							 			<label value="Select store-numbers to run this discount code in" />
+							 		</h:td>
+							 		<h:td>
+							 			<combobox id="storeNumbCmboBxId" width="220px"/>
+							 		</h:td>
+							 		<h:td style="align:right" >
+							 			<image src="/images/action_add.gif" id= "addStoreImgId" tooltiptext="Add Store" style="cursor:pointer;margin-left:10px;" />
+							 		</h:td>
+							 	</h:tr>
+							 	<h:tr>
+							 		<h:td />
+							 		<h:td />
+							 		<h:td>
+							 			<listbox id="selectedStoreLbId" multiple="true" width="200px" height="200px"  sclass="contactsView" >
+							 				<listhead>
+							 					<listheader width="150px" />
+							 					<listheader />
+							 					
+							 				</listhead>
+							 				
+							 			</listbox>
+							 		</h:td>
+							 	</h:tr>
+						 	</h:table>
+				 		</div>
+				   </div>
+				
+										
+										
+											
+				<!-- <div id="storeSelectDivId" >
+				 
+					 <h:table>
+					 
+					 	<h:tr>
+					 		<h:td width="216px">
+					 			<label value="Run Promotion in All Stores :"  />
+					 		</h:td>
+					 		<h:td colspan="2">
+					 			<checkbox id="allStoresChkBxId" style="margin:10 10 0 10px;" />
+					 		</h:td>
+					 	
+					 	</h:tr>
+					 	</h:table>
+					 	
+					 	 <div id="selectedStoreDivId" >
+						 	<h:table>
+							 	<h:tr>
+							 		<h:td width="140px" />
+							 		<h:td>
+							 			<label value="Select store-numbers to run this promotion in" />
+							 		</h:td>
+							 		<h:td>
+							 			<combobox id="storeNumbCmboBxId" width="220px"/>
+							 		</h:td>
+							 		<h:td style="align:right" >
+							 			<image src="/images/action_add.gif" id= "addStoreImgId" tooltiptext="Add Store" style="cursor:pointer;margin-left:10px;" />
+							 		</h:td>
+							 	</h:tr>
+							 	<h:tr>
+							 		<h:td />
+							 		<h:td />
+							 		<h:td>
+							 			<listbox id="selectedStoreLbId" multiple="true" width="200px" height="200px"  sclass="contactsView" >
+							 				<listhead>
+							 					<listheader width="150px" />
+							 					<listheader />
+							 					
+							 				</listhead>
+							 				
+							 			</listbox>
+							 		</h:td>
+							 	</h:tr>
+						 	</h:table>
+				 		</div>
+				 	
+				 </div> -->
+					 <h:table>
+					 <h:tr>
+						<h:tr height="20"/>
+			  				<h:td width="216px"><label  value="Enable Barcode: "/> </h:td>
+			  				<h:td ><hlayout><hbox align="center" spacing="10px">
+			  				<checkbox id="bcenableCoupChkBxId" style="margin:10 10 0 10px;"/>
+			  				<div visible="false" id="bcsizeCoupDivId">
+			  				<label value=" Barcode Type:" />
+			  				<listbox rows="1" mold="select" id="bctypeListboxId" style="padding:1px; margin-right:10px;">
+			  				    <listitem label="Linear barcode" value="LN" selected="true" />
+								<listitem label="QR Code" value="QR" />
+								<!-- <listitem label="Linear barcode" value="LN"/>
+								<listitem label="QR Code" value="QR" selected="true" /> -->
+								<listitem label="Aztec Code" value="AZ"/>
+								<listitem label="Data Matrix" value="DM"/>
+							</listbox>
+			  				<label value=" Dimension(Width X Height):" />
+			  				
+			  				<listbox rows="1" mold="select" width="150px" id="bcDimensionListboxId2"  style="padding:1px; margin-right:10px;"/>
+			  				
+							<image src="/img/icons/icon_q.png" tooltip="bchelp"/>
+	  								<popup id="bchelp" style="bgcolor:#CCCCCC;"  >
+										<label  value="Width and height can also be edited in email editor." sclass="labelPos" />
+									</popup>
+			  				</div>
+			  				</hbox>
+		  					</hlayout>
+			  				</h:td>
+			  					
+			  			</h:tr>
+			 			<h:tr height="20"/>
+						
+						<h:tr>
+					 	<h:td> <div style="font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Apply Default:" /> 
+					 	
+					 	<image src="/img/icons/icon_q.png" tooltip="otpAuthPopId"  style="padding-left:5px;" />
+						<popup id="otpAuthPopId" width="300px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="This setting works only with Shopify Sites."
+											sclass="labelPos" />
+					 	
+					 					</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+				
+					 	</div> </h:td>
+		   				
+		   				<h:td><div> <checkbox id="applydefaultId" checked="false" visible="true" /> </div> </h:td>
+			 			</h:tr>
+			 			<h:tr height="20"/>
+						
+						<h:tr>
+					 	<h:td> <div style="font-weight:bold;font-size: 16px;font-family:arial,sans-serif;align-text:left;"><label value="Allow Redemption on Promo Item:" /> 
+					 	
+					 	<image src="/img/icons/icon_q.png" tooltip="otpAuthPop1Id"  style="padding-left:5px;" />
+						<popup id="otpAuthPop1Id" width="300px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="This setting works only with Shopify Sites."
+											sclass="labelPos1" />
+					 	
+					 					</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+				
+					 	</div> </h:td>
+		   				
+		   				<h:td><div> <checkbox id="AccumId" checked="false"/> </div> </h:td>
+			 			</h:tr>
+			 				
+			  			<h:tr height="20"/>	
+						<h:tr>
+					 		<h:td>
+					 			<label value="Show offer on a mobile app:"  />
+					 		</h:td>
+					 		<h:td colspan="2">
+					 			 <checkbox id="mobileOffersId"/>
+					 		</h:td>
+			 			</h:tr>
+			 			<h:tr height="20"/>
+						
+						<h:tr>
+					 		<h:td>
+					 			<label value="OTP Authentication:"  />
+					 		</h:td>
+					 		<h:td colspan="2">
+					 			 <checkbox id="otpAuthenticationChkbId"/>
+					 		</h:td>
+			 			</h:tr>
+			 			<h:tr height="20"/>	
+			 			<div id="generateCouponNumDivId" visible="false">
+						<h:tr>
+						
+					 		<h:td>
+					 			<label value="Generate Numerical Codes? "  />
+					 		</h:td>
+					 		<h:td colspan="2">
+					 			 <checkbox id="numericalCodesGenerationId"/>
+					 		</h:td>
+					 		
+			 			</h:tr>
+			 			</div>
+					 </h:table>
+		<!--APP-3719 coupontool integration-->			
+				<separator height="10px"/>
+			<groupbox>
+ 					<caption label="Coupon Tool Integration" style="font-weight:bold;font-size:12px;" ></caption>
+			  		<h:table cellspacing="2" cellpadding="2" width="100%" visible="true">
+			  		  <h:tr height="2"/>
+						  	<h:tr>
+						  	<h:td width="150px">
+						  	
+					 			<label value="Campaign Code:"  /><image src="/img/icons/icon_q.png" tooltip="CouponCodeAuthPopId"  style="padding-left:5px;" />
+					 	<popup id="CouponCodeAuthPopId" width="300px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="Please copy the Code from Coupon URL"
+											sclass="labelPos" />
+					 	
+					 					</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+					 		
+					 		</h:td>
+					 		<h:td colspan="2">
+					 			  <textbox width="250px" maxlength="20"  style="font-weight:bold;font-size:15px;" id="ctCouponCodeTxtbId"/>
+					 		</h:td>
+					 	</h:tr>
+					 	<h:tr height="20"/>
+					 	<h:tr>
+					 		<h:td width="100px">
+					 			<label value="Prize Value:"  />
+					 		</h:td>
+					 		<h:td colspan="2">
+					 			 <textbox width="250px"  style="font-size:14px;" id="ctCouponValueTxtbId"/>
+					 		</h:td>
+					 	</h:tr>	  	
+					 	
+					 	 <div visible="true" id="IssuecouponmessagesDivId">
+				<h:tr height="30"></h:tr>
+				<h:tr height="10">
+					<h:td valign="top" width="200">
+					
+						<label value="Custom Templates:" />
+						
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<vbox>
+						<hbox>
+							<listbox id="selIssuecouponmessageAutoSmsLbId"
+								width="150px" mold="select" style="position:relative;">
+								<listitem label="Select Auto SMS"
+									selected="true" />
+							 <listitem label="Default Message"/> 
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewIssuecouponmessageSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="IssuecouponmessagePreviewBtnId" sclass="idle140" />
+								
+								<image src="/img/email_edit.gif" id="editIssuecouponmessageSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit " visible="false"
+									style="color:#2886B9; text-decoration: underline;margin-left:5px;"
+									id="IssuecouponmessageSmsEditMsgBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addIssuecouponmessageSmsImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add"
+									style="color:#2886B9;text-decoration: underline;margin-left:1px;"
+										id="IssuecouponmessageSmsAddMsgBtnId" sclass="idle140" />
+							
+						</hbox>
+						</vbox>
+					
+						
+					</h:td>
+				</h:tr>
+				</div>
+ 			<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+					</caption>
+					<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+						<html id="html" />
+						<iframe id="iframe" />
+					</div>
+				</window>
+			     
+			      </h:table>
+             </groupbox>
+				<separator height="10px"/>
+			<groupbox id="additionalSettingsGbId" open="false" visible="false">
+				<caption>
+					<label value="Additional Settings" />
+					<toolbarbutton id="additionalSettingsTbBtnId" image="/img/icons/icon_plus.png" /> 	
+				</caption>
+				<separator height="10px"/>
+				<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:2px;" >
+						<h:tr height="40" valign="top">
+						<h:td width="35%" >
+					<label  value="Exclude discounted items in the count of purchased items: "/> 
+			  				</h:td>
+			  				
+			  				<h:td>
+			  				<checkbox id="excludeDiscountedItemsId"/>
+			  				</h:td>
+			  				</h:tr>
+					<h:tr height="30" valign="top">
+						<h:td >
+							<label id="deducItemPriceLBId" value="Exclude purchased item-value from regular issuance:"></label>
+							
+							</h:td>
+							<h:td >
+							<checkbox id="deducItemPriceChkId"/>
+							</h:td>
+						</h:tr>
+					<h:tr height="40" >
+						<h:td width="25%">
+							<label value="Reward Expiration:"/>
+						</h:td>
+						<h:td colspan="2">
+						<listbox id="RewardExpiryLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="At the end of" selected="true"></listitem>
+						</listbox>
+						<listbox id="RewardExpiryTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Month(s)" value="Month" selected="true"></listitem>
+								<listitem label="Year(s)" value="Year"></listitem>
+						</listbox>
+							
+							<listbox id="rewardExpiryTypeValueLbId" mold="select" />
+						</h:td>
+	
+					</h:tr>	
+					</h:table>
+					</groupbox>
+				 <div align="right">
+				 	<button label="Back" id="backCoupBtnId" />
+				 	<button label="Save Discount Code" id="genCoupBtnId" sclass="idle180 greenbtn" />
+				 </div>
+				  
+			 </groupbox>
+			
+</window>
+</zk>

@@ -1,0 +1,9 @@
+greetingsBlock
+
+featuredBlock
+
+ArticleBlock
+
+Subarticleblock
+
+couponblock

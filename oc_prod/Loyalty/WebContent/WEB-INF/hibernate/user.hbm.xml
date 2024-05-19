@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.loyality.common.hbmbean.Users" table="users" lazy="false">
+		<id name="userId" type="java.lang.Long" column="user_id">
+			<generator class="native" />
+		</id>
+		<property name="mqsId" type="string" column="mqs_id"
+			length="20" />
+		<property name="userName" type="string" column="username"
+			length="400" unique-key="Unique_username" lazy="false" />
+		<property name="password" type="string" column="password"
+			length="256" />
+		<property name="emailId" type="string" column="emailId"
+			length="60" />
+		<property name="firstName" type="string" column="first_name"
+			length="50" />
+		<property name="lastName" type="string" column="last_name"
+			length="75" />
+		<property name="companyName" type="string" column="company_name"
+			length="100" />
+		<property name="createdDate" type="calendar"
+			column="created_date" />
+		<property name="addressOne" type="string" column="address_one"
+			length="55" />
+		<property name="addressTwo" type="string" column="address_two"
+			length="55" />
+		<property name="city" type="string" column="city" length="55" />
+		<property name="state" type="string" column="state" length="45" />
+		<property name="country" type="string" column="country"
+			length="45" />
+		<property name="pinCode" type="string" column="pin_code"
+			length="20" />
+		<property name="phone" type="string" column="phone" length="30" />
+		<property name="vmta" type="string" column="vmta" length="100" />
+		<property name="enabled" type="boolean" column="enabled" />
+		<property name="emailCount" type="java.lang.Integer" column="email_count"  />
+		<property name="usedEmailCount" type="java.lang.Integer" column="used_email_count"  />
+		
+		<property name="clientTimeZone" type="string" column="client_time_zone"/>
+		<property name="smsCount" type="java.lang.Integer" >
+			<column name="sms_count" default="0" />
+			</property>
+		
+		
+		<property name="usedSmsCount" type="java.lang.Integer" >
+			<column name="used_sms_count" default="0" />
+			</property>
+		<property name="packageStartDate" type="calendar" column="package_start_date" />
+		<property name="packageExpiryDate" type="calendar" column="package_expiry_date" />
+		<property name="userActivitySettings" type="string" column="user_activity_settings" />
+		<property name="footerEditor" type="java.lang.Byte" column="footer_editor"/>
+		
+		<many-to-one name="userOrganization"
+			class="org.mq.loyality.common.hbmbean.UserOrganization" foreign-key="orgId"
+			fetch="select" >
+			<column name="user_organization" />
+		</many-to-one>
+		<property name="accountType" type="string" >
+			<column name="account_type" length="100" />
+		</property>
+		<property name="token" type="string" unique="true">
+			<column name="token" length="100" />
+		</property>
+		<property name="CIMProfileId" type="string" unique="true">
+			<column name="cim_profile_id" length="20" />
+		</property>
+		
+		
+		
+		<property name="digitalReceiptExtraction" type="boolean" >
+			<column name="digital_receipt_extraction" default="false" />
+		</property>
+		
+		<!-- <property name="transactionalMsgChk" type="boolean" >
+			<column name="transactional_msg_chk" default="false" />
+		</property> -->
+		<property name="MsgChkType" type="string" >
+			<column name="msg_chk_type" length="100" />
+		</property>
+		<property name="userSMSTool" type="string" column="user_sms_tool" length="100" />
+		<property name="countryCarrier" type="java.lang.Short" column="country_carrier"  />
+	<!-- <property name="countryCarrier" type="java.lang.Byte" column="country_carrier"  /> -->
+		<!-- <property name="countryCode" type="string" column="country_code" length="100" /> -->
+	<property name="subscriptionEnable" type="boolean">
+			<column name="subscription_enabled" default="false"  />
+		</property>
+		
+		<property name="countryType" type="string" >
+			<column name="country_type" length="100" />
+		</property>
+		
+		<property name="enableSMS" type="boolean">
+			<column name="enable_SMS" default="false"  />
+		</property>
+		
+		<property name="considerSMSSettings" type="boolean">
+			<column name="consider_SMS_settings" default="false"  />
+		</property>
+		
+		<property name="lastLoggedInTime" type="calendar">
+			<column name="last_logged_in_time"  />
+		</property>
+		
+		<property name="optInMedium" type="java.lang.Byte" column="optin_medium"/>
+		
+		<property name="loyaltyServiceType" type="string" >
+			<column name="loyalty_service_type"  />
+		</property>
+	</class>
+</hibernate-mapping>
+

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF" name="Scheduler" monitorInterval="120">
+
+	<properties>
+		<property name="catalina.home">/sqldb/ocapp/tomcat7</property>
+	</properties>
+
+<!-- appenders -->
+	<appenders>
+		<!-- Console appender -->
+		<Console name="stdout" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>%-5p %d{dd-MM HH:mm:ss,SSS} [%C-%M::%L] - %m%n</pattern>
+			</PatternLayout>
+		</Console>
+		<!-- Rolling file appender -->
+		<RollingFile name="logfile">
+			<fileName>${catalina.home}/logs/scheduler/scheduler.log</fileName>
+			<filePattern>${catalina.home}/logs/scheduler/$${date:yyyy-MM}/scheduler-%d{MM-dd-yyyy}-%i.log.gz
+			</filePattern>
+			<PatternLayout>
+				<pattern>%-5p %d{dd-MM HH:mm:ss,SSS} [%C-%M::%L] - %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<!-- <TimeBasedTriggeringPolicy interval="1" modulate="true"/> -->
+				<SizeBasedTriggeringPolicy size="90 MB" />
+			</Policies>
+			<!-- <DefaultRolloverStrategy max="10" /> -->
+		</RollingFile>
+		
+		<RollingFile name="fileProcess">
+			<fileName>${catalina.home}/logs/scheduler/fileProcess.log</fileName>
+			<filePattern>${catalina.home}/logs/scheduler/$${date:yyyy-MM}/fileProcess-%d{MM-dd-yyyy}-%i.log.gz
+			</filePattern>
+			<PatternLayout>
+				<pattern>%-5p %d{dd-MM HH:mm:ss,SSS} [%C-%M::%L] - %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<!-- <TimeBasedTriggeringPolicy interval="1" modulate="true"/> -->
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<!-- <DefaultRolloverStrategy max="10" /> -->
+		</RollingFile>
+		
+	</appenders>
+<loggers>
+	<logger name="scheduler" level="DEBUG" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="fileProcess" level="DEBUG" additivity="false">
+		<appender-ref ref="fileProcess" />
+	</logger>
+	<logger name="org.hibernate" level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.springframework" level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.impl.NewPooledConnection"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.impl.AbstractPoolBackedDataSource"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.impl.DefaultConnectionTester"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger
+		name="com.mchange.v2.c3p0.management.DynamicPooledDataSourceManagerMBean"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.C3P0Registry" level="WARN"
+		additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.log.MLog" level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.management.ActiveManagementCoordinator"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.async.ThreadPoolAsynchronousRunner"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.params.DefaultHttpParams"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.HttpClient" level="WARN"
+		additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.HttpMethodBase"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.HttpConnection"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.HttpParser" level="WARN"
+		additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.HeaderElement"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.Wire" level="WARN"
+		additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.methods.PostMethod"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.commons.httpclient.methods.EntityEnclosingMethod"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="org.apache.catalina.session.ManagerBase" level="WARN"
+		additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.resourcepool.BasicResourcePool"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.stmt.GooGooStatementCache"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+	<logger name="com.mchange.v2.c3p0.impl.NewProxyConnection"
+		level="WARN" additivity="false">
+		<appender-ref ref="logfile" />
+	</logger>
+
+	<!-- Root logger -->
+	<root level="DEBUG">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="logfile" />
+		<appender-ref ref="fileProcess" />
+	</root>
+</loggers>
+</configuration>

@@ -1,0 +1,20 @@
+@CHARSET "UTF-8";
+
+.contactsView.z-listbox div.z-listbox-header tr.z-list-head,.contactsView.z-listbox div.z-listbox-header tr.z-auxhead
+	{
+	background-image: none;
+	background-color: #488eb0;
+	line-height: 20px;
+}
+
+z-listbox DIV.z-listbox-header TR.z-list-head {
+	background-image: none;
+	background-color: #488eb0;
+	line-height: 20px;
+}
+
+.z-button .z-button-cr {
+	background: transparent url(img/theme/btnrightside.gif) no-repeat scroll
+		right center;
+	width: 5px;
+}

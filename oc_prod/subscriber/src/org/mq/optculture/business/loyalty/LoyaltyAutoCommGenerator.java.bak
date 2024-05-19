@@ -1,0 +1,1075 @@
+package org.mq.optculture.business.loyalty;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.AutoSMS;
+import org.mq.marketer.campaign.beans.AutoSmsQueue;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.ContactsLoyalty;
+import org.mq.marketer.campaign.beans.CustomTemplates;
+import org.mq.marketer.campaign.beans.EmailQueue;
+import org.mq.marketer.campaign.beans.OCSMSGateway;
+import org.mq.marketer.campaign.beans.UserSMSGateway;
+import org.mq.marketer.campaign.dao.OCSMSGatewayDao;
+import org.mq.marketer.campaign.beans.SMSSettings;
+import org.mq.marketer.campaign.beans.UserSMSSenderId;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.AutoSMSDao;
+import org.mq.marketer.campaign.dao.AutoSmsQueueDao;
+import org.mq.marketer.campaign.dao.AutoSmsQueueDaoForDML;
+import org.mq.marketer.campaign.dao.CustomTemplatesDao;
+import org.mq.marketer.campaign.dao.EmailQueueDao;
+import org.mq.marketer.campaign.dao.SMSSettingsDao;
+import org.mq.marketer.campaign.dao.UserSMSGatewayDao;
+import org.mq.marketer.campaign.dao.UserSMSSenderIdDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.EncryptDecryptLtyMembshpPwd;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.SMSStatusCodes;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+import org.zkoss.zkplus.spring.SpringUtil;
+
+public class LoyaltyAutoCommGenerator {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER); 
+	
+	
+	public void sendEnrollTemplate(Long templateId, String mbrshipNo, String cardPin, Users user, 
+			String emailId, String firstName, Long contactId, Long loyaltyId) {
+		
+		try{
+			
+			CustomTemplatesDao customTemplatesDao = (CustomTemplatesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+			EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			CustomTemplates custTemplate = null;
+			String message = "";
+			if(templateId == -1){
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_REGISTRATION);
+			}
+			else{
+				custTemplate = customTemplatesDao.findCustTemplateById(templateId);
+				message = custTemplate.getHtmlText();
+			}
+			
+			/*message = message.replace("<OrganisationName>", user.getUserOrganization().getOrganizationName())
+			     	  .replace("[CardNumber]", ""+mbrshipNo).replace("[CardPin]", cardPin);*/
+			
+			String subject = "Welcome to [OrganizationName]'s Loyalty Program!";
+			subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+			
+			EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_TEST_LOYALTY_DETAILS_MAIL, 
+					message, "Active", emailId, user, MyCalendar.getNewCalendar(),subject, 
+					contactId, loyaltyId);
+			
+			emailQueueDao.saveOrUpdate(emailQueue);
+			}catch(Exception e){
+				logger.error("Exception in placing loyalty template email in email queue...", e);
+			}
+		
+	}
+	
+	public void sendGiftIssueTemplate(Long templateId, String mbrshipNo, String cardPin, Users user, 
+			String emailId, String firstName, Long contactId, Long loyaltyId) {
+		
+		try{
+			
+			CustomTemplatesDao customTemplatesDao = (CustomTemplatesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+			EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			CustomTemplates custTemplate = null;
+			String message = "";
+			if(templateId == -1){
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTISSUE);
+			}
+			else{
+				custTemplate = customTemplatesDao.findCustTemplateById(templateId);
+				message = custTemplate.getHtmlText();
+			}
+					
+			String subject = "Thank you for purchasing Gift Card from [OrganizationName]!";
+			subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+			
+			EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_GIFT_CARD_ISSUANCE_MAIL, 
+					message, "Active", emailId, user, MyCalendar.getNewCalendar(), subject, 
+					contactId, loyaltyId);
+			
+			emailQueueDao.saveOrUpdate(emailQueue);
+			}catch(Exception e){
+				logger.error("Exception in placing loyalty template email in email queue...", e);
+			}
+	}
+	
+	public void sendTierUpgdTemplate(Long templateId, String mbrshipNo, String cardPin, Users user, 
+			String emailId, String firstName, Long contactId, Long loyaltyId) {
+		
+		try{
+			
+			CustomTemplatesDao customTemplatesDao = (CustomTemplatesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+			EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			CustomTemplates custTemplate = null;
+			String message = "";
+			if(templateId == -1){
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_TIERUPGRADE);
+			}
+			else{
+				custTemplate = customTemplatesDao.findCustTemplateById(templateId);
+				message = custTemplate.getHtmlText();
+			}
+			
+			String subject = "[OrganizationName]'s Loyalty Program - Membership Upgraded!";
+			subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+			
+			EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_TIER_UPGRADATION_MAIL, 
+					message, "Active", emailId, user, MyCalendar.getNewCalendar(), subject, 
+					contactId, loyaltyId);
+						
+			emailQueueDao.saveOrUpdate(emailQueue);
+			}catch(Exception e){
+				logger.error("Exception in placing loyalty template email in email queue...", e);
+			}
+		
+	}
+	
+	public void sendEarnBonusTemplate(Long templateId, String mbrshipNo, String cardPin, Users user, 
+			String emailId, String firstName, Long contactId, Long loyaltyId) {
+		
+		try{
+			
+			CustomTemplatesDao customTemplatesDao = (CustomTemplatesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+			EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			CustomTemplates custTemplate = null;
+			String message = "";
+			if(templateId == -1){
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_BONUS);
+			}
+			else{
+				custTemplate = customTemplatesDao.findCustTemplateById(templateId);
+				message = custTemplate.getHtmlText();
+			}
+			
+			String subject = "[OrganizationName]'s Loyalty Program - Earned Additional Reward!";
+			subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+			
+			EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_EARNING_BONUS_MAIL, 
+					message, "Active", emailId, user, MyCalendar.getNewCalendar(), subject, 
+					contactId, loyaltyId);			
+			
+			emailQueueDao.saveOrUpdate(emailQueue);
+			}catch(Exception e){
+				logger.error("Exception in placing loyalty template email in email queue...", e);
+			}
+		
+	}
+	
+	public void sendRewardExpiryTemplate(Long templateId, String mbrshipNo, String cardPin, Users user, 
+			String emailId, String firstName, Long contactId, Long loyaltyId) {
+		logger.info("saving reward expiry template...");
+		
+		try{
+			
+			CustomTemplatesDao customTemplatesDao = (CustomTemplatesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+			EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			CustomTemplates custTemplate = null;
+			String message = "";
+			if(templateId == -1){
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_REWARDAMTEXPIRY);
+			}
+			else{
+				custTemplate = customTemplatesDao.findCustTemplateById(templateId);
+				message = custTemplate.getHtmlText();
+			}
+			
+			String subject = "[OrganizationName]'s Loyalty Program - Reward Expiring!";
+			subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+			
+			EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_REWARD_EXPIRY_MAIL, 
+					message, "Active", emailId, user, MyCalendar.getNewCalendar(), subject, 
+					contactId, loyaltyId);
+						
+			emailQueueDao.saveOrUpdate(emailQueue);
+			}catch(Exception e){
+				logger.error("Exception in placing loyalty template email in email queue...", e);
+			}
+		
+	}
+	
+	
+	 public void sendMembershipExpiryTemplate(String emailId, Long tempId, Users user,
+				Contacts contactObj, Long loyaltyId) {
+
+			try {
+				logger.debug("-------entered sendMembershipExpiryTemplate---------");
+				CustomTemplatesDao customTemplatesDao=(CustomTemplatesDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+				EmailQueueDao emailQueueDao=(EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+				CustomTemplates custTemplate = null;
+				String message = "";
+				custTemplate = customTemplatesDao.findCustTemplateById(tempId);
+				if(custTemplate == null) {
+					message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_LOYALTYMEMBSHIPEXPIRY);
+				}
+				else {
+					message = custTemplate.getHtmlText();
+				}
+				
+				String subject = "[OrganizationName]'s Loyalty Program - Membership Expiring!";
+				subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+
+				EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_MEMBERSHIP_EXPIRY_MAIL, message, "Active", emailId, user, MyCalendar.getNewCalendar()
+						, subject, contactObj.getContactId(), loyaltyId);
+				emailQueueDao.saveOrUpdate(emailQueue);
+				logger.debug("-------exit  sendMembershipExpiryTemplate---------");
+			}catch (Exception e) {
+				logger.error("Exception  ::", e);
+			}
+
+		}
+
+	 public void sendGiftMembershipExpiryTemplate(String emailId, Long tempId,
+				Users user, Contacts contactObj, Long loyaltyId) {
+
+			try {
+				logger.debug("-------entered sendGiftMembershipExpiryTemplate---------");
+				CustomTemplatesDao customTemplatesDao=(CustomTemplatesDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+				EmailQueueDao emailQueueDao=(EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+				CustomTemplates custTemplate = null;
+				String message = "";
+				custTemplate = customTemplatesDao.findCustTemplateById(tempId);
+				if(custTemplate == null) {
+					message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTMEMBSHIPEXPIRY);
+				}
+				else {
+					message = custTemplate.getHtmlText();
+				}
+				
+				String subject = "Your [OrganizationName]'s Gift Card Is Expiring!";
+				subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+
+				EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_GIFT_CARD_EXPIRY_MAIL, message, "Active", emailId, user, MyCalendar.getNewCalendar()
+						, subject, contactObj.getContactId(), loyaltyId);
+				emailQueueDao.saveOrUpdate(emailQueue);
+				logger.debug("-------exit  sendGiftMembershipExpiryTemplate---------");
+			}catch (Exception e) {
+				logger.error("Exception  ::", e);
+			}
+
+		}
+
+	
+	public void sendGiftExpiryTemplate(Long templateId, String mbrshipNo, String cardPin, Users user, 
+			String emailId, String firstName, Long contactId, Long loyaltyId) {
+		
+		try{
+			
+			CustomTemplatesDao customTemplatesDao = (CustomTemplatesDao)ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+			EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			CustomTemplates custTemplate = null;
+			String message = "";
+			if(templateId == -1){
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTAMTEXPIRY);
+			}
+			else{
+				custTemplate = customTemplatesDao.findCustTemplateById(templateId);
+				message = custTemplate.getHtmlText();
+			}
+			
+			String subject = "Your [OrganizationName]'s Gift Amount Is Expiring!";
+			subject = subject.replace("[OrganizationName]", user.getUserOrganization().getOrganizationName());
+			
+			EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_GIFT_AMOUNT_EXPIRY_MAIL, 
+					message, "Active", emailId, user, MyCalendar.getNewCalendar(),subject, 
+					contactId, loyaltyId);
+						
+			emailQueueDao.saveOrUpdate(emailQueue);
+			}catch(Exception e){
+				logger.error("Exception in placing loyalty template email in email queue...", e);
+			}
+		
+	}
+	
+	public void sendEnrollSMSTemplate(Long templateId, Users user, Long cid, Long loyaltyId, String toMobileNo) {
+
+		logger.info("Entered sendEnrollSMSTemplate...");
+		try{
+
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSMSDao autoSmsDao = (AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+			AutoSMS autoSms = null;
+			UserSMSGateway userSMSGateway = null;
+			OCSMSGateway ocSMSGateway = null;
+			String message = "";
+			String senderId="";
+			logger.info("template id >>> "+templateId);
+			if(templateId == -1){
+				String senderIdWithOrWithoutComma = null;
+
+				userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+				senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+				String[] senderIdArr;
+				senderIdArr = senderIdWithOrWithoutComma.split(",");
+				senderId = senderIdArr[0];
+				senderId = senderId.trim();
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_REGISTRATION);
+				if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+				{
+					message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+				}else{
+					message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+				}
+			}
+			else{
+				autoSms = autoSmsDao.getAutoSmsTemplateById(templateId);
+				message = autoSms.getMessageContent();
+				senderId = autoSms.getSenderId();
+				if(message.contains("[Organization Name]")){
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}	
+				}
+			}
+
+			//String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+			//		senderId = userSMSSenderId.getSenderId();
+			//}
+
+			AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_DETAILS
+					, "Active", toMobileNo, 
+					accountType, senderId, Calendar.getInstance(), user.getUserId(), cid, loyaltyId);
+
+			//smsQueueDao.saveOrUpdate(autoSmsQueue);
+			smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template enroll in sms queue...", e);
+		}
+
+	}
+
+	public void sendGiftIssueSMSTemplate(Long templateId, Users user, Long cid, Long loyaltyId, String toMobileNo) {
+		
+		try{
+
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSMSDao autoSmsDao = (AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+			AutoSMS autoSms = null;
+			OCSMSGateway ocSMSGateway = null;
+			UserSMSGateway userSMSGateway = null;
+			String senderId ="";
+			String message = "";
+			logger.info("templateId >>> "+templateId);
+			if(templateId == -1){
+				String senderIdWithOrWithoutComma = null;
+
+				userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+				senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+				String[] senderIdArr;
+				senderIdArr = senderIdWithOrWithoutComma.split(",");
+				senderId = senderIdArr[0];
+				senderId = senderId.trim();
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTISSUE);
+				if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+				{
+					message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+				}else{
+					message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+				}
+			}
+			else{
+				autoSms = autoSmsDao.getAutoSmsTemplateById(templateId);
+				message = autoSms.getMessageContent();
+				senderId = autoSms.getSenderId();
+				if(message.contains("[Organization Name]")){
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}	
+				}
+			}
+
+			//String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+			//		senderId = userSMSSenderId.getSenderId();
+			//}
+
+			AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_GIFT_CARD_ISSUANCE
+					, "Active", toMobileNo, 
+					accountType, senderId, Calendar.getInstance(), user.getUserId(), cid, loyaltyId);
+
+			//smsQueueDao.saveOrUpdate(autoSmsQueue);
+			smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template gift issue in sms queue...", e);
+		}
+	}
+
+	public void sendTierUpgdSMSTemplate(Long templateId, Users user, Long cid, Long loyaltyId, String toMobileNo) {
+		
+		try{
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSMSDao autoSmsDao = (AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+			AutoSMS autoSms = null;
+			String senderId="";
+			UserSMSGateway userSMSGateway = null;
+			OCSMSGateway ocSMSGateway = null;
+			String message = "";
+			logger.info("templateId >>> "+templateId);
+			if(templateId == -1){
+				String senderIdWithOrWithoutComma = null;
+
+				userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+				senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+				String[] senderIdArr;
+				senderIdArr = senderIdWithOrWithoutComma.split(",");
+				senderId = senderIdArr[0];
+				senderId = senderId.trim();
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_TIERUPGRADE);
+				if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+				{
+					message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+				}else{
+					message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+				}
+			}
+			else{
+				autoSms = autoSmsDao.getAutoSmsTemplateById(templateId);
+				message = autoSms.getMessageContent();
+				senderId = autoSms.getSenderId();
+				if(message.contains("[Organization Name]")){
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}	
+				}
+			}
+
+			//String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+			//		senderId = userSMSSenderId.getSenderId();
+			//}
+
+			AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_TIER_UPGRADATION
+					, "Active", toMobileNo, 
+					accountType, senderId, Calendar.getInstance(), user.getUserId(), cid, loyaltyId);
+
+			//smsQueueDao.saveOrUpdate(autoSmsQueue);
+			smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template tier upgd in sms queue...", e);
+		}
+
+	}
+	
+	public void sendEarnBonusSMSTemplate(Long templateId, Users user, Long cid, Long loyaltyId, String toMobileNo) {
+		
+		try{
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSMSDao autoSmsDao = (AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+			AutoSMS autoSms = null;
+			UserSMSGateway userSMSGateway = null;
+			OCSMSGateway ocSMSGateway = null;
+			String message = "";
+			String senderId="";
+			logger.info("template id >>> "+templateId);
+			if(templateId == -1){
+				String senderIdWithOrWithoutComma = null;
+				
+				userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+				senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+				String[] senderIdArr;
+				senderIdArr = senderIdWithOrWithoutComma.split(",");
+				senderId = senderIdArr[0];
+				senderId = senderId.trim();
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_BONUS);
+				if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+				{
+					message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+				}else{
+					message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+				}
+			}
+			else{
+				autoSms = autoSmsDao.getAutoSmsTemplateById(templateId);
+				message = autoSms.getMessageContent();
+				senderId = autoSms.getSenderId();
+				if(message.contains("[Organization Name]")){
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}	
+				}
+			}
+			
+			//String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+			//		senderId = userSMSSenderId.getSenderId();
+			//}
+			
+			AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_EARNING_BONUS
+					, "Active", toMobileNo, 
+					accountType, senderId, Calendar.getInstance(), user.getUserId(), cid, loyaltyId);
+						
+			//smsQueueDao.saveOrUpdate(autoSmsQueue);
+			smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template earn bonus in sms queue...", e);
+		}
+		
+	}
+
+	public void sendRewardAmtExpirySMSTemplate(Long templateId, Users user, Long cid, Long loyaltyId, String toMobileNo) {
+		logger.info("saving reward amount expiry sms template...");
+		try{
+
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSMSDao autoSmsDao = (AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+			AutoSMS autoSms = null;
+			UserSMSGateway userSMSGateway = null;
+			OCSMSGateway ocSMSGateway = null;
+			String senderId ="";
+			String message = "";
+			
+			logger.info("templateId >>> "+templateId);
+			if(templateId == -1){
+				String senderIdWithOrWithoutComma = null;
+
+				userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+				senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+				String[] senderIdArr;
+				senderIdArr = senderIdWithOrWithoutComma.split(",");
+				senderId = senderIdArr[0];
+				senderId = senderId.trim();
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_REWARDAMTEXPIRY);
+				if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+				{
+					message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+				}else{
+					message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+				}
+			}
+			else{
+				autoSms = autoSmsDao.getAutoSmsTemplateById(templateId);
+				message = autoSms.getMessageContent();
+				senderId = autoSms.getSenderId();
+				if(message.contains("[Organization Name]")){
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}	
+				}
+			}
+
+			//String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+			//		senderId = userSMSSenderId.getSenderId();
+			//}
+
+			AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_REWARD_EXPIRY
+					, "Active", toMobileNo, 
+					accountType, senderId, Calendar.getInstance(), user.getUserId(), cid, loyaltyId);
+
+			//smsQueueDao.saveOrUpdate(autoSmsQueue);
+			smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template reward expiry in sms queue...", e);
+		}
+
+	}
+
+	public void sendMembershipExpirySMSTemplate(String mobileNo,Long smsTempId,Users user, 
+			Contacts contactObj, Long loyaltyId) {
+		try {
+
+			if(user.isEnableSMS()) {
+
+				logger.debug("-------entered sendAutoCommSMS---------");
+
+				AutoSMSDao autoSMSDao=(AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+				OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+				UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+				AutoSmsQueueDao autoSmsQueueDao=(AutoSmsQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+				AutoSmsQueueDaoForDML autoSmsQueueDaoForDML=(AutoSmsQueueDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+				SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+				SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+				AutoSMS autoSMS = null;
+				OCSMSGateway ocSMSGateway = null;
+				UserSMSGateway userSMSGateway = null;
+				String message = null;
+				String senderId = "";
+				String accountType = null;
+
+				autoSMS = autoSMSDao.getAutoSmsTemplateById(smsTempId);
+
+				logger.info("autoSMS >>> "+autoSMS);
+				if(autoSMS == null) {
+					String senderIdWithOrWithoutComma = null;
+
+					userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+					ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+					senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+					String[] senderIdArr;
+					senderIdArr = senderIdWithOrWithoutComma.split(",");
+					senderId = senderIdArr[0];
+					senderId = senderId.trim();
+					message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_LOYALTYMEMBSHIPEXPIRY);
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}
+
+					accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+					//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+					//if(userSMSSenderId != null) {
+					//		senderId = userSMSSenderId.getSenderId();
+					//}
+				}
+				else {
+					message = autoSMS.getMessageContent();
+					if(message.contains("[Organization Name]")){
+						if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+						{
+							message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+						}else{
+							message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+						}	
+					}
+					accountType = autoSMS.getMessageType();
+					senderId = autoSMS.getSenderId();
+				}
+
+				AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_MEMBERSHIP_EXPIRY,
+						"Active",mobileNo,accountType,senderId,Calendar.getInstance(),
+						user.getUserId(),contactObj.getContactId(), loyaltyId);
+				logger.debug("autoSmsQueue--------------------"+autoSmsQueue);
+				//autoSmsQueueDao.saveOrUpdate(autoSmsQueue);
+				autoSmsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+				logger.debug("-------exit  sendAutoCommSMS---------");
+			}
+
+		}
+		catch(Exception e) {
+			logger.error("Exception  ::", e);
+		}
+
+	}
+	
+	public void sendGiftAmtExpirySMSTemplate(Long templateId, Users user, Long cid, Long loyaltyId, String toMobileNo) {
+
+		try{
+
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSMSDao autoSmsDao = (AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+			AutoSMS autoSms = null;
+			OCSMSGateway ocSMSGateway = null;
+			UserSMSGateway userSMSGateway = null;
+			String senderId ="";
+			String message = "";
+			logger.info("templateId >>> "+templateId);
+			if(templateId == -1){
+				String senderIdWithOrWithoutComma = null;
+
+				userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+				senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+				String[] senderIdArr;
+				senderIdArr = senderIdWithOrWithoutComma.split(",");
+				senderId = senderIdArr[0];
+				senderId = senderId.trim();
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTAMTEXPIRY);
+				if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+				{
+					message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+				}else{
+					message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+				}
+			}
+			else{
+				autoSms = autoSmsDao.getAutoSmsTemplateById(templateId);
+				message = autoSms.getMessageContent();
+				senderId = autoSms.getSenderId();
+				if(message.contains("[Organization Name]")){
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}	
+				}
+			}
+
+			//String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+			//		senderId = userSMSSenderId.getSenderId();
+			//}
+
+			AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_GIFT_AMOUNT_EXPIRY
+					, "Active", toMobileNo, 
+					accountType, senderId, Calendar.getInstance(), user.getUserId(), cid, loyaltyId);
+
+			//smsQueueDao.saveOrUpdate(autoSmsQueue);
+			smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template gift expiry in sms queue...", e);
+		}
+
+	}
+	
+	public void sendGiftMembershipExpirySMSTemplate(String toMobileNo,Long smsTempId, Users user, Long cid, Long loyaltyId) {
+		
+		try{
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSMSDao autoSmsDao = (AutoSMSDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings usersmsSettings =  smsSettingsDao.findHeaderbyUser(user.getUserId());
+			AutoSMS autoSms = null;
+			OCSMSGateway ocSMSGateway = null;
+			UserSMSGateway userSMSGateway = null;
+			String senderId ="";
+			String message = "";
+			
+			logger.info("smsTempId >>> "+smsTempId);
+			if(smsTempId == -1){
+				String senderIdWithOrWithoutComma = null;
+
+				userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+				senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+				String[] senderIdArr;
+				senderIdArr = senderIdWithOrWithoutComma.split(",");
+				senderId = senderIdArr[0];
+				senderId = senderId.trim();
+
+				message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTMEMBSHIPEXPIRY);
+				if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+				{
+					message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+				}else{
+					message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+				}
+			}
+			else{
+				autoSms = autoSmsDao.getAutoSmsTemplateById(smsTempId);
+				message = autoSms.getMessageContent();
+				senderId = autoSms.getSenderId();
+				if(message.contains("[Organization Name]")){
+					if(usersmsSettings != null && usersmsSettings.getMessageHeader() != null)
+					{
+						message = message.replace("[Organization Name]", usersmsSettings.getMessageHeader());	
+					}else{
+						message = message.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());	
+					}	
+				}
+			}
+
+			//String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+			//		senderId = userSMSSenderId.getSenderId();
+			//}
+
+			AutoSmsQueue autoSmsQueue = new AutoSmsQueue(message, OCConstants.ASQ_TYPE_LOYALTY_GIFT_CARD_EXPIRY
+					, "Active", toMobileNo,accountType, senderId, Calendar.getInstance(), user.getUserId(), cid, loyaltyId);
+			//smsQueueDao.saveOrUpdate(autoSmsQueue);
+			smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template gift expiry in sms queue...", e);
+		}
+
+	}
+	public void sendTransferSMS(ContactsLoyalty sourceLty, ContactsLoyalty destLty, Users user) {
+		
+		try{
+			OCSMSGatewayDao oCSMSGatewayDao = (OCSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.OCSMSGATEWAY_DAO);
+			UserSMSGatewayDao userSmsGatewayDao = (UserSMSGatewayDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERSMSGATEWAY_DAO);
+			AutoSmsQueueDao smsQueueDao = (AutoSmsQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.AUTO_SMS_QUEUE_DAO);
+			AutoSmsQueueDaoForDML smsQueueDaoForDML = (AutoSmsQueueDaoForDML)ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.AUTO_SMS_QUEUE_DAO_FOR_DML);
+			String message = "";
+			message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_SMS_TRANSFER);
+			OCSMSGateway ocSMSGateway = null;
+			UserSMSGateway userSMSGateway = null;
+			String senderId = "";
+			String accountType = null;
+
+			accountType = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+
+			String senderIdWithOrWithoutComma = null;
+
+			userSMSGateway = userSmsGatewayDao.findByUserId(user.getUserId(), SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+			ocSMSGateway = oCSMSGatewayDao.findById(userSMSGateway.getGatewayId());
+			senderIdWithOrWithoutComma =ocSMSGateway.getSenderId();
+			String[] senderIdArr;
+			senderIdArr = senderIdWithOrWithoutComma.split(",");
+			senderId = senderIdArr[0];
+			senderId = senderId.trim();
+			//UserSMSSenderId userSMSSenderId = getsenderIds(user.getUserId());
+
+			//if(userSMSSenderId != null) {
+
+			//		senderId = userSMSSenderId.getSenderId();
+			//logger.debug("===sender ids are ! null====="+senderId);
+			//}
+
+			logger.debug("===accountType====="+accountType);
+			Map<String, ContactsLoyalty> mobiles = new HashMap<String, ContactsLoyalty>();
+			if(sourceLty.getContact().getMobilePhone() != null && !sourceLty.getContact().getMobilePhone().isEmpty())
+				mobiles.put(sourceLty.getContact().getMobilePhone(), sourceLty) ;
+
+			if(destLty.getContact().getMobilePhone() != null && !destLty.getContact().getMobilePhone().isEmpty())
+				mobiles.put(destLty.getContact().getMobilePhone(), destLty) ;
+			logger.debug("===mobiles size====="+mobiles.size());
+			boolean isSameMobile = false;
+			String previousMobile = Constants.STRING_NILL;
+			for (String mobile : mobiles.keySet()) {
+				logger.debug("===for mobile====="+mobile);
+				if(!previousMobile.isEmpty() && (previousMobile.length() > mobile.length() && previousMobile.endsWith(mobile) || 
+						mobile.length()>previousMobile.length() && mobile.endsWith(previousMobile))) isSameMobile = true;
+				if(!isSameMobile) {
+					logger.debug("===isSameMobile====="+isSameMobile);
+					String finalMessage = prepareTransferContent(message, mobiles.get(mobile), sourceLty.getCardNumber()+"", destLty.getCardNumber()+"", user.getUserOrganization().getOrganizationName());
+
+					logger.debug("saving for mobile==="+mobile);
+					AutoSmsQueue autoSmsQueue = new AutoSmsQueue(finalMessage, OCConstants.ASQ_TYPE_LOYALTY_TRANSFER_MEMBERSHIP
+							, "Active", mobile,accountType, senderId, Calendar.getInstance(), user.getUserId(),
+							mobiles.get(mobile).getContact().getContactId(), mobiles.get(mobile).getLoyaltyId());
+					//smsQueueDao.saveOrUpdate(autoSmsQueue);
+					smsQueueDaoForDML.saveOrUpdate(autoSmsQueue);
+				}
+				previousMobile = mobile;
+				
+				
+			}
+			
+			
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template gift expiry in sms queue...", e);
+		}
+		
+	}
+	public void sendTransferEmail(ContactsLoyalty sourceLty, ContactsLoyalty destLty, Users user) {
+	
+	try{
+		
+		EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+		CustomTemplates custTemplate = null;
+		String message = "";
+		message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_TRANSFER);
+	
+		String subject = "[Organization Name]: Here's your new card details!";
+		subject = subject.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());
+		
+		Map<String, ContactsLoyalty> meailIds = new HashMap<String, ContactsLoyalty>();
+		if(sourceLty.getContact().getEmailId() != null && !sourceLty.getContact().getEmailId().isEmpty())
+			meailIds.put(sourceLty.getContact().getEmailId(), sourceLty) ;
+		
+		if(destLty.getContact().getEmailId() != null && !destLty.getContact().getEmailId().isEmpty())
+			meailIds.put(destLty.getContact().getEmailId(), destLty) ;
+		
+		boolean isSameEmail = false;
+		String previousEmail = Constants.STRING_NILL;
+		for (String email : meailIds.keySet()) {
+			
+			if(previousEmail.equalsIgnoreCase(email)) isSameEmail = true;
+			if(!isSameEmail) {
+				
+				String finalMessage = prepareTransferContent(message, meailIds.get(email), sourceLty.getCardNumber()+"", destLty.getCardNumber()+"", user.getUserOrganization().getOrganizationName());
+				EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_TRANSFER_MEMBERSHIP_MAIL, 
+						finalMessage, "Active", email, user, MyCalendar.getNewCalendar(),subject, 
+						meailIds.get(email).getContact().getContactId(), meailIds.get(email).getLoyaltyId());
+				emailQueueDao.saveOrUpdate(emailQueue);
+				
+			}
+			previousEmail = email;
+			
+			
+		}
+		
+					
+		}catch(Exception e){
+			logger.error("Exception in placing loyalty template email in email queue...", e);
+		}
+	
+	}
+	
+	public void sendTransferEmailforInventory(ContactsLoyalty sourceLty, ContactsLoyalty destLty, Users user) {
+		
+		try{
+			
+			EmailQueueDao emailQueueDao = (EmailQueueDao)ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			CustomTemplates custTemplate = null;
+			String message = "";
+			message = PropertyUtil.getPropertyValueFromDB(OCConstants.LOYALTY_DEFAULT_TEMPLATE_EMAIL_TRANSFER_INVENTORY);
+		
+			String subject = "[Organization Name]: Here's your new card details!";
+			subject = subject.replace("[Organization Name]", user.getUserOrganization().getOrganizationName());
+			
+			Map<String, ContactsLoyalty> meailIds = new HashMap<String, ContactsLoyalty>();
+			if(sourceLty.getContact().getEmailId() != null && !sourceLty.getContact().getEmailId().isEmpty())
+				meailIds.put(sourceLty.getContact().getEmailId(), sourceLty) ;
+			
+			if(destLty.getContact().getEmailId() != null && !destLty.getContact().getEmailId().isEmpty())
+				meailIds.put(destLty.getContact().getEmailId(), destLty) ;
+			
+			boolean isSameEmail = false;
+			String previousEmail = Constants.STRING_NILL;
+			for (String email : meailIds.keySet()) {
+				
+				if(previousEmail.equalsIgnoreCase(email)) isSameEmail = true;
+				if(!isSameEmail) {
+					
+					String finalMessage = prepareTransferContentforInventory(message, meailIds.get(email), sourceLty.getCardNumber()+"", destLty.getCardNumber()+"", user.getUserOrganization().getOrganizationName(),EncryptDecryptLtyMembshpPwd.decrypt(sourceLty.getMembershipPwd()+""));
+					EmailQueue emailQueue = new EmailQueue(custTemplate, Constants.EQ_TYPE_LOYALTY_TRANSFER_MEMBERSHIP_MAIL, 
+							finalMessage, "Active", email, user, MyCalendar.getNewCalendar(),subject, 
+							meailIds.get(email).getContact().getContactId(), meailIds.get(email).getLoyaltyId());
+					emailQueueDao.saveOrUpdate(emailQueue);
+					
+				}
+				previousEmail = email;
+				
+				
+			}
+			
+						
+			}catch(Exception e){
+				logger.error("Exception in placing loyalty template email in email queue...", e);
+			}
+		
+		}
+
+
+	public String prepareTransferContent(String message, ContactsLoyalty lty, String sourceCard, String destCard, String orgName) {
+		
+		String finalContent = Constants.STRING_NILL;
+		String FN = lty.getContact().getFirstName() != null ? lty.getContact().getFirstName() : "Valued Customer" ;
+		sourceCard = sourceCard == null || sourceCard.isEmpty() ? "Not Available" : sourceCard;
+		destCard = destCard == null || destCard.isEmpty() ? "Not Available" : destCard;
+		finalContent = message.replace("[firstName]", FN).replace("[previousMembershipNumber]", sourceCard).replace("[newMembershipNumber]", destCard).replace("[Organization Name]", orgName);
+		return finalContent;
+	}
+	
+     public String prepareTransferContentforInventory(String message, ContactsLoyalty lty, String sourceCard, String destCard, String orgName, String pwd) {
+		
+		String finalContent = Constants.STRING_NILL;
+		String FN = lty.getContact().getFirstName() != null ? lty.getContact().getFirstName() : "Valued Customer" ;
+		sourceCard = sourceCard == null || sourceCard.isEmpty() ? "Not Available" : sourceCard;
+		destCard = destCard == null || destCard.isEmpty() ? "Not Available" : destCard;
+		finalContent = message.replace("[firstName]", FN).replace("[previousMembershipNumber]", sourceCard).replace("[newMembershipNumber]", destCard).replace("[Organization Name]", orgName).replace("[password]", pwd);
+		return finalContent;
+	}
+	
+	public UserSMSSenderId  getsenderIds(Long userId) {
+		List<UserSMSSenderId> retSenderIds =  null;
+		try{
+			UserSMSSenderIdDao userSMSSenderIdDao = (UserSMSSenderIdDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USER_SMS_SENDER_ID_DAO);
+			UsersDao usersDao = (UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			logger.info("the logged user id is====>"+userId);
+			Users user = usersDao.findByUserId(userId);
+			String type = SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType());
+			retSenderIds = userSMSSenderIdDao.findSenderIdBySMSType(userId, type);
+			if(retSenderIds == null) return null;
+			return (UserSMSSenderId) retSenderIds.get(0);
+		}catch (Exception e) {
+			logger.error("Exception ::" , e);
+		}
+		return (UserSMSSenderId) retSenderIds.get(0);
+	}
+	}

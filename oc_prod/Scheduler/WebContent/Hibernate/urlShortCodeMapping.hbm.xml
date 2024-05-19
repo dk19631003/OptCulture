@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.UrlShortCodeMapping"
+		table="url_short_code_mapping">
+		<id name="shortCodeId" type="java.lang.Long">
+            <column name="short_code_id" />
+            <generator class="native" />
+        </id>
+        <property name="shortCode" type="string">
+            <column name="short_code" unique="true" />
+        </property>
+        <property name="urlContent" type="string">
+            <column name="url_content" />
+        </property>
+        <property name="urlType" type="string">
+            <column name="url_type" />
+        </property>
+        <property name="userId" type="java.lang.Long">
+            <column name="user_id" />
+        </property>
+
+	</class>
+</hibernate-mapping>

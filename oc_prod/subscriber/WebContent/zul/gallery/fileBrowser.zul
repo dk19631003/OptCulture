@@ -1,0 +1,198 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+<?component name="imageMacro" macroURI="/zul/gallery/imageMacro.zul" class="org.mq.marketer.campaign.controller.gallery.ImageMacro"?>
+<window id="fileBrowserWinId" border="normal"
+		apply="org.mq.marketer.campaign.controller.gallery.FileBrowserController"
+		 xmlns:h="http://www.zkoss.org/2005/zk/native"
+		  xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<style>
+		.imgbr_label {
+			font-family:'Microsoft Sans Serif',Tahoma,Arial,Verdana,Sans-Serif;
+			text-decoration:none;
+			font-size:11px;
+			white-space:nowrap;
+			color:black;
+			line-height:18px;
+			padding-right:8px;
+			cursor:default;
+			vertical-align:middle;
+		}
+	</style>
+	<script>
+		<![CDATA[
+			function insertLink(url){
+				//alert("URL : " + url);
+				var href = window.opener.document.getElementById("href");
+				//var url = $e(comp);
+				href.value = url;
+				href.focus();
+				self.close();
+			}
+			function refreshWin() {
+				window.location.reload(true);
+			}
+		]]>
+	</script>
+		<h:table  height="400px" width="850px" style="overflow:auto;" >
+			<h:tr>
+				<h:td width="200px" valign="top">
+					<tree id="explorerTree" zclass="z-dottree"
+						width="200px" style="border:none;overflow:auto;" height="400px">
+						<treecols>
+							<treecol label="Folders" maxlength="25" />
+						</treecols>
+					</tree>
+				</h:td>
+				<h:td width="1px" style="background-color:#538BA2">
+				</h:td>
+				<h:td valign="top">
+					<div id="filesDivId" visible="false" width="100%" height="100%">
+						<h:table width="100%" height="100%">
+							<h:tr height="25px">
+								<h:td>
+									<div id="optionsDivId">
+										<h:div class="view" id="toolbar_view">
+											<div onClick="fileUploadHboxId.setVisible(!fileUploadHboxId.isVisible());" style="float:left">
+												<h:img src="/subscriber/img/icons/add.gif"/>
+												<h:span class="imgbr_label">Upload</h:span>
+											</div>
+											<div w:onClick="refreshWin()" style="float:left">
+												<h:img src="/subscriber/img/icons/refresh.gif"/>
+												<h:span class="imgbr_label">Refresh</h:span>
+											</div>
+											<div onClick="" style="float:left" visible="false">
+												<h:img src="/subscriber/img/icons/settings.gif"/>
+												<h:span class="imgbr_label">Settings</h:span>
+											</div>
+										</h:div>
+									</div>
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td>
+									<hbox id="fileUploadHboxId" visible="false">
+										<label value="Browse file" sclass="theme-lbHeading"/>
+										<textbox id="selectedFileTbId"/>
+										<button label="Browse..." id="uploadBtnId" upload="true,maxsize=-1" />
+										<button label="Upload" id="imgUploadBtnId"/>
+									</hbox>
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td valign="top" style="background-color:#EBEBEB">
+									<grid id="fileGridId" mold="paging" pageSize="10" width="100%" visible="false">
+										<columns>
+											<column label="Name"/>
+											<column label="Size" width="50px"/>
+											<column label="Last Modified Date" width="150px"/>
+											<column label="" align="center" width="120px"/>
+										</columns>
+									</grid>
+								</h:td>
+							</h:tr>
+						</h:table>
+					</div>
+				</h:td>
+			</h:tr>
+		</h:table>
+				<!--<zscript>
+			<![CDATA[
+				import org.mq.marketer.campaign.general.MessageUtil;
+				import org.mq.marketer.campaign.general.PropertyUtil;
+				import org.mq.marketer.campaign.general.PageUtil;
+				import org.zkoss.util.media.Media;
+				import org.clapper.util.io.FileUtil;
+    			import java.io.File;
+    			import java.util.List;
+    			import java.util.ArrayList;
+    			import java.io.BufferedInputStream;
+    			import java.io.ByteArrayInputStream;
+    			import java.io.FileOutputStream;
+    			import java.text.DateFormat;
+    			import java.text.SimpleDateFormat;
+    			import org.zkoss.zul.Messagebox;
+    			import org.mq.marketer.campaign.general.FileUploader;
+    			import org.apache.log4j.Logger;
+    			
+				Media media = null;
+
+				Logger logger = Logger.getRootLogger();
+				
+				List extList = new ArrayList();
+				extList.add("pdf"); extList.add("PDF"); 
+				extList.add("gif"); extList.add("jpg"); extList.add("png"); extList.add("jpeg");
+				extList.add("GIF"); extList.add("JPG"); extList.add("PNG"); extList.add("JPEG");
+				DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm aaa");
+				
+				void upload(){
+					if(media == null) {
+						Messagebox.show("Please select a file.", "Error", Messagebox.OK , Messagebox.ERROR);
+						return;
+					}
+					Treeitem ti = (Treeitem)explorerTree.getSelectedItem();
+					if(ti == null) {
+						Messagebox.show("Please select the folder to upload.");
+						return;
+					}
+					File file = (File)ti.getValue();
+					String path = file.getAbsolutePath() + "/" +((Media)media).getName();
+					logger.debug("File Path : " + path);
+					String ext = FileUtil.getFileNameExtension(path);
+					logger.debug("Ext : " + ext);
+					if(ext == null){
+						Messagebox.show("Upload valid file.", "Error", Messagebox.OK , Messagebox.ERROR);
+						return;
+					}
+					if(!extList.contains(ext)){
+						Messagebox.show("Upload image or PDF files only.", "Error", Messagebox.OK , Messagebox.ERROR);
+						return;
+					}
+					try{
+						String folderType = (String)ti.getAttribute("FolderType");
+						if(logger.isDebugEnabled()) logger.debug("Folder Type : "+ folderType);
+						if(folderType == null) {
+							return;
+						}
+						if(folderType.equalsIgnoreCase("Gallery")) {
+							if(ext.equalsIgnoreCase("pdf")) {
+								Messagebox.show("Upload image file only in the folder.", "Error", Messagebox.OK , Messagebox.ERROR);
+								return;
+							}
+						}
+						
+						byte res = FileUploader.upload(media,path,false);
+						
+						if (res == -10) {
+							if(Messagebox.show("File name already exists. Do you want to replace the file?",
+									"File Upload", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION)
+									== Messagebox.CANCEL){
+								return;
+							}
+							res = FileUploader.upload(media,path,true);
+						}
+						if(res < 0) {
+							Messagebox.show("File upload failed. Please retry.",
+									"Error", Messagebox.OK , Messagebox.ERROR);
+							return;
+						}
+						
+						Messagebox.show("File uploaded successfully. Refresh the page to see the file.", "Info", Messagebox.OK , Messagebox.INFORMATION);						
+						fileUploadHboxId.setVisible(false);
+						selectedFileTbId.setValue("");
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					media = null;
+				}
+				
+				void browse(Media m) {
+					logger.debug("Browse is called");
+					selectedFileTbId.setValue(m.getName());
+					media = m;
+				}
+
+			]]>
+		</zscript>
+--></window>
+</zk>

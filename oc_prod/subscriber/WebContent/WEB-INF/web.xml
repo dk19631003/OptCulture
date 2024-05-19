@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml
+	Purpose:
+	
+	Description:
+	
+	History:
+	
+	Copyright (C) 2009 MagnaQuest Technologies. All Rights Reserved.
+-->
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<description>
+		<![CDATA[Captiway]]>
+	</description>
+	<display-name>Captiway</display-name>
+	
+	<icon>
+		<small-icon>img/favicon.ico</small-icon>
+		<large-icon>img/favicon.ico</large-icon>
+	</icon>
+	
+	
+	
+	<!-- Java-based Spring container definition -->
+	<context-param>
+    	<param-name>contextClass</param-name>
+    	<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+
+	<!-- Location of Java @Configuration classes that configure the components that makeup this application -->
+	<context-param>
+    	<param-name>contextConfigLocation</param-name>
+    	<param-value>org.mq.marketer.social.config</param-value>
+	</context-param>
+	
+	
+	<!-- Ensure UTF-8 character encoding is used -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Enables support for DELETE and PUT request methods with web browser clients -->
+	<filter>
+		<filter-name>hiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>hiddenHttpMethodFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<!-- H2 Database Console for managing the app's database -->
+	<servlet>
+		<servlet-name>H2Console</servlet-name>
+		<servlet-class>org.h2.server.web.WebServlet</servlet-class>
+		<init-param>
+			<param-name>-webAllowOthers</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>H2Console</servlet-name>
+		<url-pattern>/admin/h2/*</url-pattern>
+	</servlet-mapping>
+			
+	<!-- Handles requests into the application -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value></param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	
+	
+	
+	
+	<!-- <context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/applicationContext.xml
+			/WEB-INF/applicationContext-security.xml
+		</param-value>
+	</context-param> -->
+	
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/log4j2.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+	
+	<!-- To get the online users details these have been configured -->
+	
+	<!--<listener>
+        <listener-class>
+            org.mq.marketer.campaign.controller.SessionCounter
+        </listener-class>
+    </listener>
+	--><listener>
+        <listener-class>
+            org.mq.marketer.campaign.controller.ActiveUsers
+        </listener-class>
+    </listener>
+	
+	<!--
+		uncomment HttpSessionEventPublisher listener 
+		if u want single session login 
+		then uncomment the session-management section in applicationContext-security.xml
+	-->
+	<!-- 
+	<listener>
+		<listener-class>
+			org.springframework.security.ui.session.HttpSessionEventPublisher
+		</listener-class>
+	</listener>
+ 	-->
+	<listener>
+		<description>
+			ZK listener for cleanup when a session is destroyed
+		</description>
+		<listener-class>
+			org.zkoss.zk.ui.http.HttpSessionListener
+		</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+	</filter>
+	
+	<listener>
+	    <listener-class>
+	      org.springframework.security.web.session.HttpSessionEventPublisher
+	    </listener-class>
+	 </listener>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+<servlet>
+
+		<servlet-name>bee</servlet-name>
+		<servlet-class>
+ <!-- org.mq.optculture.restservice.beefileapiservice.BeeFileAPIResponse
+ 	 -->		org.springframework.web.servlet.DispatcherServlet
+	
+ 		</servlet-class>
+ 		<load-on-startup>3</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>bee</servlet-name>
+		<url-pattern>/BeeFileAPI/*</url-pattern>
+	</servlet-mapping>
+	
+
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>*.mqrm</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+      <servlet-name>ConfigureLoggerLevels</servlet-name>
+      <servlet-class>org.mq.marketer.campaign.controller.ConfigureLoggerLevels</servlet-class>
+   </servlet>
+
+ 
+   <servlet-mapping>
+      <servlet-name>ConfigureLoggerLevels</servlet-name>
+      <url-pattern>/ConfigureLoggerLevels</url-pattern>
+   </servlet-mapping>
+	
+	<servlet>
+		<description>ZK loader for ZUML pages</description>
+		<servlet-name>zkLoader</servlet-name>
+		<servlet-class>
+			org.zkoss.zk.ui.http.DHtmlLayoutServlet
+		</servlet-class>
+		<!-- Must. Specifies URI of the update engine (DHtmlUpdateServlet).
+			It must be the same as <url-pattern> for the update engine.
+		-->
+		<init-param>
+			<param-name>update-uri</param-name>
+			<param-value>/zkau</param-value>
+		</init-param>
+		<init-param>
+			<param-name>compress</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- Optional. Specifies the default log level: OFF, ERROR, WARNING,
+			INFO, DEBUG and FINER. If not specified, the system default is used.
+			<init-param>
+			<param-name>log-level</param-name>
+			<param-value>OFF</param-value>
+			</init-param>
+		-->
+		<load-on-startup>1</load-on-startup>
+		<!-- Must -->
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>zkLoader</servlet-name>
+		<url-pattern>*.zul</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>zkLoader</servlet-name>
+		<url-pattern>*.zhtml</url-pattern>
+	</servlet-mapping>
+	<!-- Optional. Uncomment it if you want to use richlets.
+		<servlet-mapping>
+		<servlet-name>zkLoader</servlet-name>
+		<url-pattern>/zk/*</url-pattern>
+		</servlet-mapping>
+	-->
+	<servlet>
+		<description>The asynchronous update engine for ZK</description>
+		<servlet-name>auEngine</servlet-name>
+		<servlet-class>
+			org.zkoss.zk.au.http.DHtmlUpdateServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>auEngine</servlet-name>
+		<url-pattern>/zkau/*</url-pattern>
+	</servlet-mapping>
+	<!-- //// -->
+	<!-- /////////// -->
+	<!-- Miscellaneous -->
+	<session-config>
+		<session-timeout>300</session-timeout>
+	</session-config>
+	<!-- MIME mapping -->
+	<mime-mapping>
+		<extension>doc</extension>
+		<mime-type>application/vnd.ms-word</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>gif</extension>
+		<mime-type>image/gif</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>htm</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>html</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>jnlp</extension>
+		<mime-type>application/x-java-jnlp-file</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>jpeg</extension>
+		<mime-type>image/jpeg</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>jpg</extension>
+		<mime-type>image/jpeg</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>js</extension>
+		<mime-type>application/x-javascript</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>pdf</extension>
+		<mime-type>application/pdf</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>png</extension>
+		<mime-type>image/png</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>PNG</extension>
+		<mime-type>image/png</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>txt</extension>
+		<mime-type>text/plain</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>xls</extension>
+		<mime-type>application/vnd.ms-excel</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>xml</extension>
+		<mime-type>text/xml</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>xul</extension>
+		<mime-type>application/vnd.mozilla.xul-xml</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>zhtml</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>zip</extension>
+		<mime-type>application/x-zip</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>zul</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>bmp</extension>
+		<mime-type>image/bmp</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>BMP</extension>
+		<mime-type>image/bmp</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>jpe</extension>
+		<mime-type>image/jpeg</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>ico</extension>
+		<mime-type>image/x-icon</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>JPG</extension>
+		<mime-type>image/jpeg</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>JPEG</extension>
+		<mime-type>image/jpeg</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>swf</extension>
+		<mime-type>application/x-shockwave-flash</mime-type>
+	</mime-mapping>
+	<welcome-file-list>
+		<welcome-file>index.zul</welcome-file>
+	</welcome-file-list>
+	<error-page>
+<error-code>404</error-code>
+<location>/ErrorPage404.jsp</location>
+</error-page>
+</web-app>

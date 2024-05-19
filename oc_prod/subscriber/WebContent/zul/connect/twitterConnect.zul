@@ -1,0 +1,20 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+<window title="Twitter" border="normal" xmlns:h="native"  
+	 >
+New Content Here!
+
+
+ <h:form action="/subscriber/connect/twitter" method="POST">
+	<h:div >
+		<h:p>You aren't connected to Twitter yet. Click the button to connect.</h:p>
+	</h:div>
+	<h:p><h:button type="submit"> Connect</h:button></h:p>
+</h:form>
+
+<button label="Twitter CONNECT" href="/connect/twitter"  type="submit"/>	    
+<button label="LinkedIn CONNECT" href="/connect/linkedin"  type="submit"/>	    
+
+</window>
+</zk>

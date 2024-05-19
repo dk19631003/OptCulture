@@ -1,0 +1,16 @@
+<?page title="My Social Campaigns" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="mySocialCampWinId" apply="org.mq.marketer.campaign.controller.social.MySocialCampaignController"> 
+<listbox id="mySocialCampaignsLstId"  emptyMessage="There are no social campaigns to display."  mold="paging" pageSize="10">
+	<listhead >
+		<listheader>Campaign Name</listheader>
+		<listheader>Description</listheader>
+		<listheader>Destinations Configured</listheader>
+		<listheader>Created Date</listheader>
+		<listheader>Status</listheader>
+		<listheader>Option</listheader>
+	</listhead>
+	
+</listbox>
+</window>
+</zk>

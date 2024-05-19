@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.UsersDomains" table="userdomain" lazy="false">
+		<id name="domainId" type="java.lang.Long" column="domain_id">
+			<generator class="native" />
+		</id>
+		<property name="externalId" type="string" column="external_id"
+			length="20" />
+		<property name="domainName" type="string" column="domain_name"
+			length="64"  lazy="false" />
+		<property name="displayName" type="string" column="display_name"
+			length="64"  lazy="false" />
+			
+		<many-to-one name="domainManagerId"
+			class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false">
+			<column name="domain_managerid" />
+		</many-to-one>
+		
+		<set name="mailingLists" table="mlists_domains"	>
+			<key column="domain_id" />
+			<many-to-many
+				class="org.mq.captiway.scheduler.beans.MailingList" column="list_id" />
+		</set>
+			
+		<set name="segments" table="segments_domains">
+			<key column="domain_id" />
+			<many-to-many
+				class="org.mq.captiway.scheduler.beans.SegmentRules" column="seg_rule_id" />
+		</set>
+		
+		
+		
+		<many-to-one name="userOrganization"
+			class="org.mq.captiway.scheduler.beans.UserOrganization" foreign-key="orgId"
+			fetch="select" lazy="false">
+			<column name="user_organization" />
+		</many-to-one>
+				
+		<property name="createdDate" type="calendar" column="created_date" />
+
+	</class>
+</hibernate-mapping>
+

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.UserOrganization" table="user_organization" lazy="false">
+		<id name="userOrgId" type="java.lang.Long" column="user_org_id">
+			<generator class="native" />
+		</id>
+		<property name="organizationName" type="string" column="org_name"  />
+		<property name="orgExternalId" type="string" column="org_external_id"  />
+		<property name="createdDate" type="calendar" column="created_date" />
+		
+		<property name="branding" type="string" column="branding"  />
+		<property name="clientType" type="string" column="client_type"  />
+		
+			<property name="msgReceivingNumbers" type="string" column="msg_received_number"  />
+		
+		<property name="toEmailId" type="string" column="to_email_id"  />
+		
+		
+		<property name="maxKeywords" type="java.lang.Integer" >
+		<column name="max_keywords" default="0" />
+		</property>
+		
+		<property name="cardId" type="java.lang.Long">
+			<column name="card_id"></column>
+		</property>
+		<property name="nextCardSeqNo" type="java.lang.Long">
+			<column name="nextcard_seqno"></column>
+		</property>
+		<property name="cardGenerateFlag" type="string">
+			<column name="cardgenerate_flag" length="16" default="'N'"></column>
+		</property>
+		<property name="cardSeqPrefix" type="java.lang.Long">
+			<column name="cardseq_prefix"></column>
+		</property>
+		<property name="cardRandPrefix" type="java.lang.Long">
+			<column name="cardrand_prefix"></column>
+		</property>
+		<property name="minNumberOfDigits" type="java.lang.Integer" >
+		<column name="min_number_of_digits" default="0"></column>
+		</property>
+		<property name="maxNumberOfDigits" type="java.lang.Integer">
+		<column name="max_number_of_digits" default="0"></column>	
+		</property>
+		 <property name="mobilePattern" type="boolean">
+			<column name="mobile_pattern" default="false" />
+		</property> 		
+	</class>
+</hibernate-mapping>
+

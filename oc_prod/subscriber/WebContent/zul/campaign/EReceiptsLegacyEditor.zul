@@ -1,0 +1,286 @@
+<?page title="Digital Reciepts" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window border="none"
+		apply="org.mq.marketer.campaign.controller.campaign.EReceiptsLegacyController"
+		width="100%" xmlns:h="native">
+		<style>
+
+
+
+			.redStar{ font-size:14px;color:red; }
+
+			
+			<![CDATA[ .z-label { font-size: 13px; font-family:
+			arial,sans-serif; } .z-radio { display: inline; }
+
+
+			]]>
+			
+			
+   </style>
+
+
+
+		<tabbox>
+			<tabs>
+				<tab>Templates</tab>
+				<tab id="myTemplatesTabId" visible="false">
+					Templates
+				</tab>
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+
+					<!-- <label
+						value="You can select a default or a custom template as a Digital Receipt here to be sent when your customer makes a purchase ."
+						style="font-size: 12px;font-family: : arial,sans-serif;padding:30px;" /> -->
+					<h:br />
+					<!-- <label value="Please Note"
+						style="padding-left:30px;font-weight:bold;font-size: 12px;font-family:arial,sans-serif;" />
+					<label
+						value=" : Once all changes to the selected template have been made, you will have to click on 'Save As My Choice' to configure as your digital receipt."
+						style="font-size: 12px;font-family: : arial,sans-serif;" /> -->
+					<div width="100%" align="right">
+						<!-- <radiogroup orient="horizontal" id="templateTypeGrpId" > <radio label="System Templates" ></radio>  <radio label="MyTemplates"></radio> </radiogroup> -->
+						
+						<toolbarbutton id="sendTestBtnId"
+							image="/img/icons/Send-test-DR-Icon_2.png"
+							label="Send Test Receipt" style="color:#2886B9;text-decoration: underline;" />
+						<toolbarbutton id="submitBtnId"
+							image="/img/digi_receipt_Icons/Save_in_my_templates_icn.png"
+							label="Save In My Templates" visible="false" style="color:#2886B9;text-decoration: underline;" />
+						<toolbarbutton id="updateTemplateAId"
+							image="/img/digi_receipt_Icons/Save_icn.png"
+							label="Update My Template" style="color:#2886B9;text-decoration: underline;" visible="false"/>
+					</div>
+
+					<label value="Template Name : "
+						style="font-weight: bold;" />
+					<label id="selectedTemplateLblId" />
+					<hbox width="100%">
+						<vbox visible="false" width="230px" style="margin-right:10px;" align="center">
+							<tabbox mold="accordion" id="tabBoxId">
+								<tabs>
+									<tab width="230px" sclass="segmentHead"
+										label="My Templates">
+									</tab>
+									<tab width="230px" sclass="segmentHead"
+										label="System Templates">
+									</tab>
+								</tabs>
+								<tabpanels>
+									<tabpanel>
+										<listbox id="myTemplatesListId"
+											sclass="segmentList" height="410px">
+												<listhead sizable="false">
+													<listheader maxlength="30"/>
+												</listhead>
+										</listbox>
+									</tabpanel>
+									<tabpanel>
+										<listbox id="digitalTemplatesListId"
+										   sclass="segmentList">
+												<listhead sizable="false">
+													<listheader maxlength="30"/>
+												</listhead>
+										</listbox>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+
+						</vbox>
+
+						<vbox >
+
+							<ckeditor id="digitalRecieptsCkEditorId" customConfigurationsPath="/js/ckConfig.js"
+								width="98%" height="450px">
+							</ckeditor>
+
+						</vbox>
+
+
+					</hbox>
+
+
+					<h:table width="100%">
+						<h:tr>
+
+							<h:td width="30%"></h:td>
+							<h:td colspan="2">
+								<!-- <label value="Selected Templates : " />  <label id="selectedTemplateLblId" /> <h:br/>  -->
+
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td width="30%"></h:td>
+							<h:td>
+
+
+
+
+							</h:td>
+
+						</h:tr>
+						<h:tr height="100px" width="100%">
+							<h:td width="30%"></h:td>
+
+							<h:td colspan="2"
+								style="padding-right:70px;" width="70%" align="right">
+								<!-- <button id="submitBtnId" sclass="idle200 greenbtn" label="Save In My Templates" />  -->
+								<!-- <button id="configTemplateBtnId"
+									sclass="idle140 greenbtn" label="Save" /> -->
+								<button id="backBtnId" label="Back"  sclass="idle140" />	
+								<button id="updateTemplateContentBtnId"
+									sclass="idle140 greenbtn" label="Save" />
+
+							</h:td>
+
+						</h:tr>
+					</h:table>
+
+
+
+
+					<window id="winId" title="Save in My Templates"
+						border="normal" visible="false" width="400px" height="100px"
+						closable="true"
+						onClose="self.setVisible(false); event.stopPropagation();">
+						<hbox>
+							<label
+								value="Please provide template name:" />
+							<textbox id="templatNameTbId" />
+						</hbox>
+						<button label="Save Template"
+							id="saveInMyTempBtnId" />
+					</window>
+					
+					<window id="testDRWinId" visible="false" closable="true" title="Send Test Receipt" 
+						height="200px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+						<h:table style="padding:10px;">
+							<h:tr>
+								<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td colspan="1"><label value="Email address:" /></h:td>
+								<h:td colspan="2"><textbox  id="testDRTbId"  width="160px"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td/>
+								
+								<h:td  colspan="2" valign="center">	
+									<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+									<label value="To send a test receipt to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+								</h:td>
+								
+								
+							</h:tr>
+							<h:tr height="10" />
+							<h:tr>
+								<h:td><button label="Send" id="sendTestMailBtnId" /></h:td>
+								<h:td><button label="Cancel" id="cancelSendTestMailBtnId" /></h:td>
+							</h:tr>
+						</h:table>
+					</window>
+					
+				</tabpanel>
+
+				<tabpanel>
+					<listbox id="digitalRecieptListId"
+						checkmark="true">
+						<listhead>
+							<listheader>Template Name</listheader>
+							<listheader>Created Date</listheader>
+							<listheader>Options</listheader>
+						</listhead>
+					</listbox>
+
+					<hbox>
+						<button id="myTemplateBtnId"
+							label="Configure">
+						</button>
+					</hbox>
+				</tabpanel>
+
+			</tabpanels>
+
+
+
+		</tabbox>
+		<menupopup id="manageActionsMpId"  sclass="myfilter">
+						<!-- <menuitem label="Make A Copy" id="makeCopyMId"/> -->
+						<menuitem label="Save As" id="saveAsMId"/>
+						<menuitem label="Send Test Receipt" id="sendTestReceiptMId"/>
+						<menuitem label="Save As My Choice" id="saveAsMyChoiceMId"/>
+						<menuitem label="View Details" id="viewDetailsMId"/>
+						<menuitem label="Rename Template" id="renameTemplateMId"/>
+						<menuitem label="Delete Template" id="deleteTemplateMId"/>
+		</menupopup>
+		
+		<window id="makeACopyWinId" title="Make A Copy"
+						border="normal" visible="false" width="400px" height="150px"
+						closable="true"
+						onClose="self.setVisible(false); event.stopPropagation();">
+				
+						
+						 <h:table>
+						 <h:tr>
+						   <h:td width="50%" align="center"><label value="Please provide template name" /></h:td>
+						 </h:tr>
+						 <h:tr>
+						   <h:td width="50%" align="center"><label value="Template Name:"  /></h:td><h:td><textbox id="templatNameTbId" maxlength="50"  /></h:td>
+						 </h:tr>
+						 <h:tr height="10" />
+						 <h:tr>
+						   <h:td></h:td>
+						   <h:td><button label="Save Template" id="saveInMyTempBtnId" /></h:td>
+						 </h:tr>
+						</h:table> 
+					
+            			
+						
+						
+						
+		</window>
+					
+					
+		<window id="viewDetailsWinId"  title="View Details" visible="false" width="420px"  border="normal"  closable="true"  onClose="self.setVisible(false); event.stopPropagation();" >
+		
+				<h:table width="400px"  >
+					<h:tr>
+						<h:td height="30px" width="180px"><label value="Template Name : "  /></h:td> <h:td><label id="templateNameLblId"/></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td height="30px"><label value="Creation Date : "/> </h:td> <h:td><label id="creationDateLblId"/></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td height="30px"><label value="Last Modified Date : " /> </h:td> <h:td><label id="lastAccLblId"/></h:td>
+					</h:tr>
+				</h:table>
+							
+		
+		
+		</window>	
+		
+		<window id="renameTemplateWinId"  title="Rename Template" visible="false" width="420px"  border="normal"  closable="true"  onClose="self.setVisible(false); event.stopPropagation();" >
+		
+				<h:table>
+						 <h:tr>
+						   <h:td colspan="2" ><label value="Please provide new name for the template " /></h:td>
+						 </h:tr>
+						 <h:tr>
+						   <h:td width="200px" align="center"><label value="Template Name:" /> </h:td>
+						   <h:td><textbox id="newTempltNameTbId" maxlength="50"  /></h:td>
+						 </h:tr>
+						 <h:tr height="10" />
+						 <h:tr>
+						   <h:td align="center"><button label="Rename" id="renameTempltBtnId"  />
+						   <button label="Cancel" id="cancelTempltBtnId"  /></h:td>
+						 </h:tr>
+						</h:table> 
+							
+		
+		
+		</window>
+	</window>
+</zk>

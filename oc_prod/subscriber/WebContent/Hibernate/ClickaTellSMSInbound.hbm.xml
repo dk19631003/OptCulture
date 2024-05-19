@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.ClickaTellSMSInbound" table="sms_inbounds">
+    <id name="inboundMsgId" type="java.lang.Long" column="inbound_msg_id">
+      <generator class="native"/>
+    </id>
+	<property name="text" type="string" column="text_content" />
+	<property name="usedKeyWords" type="string" column="used_keywords" />
+	<property name="moFrom" type="string" column="mo_from" />
+	<property name="moTo" type="string" column="mo_to" />
+    <property name="timeStamp" type="calendar" column="inbound_time"/>
+    <property name="orgId" type="java.lang.Long" column="org_id" />
+    <property name="autoResponse" type="string" column="auto_response" length="1000"/>
+    <property name="msgID" type="string" column="msg_id" length="100" />
+    <property name="deliveryStatus" type="string" column="delivery_status" length="50" />
+    <property name="deliveredTime" type="calendar" column="delivered_time"/>
+  </class>
+</hibernate-mapping>
+
+
+ 

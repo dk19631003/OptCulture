@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 17, 2011 17:07:04 PM -->
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SparkBaseCard" 
+	table="sparkbase_cards"  >
+		  
+		<id name="sparkBaseCard_id" type="java.lang.Long" >
+			<column name="sparkbase_card_id"/>
+			<generator class="native" />
+		</id>
+		
+		<many-to-one name="sparkBaseLocationId"
+			class="org.mq.marketer.campaign.beans.SparkBaseLocationDetails"
+			foreign-key="sparkBaseLocationDetails_id" fetch="select" >
+			<column name="sparkbase_location_id" />
+		</many-to-one>
+		
+		<property name="cardId" type="string"  unique-key="cardIdUniqueKey" >
+			<column name="card_id" />
+		</property>
+		
+		<property name="cardPin" type="string" >
+			<column name="card_pin" />
+		</property>
+		
+		<property name="cardType" type="string" >     <!--  physical or virtual  -->
+			<column name="card_type" />
+		</property>
+		
+		<property name="fromSource" type="string" >    <!--  upload or pos  -->
+			<column name="from_source" />
+		</property>
+		
+		<property name="status" type="string" >
+			<column name="status" />
+		</property>
+		
+		<property name="activationDate" type="calendar">
+			<column name="activation_date"></column>
+		</property>
+		<property name="comments" type="string">
+			<column name="comments" />
+		</property>
+	</class>
+</hibernate-mapping>

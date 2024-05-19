@@ -1,0 +1,154 @@
+<?page title="eventTriggEmailPageId" contentType="text/html;charset=UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:n="http://www.zkoss.org/2005/zk/native"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+   <window id="eventTriggerWinId" width="100%" xmlns:w="http://www.zkoss.org/2005/zk/client" apply="org.mq.marketer.campaign.controller.campaign.EventTriggerEmailController" >
+      <tabbox id="triggerTabbxId" width="100%" >
+      			<tabs >
+								        <tab label="Event Triggers" />
+								        <tab label="Add Trigger"  id="addTriggerTabId"/>
+								        <tab label="Create Custom Event"  id="eventTypeOptTabid" />
+   				 </tabs>
+   			
+   			<tabpanels>	 
+      		  <tabpanel> 
+      			 	<h:table width="100%">
+			     		
+			     		<h:tr>	
+			     			<h:td  valign="top">
+			     					
+			     					<h:table>
+			     						<h:tr>
+			     							<h:td>
+			     									<label value="A trigger is used to prompt an email/SMS (or a series of emails /SMSs) to be sent" /><h:br />
+			     									<label value="to a mailing list based on the occurrence of an event or specific criteria or a particular date." />
+			     							</h:td>
+			     						</h:tr>
+			     					</h:table>
+			     					</h:td>
+			     					</h:tr>
+			     					<h:tr>
+			     					<h:td >
+			     					<grid width="98%" id="existingTriggersGrdId"  mold="paging" pageSize="6" pagingPosition="bottom"
+			     						emptyMessage="No Events found. Please go to the 'Add Trigger' Tab to create an Events.">
+			     					
+        								 
+										<columns>
+											<column width="20%">Name</column>
+											<column width="20%">Created Date</column>
+											<column width="15%">Triggered By</column>
+											<column width="15%">Status</column>
+											<column width="30%">Actions</column>
+										</columns>
+								  </grid>
+			     			</h:td>
+			     		</h:tr>
+			     	</h:table>	
+	    	</tabpanel>
+	    	
+        	<tabpanel > 
+        					<h:table width="100%">
+        						<h:tr>
+			     					<h:td><include src=""  id="triggerPageIncludeId"/></h:td>
+			     					
+			     				</h:tr>
+							</h:table>
+	    	</tabpanel>
+	    	
+	    	<tabpanel > 
+	    			<h:table width="100%">
+	    				<h:tr>
+	    					<h:td>
+				    			<label value="You can create &amp; save your custom trigger dates here.These will appear as a list under " />
+								<label value="  &quot; A specific date &quot;" style="font-weight:bold;" /><h:br />
+								<label value="option from where you'll be able to  choose one to trigger you event." /><h:br />
+								<label value="For example, you can enter Trigger Date Name as " /><label value="Independence Day" style="font-weight:bold;" />
+								<label value=" and Selected Date as" /><label value=" 15/08/2011" style="font-weight:bold;" />
+	    					</h:td>
+	    				</h:tr>
+	    			</h:table>
+	    	        
+	    	        
+	    	       <groupbox closable="false" style="margin:10px 15px 10px 0">
+	    				<caption label="Add Custom Event"></caption>
+        					<h:table width="50%">
+        						
+			     				<h:tr>
+			     					<h:td align="right">
+										  <label value="Enter Event Name :" />
+									</h:td>	  
+									<h:td>	  
+										  <textbox id="custEvntTbId"></textbox>					 	
+			     					</h:td>
+			     				</h:tr>
+			     				
+			     				<h:tr>
+			     					<h:td  align="right">
+										  <label value="Select Date :" />
+									</h:td>	  
+									<h:td>	
+										  <datebox id="custmEvntDateBxId" format="dd-MM-yyyy" cols="18" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" width="165px" ></datebox>					 	
+			     					</h:td>
+			     				</h:tr>
+			     				
+			     				<h:tr>
+			     					<h:td></h:td>
+			     					<h:td>
+										  <button id="custmEvntSavBtnId" label="Save" ></button>
+													 	
+			     					</h:td>
+			     				</h:tr>
+							</h:table>
+						</groupbox>
+	    	        
+	    	        
+	    	        
+	    	        <grid width="99%" id="existingCustomEventsGrdId" >
+			     					
+        								 
+										<columns>
+											<column width="35%">Name</column>
+											<column width="35%">Date</column>
+											<column> Action</column>
+										</columns>
+										
+										 <rows>
+												<row><label value="Email name" /><label value="12/12/2010" /><toolbarbutton label="delete" style="padding:0px 20px;border: 0px;" /></row>
+												<row><label value="Email name" /><label value="12/12/2010" /><toolbarbutton label="delete" style="padding:0px 20px;border: 0px;" /></row>
+												<row><label value="Email name" /><label value="12/12/2010" /><toolbarbutton label="delete" style="padding:0px 20px;border: 0px;" /></row>
+												<row><label value="Email name" /><label value="12/12/2010" /><toolbarbutton  label="delete" style="padding:0px 20px;border: 0px;" /></row>
+										</rows>  
+					</grid>
+	    	        
+	    
+						
+						<!-- <script>
+							<![CDATA[
+								function validateCustomFrm() {
+									
+									
+									if(zk.Widget.$(jq('$custEvntTbId')).getValue() == '') {
+										jq.alert('Custom event name field cannot be empty.');
+										return false;
+									}
+									//alert(zk.Widget.$(jq('$custmEvntDateBxId')).getValue());
+									if(zk.Widget.$(jq('$custmEvntDateBxId')).getValue() == undefined ||  zk.Widget.$(jq('$custmEvntDateBxId')).getValue() == '') {
+										jq.alert('Please select custome event date.');
+										return false;
+									} 
+								}		
+							]]>
+						</script>	 -->
+	    	</tabpanel>
+	   	</tabpanels>    
+     </tabbox>
+     
+     	
+    </window>
+
+</zk>
+

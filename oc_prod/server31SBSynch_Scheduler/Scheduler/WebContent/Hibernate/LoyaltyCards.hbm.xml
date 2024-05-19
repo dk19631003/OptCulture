@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.LoyaltyCards"
+		table="loyalty_cards">
+		<id name="cardId" type="java.lang.Long" column="card_id">
+			<generator class="native" />
+		</id>
+		<property name="programId" type="java.lang.Long">
+	      <column name="program_id" not-null="true"/>
+	    </property>
+		<property name="cardSetId" type="java.lang.Long">
+			<column name="card_set_id" not-null="true"/>
+		</property>
+		<property name="cardNumber" type="string">
+			<column name="card_number" length="60" not-null="true" unique-key="unique_key" />
+		</property>
+		<property name="cardPin" type="string">
+			<column name="card_pin" length="60" />
+		</property>
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_id" not-null="true"/>
+		</property>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" unique-key="unique_key"/>
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="60" not-null="true"/>
+		</property>
+	    <!-- <property name="createdDate" type="calendar">
+			<column name="created_date" not-null="true"/>
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" length="60" not-null="true"/>
+		</property> -->
+		<property name="activationDate" type="calendar">
+			<column name="activation_date" />
+		</property>
+		<property name="registeredFlag" type="char">
+			<column name="registered_flag" />
+		</property>
+		<property name="membershipId" type="java.lang.Long">
+			<column name="membership_id" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,11 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+
+	<script defer="true">
+	//	window.opener.location.reload(false);
+	 window.opener.location.reload();
+	 window.close();
+	</script>
+
+</zk>

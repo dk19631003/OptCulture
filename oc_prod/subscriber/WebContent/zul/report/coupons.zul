@@ -1,0 +1,273 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="couponWinId"  apply="org.mq.marketer.campaign.controller.report.CouponsController" xmlns:w="client" xmlns:h="native"
+		width="100%">
+		<div id="couponsReportDivId">
+		<div style="background-color: #F4F5F9;">
+		
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+			bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+			<h:tr bgcolor="#F4F5F9">
+
+			<h:td>
+				<label value="Discount Code Name:" sclass="theme-lbHeading" />
+				<label id="couponLblId" />
+			</h:td>
+			<h:td>
+				<label value="Validity Period:"
+					sclass="theme-lbHeading" />
+				<label id="validityLblId"
+					style="padding-right:6px;"/>
+			</h:td>
+					<h:td>
+					<label value="
+					Discount : " sclass="theme-lbHeading" />
+				<label id="discountLblId"
+					style="padding-right:6px;"/>
+					</h:td>
+					
+			
+					</h:tr>
+					</h:table>
+<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+			bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">					
+		<h:tr bgcolor="#F4F5F9">
+			<h:td>
+			  	      <hlayout>
+			  	   <div style="padding-left:2px;">
+			       	 <label value="Search by:" sclass="theme-lbHeading"/>                              
+				     <listbox id="srchLbId" mold="select"  width="150px" >
+				     	<listitem label="Status" value ="status" selected="true"/>
+				        <listitem label="Issued Date" value ="IssuedDate"/>
+            			<listitem label="Redeemed Date" value="RedeemedDate"/>
+            			<listitem label="Store Name" value="StoreName"/>
+        		     </listbox>
+			       </div>
+			     
+			     
+			     <div id="statusId" visible="true">
+        		   	 <listbox id="filterByStatusId" mold="select" width="150px">
+        		   	 	<listitem label="Redeemed" value ="Redeemed" selected="true"  ></listitem>
+        		   	 	<listitem label="Issued" value ="Active"></listitem>
+        		   	 	<listitem label="Not Issued" value ="Inventory"></listitem>
+        		   	 	<listitem label="Expired" value ="Expired"></listitem>
+        		   	 	<listitem label="All" value ="All"></listitem>
+        		   	 </listbox>
+        		 </div>
+			     
+			     <div id="StoreNameId" visible="false">
+        		   	 <listbox id="searchByStoreNameId" mold="select" width="150px">
+        		   	 	<listitem label="All" selected="true"  value="All"></listitem>
+        		   	 </listbox>
+        		 </div> 
+			     
+			     <div id="IssuedDateId" visible="false">
+					 <space />
+					 <label value="From: " />
+					 <datebox id="fromIssuedDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+					 <space />
+					 <label value="To: " />
+					 <datebox id="toIssuedDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			       </div>
+			       
+			      <div id="RedeemedDateId" visible="false">
+					 <space />
+					 <label value="From: " />
+					 <datebox id="fromRedeemedDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+					 <space />
+					 <label value="To: " />
+					 <datebox id="toRedeemedDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			       </div>
+			       
+			     
+				  <div id="filterBtnDivId">
+				      <button label="Get Reports" id="getReportBtnId" sclass="idle140 greenbtn" style="margin-left:20px;" />
+				  </div>
+				  <div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;" >
+				  	  <a label="Reset" id="resetAnchId" />
+				  </div>
+			  	</hlayout>
+			  	   </h:td>
+		</h:tr>
+	</h:table>
+</div>
+					
+					
+				<grid id="
+					couponsGridId " emptyMessage="No records Found...">
+					<columns menupopup="auto" sizable="true">
+						<column label="Discount code"   width="100px"/>
+						<column label="Status"  width="80px" />
+						<column label="Issued to" />
+						<column label="Redeemed by"  />
+						<column label="Membership #"  />
+						<column label="Campaign Name" style="white-space: normal;" />
+						<column label="Issued On"  width="140px" />
+						<column label="Redeemed On"  width="140px" />
+						<column label="Store" width="80px" />
+						<!-- <column label="DocsId" width="100px"/> -->
+						<column label="Receipt#" width="100px"/>
+						<column label="No Of Times Redeemed"  style="white-space: normal;"/>
+						<column label="Rewards Redeemed if any"  sclass="hovergridcolumn" style="white-space: normal;"/>
+						<column label="Discount On Item"  sclass="hovergridcolumn" style="white-space: normal;"/>
+						<column label="Total Discount "  style="white-space: normal;" />
+						<column label="Total Revenue" style="white-space: normal;" />
+						<column label="Item Info" style="white-space: normal;" />
+						<!-- <column label="Points Redeemed"  sclass="hovergridcolumn" style="white-space: normal;"/> -->
+					</columns>
+					<rows id="couponsRowsId"/>
+					</grid>
+
+					<h:table width="100%" cellspacing="0"
+						cellpadding="0" style="padding-top:10px;">
+						<h:tr bgcolor="#F9F9F9">
+
+							<h:td align="right">
+								<label value="Items per page:"
+									style="padding-right:5px;font-size:11px;" />
+								<listbox rows="1" mold="select"
+									id="pageSizeLbId" style="margin-right:30px;">
+									<listitem label="5" selected="true"  />
+									<listitem label="10"/>
+									<listitem label="20"/>
+									<listitem label="50" />
+								</listbox>
+							</h:td>
+							<h:td width="280px">
+								<paging id="couponListBottomPagingId"
+									detailed="true" pageSize="5" width="280px"
+									class="contactsViewPaging" style="border:none;" />
+							</h:td>
+						</h:tr>
+						
+					</h:table>
+					
+					<div id="exportDivId" >
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />
+			 	   			<comboitem label=" .xls " value="xls" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file." style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId" />
+				</div>
+				
+	<h:div style="padding:15px 0 5px 5px;"><label value="Store redemption of discount code : " id="promoID" style="font-weight:bold;display:none;"/></h:div> 			
+		<grid id="promotionRedmDetailGridId"  emptyMessage="No Data available" >
+		<columns>
+			<column label="Store" />
+			<column label="Revenue"/>
+			<column label="No. Of Redemptions"/>
+		</columns>
+		<rows  id="promotionRedmDetailRowsId" />
+	
+	</grid>
+	<div id="pagingPromoDetailDivId">
+	    <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+		        <h:td align="left">
+							<div id="exportPromoDetailDivId" >
+								<label value="Export as a " />
+								<listbox id="exportFilterPromoDetailLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<label value=".file" />
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnPromoDetailId" />
+							</div>
+				</h:td>
+		
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="memberPerPagePromoDetailLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="promoDetailPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		</h:tr>
+		</h:table>
+	</div>
+					
+	</div>
+	<div visible="false" id="storeReportDivId">
+	
+
+<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+		<h:tr bgcolor="#F4F5F9">
+			<h:td>
+				<label value="Date" sclass="theme-lbHeading"/>
+							<space/>
+							<label value="From"/>
+							<datebox id="storeFromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							format="dd-MMM-yyyy" constraint="no future"/><space/>
+							<label value="To "/>
+							<datebox id="storeToDateboxId" readonly="true"
+							use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy"/>
+			
+			<space spacing="275px" />
+			
+				<button label="Get Reports" sclass="idle140 greenbtn" id="getStoreBetweenDatesBtnId"/>
+				<a label="Reset" id="storeResetAnchId" style="margin-left:20px;" />
+		
+		</h:td>
+		</h:tr>
+	</h:table>
+	<h:div style="padding:15px 0 5px 5px;"><label value="Discount Codes redeemed at store :" id="storeID" style="font-weight:bold;"/></h:div> 
+	<grid id="storeRedmGridId" emptyMessage="No Data available" >
+		<columns>
+			<column label="Discount Code Name" />
+			<column label="Revenue"/>
+			<column label="No. Of Redemptions"/>
+		</columns>
+		<rows  id="storeRedmRowsId" />
+	
+	</grid>
+	<div id="pagingStoreDivId">
+	    <h:table width="100%" bgcolor="#F9F9F9">
+		<h:tr >
+		        <h:td align="left">
+							<div id="exportStoreDivId" >
+								<label value="Export as a " />
+								<listbox id="exportFilterStoreoLbId" mold="select" width="100px">
+						 	   		<listitem label=".csv file" selected="true" value="csv"/>    
+								</listbox>
+								<label value=".file" />
+								<button  label="Export" sclass="idle140 greenbtn" id="exportBtnStoreId" />
+							</div>
+				</h:td>
+		
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="memberPerPageStoreLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="storePagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		</h:tr>
+		</h:table>
+	</div>
+	</div>				
+			<div align="right">
+					
+						<button label="Back" id="backBtnId" style="margin-right: 10px;" sclass="idle70"/>
+					
+					
+					</div>		
+
+	</window>
+</zk>

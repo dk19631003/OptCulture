@@ -1,0 +1,5 @@
+jdbc.driverClassName = com.mysql.jdbc.Driver
+jdbc.url = jdbc:mysql://172.16.9.104:3306/optculture_2_0_app_CC
+jdbc.username = captiway
+jdbc.password = c@ptiw@y
+hibernate.dialect=org.mq.loyality.utils.OCMySQLDialect

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.DigitalReceiptUserSettings"
+		table="digital_receipt_user_settings">
+
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" not-null="true" />
+		</property>
+
+		<property name="templateJsonSettings" type="string">
+			<column name="template_json_settings" length="50" />
+		</property>
+
+		<property name="selectedTemplateName" type="string">
+			<column name="selected_template_name"
+				unique-key="unique_name" />
+		</property>
+
+		<property name="subject" type="string">
+			<column name="subject" length="200"   />
+		</property>
+
+
+
+		<property name="fromName" type="string">
+			<column name="from_name"/>
+		</property>
+
+		<property name="fromEmail" type="string">
+			<column name="from_email"  />
+		</property>
+
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="personalizeTo" type="boolean">
+			<column name="personalize_to" default="false" />
+		</property>
+		<property name="toName" type="string">
+			<column name="to_name" length="60" />
+		</property>
+		<property name="webLinkFlag" type="boolean">
+			<column name="web_link_flag" default="false" />
+		</property>
+		<property name="webLinkText" type="string">
+			<column name="web_link_text"  />
+		</property>
+		<property name="webLinkUrlText" type="string">
+			<column name="web_link_urlText"  />
+		</property>
+		<property name="permissionRemainderFlag" type="boolean">
+			<column name="permission_remainder_flag" default="false" />
+		</property>
+		<property name="permissionRemainderText" type="string">
+			<column name="permission_remainder_text"
+			length="255">
+			</column>
+		</property>
+		<property name="enabled" type="boolean">
+		<column name="enabled" default="true" />
+		</property>	
+		
+		<property name="includeTax" type="boolean" >
+			<column name="include_tax" default="true" />
+		</property>
+		
+		<property name="includeFee" type="boolean" >
+			<column name="include_fee" default="true" />
+		</property>
+		
+		<property name="includeShipping" type="boolean" >
+			<column name="include_shipping" default="true" />
+		</property>
+		
+		<property name="includeDynamicFrmName" type="boolean" >
+			<column name="include_dynamic_from_name" default="false" />
+		</property>
+		
+		<property name="includeDynamicFrmEmail" type="boolean" >
+			<column name="include_dynamic_from_email" default="false" />
+		</property>
+
+	</class>
+
+</hibernate-mapping>

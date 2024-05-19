@@ -1,0 +1,25 @@
+<!-- <window>
+
+   <script >
+        <![CDATA[
+			
+             alert("Unknown Error Occured while processing the request...");
+                 
+        ]]>
+        </script>
+</window> -->
+
+<window title="Error Message"
+width="350px" border="normal" mode="modal" closable="true">
+
+
+    <vbox>
+Unknown Error occurred while processing your request. 
+Please contact Administrator.
+        <hbox style="margin-left:auto; margin-right:auto">
+           
+            <button label="Reload" onClick="Executions.sendRedirect(null)"/>
+        </hbox>
+    </vbox>
+
+</window>

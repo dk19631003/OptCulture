@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ 	<class name="org.mq.captiway.scheduler.beans.CustomTemplates"
+		table="custom_templates">
+	  <id name="templateId" type="java.lang.Long">
+			<column name="template_id" />
+			<generator class="native" />
+	  </id>	
+	  <property name="templateName" type="java.lang.String">
+			<column name="template_name" length="255" />
+	  </property>	
+	  <many-to-one name="userId"
+			class="org.mq.captiway.scheduler.beans.Users"
+			foreign-key="customTemplate_UserFkey" fetch="select">
+			<column name="user_id" not-null="true" />
+	  </many-to-one>
+	  <property name="htmlText" type="text">
+			<column name="html_text" />
+	  </property>	
+	   <property name="iframeLink" type="java.lang.String">
+			<column name="iframe_link" />
+	  </property>	
+	   <property name="type" type="java.lang.String">
+			<column name="type" />
+	  </property>
+	 
+	  	
+	  <property name="subject" type="string">
+			<column name="subject" length="200" />
+		</property>
+		<property name="personalizeTo" type="boolean">
+			<column name="personalize_to" default="false" />
+		</property>
+		<property name="toName" type="string">
+			<column name="to_name" length="100" />
+		</property>
+		<property name="fromName" type="string">
+			<column name="from_name" length="60" default="''" />
+		</property>
+		<property name="fromEmail" type="string">
+			<column name="from_email" length="100" />
+		</property>
+		
+		
+		<property name="webLinkFlag" type="boolean">
+			<column name="web_link_flag" default="false" />
+		</property>
+		<property name="webLinkText" type="string">
+			<column name="web_link_text" default="''" />
+		</property>
+		<property name="webLinkUrlText" type="string">
+			<column name="web_link_urlText" default="''" />
+		</property>
+		<property name="permissionRemainderFlag" type="boolean">
+			<column name="permission_remainder_flag" default="false" />
+		</property>
+		<property name="permissionRemainderText" type="string">
+			<column name="permission_remainder_text" default="''"
+				length="255">
+			</column>
+		</property>
+		<property name="addressFlag" type="boolean">
+			<column name="address_flag" default="false" />
+		</property>
+		
+		<property name="includeOrg" type="boolean">
+			<column name="include_org" default="false" />
+		</property>
+		<property name="includeOrgUnit" type="boolean">
+			<column name="include_org_unit" default="false" />
+		</property>
+		<property name="addressStr" type="string">
+			<column name="address" length="1000"/>
+		</property>	
+	  	
+	  	<property name="includeBeforeStr" type="string">
+			<column name="include_before_str" length="200"/>
+		</property>	
+		
+		<set name="urls" table="cust_template_urls" lazy="false">
+		<key column="template_id" />
+		<element type="string" column="url"/>
+		</set>
+	  	
+	</class>
+</hibernate-mapping>

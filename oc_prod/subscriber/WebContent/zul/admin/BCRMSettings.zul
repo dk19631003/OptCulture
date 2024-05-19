@@ -1,0 +1,450 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="optIntelWinId" border="0"   apply="org.mq.marketer.campaign.controller.admin.BCRMSettingsController" 	xmlns:h="native" xmlns:w="client" width="100%">
+	
+	
+	<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px" id="createListGroupBoxId">
+				<caption label="Create BCRM List"  />
+				<div id="userOrgListDivId" visible="false">
+					<h:table cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td  width="200" >
+								<label value="Select Organization :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="orgListBxId" mold="select" width="200px">
+								</listbox>
+							</h:td>	
+						</h:tr>
+					
+					
+						<h:tr>
+							<h:td >
+								<label value="Select User :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="usersListBxId" mold="select" width="200px">
+								</listbox>
+							</h:td>	
+						</h:tr>
+						
+						
+						
+					</h:table>
+				</div>
+				
+				<div id="createListDivId" width="100%" > 
+					<h:table cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td width="200" >
+								<label value="List Name :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="posListTxtBoxId" width="270px" maxlength="50" cols="30"/>
+							</h:td>	
+						</h:tr>
+						
+						<h:tr>
+							<h:td valign="top">
+								<label value="Description :" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="posListDescTbId" rows="5" width="270px" maxlength="125" height="100px"/>
+							</h:td>	
+						</h:tr>	
+						
+						<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Double opt-in email:" />
+								</h:td>
+								
+								<h:td >
+									<checkbox id="doubleOptInCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+								
+						</h:tr>
+						<h:tr>
+							<h:td  width="200" />
+								<h:td>
+									<div id="doubleOptLtDiv" width="100%"  style="z-index: 0;" visible="false">
+         								<label value="Opt-in Email:" />
+										<listbox id="optInEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Select Message" />
+										</listbox>
+										<image id="optInPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="previewBtnId" sclass="idle140"/>
+	         						</div>   
+								</h:td>
+						</h:tr>
+						
+						<h:tr>
+								<h:td style="display:none;" width="200">
+									<label value="Enable a Parental Consent email:" />
+								</h:td>
+								
+								<h:td style="display:none;">
+									<checkbox id="parentalConsentCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+						</h:tr>
+						
+						<h:tr>
+							<h:td style="display:none;" width="200" />
+							<h:td style="display:none;">
+							
+								<div id="parentalOptLtDiv" width="100%" visible="false" style="z-index: 0;">
+	          						<label value="Parental Consent Email :" />
+									<listbox id="parentalConsentEmailLbId"  width="270px"   mold="select" sclass="contactsView">
+									  <listitem  selected="true" label="Select Message" />
+									</listbox>
+									
+									<image id="parentalPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+									<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="parentalPreviewBtnId" sclass="idle140"/>
+        						</div>  
+							</h:td>
+						</h:tr>
+						
+					</h:table>
+				</div>
+				
+	         	<div align="right">
+					<button label="Save &amp; Continue" id="creatListNxtBtnId" sclass="idle140"/>
+	         	
+	         	</div>
+				
+				
+		</groupbox>
+		
+		
+		<div id="posMappingDivId" visible="false" >
+			<!-- Contacts POS Mapping -->
+			<groupbox   closable="false" open="true" >
+				<caption >
+					<label value="BCRM Contact Field Mappings"/>
+						<toolbarbutton id="posContTbBtnId" image="/img/icons/icon_minus.png" />
+				</caption>
+				<div  id="posMapContDivId">
+				
+					<div align="right">
+					<toolbarbutton image="/images/action_add.gif"  label="Add Contact Row" id="addContactPosMapBtnId" />
+					</div>
+					<grid>
+						<columns>
+							<column label="BCRM Attribute" />
+							<column label="OptCulture Field"></column>
+							<column label="Data Type" width="300px"/>
+							<column label="Optional Value" width="200px"/>
+							<column label="Display Label"></column>
+							<column label="Uniq.Pri" width="70px"></column>
+							<column label="Action" width="60px;" />
+						</columns>
+						<rows id="contactRowsId"/>
+					</grid>
+				
+				</div>
+			</groupbox>	
+			
+			<separator height="15px"/>
+			
+			<!-- Sales POS Mapping -->
+			<groupbox  closable="false" open="true">
+				<caption >
+					<label value="BCRM Order Field Mappings"/>
+					<toolbarbutton id="posSalesTbBtnId" image="/img/icons/icon_minus.png" />
+				</caption>
+				
+				<div id="posMapSalesDivId">
+					<div align="right">
+						<toolbarbutton image="/images/action_add.gif"  label="Add Sales Row" id="addSalesPosMapBtnId" />
+					</div>
+					<grid>
+						<columns>
+							<column label="BCRM Attribute" />
+							<column label="OptCulture Field"></column>
+							<column label="Data Type" width="300px"/>
+							<column label="Optional Value" width="200px"/>
+							<column label="Display Label"></column>
+							<column label="Uniq.Pri" width="70px"></column>
+							<column label="Action" width="60px;" />
+						</columns>
+						<rows id="salesRowsId"/>
+					</grid>
+				</div>
+				
+			</groupbox>	
+		
+		<separator height="15px"/>
+			<!-- SKU POS Mapping -->
+			<groupbox closable="false" open="true" >
+				<caption >
+					<label value="BCRM Plans Field Mappings"/>
+					<toolbarbutton id="posSKUTbBtnId" image="/img/icons/icon_minus.png" />
+				</caption>
+				<div  id="posMapSKUDivId">
+					<div align="right">
+						<toolbarbutton image="/images/action_add.gif"  label="Add SKU Row" id="addSKUPosMapBtnId" />
+					</div>
+					<grid>
+						<columns>
+							<column label="BCRM Attribute" />
+							<column label="OptCulture Field"></column>
+							<column label="Data Type" width="300px"/>
+							<column label="Optional Value" width="200px"/>
+							<column label="Display Label"></column>
+							<column label="Uniq.Pri" width="70px"></column>
+							<column label="Action" width="60px;" />
+						</columns>
+						<rows id="skuRowsId"/>
+					</grid>
+				</div>
+			</groupbox>
+			
+			<separator height="15px"/>
+			
+			<!-- Sales POS Mapping -->
+			<groupbox  closable="false" open="true">
+				<caption >
+					<label value=" BCRM HomesPassed Field Mappings"/>
+					<toolbarbutton id="homesPassedTbBtnId" image="/img/icons/icon_minus.png" />
+				</caption>
+				
+				<div id="posMapHomesPassedDivId">
+					<div align="right">
+						<toolbarbutton image="/images/action_add.gif"  label="Add BCRM Row" id="addHomesPassedMapBtnId" />
+					</div>
+					<grid>
+						
+						<columns>
+							<column label="BCRM Attribute" />
+							<column label="Field"></column>
+							<column label="Data Type" width="300px"/>
+							<column label="Optional Value" width="200px"/>
+							<column label="Display Label"></column>
+							<column label="Uniq.Pri" width="70px"></column>
+							<column label="Action" width="60px;" />
+						</columns>
+						<rows id="homesPassedRowsId"/>
+					</grid>
+				</div>
+				
+			</groupbox>	
+			
+			<separator height="15px"/>	
+
+			<h:table width="100%">
+				<h:tr>
+					<h:td align="right">
+						<button label="Back" id="posMapBackBtnId" />
+						<button label="Save &amp; Continue" id="saveContinueBtnId" />
+					</h:td>
+				</h:tr>
+			</h:table>
+								
+		</div>
+	
+	<groupbox id="posFTPSettingsGroupBoxId" sclass="gbStyle" closable="false"  style="padding:15px 10px"  visible="false" >
+			<caption label="BCRM FTP Settings"  />
+	 <div  width="100%" > 
+	 	<div align="right">
+	 			<button  label="Add" id="ftpSettingsAddBtnId" sclass="idle70"/>
+				<!-- <toolbarbutton image="/images/action_add.gif"  label="Add Sales Row" id="addSalesPosMapBtnId" /> -->
+		</div>
+	 
+		
+		<grid emptyMessage="No Data available">
+			<columns>
+					<column label="File Type" width="120px;"/>
+					<column label="Host Address"  />
+					<column label="User Name" width="160px;"/>
+					<column label="Password" width="120px;"/>
+					<column label="Directory Location" />
+					<column label="File Format" />
+					<column label="Is Enabled" width="90px;"/>
+					<column label="Scheduled Freq Time" width="160px;" />
+					<column label="Action" width="60px;" />
+				</columns>
+				<rows id="ftpSettingsRowsId"  />
+		
+		</grid>
+		
+	 </div>
+		
+		<!-- <h:table width="100%">
+			<h:tr>
+				<h:td align="right">
+				<button label="Back" id="posFTPSettingsBackBtnId" sclass="idle"/>
+				<button label="Submit" id="submitBtnId" sclass="idle140 greenbtn"/></h:td>
+			</h:tr>
+		</h:table> -->
+		
+		
+		
+		<separator height="30px"/>
+	 <!--Here to create a list -->
+	 <div>
+		 <label value="Location Time-Zone Settings :" sclass="boldLabel"/>
+		 
+		 <listbox id="TimesZonesLbId" mold="select" rows="1">
+		 	<listitem label="--select--" selected="true"  />
+		 	<listitem label="(GMT -12:00) Eniwetok, Kwajalein" value="-720" />
+		 	<listitem label="(GMT -11:00) Midway Island, Samoa" value="-660" />
+		 	<listitem label="(GMT -10:00) Hawaii" value="-600" />
+		 	<listitem label="(GMT -9:00) Alaska" value="-540" />
+		 	<listitem label="(GMT -8:00) Pacific Time (US &amp; Canada)" value="-480" />
+		 	<listitem label="(GMT -7:00) Mountain Time (US &amp; Canada)" value="-420" />
+		 	<listitem label="(GMT -6:00) Central America, El Salvador" value="-360" />
+		 	<listitem label="(GMT -6:00) Central Time (US &amp; Can.), Mexico" value="-360" />
+		 	<listitem label="(GMT -5:00) Eastern Time (US &amp; Can.)" value="-300" />
+		 	<listitem label="(GMT -4:30) Caracas" value="-270" />
+		 	<listitem label="(GMT -4:00) Atlantic Time (Can.)" value="-240" />
+		 	<listitem label="(GMT -3:30) Newfoundland" value="-210" />
+		 	<listitem label="(GMT -3:00) Brazil, Buenos Aires, Georgetown" value="-180" />
+		 	<listitem label="(GMT -2:00) Mid-Atlantic" value="-120" />
+		 	<listitem label="(GMT -1:00 hour) Azores" value="-60" />
+		 	<listitem label="(GMT) Reykjavik" value="0" />
+		 	<listitem label="(GMT) Western Europe Time, London, Lisbon" value="0" />
+		 	<listitem label="(GMT +1:00 hour) Brussels, Copenhagen, Madrid" value="60" />
+		 	<listitem label="(GMT +2:00) South African Standard Time" value="120" />
+		 	<listitem label="(GMT +2:00) Athens, Cairo" value="120" />
+		 	<listitem label="(GMT +3:00) Baghdad, Moscow, Riyadh" value="180" />
+		 	<listitem label="(GMT +3:30) Tehran" value="210" />
+		 	<listitem label="(GMT +4:00) Abu Dhabi, Muscat" value="240" />
+		 	<listitem label="(GMT +4:30) Kabul" value="270" />
+		 	<listitem label="(GMT +5:00) Islamabad, Karachi" value="300" />
+		 	<listitem label="(GMT +5:30) Bombay, Calcutta, Colombo, New Delhi" value="330" />
+		 	<listitem label="(GMT +6:00) Almaty, Dhaka" value="360" />
+		 	<listitem label="(GMT +7:00) Bangkok, Hanoi, Jakarta" value="420" />
+		 	<listitem label="(GMT +8:00) Beijing, Perth, Singapore, Hong Kong" value="480" />
+		 	<listitem label="(GMT +9:00) Tokyo, Seoul, Osaka" value="540" />
+		 	<listitem label="(GMT +9:30) Adelaide" value="570" />
+		 	<listitem label="(GMT +10:00) Canbera, Melbourne, Sydney" value="600" />
+		 	<listitem label="(GMT +10:00) Brisbane" value="600" />
+		 	<listitem label="(GMT +10:30) Lord Howe Island" value="630" />
+		 	<listitem label="(GMT +11:00) Solomon Isl., New Caledonia" value="660" />
+		 	<listitem label="(GMT +12:00) Auckland, Fiji, Kamchatka" value="720" />
+		 	<listitem label="(GMT +12:45) Chatham Islands" value="765" />
+		 	<listitem label="GMT +13:00) New Zealand Daylight Time, Tonga" value="780" />
+		 
+		 </listbox>
+	 </div>
+		
+	</groupbox>
+	
+	
+	
+	<groupbox id="mastersBCRMFTPSettingsGroupBoxId" sclass="gbStyle" closable="false"  style="padding:15px 10px"   visible="false">
+		<caption label="Sales to Contacts &amp; Inventory Relation Mapping"  />
+		
+		<div style="padding:10px; margin:10px; border-radius:3px;border: 1px solid #CCCCCC;" id ="relationMapDivId" width="800px"/>
+		<separator height="20px"/>
+		<h:table cellspacing="0" cellpadding="4"   width="825" 
+				style="padding:10px; margin:10px; border-radius:3px;border: 1px solid #CCCCCC; display:none;"  >
+			<h:tr >
+				<h:td width="250" align="right"> <label value="Sales Unique Key (accross csv files) :" sclass="boldLabel"/> </h:td>
+				<h:td > <listbox id="salesUniqueFieldsId" mold="select" /> </h:td>
+			</h:tr>
+			<h:tr height="30"/>
+			<h:tr >
+				<h:td align="right"> <label value="Inventory Vendor Code :" sclass="boldLabel"/> </h:td>
+				<h:td > <listbox id="vendorCodeFieldsId" mold="select" /> </h:td>
+			</h:tr>
+			<h:tr >
+				<h:td align="right"> <label value="Inventory Department Code :" sclass="boldLabel"/> </h:td>
+				<h:td > <listbox id="deptCodeFieldsId" mold="select" /> </h:td>
+			</h:tr>
+		</h:table>
+		
+		<div align="right">
+			<button label="Back" id="masterBCRMFTPSettingsBackBtnId" sclass="idle"/>
+			<!-- <button label="Submit" id="masterSubmitBtnId" sclass="idle140 greenbtn"/> -->
+			<button label="Submit" id="submitBtnId" sclass="idle140 greenbtn"/>
+		</div>
+	
+	
+	</groupbox>
+	
+	
+	
+	
+	<!-- <groupbox id="mastersBCRMFTPSettingsGroupBoxId" sclass="gbStyle" closable="false"  style="padding:15px 10px"   visible="false">
+
+		<groupbox id="salesToContactsBCRMFTPSettingsGroupBoxId" sclass="gbStyle" closable="false"  style="padding:15px 10px"   >
+		<caption label="Sales to Contacts Relation Mapping"  />
+		<div  width="100%" > 
+
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0" style="padding:10px 0px;border-radius:5px;">
+		<h:tr >
+		<h:td width="400px"  >
+		<label value="Select Sales Field :" sclass="boldLabel"/>
+		<listbox id="salesFieldsId" rows="1" mold="select" style="position:relative;left:10px;">
+			<listitem label="-Select-" selected="true"/>
+		</listbox>
+
+	</h:td>
+
+	<h:td width="400px"  >
+	<label value="Select Contact Field :" sclass="boldLabel"/>
+	<listbox id="contactsFieldsId" rows="1" mold="select" style="position:relative;left:10px;">
+		<listitem label="-Select-" selected="true"/>
+	</listbox>
+	</h:td>
+	</h:tr>
+	</h:table>
+	</div>
+
+	</groupbox>
+	<groupbox id="salesToInventoryBCRMFTPSettingsGroupBoxId" sclass="gbStyle" closable="false"  style="padding:15px 10px"   >
+		<caption label="Sales to Inventory Relation Mapping"  />
+		<div  width="100%" > 
+
+			<h:table cellspacing="0" cellpadding="4" width="100%" border="0" style="padding:10px 0px;border-radius:5px;">
+				<h:tr >
+					<h:td width="400px"  >
+						<label value="Select Sales Field :" sclass="boldLabel"/>
+							<listbox id="salesFields1Id" rows="1" mold="select" style="position:relative;left:10px;">
+								<listitem label="-Select -" selected="true"/>
+							</listbox>
+					</h:td>
+		
+					<h:td width="400px"  >
+						<label value="Select Inventory Field :" sclass="boldLabel"/>
+						<listbox id="inventoryFieldsId" rows="1" mold="select" style="position:relative;left:10px;">
+							<listitem label="-Select -" selected="true"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+			</h:table>
+		</div>
+
+	</groupbox>
+	<h:table width="100%">
+		<h:tr>
+		<h:td align="right">
+		<button label="Back" id="masterBCRMFTPSettingsBackBtnId" sclass="idle"/>
+		<button label="Submit" id="masterSubmitBtnId" sclass="idle140 greenbtn"/></h:td>
+		</h:tr>
+	</h:table>
+
+
+</groupbox> -->
+
+		
+		<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+			<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+
+
+
+</window>
+</zk>

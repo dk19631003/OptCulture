@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.SMSSettings" table="org_sms_settings">
+    <id name="setupId" type="java.lang.Long" column="setup_id">
+      <generator class="native"/>
+    </id>
+    <property name="type" type="string">
+    <column name="type" length="20" />
+    </property>
+	<property name="keyword" type="string">
+	<column name="keyword" length="50" />
+	</property>
+	<property name="autoResponse" type="text" column="auto_response" />
+    <property name="validUpto" type="calendar" column="valid_upto"/>
+    <property name="createdDate" type="calendar" column="created_date"/>
+    <property name="startFrom" type="calendar" column="start_from"/>
+    <property name="orgId" type="java.lang.Long" column="org_id" />
+    <many-to-one name="userId"
+		class="org.mq.captiway.scheduler.beans.Users"  foreign-key="userId"
+		fetch="select" >
+		<column name="user_id"  />
+	</many-to-one><!--
+     <many-to-one name="listId"
+		class="org.mq.captiway.scheduler.beans.MailingList" foreign-key="listId"
+		fetch="select" >
+		<column name="list_id"  />
+	</many-to-one>
+	
+	-->
+	<property name="listId" type="java.lang.Long" >
+	<column name="list_id"  />
+	</property>
+	
+	<property name="enableWelcomeMessage" type="boolean">
+	<column name="enable_welcome_msg" default="true" />
+	</property>	
+
+	<property name="welcomeMessage" type="text" column="welcome_msg" />
+	<property name="messageHeader" type="string">
+	<column name="msg_header" length="50" />
+	</property>
+	
+	
+	
+	
+	<property name="shortCode" type="string">
+	<column name="short_code" length="50" />
+	</property>
+	<property name="optInMedium" type="java.lang.Byte" column="optin_medium"/>
+	<property name="enable" type="boolean">
+	<column name="enable" default="true" />
+	</property>	
+	
+	<property name="optinMissedCalNumber" type="string">
+	<column name="optin_missedcal_number" length="50" />
+	</property>
+	<property name="senderId" type="string">
+	<column name="sender_id" length="50" />
+	</property>
+  </class>
+</hibernate-mapping>
+
+
+ 

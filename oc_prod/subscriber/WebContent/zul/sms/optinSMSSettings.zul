@@ -1,0 +1,564 @@
+<zk>
+	<window id="optinSmsProgramWinId" border="0" width="100%"
+		apply="org.mq.marketer.campaign.controller.sms.OptinSMSSettingsController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+	<script>
+			<![CDATA[
+			
+			function updateCaretPosition() {
+			//alert("hai");
+				// get the zk widgets
+				var scriptTB = zk.Widget.$(jq('$optInMsgTbId'))
+				var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+				
+				// get the js elements
+				var jsScriptTB = document.getElementById(scriptTB.uuid)
+				var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+				
+				// get the caret position
+				var pos = getCaret(jsScriptTB);
+				
+				// set the caret position in the hidden text field
+				jsCaretPosTB.value = pos;
+				
+				// trigger an event to send the caret position to the server
+				if (document.createEvent) {
+				var evt = document.createEvent('HTMLEvents');
+				evt.initEvent( 'blur', false, false);
+				jsCaretPosTB.dispatchEvent(evt);
+				
+				var evt2 = document.createEvent('HTMLEvents');
+				evt2.initEvent( 'change', false, false);
+				jsCaretPosTB.dispatchEvent(evt2);
+				} else if (document.createEventObject) {
+				jsCaretPosTB.fireEvent('onblur');
+				jsCaretPosTB.fireEvent('onchange');
+			 }
+			}
+			
+			 function getCaret(el) {
+             	
+             	if (el.selectionStart) {
+                     return el.selectionStart;
+                 } else if (document.selection) {
+                     el.focus();
+
+                     var r = document.selection.createRange();
+
+                     
+                     if (r == null) {
+                     	
+                         return 0;
+                     }
+
+                     var re = el.createTextRange();
+                     	
+                             rc = re.duplicate();
+                     re.moveToBookmark(r.getBookmark());
+                     rc.setEndPoint('EndToStart', re);
+                     return rc.text.length;
+                 }else{
+                 	
+                 	if(el.value.length > 0) {
+                 		
+                 		el.selectionStart = el.value.length;
+                 		 return el.selectionStart;
+                 		
+                 	}
+                 	
+                 }
+                 return 0;
+
+
+               
+             }
+             
+			  function updateTranTemCaretPosition() {
+					//var scriptTB1 = zk.Widget.$(jq(jq('$transTempContentTxtBxId')))
+					var scriptTB1 = zk.Widget.$(jq('$transTempContentTxtBxId'))
+					//alert('transTempContentTxtBxId object id is ::'+scriptTB1);
+					//var caretPosTB1 = zk.Widget.$(jq(jq('$transCaretPosTB')))
+					var caretPosTB1 = zk.Widget.$(jq('$transCaretPosTB'))
+					
+					// get the js elements
+					var jsScriptTB1 = document.getElementById(scriptTB1.uuid)
+	            	//alert('hai 123'+jsScriptTB.value);
+					var jsCaretPosTB1 = document.getElementById(caretPosTB1.uuid)
+				
+					// get the caret position
+					var pos = getCaret(jsScriptTB1);
+					//alert('position value is ::'+pos);
+					// set the caret position in the hidden text field
+					jsCaretPosTB1.value = pos;
+				
+					// trigger an event to send the caret position to the server
+					if (document.createEvent) {
+						var evt = document.createEvent('HTMLEvents');
+						evt.initEvent( 'blur', false, false);
+						jsCaretPosTB1.dispatchEvent(evt);
+				
+						var evt2 = document.createEvent('HTMLEvents');
+						evt2.initEvent( 'change', false, false);
+						jsCaretPosTB1.dispatchEvent(evt2);
+					} else if (document.createEventObject) {
+						jsCaretPosTB1.fireEvent('onblur');
+						jsCaretPosTB1.fireEvent('onchange');
+					}
+				} 
+			  
+			  function updateOptinCaretPosition() {
+					//alert("hai");
+						// get the zk widgets
+						var scriptTB = zk.Widget.$(jq('$optinContentTxtBxId'))
+						var caretPosTB = zk.Widget.$(jq('$optinCaretPosTB'))
+						
+						// get the js elements
+						var jsScriptTB = document.getElementById(scriptTB.uuid)
+						var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+						
+						// get the caret position
+						var pos = getCaret(jsScriptTB);
+						
+						// set the caret position in the hidden text field
+						jsCaretPosTB.value = pos;
+						
+						// trigger an event to send the caret position to the server
+						if (document.createEvent) {
+						var evt = document.createEvent('HTMLEvents');
+						evt.initEvent( 'blur', false, false);
+						jsCaretPosTB.dispatchEvent(evt);
+						
+						var evt2 = document.createEvent('HTMLEvents');
+						evt2.initEvent( 'change', false, false);
+						jsCaretPosTB.dispatchEvent(evt2);
+						} else if (document.createEventObject) {
+						jsCaretPosTB.fireEvent('onblur');
+						jsCaretPosTB.fireEvent('onchange');
+					 }
+					}
+
+			
+			]]>
+			</script>
+
+		<div>
+			<label value="Mandatory Configurations before getting started with your first Opt-in SMS Program." />
+		</div>
+		
+		<h:br/>
+		<div>
+		<label  value="Note:"/>
+		
+		<label value="If you want to change anything, please contact Admin(support@optculture.com)." />
+		</div>
+
+		<h:br/>
+			
+	<groupbox width="99%" sclass="gbStyle" 	style="margin-top:10px;" closable="false" id="optinGBId">
+				<caption>
+					<label value="Opt-in Settings" />
+				</caption>
+				<h:table cellspacing="5" cellpadding="5" width="100%" 	align="left" style="padding-left:20px;" >
+					
+					<h:tr>
+						<h:td valign="bottom" width="200px">
+							<label value="Opt-in Sender ID:" />
+						</h:td>
+		
+						<h:td valign="bottom" >
+							<textbox id="optinSenderIdTxtId"  disabled="true"  width="250px" maxlength="100" />
+						</h:td>
+				   </h:tr>
+				     
+				</h:table>
+				
+				<div id="optinDivId" visible="false" >
+					<h:table cellspacing="5" cellpadding="5" width="100%" 	align="left" style="padding-left:20px;">
+					   <h:tr>
+							<h:td valign="bottom" width="200px">
+								<label value="Opt-in Keyword:" />
+							</h:td>
+		
+							<h:td valign="top" >
+								<textbox id="optInKeywordTxtId"  disabled="true" width="250px" maxlength="100" />
+							</h:td>
+					  </h:tr>
+					  
+					  
+					  
+					  <h:tr>
+							<h:td valign="bottom" width="200px">
+								<label value="Opt-in List:" />
+							</h:td>
+							
+							<h:td valign="top" >
+								<textbox id="optinListTxtId"  disabled="true" width="250px" maxlength="100" />
+							</h:td>
+			<!-- 
+							<h:td valign="bottom" >
+								<listbox id="optinListLBId"  mold="select" width="200px" disabled="true"/>
+							</h:td> -->
+					   </h:tr>
+					   
+					</h:table>
+							
+					<div id="optinMsdCalNumDivId" visible="false" >
+						<h:table cellspacing="5" cellpadding="5" width="100%" 	align="left" style="padding-left:20px;">
+							<h:tr>
+								<h:td valign="bottom" width="200px">
+									<label value="Opt-in Missed Call number :" />
+									</h:td>
+								<h:td valign="bottom" >
+									<textbox  id="optinMsdCalNumTxtId" disabled="true" width="250px" maxlength="100" />
+								</h:td>
+							</h:tr>
+						</h:table>
+						
+					</div>
+					
+				<div id ="keywordRecvNumDivId" visible="false">
+					<h:table cellspacing="5" cellpadding="5" width="100%" 	align="left" style="padding-left:20px;">
+			
+						<h:tr>
+							<h:td valign="bottom" width="200px">
+								<label value="Opt-in Keyword Receiving Number :" />
+								</h:td>
+							<h:td valign="bottom" >
+								<textbox   disabled="true" id="keywordRecvNumTxtId"  width="250px" maxlength="100" />
+							</h:td>
+						</h:tr>
+					
+					</h:table>
+				</div>
+				
+				
+			</div>
+					
+			<div id="optoutDivId" visible="false" >
+				<h:table cellspacing="5" cellpadding="5" width="100%" 	align="left" style="padding-left:20px;">
+					<h:tr>
+						<h:td valign="bottom" width="200px">
+							<label value="Opt-out Keyword: :" />
+							</h:td>
+						<h:td valign="bottom" >
+							<textbox  id="optoutTxtId" disabled="true"  width="250px" maxlength="100" />
+						</h:td>
+					</h:tr>
+					
+				
+			</h:table>
+		
+		</div>
+	 </groupbox>
+	
+	<groupbox width="99%" sclass="gbStyle"
+			style="margin-top:10px;" closable="false">
+		<caption>
+			<label value="Invite Opt-ins" />
+		</caption>
+	<h:table>
+	<h:tr>
+	
+		<h:td valign="top" width="200px">
+			<label value="Send Opt-in Invitation Message :" />
+		</h:td>
+		
+		
+		<h:td  valign="top"  colspan="2">
+			<checkbox id="enableOptInChkBox" />
+		</h:td>	
+		
+		</h:tr>
+		<h:tr>
+			<h:td colspan="3">
+				<div id="enableOptinDivId">
+					<h:table cellspacing="5" cellpadding="5" width="100%" align="left" style="padding-left:20px;">
+					<h:tr>
+						<h:td valign="top" width="200px">
+						<label value="Source:" />
+					</h:td>
+					
+					
+					<h:td  valign="top"  colspan="2">
+					
+						<checkbox label="Manual Upload" value="1" id="enableManualChkBox" />
+						<checkbox label="Web-Form" value="2" id="enableWebFormChkBox" />
+						<checkbox label="POS" value="4" id="enablePOSChkBox" />
+						
+					</h:td>	
+					</h:tr>
+					<h:tr>
+					<h:td valign="top" width="200px">
+						<label value="Message inviting opt-ins :(Include your opt-in keyword in this message)" />
+					</h:td>
+		
+					<h:td valign="top" width="260" >
+					<textbox id="caretPosTB" visible="false" />
+						<textbox id="optInMsgTbId" value="" name="shortCodeTb" width="250px" multiline="true" height="160px" readonly="true"
+								w:onClick="updateCaretPosition()"
+									w:onChanging="updateCaretPosition()"
+									w:onFocus="updateCaretPosition()" />
+						
+					</h:td>
+					<h:td valign="top">
+					<h:table cellspacing="5" cellpadding="5" width="100%"
+						align="left" >
+					
+		     		
+					<h:tr>
+					<h:td>
+						<a id="checkTemplateAnchId"  sclass="tbbLink"
+							label="Change Content"
+							style="color:#2886B9;font-weight:bold;text-decoration: underline;valign:top;" />
+							
+				 </h:td>
+		     		</h:tr>
+					</h:table>
+					</h:td>
+					
+					</h:tr>
+					
+				<h:tr>
+					<h:td />
+					<h:td valign="top" 
+						colspan="2">
+						<label value="Character Count :"
+							style="font-weight:bold;" />
+						<textbox id="charCountTbId" readonly="true"
+							value="0" width="70px" />
+						<label value="(160 Characters per SMS)" />
+					</h:td>
+				</h:tr>	
+							
+				</h:table>
+			
+			</div>
+		</h:td>
+		
+		</h:tr>
+	
+	</h:table>
+	
+		<div align="center">
+			<button id ="submitBtnId" label="Save Changes" sclass="idle70 greenbtn"/>
+			
+		</div>
+	</groupbox>
+	<groupbox width="99%" sclass="gbStyle" 	style="margin-top:10px;" closable="false" id="transGBId" visible="false">
+		<caption>
+		<label value="Transactional Settings" />
+		</caption>
+	
+		<h:table cellspacing="5" cellpadding="5" width="100%" align="left" style="padding-left:20px;">
+		
+	
+			
+			<h:tr>
+	    			<h:td  >
+	    				<label value="Transactional Sender ID:"  />
+	    			</h:td>
+	    			<h:td>
+	    				<textbox id="transSenderIdTxtBxId" disabled="true"/>
+	    			</h:td>
+	    		</h:tr>
+	    		
+	
+	     	<h:tr>
+	     			
+	    			<h:td width="200px" >
+	    				<label value="Available Transactional Templates:"   />
+	    			</h:td>
+	    			<h:td width="160px">
+	    				<combobox id="approveTempCmbBoxId" readonly="true" />
+	    			</h:td>
+	    			<h:td width="160px">
+	    				<toolbarbutton id="tempContPreviewTbId" image="images/icon_preview_big.png" sclass="tbbLink"
+						label="Preview"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	    			
+	    			</h:td>
+	    			<h:td>
+					<toolbarbutton id="addNewTempTBId"  image="/images/action_add.gif" sclass="tbbLink"
+						label="Add New Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				</h:td>
+	    			
+	     	</h:tr>
+	
+			
+			
+			</h:table>
+	
+	</groupbox>
+	
+	<groupbox width="99%" sclass="gbStyle" 	style="margin-top:10px;" closable="false" id="keywordsGBId" >
+		<caption>
+		<label value="Keyword Settings" />
+		</caption>
+		
+		<h:table cellspacing="5" cellpadding="5" width="100%" align="left" style="padding-left:20px;">
+		
+	
+			
+			<h:tr>
+     			<h:td valign="bottom" width="200px" >
+     				<label value="Keyword Limit:"  />
+     			</h:td>
+     			<h:td>
+     				<textbox id="keywordLimiTxtId" disabled="true" />
+     			</h:td>
+     		</h:tr>
+     		
+     		<!-- <h:tr>
+				<h:td valign="bottom" width="200px">
+					<label value="Message Receiving Number:" />
+					</h:td>
+				<h:td valign="bottom" >
+				<combobox  id="msgRecvNumCbId"  readonly="true" />
+					
+				</h:td>
+			</h:tr> -->
+     		
+     			<h:tr>
+     			<h:td valign="bottom" width="200px" >
+     				<label value="Alerts will be Sent to:"  />
+     			</h:td>
+     			<h:td>
+     				<textbox id="toEmailTxtBxId" disabled="true"/>
+     			</h:td>
+     		</h:tr>
+     		
+	</h:table>
+	     
+	
+	</groupbox>
+
+	
+	<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false);event.stopPropagation();" />
+		</caption>
+		<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+			<iframe id="iframeId" width="100%" height="100%"/>
+		</div>
+	</window>
+
+
+
+
+<window id="createTransTempWinId" width="400px" title="Create New Transactional Template" border="normal" 
+			mode="overlapped" visible="false" position="center" style="overflow:auto;">
+			<caption>
+				<toolbarbutton label="Close" onClick="createTransTempWinId.setVisible(false);event.stopPropagation();" />
+			</caption>
+			<h:table>
+				<h:tr>
+					<h:td>
+						<label value="Template Name:"/>
+					</h:td>
+					<h:td colspan="2">
+						<textbox id="transTempNameTxtBxId"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="3">
+					
+				
+					
+						<textbox id="transCaretPosTB" visible="false" />
+						<textbox id="transTempContentTxtBxId" width="350px"
+							rows="12" height="165px" maxlength="380"
+							style="font-family: Arial,Helvetica,sans-serif;font-size:
+			 				14px;line-height: 1.5em;margin-top:10px;padding-bottom:25px;padding-top:25px;" w:onClick="updateTranTemCaretPosition()"  
+						 	w:onChanging="updateTranTemCaretPosition()" w:onFocus="updateTranTemCaretPosition()"
+							name="transTempContentTxtBxId" context="editPopup" />
+						
+					
+					
+					
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<label value="Character Count:"/>
+					</h:td>
+					<h:td >
+						<textbox id="transTempCharCountTxtBxId" readonly="true" value="0" width="70px" />
+					</h:td>
+					<h:td >
+						<label value="(160 Character per SMS)"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2" align="right">
+						<button id="transTempSaveBtnId" label="Save" sclass="idle70" />
+					</h:td>
+					<h:td  align="left">
+						<button id="transTempCancelBtnId" label="Cancel"  
+						 />
+					</h:td>
+				</h:tr>
+				
+			
+		</h:table>
+		
+	</window>
+	
+	
+	<window id="createNewOptinMsgWinId" width="400px" title="Create New Opt-in Message Content" border="normal" 
+			mode="overlapped" visible="false" position="center" style="overflow:auto;">
+			<caption>
+				<toolbarbutton label="Close" onClick="createNewOptinMsgWinId.setVisible(false);event.stopPropagation();" />
+			</caption>
+			<h:table>
+				
+				<h:tr>
+					<h:td colspan="3">
+					
+				
+					
+						<textbox id="optinCaretPosTB" visible="false" />
+						<textbox id="optinContentTxtBxId" width="350px"
+							rows="12" height="165px" maxlength="380"
+							style="font-family: Arial,Helvetica,sans-serif;font-size:
+			 				14px;line-height: 1.5em;margin-top:10px;padding-bottom:25px;padding-top:25px;" w:onClick="updateOptinCaretPosition()"  
+						 	w:onChanging="updateOptinCaretPosition()" w:onFocus="updateOptinCaretPosition()"
+							name="optinContentTxtBxId" context="editPopup" />
+						
+					
+					
+					
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<label value="Character Count:"/>
+					</h:td>
+					<h:td >
+						<textbox id="optinCharCountTxtBxId" readonly="true" value="0" width="70px" />
+					</h:td>
+					<h:td >
+						<label value="(160 Character per SMS)"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2" align="right">
+						<button id="optinSaveBtnId" label="Save" sclass="idle70" />
+					</h:td>
+					<h:td  align="left">
+						<button id="optinCancelBtnId" label="Cancel"  
+						 />
+					</h:td>
+				</h:tr>
+				
+			
+		</h:table>
+		
+	</window>
+	
+
+
+</window>
+
+
+</zk>

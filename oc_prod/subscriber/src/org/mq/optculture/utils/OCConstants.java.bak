@@ -1,0 +1,721 @@
+/**
+ * 
+ */
+package org.mq.optculture.utils;
+
+/**
+ * @author manjunath.nunna
+ *
+ */
+public interface OCConstants {
+	
+	public static final String JSON_VALUE				= "jsonVal";
+	public static final String JSON_DR_VALUE				= "jsonValue";
+	public static final String MAGENTO_BUSINESS_SERVICE = "magentoBusinessServiceImpl";
+	public static final String LOYALTY_INQUIRY_BUSINESS_SERVICE = "loyaltyInquiryService";
+	public static final String LOYALTY_INQUIRY_OC_BUSINESS_SERVICE = "loyaltyInquiryOCService";
+	public static final String LOYALTY_ISSUANCE_BUSINESS_SERVICE = "loyaltyIssuanceService";
+	public static final String ASYNC_LOYALTY_ISSUANCE_BUSINESS_SERVICE = "AsyncLoyaltyIssuanceService";
+	public static final String ASYNC_LOYALTY_TRX_DAO = "asyncLoyaltyTrxDao";
+	public static final String ASYNC_LOYALTY_TRX_DAO_FOR_DML = "asyncLoyaltyTrxDaoForDML";
+	public static final String LOYALTY_ISSUANCE_OC_BUSINESS_SERVICE = "loyaltyIssuanceOCService";
+	public static final String LOYALTY_REDEMPTION_BUSINESS_SERVICE = "loyaltyRedemptionService";
+	public static final String LOYALTY_REDEMPTION_OC_BUSINESS_SERVICE = "loyaltyRedemptionOCService";
+	public static final String LOYALTY_ENROLMENT_BUSINESS_SERVICE = "loyaltyEnrolmentService";
+	public static final String LOYALTY_ENROLMENT_OC_BUSINESS_SERVICE = "loyaltyEnrolmentOCService";
+	public static final String LOYALTY_TRANSFER_MEMBERSHIP_BUSINESS_SERVICE = "loyaltyTransferService";
+	public static final String LOYALTY_OTP_OC_BUSINESS_SERVICE = "loyaltyOTPOCService";
+	public static final String LOYALTY_FETCHDATA_BUSINESS_SERVICE = "loyaltyFetchDataService";
+	public static final String LOYALTY_DATA_BUSINESS_SERVICE_IMPL = "loyaltyDataBusinessServiceImpl";
+	public static final String LOYALTY_ENROLLMENT_HISTORY_SERVICE_IMPL = "loyaltyEnrollmentHistoryServiceImpl";
+	public static final String LOYALTY_DATA_OC_SERVICE_IMPL = "loyaltyDataOCServiceImpl";
+	public static final String LOYALTY_RETURN_TRANSACTION_OC_BUSINESS_SERVICE = "loyaltyReturnTransactionOCService";
+
+	
+
+	public static final String GATEWAY_BUSINESS_SERVICE = "gatewayBusinessServiceImpl";
+	public static final String POS_DR_BUSINESS_SERVICE = "posDRBusinessServiceImpl";
+	public static final String SEND_DR_BUSINESS_SERVICE = "sendDRBusinessServiceImpl";
+	public static final String RESET_PASSWORD_BUSINESS_SERVICE = "resetPasswordBusinessServiceImpl";
+	public static final String DR_REPORT_BUSINESS_SERVICE = "drReportBusinessServiceImpl";
+	public static final String SPARKBASE_TOKEN_SERVICE = "sparkBaseTokenServiceImpl";
+	public static final String COUPON_CODE_ENQUIRY_BUSINESS_SERVICE = "couponCodeEnquiryServiceImpl";
+	public static final String COUPON_CODE_REDEEMED_BUSINESS_SERVICE = "couponCodeRedeemedServiceImpl";
+	public static final String CONTACT_SUBSCRIPTION_BUSINESS_SERVICE = "contactSubscriptionServiceImpl";	
+	public static final String GENERAL_MAIL_SENDER_BUSINESS_SERVICE="generalMailSenderServiceImpl";
+	public static final String UPDATE_CONTACTS_BUSINESS_SERVICE="updateContactsBusinessServiceImpl";
+	public static final String UPDATE_SKU_BUSINESS_SERVICE="updateSkuBusinessServiceImpl";
+	
+	public static final String CAMPAIGN_REPORT_BUSINESS_SERVICE = "campaignReportBusinessServiceImpl";
+	public static final String GENERIC_UNSUBSCRIBE_BUSINESS_SERVICE = "genericUnsubscribeBusinessServiceImpl";
+	public static final String AUTO_EMAIL_REPORT_BUSINESS_SERVICE = "autoEmailReportBusinessServiceImpl";
+	String UPDATE_EMAIL_REPORTS = "updateEmailReports";
+	
+	public static final String OPT_SYNC_UPDATE_SERVICE = "updateOptSyncDataServiceImpl";
+	
+	
+	String MAGENTO_SERVICE_ACTION_PROMO_ENQUIRY_REQUEST= "promoEnquiryRequest";
+	String LOYALTY_SERVICE_ACTION_INQUIRY = "loyalty_inquiry";
+	String LOYALTY_SERVICE_ACTION_ISSUANCE = "loyalty_issuance";
+	String LOYALTY_SERVICE_ACTION_REDEMPTION = "loyalty_redemption";
+	String LOYALTY_SERVICE_ACTION_ENROLMENT = "loyalty_enrolment";
+	String LOYALTY_SERVICE_ACTION_TRANSFER = "loyalty_transfer";
+	String LOYALTY_SERVICE_ACTION_OTP = "loyalty_otp";
+	String LOYALTY_XML_ACTION_ENROLMENT = "loyalty_xml_enrolment";
+	String LOYALTY_XML_ACTION_ISSUANCE = "loyalty_xml_issuance";
+	String LOYALTY_SERVICE_ACTION_FETCHDATA = "loyalty_fetchdata";
+	String LOYALTY_SERVICE_ACTION_RETURN = "loyalty_return";
+	String DIGITAL_RECEIPT_XML_ACTION_SENDEMAIL = "dr_xml_sendemail";
+	String DR_ONLINE_MODE = "online";
+	String DR_OFFLINE_MODE = "offline";
+	String DIGITAL_RECEIPT_SERVICE_ACTION_SENDEMAIL = "dr_service_sendemail";
+
+	String COUPON_CODE_ENQUIRY_REQUEST="couponCodeEnquiryRequest";
+	String COUPON_CODE_REDEEMED_REQUEST="couponCodeRedeemedRequest";
+	String GENERAL_MAIL_SENDER_REQUEST="generalMailSenderRequest";
+	String UPDATE_CONTACTS_SERVICE_REQUEST="updateContactsServiceRequest";
+	String UPDATE_SKU_SERVICE_REQUEST="updateSkuServiceRequest";
+	
+	String DR_REPORT_ACTION_TYPE_OPEN="open";
+	String DR_REPORT_ACTION_TYPE_CLICK="click";
+
+	String CONTACT_SUBSCRIPTION_REQUEST = "contactSubscriptionRequest";
+	String GENERAL_MAIL_SENDER="generalMailSender";
+	String GENERAL_MAIL_SENDER_PLACEHOLDER_BODY="[body]";
+	
+	// dao's
+	String CHARACTERCODESDAO = "CharacterCodesDao";
+	String COUPONCODES_DAO = "couponCodesDao";
+	String COUPONCODES_DAOForDML = "couponCodesDaoForDML";
+	String COUPONS_DAO = "couponsDao";
+	String COUPONS_DAOForDML = "couponsDaoForDML";
+	String USERS_DAO = "usersDao";
+	String USERS_DAOForDML = "usersDaoForDML";
+	String RESET_PASSWORD_TOKEN_DAO = "resetPasswordTokenDao";
+	String RESET_PASSWORD_TOKEN_DAO_FOR_DML = "resetPasswordTokenDaoForDML";
+	String COUPON_DICOUNT_GENERATE_DAO = "coupDiscGenDao";
+	String CONTACTS_DAO = "contactsDao";
+	String CONTACTS_DAO_FOR_DML = "contactsDaoForDML";
+	String SMS_SUPPRESSED_CONTACTS_DAO = "suppressedContactsDao";
+	String SMS_SUPPRESSED_CONTACTS_DAO_FOR_DML = "suppressedContactsDaoForDML";
+	String POSMAPPING_DAO = "posMappingDao";
+	String SPARKBASE_LOCATIONDETAILS_DAO = "sparkBaseLocationDetailsDao";
+	String CONTACTS_LOYALTY_DAO = "contactsLoyaltyDao";
+	String CONTACTS_LOYALTY_DAO_FOR_DML = "contactsLoyaltyDaoForDML";
+	String SPARKBASECARD_DAO = "sparkBaseCardDao";
+	String SPARKBASECARD_DAO_FOR_DML = "sparkBaseCardDaoForDML";
+	String DR_SENT_DAO = "drSentDao";
+	String DR_SENT_DAO_ForDML = "drSentDaoForDML";
+	String CUSTOMTEMPLATES_DAO = "customTemplatesDao";
+	String CUSTOMTEMPLATES_DAO_ForDML = "customTemplatesDaoForDML";
+	String AUTO_SMS_DAO = "autoSMSDao";
+	String AUTO_SMS_DAO_FOR_DML = "autoSMSDaoForDML";
+	String EMAILQUEUE_DAO = "emailQueueDao";
+	String EMAILQUEUE_DAO_ForDML = "emailQueueDaoForDML";
+	String SMSSETTINGS_DAO = "smsSettingsDao";
+	String MAILINGLIST_DAO = "mailingListDao";
+	String MAILINGLIST_DAO_FOR_DML = "mailingListDaoForDML";
+	String LOYALTY_TRANSACTION_DAO = "loyaltyTransactionDao";
+	String LOYALTY_TRANSACTION_DAO_FOR_DML = "loyaltyTransactionDaoForDML";
+	String PURGELIST = "purgeList";
+	String CAPTIWAYTOSMSAPIGATEWAY = "captiwayToSMSApiGateway";
+	String DIGITAL_RECEIPTS_JSON_DAO = "digitalReceiptsJSONDao";
+	String DIGITAL_RECEIPTS_JSON_DAOForDML = "digitalReceiptsJSONDaoForDML";
+	String DIGITAL_RECEIPT_USER_SETTINGS_DAO = "digitalReceiptUserSettingsDao";
+	String DIGITAL_RECEIPT_MYTEMPLATES_DAO = "digitalReceiptMyTemplatesDao";
+	String RETAILPRO_SALES_DAO = "retailProSalesDao";
+	String ORGANIZATION_STORES_DAO = "organizationStoresDao";
+	String TRANSACTIONAL_TEMPLATES_DAO = "transactionalTemplatesDao";
+	String TRANSACTIONAL_TEMPLATES_DAO_ForDML = "transactionalTemplatesDaoForDML";
+	String USER_SMS_SENDER_ID_DAO = "userSMSSenderIdDao";
+	String ML_CUSTOM_FIELDS_DAO = "mlCustomFieldsDao";
+	String URL_SHORTCODE_MAPPING_DAO = "urlShortCodeMappingDao";
+	String URL_SHORTCODE_MAPPING_DAO_FOR_DML = "urlShortCodeMappingDaoForDML";
+	String AUTO_SMS_QUEUE_DAO = "autoSmsQueueDao";
+	String AUTO_SMS_QUEUE_DAO_FOR_DML = "autoSmsQueueDaoForDML";
+	String UPDATE_OPTSYNC_DATA_DAO = "updateOptSyncDataDao";
+	String UPDATE_OPTSYNC_DATA_DAO_FOR_DML = "updateOptSyncDataDaoForDML";
+	String USER_CAMPAIGN_EXPIRATION_DAO = "userCampaignExpirationDao";
+	String USER_CAMPAIGN_EXPIRATION_DAO_FOR_DML = "userCampaignExpirationDaoForDML";
+	String ORGSMSKEYWORDS_DAO = "orgSMSkeywordsDao";
+	String CLICKATELLSMSINBOUND_DAO = "clickaTellSMSInboundDao";
+	String CLICKATELLSMSINBOUND_DAO_FOR_DML = "clickaTellSMSInboundDaoForDML";
+	String USERSMSGATEWAY_DAO = "userSMSGatewayDao";
+	String OCSMSGATEWAY_DAO = "OCSMSGatewayDao";
+	String SKU_FILE_DAO = "skuFileDao";
+	String SKU_FILE_DAO_FOR_DML = "skuFileDaoForDML";
+	String MESSAGES_DAO = "messagesDao";
+	String MESSAGES_DAO_FOR_DML = "messagesDaoForDML";
+	String FORM_MAPPING_DAO = "formMappingDao";
+	String CUSTOM_FIELD_DAO = "cfDataDao";
+	String CUSTOM_FIELD_DAO_FORDML = "cfDataDaoForDML";
+//	String CONTACT_LOYALITY_DAO = "contactsLoyaltyDao";
+	String SPARKBASE_LOC_DAO = "sparkBaseLocationDetailsDao";
+	String SPARKBASE_CARD_DAO = "sparkBaseCardDao";
+	String SPARKBASE_CARD_DAO_FOR_DML = "sparkBaseCardDaoForDML";
+	String SPARKBASE_TRANSACTIONS_DAO = "sparkBaseTransactionsDao";
+	String UNSUBSCRIBE_DAO = "unsubscribesDao";
+	String UNSUBSCRIBE_DAO_FOR_DML = "unsubscribesDaoForDML";
+	String CUSTOM_TEMP_DAO = "customTemplatesDao";
+	String CONTACT_PARENTAL_CONSENT_DAO = "contactParentalConsentDao";
+	String CONTACT_PARENTAL_CONSENT_DAOForDML = "contactParentalConsentDaoForDML";
+	String PURGE_LIST = "purgeList";
+	String EVENT_TRIGGER_EVENTS_OBSERVABLE = "eventTriggerEventsObservable";
+	String EVENT_TRIGGER_EVENTS_OBSERVER = "eventTriggerEventsObserver";
+	String CAPTIWAY_TO_SMS_API_GATEWAY = "captiwayToSMSApiGateway";
+	String EVENT_TRIGGER_DAO = "eventTriggerDao";
+	String CAMPAIGN_SENT_DAO = "campaignSentDao";
+	String CAMPAIGN_SENT_DAO_FOR_DML = "campaignSentDaoForDML";
+	String CAMPAIGN_REPORT_DAO = "campaignReportDao";
+	String SMS_CAMPAIGNREPORT_DAO = "smsCampaignReportDao";
+	String UNSUBSCRIBES_DAO = "unsubscribesDao";
+	String UNSUBSCRIBES_DAO_FOR_DML = "unsubscribesDaoForDML";
+	
+	String CUSTOMERSALESUPDATEDATA_DAO = "customerSalesUpdateDataDao";
+	
+	//OptSync DAO
+	String UPDATEOPTSYNCDATA_DAO="updateOptSyncDataDao";
+	
+	//LoyaltyDaos
+	String LOYALTY_PROGRAM_TRANS_DAO = "loyaltyProgramTransDao";
+	String LOYALTY_PROGRAM_TRANS_DAO_FOR_DML = "loyaltyProgramTransDaoForDML";
+	//String LOYALTY_PROGRAM_TIER_DAO = "loyaltyProgramTierDao";
+	//String LOYALTY_PROGRAM_DAO = "loyaltyProgramDao";
+	String CONTACTS_LOYALTY_STAGE_DAO = "contactsLoyaltyStageDao";
+	String CONTACTS_LOYALTY_STAGE_DAO_FOR_DML = "contactsLoyaltyStageDaoForDML";
+	String LOYALTY_PROGRAM_DAO = "loyaltyProgramDao";
+	String LOYALTY_PROGRAM_DAO_FOR_DML = "loyaltyProgramDaoForDML";
+	String LOYALTY_CARD_SET_DAO = "loyaltyCardSetDao";
+	String LOYALTY_CARD_SET_DAO_FOR_DML = "loyaltyCardSetDaoForDML";
+	String LOYALTY_CARDS_DAO = "loyaltyCardsDao";
+	String LOYALTY_CARDS_DAO_FOR_DML = "loyaltyCardsDaoForDML";
+	String LOYALTY_PROGRAM_TIER_DAO = "loyaltyProgramTierDao";
+	String LOYALTY_PROGRAM_TIER_DAO_FOR_DML = "loyaltyProgramTierDaoForDML";
+	String LOYALTY_THRESHOLD_BONUS_DAO = "loyaltyThresholdBonusDao";
+	String LOYALTY_THRESHOLD_BONUS_DAO_FOR_DML = "loyaltyThresholdBonusDaoForDML";
+	String LOYALTY_PROGRAM_EXCLUSION_DAO = "loyaltyProgramExclusionDao";
+	String LOYALTY_PROGRAM_EXCLUSION_DAO_FOR_DML = "loyaltyProgramExclusionDaoForDML";
+	String LOYALTY_AUTO_COMM_DAO = "loyaltyAutoCommDao";
+	String LOYALTY_AUTO_COMM_DAO_FOR_DML = "loyaltyAutoCommDaoForDML";
+	String LOYALTY_TRANSACTION_PARENT_DAO = "loyaltyTransactionParentDao";
+	String LOYALTY_TRANSACTION_PARENT_DAO_FOR_DML = "loyaltyTransactionParentDaoForDML";
+	String LOYALTY_TRANSACTION_CHILD_DAO = "loyaltyTransactionChildDao";
+	String LOYALTY_TRANSACTION_CHILD_DAO_FOR_DML = "loyaltyTransactionChildDaoForDML";
+	String LOYALTY_TRANSACTION_EXPIRY_DAO = "loyaltyTransactionExpiryDao";
+	String LOYALTY_TRANSACTION_EXPIRY_DAO_FOR_DML = "loyaltyTransactionExpiryDaoForDML";
+	String OTP_GENERATEDCODES_DAO = "OTPGeneratedCodesDao";
+	String OTP_GENERATEDCODES_DAO_FOR_DML = "OTPGeneratedCodesDaoForDML";
+
+	String LOYALTY_SETTINGS_DAO = "loyaltySettingsDao";
+	String LOYALTY_SETTINGS_DAO_FOR_DML = "loyaltySettingsDaoForDML";
+	String LOYALTY_THRESHOLD_ALERTS_DAO = "loyaltyThresholdAlertsDao";
+	String LOYALTY_THRESHOLD_ALERTS_DAO_FOR_DML = "loyaltyThresholdAlertsDaoForDML";
+
+	String LTY_SETTINGS_ACTIVITY_LOGS_DAO = "ltySettingsActivityLogsDao";
+	String LTY_SETTINGS_ACTIVITY_LOGS_DAO_FOR_DML = "ltySettingsActivityLogsDaoForDML";
+	String USER_EMAIL_ALERT_DAO = "userEmailAlertDao";
+	String USER_EMAIL_ALERT_DAO_FOR_DML = "userEmailAlertDaoForDML";
+	// LoyaltyDaos
+
+	
+	/**
+	 * Added for SmsQueueDao
+	 */
+	String SMS_QUEUE_DAO = "smsQueueDao";
+	String SMS_QUEUE_DAO_ForDML = "smsQueueDaoForDML";
+	String JSON_RESPONSE_SUCCESS_MESSAGE = "Success";
+	String JSON_RESPONSE_FAILURE_MESSAGE = "Failure";
+	
+	String LOYALTY_POINTS = "Points";
+	String LOYALTY_USD = "USD";
+	String LOYALTY_ENROLL_STATUS_SUCCESS = "Success";
+	String LOYALTY_ENROLL_STATUS_FAILURE = "Failure";
+	String LOYALTY_TRANSACTION_STATUS_NEW = "New";
+	String LOYALTY_TRANSACTION_STATUS_PROCESSED = "Processed";
+	String LOYALTY_TRANSACTION_STATUS_FAILED = "Failed";
+	String LOYALTY_TRANSACTION_STATUS_PURCHASE_IMMEDIATE = "PurchaseImmediate";
+	String LOYALTY_TRANSACTION_STATUS_PURCHASE = "Purchase";
+	String LOYALTY_TRANSACTION_STATUS_BONUS = "Bonus";
+	String LOYALTY_TRANSACTION_STATUS_GIFT_IMMEDIATE = "GiftImmediate";
+	
+	
+	String LOYALTY_TRANSACTION_ENROLMENT = "Enrolment";
+	String LOYALTY_TRANSACTION_INQUIRY = "Inquiry";
+	String LOYALTY_TRANSACTION_ISSUANCE = "Issuance";
+	String LOYALTY_TRANSACTION_REDEMPTION = "Redemption";
+	String LOYALTY_TRANSACTION_ENROLENQUIRY = "EnrolEnquiry";
+	String LOYALTY_TRANSACTION_EXPIRY = "Expiry";
+	String LOYALTY_TRANSACTION_RETURN = "Return";
+
+
+	//SMS in-bound / miscall optin request parameter names
+	
+	String REQUEST_PARAM_TYPE = "type";
+	String REQUEST_PARAM_TYPE_VALUE_SMS = "SMS";
+	String REQUEST_PARAM_TYPE_VALUE_MISSEDCALL = "MissedCall";
+	String REQUEST_PARAM_SOURCE = "Source";
+	String REQUEST_PARAM_DEST = "Dest";
+	String REQUEST_PARAM_MISSEDCALL_STIME = "Stime";
+	String REQUEST_PARAM__MSG_STIME = "stime";
+	String REQUEST_PARAM__MSG = "msg";//MM/DD/YY HH:MM:SS PM/AM
+	
+	//Dest Source Stime msg= "type=SMS/MissedCall send dest stime=MM/DD/YY HH:MM:SS PM/AM
+	
+	String SMS_PROGRAM_KEYWORD_TYPE_OPTIN = "Optin";
+	String SMS_PROGRAM_KEYWORD_TYPE_OPTOUT = "OptOut";
+	String SMS_PROGRAM_KEYWORD_TYPE_HELP = "Help";
+	
+	// added for shortern Url
+	
+	String SHORTURL_TYPE_SHORTCODE = "S";
+	String SHORTURL_TYPE_BARCODE_TYPE_MULTIPLE = "BM";
+	String SHORTURL_TYPE_BARCODE_TYPE_SINGLE = "BS";
+	
+	
+	String SHORTURL_TYPE_BARCODE_STRING="Barcode as URL";
+	
+	String AUTO_SMS_OPTIN_MESSAGE = "AutoSMSOptinMessage";
+	String SMS_OPTIN_MESSAGE_DYNAMIC_KEYWORD = "[SMS_OPTIN_MESSAGE_DYNAMIC_KEYWORD]";
+	String SMS_OPTIN_MESSAGE_DYNAMIC_KEYWORD_RECVING_NUMBER = "[SMS_OPTIN_MESSAGE_DYNAMIC_KEYWORD_RECVING_NUMBER]";
+	
+	String SMS_OPTIN_MESSAGE_MISSED_CALL_NUMBER = "[SMS_OPTIN_MESSAGE_MISSED_CALL_NUMBER]";
+	String FORM_MAPPING_SPLIT_DELIMETER = ";=;";
+
+	//Module level error message flags
+	String ERROR_PROMO_FLAG = "P";
+	String ERROR_CONTACTS_FLAG = "C";
+	String ERROR_SKU_FLAG = "S";
+	String ERROR_GENERALMAILSENDER_FLAG = "G";
+	String ERROR_LOYALTY_FLAG = "L";
+	String ERROR_DR_FLAG = "D";
+	
+	String ERROR_OPTSYNC_FLAG = "OS";
+	
+	int OPT_SYNC_TIMER_PERIOD = 10;
+	int DOWN_ALERT_TIME_SPAN_DAY = 1440;
+
+	String LOYALTY_ONLINE_MODE = "online";
+	String LOYALTY_OFFLINE_MODE = "offline";
+
+	
+	//Added for campaign reports update
+	String URL_TYPE_OLD_REQUESTED_ACTION = "requestedAction";
+	String URL_TYPE_NEW_REQUESTED_ACTION = "action";
+	
+	String CAMPAIGN_UPDATE_RESPONSE_STATUS_FAILURE = "failure";
+	
+	String RESPONSE_TYPE_OPEN_IMAGE = "openImage";
+	String RESPONSE_TYPE_CLICK_REDIRECT = "clickRedirect";
+	String RESPONSE_TYPE_WEB_LINK = "webLink";
+	String RESPONSE_TYPE_RESUBSCRIBE = "resubscribe";
+	String RESPONSE_TYPE_UNSUBSCRIBE_REQ = "unsubscribeReq";
+	String RESPONSE_TYPE_UNSUBSCRIBE_UPDATE = "unsubscribeUpdate";
+	String RESPONSE_TYPE_FARWARD_UPDATE = "farwardUpdate";
+	String RESPONSE_TYPE_UPDATE_SUBSCRPTION = "updateSubscrption";
+	String RESPONSE_TYPE_REDIRECT_SHARE = "redirectShare";
+	String RESPONSE_TYPE_SHARE_LINK = "shareLink";
+	String RESPONSE_TYPE_BARCODE = "barCode";
+	
+	String UPDATE_REPORT_ACTION_OPEN = "open";
+	String UPDATE_REPORT_ACTION_CLICK = "click";
+	String UPDATE_REPORT_ACTION_WEBPAGE = "webpage";
+	String UPDATE_REPORT_ACTION_RESUBSCRIBE = "ReSubscribe";
+	String UPDATE_REPORT_ACTION_UNSUBSCRIBE = "unsubscribe";
+	String UPDATE_REPORT_ACTION_UNSUB_REASON = "unsubReason";
+	String UPDATE_REPORT_ACTION_FARWARD = "farward";
+	String UPDATE_REPORT_ACTION_UPDATE_SUBSCRPTION = "updateSubscrption";
+	String UPDATE_REPORT_ACTION_TWEET_ON_TWITTER = "tweetOnTwitter";
+	String UPDATE_REPORT_ACTION_SHARED_ON_FB = "sharedOnFb";
+	String UPDATE_REPORT_ACTION_SHARE_LINK = "shareLink";
+	String UPDATE_REPORT_ACTION_COUPONCODE = "couponcode";
+	
+	String REDIRECT_UNSUB_LINK = "/view/unsubscribe.jsp";
+	String REDIRECT_GENERIC_UNSUB_PINTO_RANCH_LINK = "/view/unsubscribePintoRanch.jsp";
+	String REDIRECT_UPDATE_SUBS_ERROR_LINK = "/view/updateSubsError.jsp";
+	String REDIRECT_UPDATE_SUBS_LINK = "/zul/updateSubscriptions.zul";
+	
+	String Form_HID = "hId";
+	String WELCOME_MAIL_TEMPLATE = "welcomeMsgTemplate";
+	String ORG_NAME_PLACEHOLDER = "[OrganisationName]";
+	String REPLY_TO_MAIL = "[senderReplyToEmailID]";
+	String EMAIL_STATUS_ACTIVE = "Active";
+	String EMAIL_SUBJECT_WELCOME_EMAIL = " Welcome Mail.";
+	String EMAIL_SUBJECT_REQUIRE_PARENTAL_CONSENT = "Require Parental Consent.";
+	String PARENTAL_CONSENT_MAIL_TEMPLATE = "parentalConsentMsgtemplate";
+	String LOYALTY_MAIL_TEMPLATE = "loyaltyOptinMsgTemplate";
+	String RESUBSCRIBE_LINK = "ResubscribeLink";
+	String RESUBSCRIPTION_TEMPLATE = "ResubscriptionTemaplate";
+	String SUBSCRIBER_MAIL_ID_PH = "[SubscriberEmailID]";
+	String URL_PH ="[url]";
+	String SENDER_NAME_PH = "[senderName]";
+	String RESUBSCRIPTION_MAIL_SUBJECT = "Resubscription link";
+	String RESUBSCRIPTION_MAIL_TYPE = "Resubscription";
+	String CARD_TYPE_LOYALTY = "loyalty";
+	String FORM_MAPPING_NULL_URL = "https://app.optculture.com";
+	
+	//OptSync Status Constants
+	String OPT_SYNC_STATUS_NEW="N";
+	String OPT_SYNC_STATUS_ACTIVE="A";
+	String OPT_SYNC_STATUS_DEACTIVE ="D";
+	
+	String OPT_SYNC_PLUGIN_STATUS_ACTIVE="A";
+	String OPT_SYNC_PLUGIN_STATUS_INACTIVE="I";
+	
+	String Opt_SYNC_ENABLE_MOINTORING="Y";
+	String Opt_SYNC_DISABLE_MOINTORING="N";
+	String ENABLE="enable";
+	String DISABLE="disable";
+	
+	String OPTINL_MAIL_SENDER="optSyncMailSender";
+	
+	String OPTSYNC_ALERT_MAIL_SUBJECT="OptCulture Alert: OptSync Down (Username:[USERNAME])";
+	String OPTSYNC_ALERT_MAIL_SUBJECT_PH ="[USERNAME]";
+	
+	String OPTSYNC_UP_ALERT_MAIL_SUBJECT="OptCulture Alert: OptSync UP (Username:[USERNAME])";
+	
+	//new column in user organization
+	String STATUS_ACTIVE="A";
+	String STATUS_DELETE="D";
+
+	String LOYALTY_TRANS_TYPE_ENROLLMENT = "Enrollment";
+	String LOYALTY_TRANS_TYPE_TRANSFER = "Transfer";
+	
+	String LOYALTY_TRANS_TYPE_ENROLLMENTHISTORY = "EnrollmentHistory";
+	String LOYALTY_TRANS_TYPE_ISSUANCE = "Issuance";
+	String LOYALTY_TRANS_TYPE_BONUS = "Bonus";
+	String LOYALTY_TRANS_TYPE_REDEMPTION = "Redemption";
+	String LOYALTY_TRANS_TYPE_ADJUSTMENT = "Adjustment";
+	String LOYALTY_TRANS_TYPE_CHANGE_TIER = "Tier adjustment";
+	String LOYALTY_TRANS_TYPE_ADJUSTMENT_ADD = "Add";
+	String LOYALTY_TRANS_TYPE_ADJUSTMENT_SUB = "Sub";
+	//String GIFT_TRANS_TYPE_ISSUANCE = "Gift Issuance";
+	//String GIFT_TRANS_TYPE_REDEMPTION = "Gift Redemption";
+	String LOYALTY_TRANS_TYPE_INQUIRY = "Inquiry";
+	String LOYALTY_TRANS_TYPE_EXPIRY = "Expiry";
+	String LOYALTY_TRANS_TYPE_OTP = "OTP";
+	String LOYALTY_TRANS_TYPE_RETURN = "Return";
+	
+	String LOYALTY_PROGRAM_TRANS_STATUS_NEW = "New";
+	String LOYALTY_PROGRAM_TRANS_STATUS_WORKING = "Working";
+	String LOYALTY_PROGRAM_TRANS_STATUS_PROCESSED = "Processed";
+	String LOYALTY_PROGRAM_TRANS_STATUS_SUSPENDED = "Suspended";
+	
+	String LOYALTY_SERVICE_TYPE_SB = "SB";
+	String LOYALTY_SERVICE_TYPE_OC = "OC";
+	String LOYALTY_SERVICE_TYPE_SBTOOC = "SBToOC";
+	
+	String LOYALTY_PROGRAM_TIER1 = "Tier 1";
+	String LOYALTY_PROGRAM_TIER_TYPE_PENDING = "Pending";
+	String LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_MONTH = "Month";
+	String LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_YEAR = "Year";
+	
+	//Loyalty Program
+	char FLAG_YES = 'Y';
+	char FLAG_NO = 'N';
+	String LOYALTY_TYPE_POINTS = "Points";
+	String LOYALTY_TYPE_CURRENCY = "Currency";
+	String LOYALTY_TYPE_AMOUNT = "Amount";
+	String LOYALTY_TYPE_PERCENTAGE = "Percentage";
+	String LOYALTY_TYPE_VALUE = "Value";
+	String LOYALTY_TYPE_DAY = "Day";
+	String LOYALTY_TYPE_HOUR = "Hour" ;
+	String LOYALTY_TYPE_YEAR = "Year" ;
+	String LOYALTY_TYPE_MONTH = "Month" ;
+	String LOYALTY_TYPE_PURCHASE = "Purchase";
+	String LOYALTY_TYPE_GIFT = "Gift";
+	String LOYALTY_TYPE_REWARD = "Reward";
+	String LOYALTY_TYPE_REVERSAL = "Reversal";
+	String LOYALTY_TYPE_STORE_CREDIT = "Store Credit";
+	
+	String LOYALTY_CARDSET_TYPE_VIRTUAL = "Virtual";
+	String LOYALTY_CARDSET_TYPE_PHYSICAL = "Physical";
+	String LOYALTY_CARDSET_TYPE_CUSTOM = "Custom";
+	String LOYALTY_CARDSET_GEN_TYPE_SEQUENTIAL = "Sequential";
+	String LOYALTY_CARDSET_GEN_TYPE_RANDOM = "Random";
+	String LOYALTY_CARDSET_STATUS_ACTIVE = "Active";
+	String LOYALTY_CARDSET_STATUS_SUSPENDED = "Suspended";
+	String LOYALTY_PROGRAM_STATUS_ACTIVE = "Active";
+	String LOYALTY_PROGRAM_STATUS_SUSPENDED = "Suspended";
+	String LOYALTY_PROGRAM_STATUS_DRAFT = "Draft";
+	
+	String LOYALTY_REG_REQUISITE_FIRSTNAME = "firstName";
+	String LOYALTY_REG_REQUISITE_LASTNAME = "lastName";
+	String LOYALTY_REG_REQUISITE_MOBILEPHONE = "mobilePhone";
+	String LOYALTY_REG_REQUISITE_EMAILID = "emailId";
+	String LOYALTY_REG_REQUISITE_ADDRESSONE = "addressOne";
+	String LOYALTY_REG_REQUISITE_CITY = "city";
+	String LOYALTY_REG_REQUISITE_STATE = "state";
+	String LOYALTY_REG_REQUISITE_ZIP = "zip";
+	String LOYALTY_REG_REQUISITE_COUNTRY = "country";
+	String LOYALTY_REG_REQUISITE_BIRTHDAY = "birthDay";
+	String LOYALTY_REG_REQUISITE_ANNIVERSARY = "anniversary";
+	String LOYALTY_REG_REQUISITE_GENDER = "gender";
+	
+	String LOYALTY_PRODUCT_ITEMCATEGORY = "itemCategory";
+	String LOYALTY_PRODUCT_DEPARTMENTCODE = "departmentCode";
+	String LOYALTY_PRODUCT_CLASS = "classCode";
+	String LOYALTY_PRODUCT_SUBCLASS = "subClassCode";
+	String LOYALTY_PRODUCT_DCS = "DCS";
+	String LOYALTY_PRODUCT_VENDORCODE = "vendorCode";
+	String LOYALTY_PRODUCT_SKUNUMBER = "sku";
+	
+	String LOYALTY_LIFETIME_POINTS = "LifetimePoints";
+	String LOYALTY_LIFETIME_PURCHASE_VALUE = "LifetimePurchaseValue";
+	String LOYALTY_CUMULATIVE_PURCHASE_VALUE = "CumulativePurchaseValue";
+	String LOYALTY_DRAFT_STATUS_COMPLETE = "Complete";
+	String LOYALTY_DRAFT_STATUS_INCOMPLETE = "Incomplete";
+	
+	String LOYALTY_PROMO_EXCLUSION_ALL = "ALL";
+	
+	String CONTACTS_LOYALTY_STATUS_ACTIVE = "Active";
+	String CONTACTS_LOYALTY_STATUS_EXPIRED = "Expired";
+	
+	
+	String LOYALTY_MEMBERSHIP_STATUS_ACTIVE = "Active";
+	String LOYALTY_MEMBERSHIP_STATUS_EXPIRED = "Expired";
+	String LOYALTY_MEMBERSHIP_STATUS_SUSPENDED = "Suspended";
+	String LOYALTY_MEMBERSHIP_STATUS_CLOSED = "Closed";//user for transfer
+	String LOYALTY_MEMBERSHIP_STATUS_TRANSFERING = "Transfering";
+	
+	String LOYALTY_MEMBERSHIP_TYPE_CARD = "Card";
+	String LOYALTY_MEMBERSHIP_TYPE_MOBILE = "Mobile";
+	//String LOYALTY_MEMBERSHIP_TYPE_DYNAMIC = "Dynamic"; // Card Number given by user at the time of enrollment
+	
+	String LOYALTY_CARD_STATUS_ACTIVATED = "Activated";
+	//String LOYALTY_CARD_STATUS_EXPIRED = "Expired";
+	String LOYALTY_CARD_STATUS_ENROLLED = "Enrolled";
+	String LOYALTY_CARD_STATUS_INVENTORY = "Inventory";
+	String LOYALTY_CARD_STATUS_INVENTORY_TRANSFERED = "Inventory/Transfered";//intermediate status to avoid 2 concurrent request b/w enrollment & transfer
+	String LOYALTY_CARD_STATUS_SELECTED = "Selected";
+	
+	String LOYALTY_CONVERSION_TYPE_AUTO = "Auto";
+	String LOYALTY_CONVERSION_TYPE_ONDEMAND = "Ondemand";
+	
+	// start entered amount types in transactionchild table
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_GIFT = "Gift";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_PURCHASE = "Purchase";
+	//String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_BONUS = "Bonus";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_POINTSREDEEM = "PointsRedeem";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_AMOUNTREDEEM = "AmountRedeem";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_POINTSADJUSTMENT = "PointsAdjustment";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_AMOUNTADJUSTMENT = "AmountAdjustment";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_POINTS_EXP = "PointsExp";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_AMOUNT_EXP = "AmountExp";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_ISSUANCE_REVERSAL = "IssuanceReversal";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_REDEMPTION_REVERSAL = "RedemptionReversal";
+	String LOYALTY_TRANS_ENTEREDAMOUNT_TYPE_STORE_CREDIT = "StoreCredit";
+	String LOYALTY_MEMBERSHIP_REWARD_FLAG_G = "G"; //FOR GIFT CARD
+	String LOYALTY_MEMBERSHIP_REWARD_FLAG_L = "L"; //FOR LOYALTY CARD
+	String LOYALTY_MEMBERSHIP_REWARD_FLAG_GL = "GL"; //FOR GIFT TO LOYALTY
+	
+	String LOYALTY_EXPIRY_TYPE_POINTS = "Points";
+	String LOYALTY_EXPIRY_TYPE_AMOUNT = "Amount";
+	String LOYALTY_EXPIRY_TYPE_GIFT = "Gift";
+	
+	String LOYALTY_TRANSACTION_SOURCE_TYPE_STORE = "Store";
+	String LOYALTY_TRANSACTION_SOURCE_TYPE_AUTO = "Auto";
+	String LOYALTY_TRANSACTION_SOURCE_TYPE_MANUAL = "Manual";
+	String LOYALTY_TRANSACTION_SOURCE_TYPE_WEBFORM = "Webform";
+	
+	String LOYALTY_ENROLLHISTORY_TYPE_DETAILED = "Detailed";
+	String LOYALTY_ENROLLHISTORY_TYPE_SUMMARY = "Summary";
+	String LOYALTY_ENROLLHISTORY_SOURCE_ALL = "All";
+	String LOYALTY_ENROLLHISTORY_SOURCE_STORE = "Store";
+	String LOYALTY_ENROLLHISTORY_SOURCE_WEBFORM = "Webform";
+	String LOYALTY_ENROLLHISTORY_MODE_ALL = "All";
+	String LOYALTY_ENROLLHISTORY_MODE_Online = "Online";
+	String LOYALTY_ENROLLHISTORY_MODE_Offline = "Offline";
+	String LOYALTY_ENROLLHISTORY_SERVICETYPE_OC = "OC";
+	String LOYALTY_ENROLLHISTORY_SERVICETYPE_SB = "SB";
+	String LOYALTY_ENROLLHISTORY_SERVICETYPE_ALL = "All";
+	String LOYALTY_ENROLLHISTORY_STORE_ALL = "All";
+	
+	//end entered amount types in transactionchild table
+	String OTP_GENERATED_CODE_STATUS_ACTIVE = "Active";
+	String OTP_GENERATED_CODE_STATUS_EXPIRED = "Expired";
+	
+	String LOYALTY_MEMBERSHIP_MOBILE_VALID = "Valid";
+	String LOYALTY_MEMBERSHIP_MOBILE_INVALID = "Invalid";
+	
+	
+	
+	
+	
+	
+	//Added for auto-sms
+	
+	String ASQ_STATUS_ACTIVE = "Active";
+	String ASQ_STATUS_SENT   = "Sent";
+	String ASQ_STATUS_FAILURE   = "Failure";
+	
+	String ASQ_STATUS_NEW = "New";
+	String ASQ_STATUS_PROCESSED = "Processed";
+	//String ASQ_STATUS_FAILURE = "Failure";
+	
+	String TRANSACTIONAL_TEMPLATE_TYPE_AS = "AS";
+	String AUTO_SMS_MESSAGE_TYPE_TW = "TW";
+	String AUTO_SMS_MESSAGE_TYPE_TR = "TR";
+
+	String AUTO_SMS_TEMPLATE_TYPE_LOYALTY_REGISTRATION= "Loyalty Enrollment";
+	String AUTO_SMS_TEMPLATE_TYPE_TIER_UPGRADATION="Tier Upgradation";
+	String AUTO_SMS_TEMPLATE_TYPE_EARNED_BONUS="Earning Bonus";
+	String AUTO_SMS_TEMPLATE_TYPE_EARNED_REWARD_EXPIRATION="Reward Expiration";
+	String AUTO_SMS_TEMPLATE_TYPE_MEMBERSHIP_EXPIRATION = "Membership Expiration";
+	String AUTO_SMS_TEMPLATE_TYPE_GIFT_AMOUNT_EXPIRATION = "Gift Amount Expiration";
+	String AUTO_SMS_TEMPLATE_TYPE_GIFT_CARD_EXPIRATION="Gift-Card Expiration";
+	String AUTO_SMS_TEMPLATE_TYPE_GIFT_CARD_ISSUANCE="Gift-Card Issuance";
+
+	String AUTO_SMS_TEMPLATE_STATUS_APPROVED = "A";
+	String AUTO_SMS_TEMPLATE_STATUS_PENDING = "P";
+	
+	//Auto-SMS Queue Types
+	String ASQ_TYPE_LOYALTY_DETAILS = "LoyaltyDetails";
+ 	String ASQ_TYPE_LOYALTY_GIFT_CARD_ISSUANCE = "LoyaltyGiftCardIssuance";
+ 	String ASQ_TYPE_LOYALTY_TIER_UPGRADATION = "LoyaltyTierUpgradation";
+ 	String ASQ_TYPE_LOYALTY_EARNING_BONUS = "LoyaltyEarningBonus";
+ 	String ASQ_TYPE_LOYALTY_REWARD_EXPIRY = "LoyaltyRewardExpiry";
+ 	String ASQ_TYPE_LOYALTY_MEMBERSHIP_EXPIRY = "LoyaltyMembershipExpiry";
+ 	String ASQ_TYPE_LOYALTY_GIFT_CARD_EXPIRY = "LoyaltyGiftCardExpiry";
+ 	String ASQ_TYPE_LOYALTY_GIFT_AMOUNT_EXPIRY = "LoyaltyGiftAmountExpiry";
+ 	String ASQ_TYPE_LOYALTY_TRANSFER_MEMBERSHIP = "LoyaltyTransferMembership";
+
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_REGISTRATION = "loyaltyOptinMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTISSUE = "giftCardIssMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_TIERUPGRADE = "tierUpgradationMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_BONUS = "earnedThresholdBonusMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_REWARDAMTEXPIRY = "rewardExpMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTAMTEXPIRY = "giftAmountExpMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_LOYALTYMEMBSHIPEXPIRY = "memExpMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_GIFTMEMBSHIPEXPIRY = "giftCardExpMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_TRANSFER = "transferMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_EMAIL_TRANSFER_INVENTORY = "transferInventoryMsgTemplate";
+	
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_REGISTRATION = "loyaltyRegSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTISSUE = "giftCrdIssSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_TIERUPGRADE = "tierUpgrdSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_BONUS = "earnBonusSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_REWARDAMTEXPIRY = "rewardExpSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTAMTEXPIRY = "giftAmtExpSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_LOYALTYMEMBSHIPEXPIRY = "memshpExpSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_GIFTMEMBSHIPEXPIRY = "giftCrdExpSmsMsgTemplate";
+	String LOYALTY_DEFAULT_TEMPLATE_SMS_TRANSFER = "transferSMSMsgTemplate";
+	
+	//Card generation flag
+	String LOYALTY_CARD_GENERATION_FLAG_Y = "Y";
+	String LOYALTY_CARD_GENERATION_FLAG_N = "N";
+	
+	
+	
+	//SparkBase Transaction type
+	
+	String SPARKBASE_TRANSACTION_TYPE_LOYALTY_ISSUANCE = "Loyalty Issuance";
+	
+	
+	//OCLOYALTY URL STRING
+//	String LOYALTY_LOGIN_URL= "www.getyourbalance.com/";
+	
+	//One or More Years or Months
+	String MORETHANONEOCCURENCE="(s)";
+	
+	//Loyalty type for web portal
+	String LOYALTY_SETTINGS_TYPE_CARD_NUMBER = "Card Number";
+	String LOYALTY_SETTINGS_TYPE_MOBILE_NUMBER = "Mobile Number";
+	
+	//Added for Survey_of_April_2017
+	
+	String SURVEY_LIST_NAME = "Survey_of_April_2017";
+	
+	//Added for mailinglist status 
+	
+	String MAILINGLIST_STATUS_ACTIVE = "Active";
+	
+	
+	//oc loyalty event trigger status
+  	
+ 	 String LOYALTY_TRANSACTION_ET_STATUS_NEW="New";
+	 String LOYALTY_TRANSACTION_ET_STATUS_PROCESSED="Processed";
+	 String LOYALTY_TRANSACTION_ET_STATUS_UNPROCESSED="Unprocessed";
+	 
+	 
+	 String LOYALTY_ADJUSTMENT = "Loyaty Adjustment";
+	 String LOYALTY_ISSUANCE = "Loyaty Issuance";
+	 String LOYALTY_REDEMPTION = "Loyaty Redemption";
+	 String LOYALTY_GIFT_ISSUANCE = "Gift Issuance";
+	 String LOYALTY_GIFT_REDEMPTION = "Gift Redemption";
+	
+	String USER_ALERT_CAMPAIGN_EXPIRED_STATUS_ACTIVE = "A";
+	String USER_ALERT_CAMPAIGN_EXPIRED_STATUS_SCHEDULE_DELEATED = "SDL";
+	String USER_ALERT_CAMPAIGN_EXPIRED_STATUS_CAMPAIGN_DELEATED = "CDL";
+	String USER_ALERT_CAMPAIGN_EXPIRED_STATUS_DRAFT = "D";
+	String USER_ALERT_CAMPAIGN_EXPIRED_STATUS_SENT = "S";
+	String USER_ALERT_CAMPAIGN_EXPIRED_STATUS_EXPIRED = "E";
+	
+	String USER_ALERT_EMAIL_TYPE_CAMP_EXPIRATION = "CE";
+	
+	String MSG_CAMP_EXPIRATION = "msgCampExpiration";
+	//Email Id length
+	public static final int MAX_EMAIL_ID_LENGTH = 50;
+	
+	//Added 2.3.11 
+	public static final String CAMPAIGN_STATUS_ACTIVE = "Active";
+	public static final String CAMPAIGN_STATUS_SENT = "Sent";
+	public static final String CAMPAIGN_STATUS_DRAFT = "Draft";
+	public static final byte SENT_EMAIL_STATUS = 1;
+	public static final byte ACTIVE_EMAIL_STATUS = 0;
+	public static final byte DRAFT_EMAIL_STATUS=2;
+	public static final String FONT_BOLD = "font-weight:bold;";
+	
+	 public String LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_PERCENTAGE = "percentage";
+	 public String LOYALTY_CARDS_AVAILABLE_COUNT_TYPE_VALUE = "value";
+	
+	 
+	public String LTY_ACTIVITY_LOG_TYPE_PROGRAM = "P";
+	public String LTY_ACTIVITY_LOG_TYPE_TIER = "T";
+	// public String LTY_ACTIVITY_LOG_TYPE_REGISTRATION_BONUS = "RB";
+	public String LTY_ACTIVITY_LOG_TYPE_BONUS = "B";
+	public String LTY_ACTIVITY_LOG_TYPE_LOYALTY_REWARD_VALIDITY = "LRV";
+	public String LTY_ACTIVITY_LOG_TYPE_GIFT_AMOUNT_VALIDITY = "GAV";
+	public String LTY_ACTIVITY_LOG_TYPE_LOYALTY_MEMBERSHIP_VALIDITY = "LMV";
+	public String LTY_ACTIVITY_LOG_TYPE_GIFT_CARD_VALIDITY = "GCV";
+	
+	
+	String LOYALTY_TYPE_ISSUANCE ="Loyalty Issuance";
+	String LOYALTY_TYPE_REDEMPTION ="Loyalty Redemption";
+	
+	String ASYNC_LOYALTY_SERVICE_ACTION_INQUIRY = "async_loyalty_inquiry";
+	public static final String ASYNC_LOYALTY_INQUIRY_BUSINESS_SERVICE = "asyncLoyaltyInquiryService";
+	
+	public static final String ASYNC_LOYALTY_ENROLMENT_BUSINESS_SERVICE = "asyncLoyaltyEnrolmentService";
+	String LOYALTY_ENROLLMENT = "Loyaty Enrollment";
+	
+	public String LTY_SETTING_REPORT_FRQ_DAY = "D";
+	public String LTY_SETTING_REPORT_FRQ_WEEK = "W";
+	public String LTY_SETTING_REPORT_FRQ_MONTH ="M";
+	public String LTY_SETTING_REPORT_TYPE ="Loyalty Report";
+	public String LTY_SETTNG_REPORT_TRIGGER_F = "FM";
+	public String LTY_SETTNG_REPORT_TRIGGER_L = "LM";
+	
+	public static final String LOYALTY_CARD_GENERATION_TYPE_CUSTOM ="Custom";
+	public static final String LOYALTY_CARD_GENERATION_TYPE_SYSTEM ="System";
+	public static final String LOYALTY_CARD_GENERATION_TYPE_DYNAMIC ="Dynamic";
+	
+	 String LOYALTY_PROGRAM_TYPE_CARD = "Card";
+	 String LOYALTY_PROGRAM_TYPE_MOBILE = "Mobile";
+	 String LOYALTY_PROGRAM_TYPE_DYNAMIC = "Dynamic";
+	 
+	 
+	 
+	 /*
+	  * REMOTE_SERVER_URL
+	  * 
+	  */
+	 
+	 public static final String REMOTE_IMAGE_DIRECTORY_IP = "REMOTE_IMAGE_DIRECTORY_IP";
+	  public static final String REMOTE_IMAGE_DIRECTORY_PORT = "REMOTE_IMAGE_DIRECTORY_PORT";
+	  
+	  public static final String REMOTE_IMAGE_DIRECTORY_USER = "REMOTE_IMAGE_DIRECTORY_USER";
+	  public static final String REMOTE_IMAGE_DIRECTORY_PASSWORD = "REMOTE_IMAGE_DIRECTORY_PASSWORD";
+	  
+	  //public static final String TOKEN_UNDERSCORE = "-";
+
+}

@@ -1,0 +1,754 @@
+package org.mq.marketer.campaign.controller.admin;
+
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.SecRoles;
+import org.mq.marketer.campaign.beans.TransactionalTemplates;
+import org.mq.marketer.campaign.beans.UserSMSSenderId;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.custom.MyDatebox;
+import org.mq.marketer.campaign.dao.ContactsDao;
+import org.mq.marketer.campaign.dao.DRSentDao;
+import org.mq.marketer.campaign.dao.SecRolesDao;
+import org.mq.marketer.campaign.dao.TransactionalTemplatesDao;
+import org.mq.marketer.campaign.dao.UserActivitiesDao;
+import org.mq.marketer.campaign.dao.UserSMSSenderIdDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageListEnum;
+import org.mq.marketer.campaign.general.Redirect;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.business.helper.UserHelper;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkplus.spring.SpringUtil;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Iframe;
+import org.zkoss.zul.Intbox;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Window;
+
+public class EditUserController extends GenericForwardComposer {
+
+	Combobox vmtaCbId;
+	Textbox reNewPass;
+	Textbox newPass;
+	Button disableUserBtnId, deleteUserBtnId, editUserBtnId;
+	MyDatebox startDbId;
+	MyDatebox expDbId;
+	Intbox totalLimitLbId;
+	Label vmtaStatusLblId;
+	Label responseLblId;
+	Label pwdLblId;
+	Checkbox enabledCbId ,enableBillingAdminChkBoxId;
+	Div pwdTdId , enableBillingAdminDivId;
+	Window editUserWinId;
+	private  Users user = null;
+	private UsersDao usersDao;
+	private DRSentDao drSentDao;
+	private ContactsDao contactsDao;
+	private UserActivitiesDao userActivitiesDao;
+	private Label smsSenderIdsLblId;
+	private Toolbarbutton clickHereTlbId;
+	private Combobox approveTempCmbBoxId;
+	private TransactionalTemplatesDao  transactionalTemplatesDao;
+	private UserSMSSenderIdDao userSMSSenderIdDao;
+	private SecRolesDao secRolesDao;
+	
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	
+	public EditUserController() {
+		logger.info("Default constructor.");
+		this.usersDao = (UsersDao)SpringUtil.getBean("usersDao");
+		contactsDao=(ContactsDao) SpringUtil.getBean("contactsDao");
+		drSentDao = (DRSentDao) SpringUtil.getBean("drSentDao");
+		userActivitiesDao=(UserActivitiesDao) SpringUtil.getBean("userActivitiesDao");
+		transactionalTemplatesDao = (TransactionalTemplatesDao)SpringUtil.getBean("transactionalTemplatesDao");
+		userSMSSenderIdDao = (UserSMSSenderIdDao)SpringUtil.getBean("userSMSSenderIdDao");
+		secRolesDao =(SecRolesDao)SpringUtil.getBean("secRolesDao");
+		try {
+			user =(Users)getUser();
+			if(user!= null) {
+				
+				logger.info("user details"+user.getCompanyName());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception  ::", e);
+		}
+	}
+	
+	@Override
+	public void doAfterCompose(Component comp) throws Exception {
+		
+		super.doAfterCompose(comp);
+		
+		logger.debug("-- Just Entered -- ");
+		
+		
+	/*	user = (Users)sessionScope.get("editUserObj");
+
+		VmtaDao vmtaDao = (VmtaDao)SpringUtil.getBean("vmtaDao");
+		List<Vmta> vmtaList = vmtaDao.findAll();
+		
+		logger.debug("Got vmta List of size :" + vmtaList.size());
+		
+		Comboitem ci;
+		ci = new Comboitem("--Select VMTA--");
+		ci.setDescription(" ");
+		ci.setParent(vmtaCbId);
+		
+		for (Vmta vmta : vmtaList) {
+			ci = new Comboitem(vmta.getVmtaName());
+			ci.setDescription(vmta.getDescription());
+			if(vmta.getStatus().equalsIgnoreCase("good")) {
+				ci.setImage("/img/vmta/goodVmta.JPG");
+			} else if(vmta.getStatus().equalsIgnoreCase("bad")) {
+				ci.setImage("/img/vmta/badVmta.JPG");
+			} else if(vmta.getStatus().equalsIgnoreCase("average")) {
+				ci.setImage("/img/vmta/avgVmta.png");
+			}
+			ci.setValue(vmta.getStatus());
+			ci.setParent(vmtaCbId);
+			
+			if(user.getVmta().equalsIgnoreCase(vmta.getVmtaName())) {
+				vmtaCbId.setSelectedItem(ci);
+				vmtaStatusLblId.setValue(vmta.getStatus());
+			} //if
+		} //for
+		
+		if(vmtaCbId.getSelectedIndex() <= 0)
+			vmtaCbId.setSelectedIndex(0);*/
+//		user = (Users)sessionScope.get("editUserObj");
+		
+		// enable billing Admin
+		
+		List<SecRoles> userRoles = secRolesDao.findByUserId(user.getUserId());
+		SecRoles tempRole = null;
+		logger.info("userRoles="+userRoles);
+		
+		if(userRoles==null || userRoles.isEmpty()) return;
+		
+		Iterator<SecRoles> rolesIt = userRoles.iterator();
+		boolean isSuperUser = false;
+	
+		boolean isAlreadyEnabled = false;
+		while(rolesIt.hasNext()) {
+			tempRole = rolesIt.next();
+			//System.out.println("role name is::;"+tempRole.getName());
+			if(tempRole.getName().equals(Constants.USER_ROLE_OCADMIN)  || tempRole.getName().equals(Constants.USER_ROLE_CUSTOM_USER ) || 
+											tempRole.getName().equals(Constants.USER_ROLE_SUPER_USER)) {
+				isSuperUser = true;
+				break;
+			}
+			//if(tempRole.getName().equals(Constants.ROLE_USER_BILLING_ADMIN))billingRoleName = true;
+			
+		} // while
+		
+		while(rolesIt.hasNext()) {
+			tempRole = rolesIt.next();
+		//	System.out.println("role name is::;"+tempRole.getName());
+			if(isSuperUser && tempRole.getName().equals(Constants.ROLE_USER_BILLING_ADMIN) ) {
+				
+				 isAlreadyEnabled = true;
+				 break;
+			}
+											
+			
+		} // while
+		
+		enableBillingAdminDivId.setVisible(isSuperUser);
+		if(enableBillingAdminDivId.isVisible()) {
+			enableBillingAdminChkBoxId.setChecked(isSuperUser && isAlreadyEnabled);
+			enableBillingAdminChkBoxId.setDisabled(enableBillingAdminChkBoxId.isChecked());
+		}
+	
+
+		//onCheck$enableBillingAdminChkBoxId();
+		
+		String senderIds = "";
+	    List<String> senderIdLst = usersDao.getSenderIdByUserName(user.getUserName());
+	    logger.info("senderIdLst====>"+senderIdLst.size());
+	    
+	    for(String senderId : senderIdLst) {
+	    	
+	    	if(senderIds.length()>0) senderIds += ",";
+	    	senderIds += senderId;
+	    	
+	    	
+	    }
+		
+	    smsSenderIdsLblId.setValue(senderIds);
+	    
+	    Calendar tempCal = user.getPackageExpiryDate();
+		tempCal.setTimeZone((TimeZone) sessionScope.get("clientTimeZone"));
+		expLblId.setValue(MyCalendar.calendarToString(tempCal,MyCalendar.FORMAT_STDATE));
+		
+		tempCal = user.getPackageStartDate();
+		tempCal.setTimeZone((TimeZone) sessionScope.get("clientTimeZone"));
+		startLblId.setValue(MyCalendar.calendarToString(tempCal,MyCalendar.FORMAT_STDATE));
+		
+		
+		//set TransactionalSMS check
+		if(user.getMsgChkType() != null){
+			
+			transationalSMSChkBxId.setChecked(user.getMsgChkType().equals("TR"));
+		}
+		
+		//set Transactional Sender Id
+		if(senderIds != null && senderIds.trim().length() > 0)
+							senderIdTxtBxId.setValue(senderIds);
+		
+		
+		//set TransactionalTemplates if any
+		logger.debug("user.getUserId() please  ::"+user.getUserId());
+		List<TransactionalTemplates>  templateList = transactionalTemplatesDao.findTemplatesByOrgId(user.getUserOrganization().getUserOrgId());
+		Comboitem combItem = null;
+		combItem = new Comboitem("--select--");
+		combItem.setParent(approveTempCmbBoxId);
+		
+		if(templateList != null && templateList.size() >0) {
+			
+			for (TransactionalTemplates eachObj : templateList) {
+				combItem = new Comboitem(eachObj.getTemplateName());
+				combItem.setDescription(eachObj.getStatus() == 0? "Pending" : "Approved");
+				combItem.setValue(eachObj);
+				combItem.setParent(approveTempCmbBoxId);
+			}
+		}
+		
+		approveTempCmbBoxId.setSelectedIndex(0);
+		
+		//set SMSGate way type
+		String smsGateWayStr = "";
+		if(user.getCountryType()!= null && user.getCountryType().equals(Constants.SMS_COUNTRY_INDIA)) smsGateWayStr =  "IN";
+		else if (user.getCountryType()!= null &&  user.getCountryType().equals(Constants.SMS_COUNTRY_US)) smsGateWayStr =  "US";
+		smsGatewayId.setValue(smsGateWayStr);
+		
+		//Set SMS Country Code
+		smsCountryCodeLblId.setValue(user.getCountryCarrier() != null ? ""+user.getCountryCarrier(): "");
+		
+		//drSent
+		Long userId=user.getUserId();
+		Long count = drSentDao.findTotDRSentCount(userId);
+		totalDRSentId.setValue(count.toString());
+		
+		//lastaccountactivity	
+		
+		Calendar date=userActivitiesDao.findLastUserActivityDate(userId);
+		lastAccountActivityDateLbId.setValue(MyCalendar.calendarToString(date,MyCalendar.FORMAT_DATETIME_STYEAR));
+		
+		//totaluniqcontacts
+		Long uniqueCount=contactsDao.findUniqActiveContacts(userId);
+		totalNoOfUniqueActiveContactsLbId.setValue(uniqueCount.toString());
+		
+		if(!user.isEnabled())
+		{
+			disableUserBtnId.setLabel("Enable User");
+		}
+		
+	} //doAfterCompose
+	private Label expLblId,startLblId,smsGatewayId,smsCountryCodeLblId,totalDRSentId,lastAccountActivityDateLbId,totalNoOfUniqueActiveContactsLbId;
+	
+	public Users getUser(){
+		user = (Users)Sessions.getCurrent().getAttribute("editUserObj");
+		return user;
+	}
+	public void onCheck$enableBillingAdminChkBoxId(){
+		
+		try {
+			List<SecRoles> userRoles = secRolesDao.findByUserId(user.getUserId());
+			Set<SecRoles> setRolesSet = new HashSet<SecRoles>();
+			//setRolesSet.add(userRoles);
+			
+			SecRoles biilingRole = secRolesDao.findBy(Constants.ROLE_USER_BILLING_ADMIN);
+			if(enableBillingAdminDivId.isVisible() && enableBillingAdminChkBoxId.isChecked()){
+				
+				if( Messagebox.show("Are you sure you want to add Billing Admin role for user? ","Confirm",
+						Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION) == Messagebox.OK ){
+				for (SecRoles secRoles : userRoles) {
+					
+					if(secRoles.getName().equals(biilingRole.getName()))continue;
+					setRolesSet.add(secRoles);
+					
+				}
+				
+				if(!setRolesSet.contains(biilingRole)){
+					setRolesSet.add(biilingRole);
+					UserHelper userHelper = new UserHelper();
+					userHelper.createBillingProfile(user);
+				}
+				enableBillingAdminChkBoxId.setDisabled(enableBillingAdminChkBoxId.isChecked());
+				user.setRoles(setRolesSet);
+				usersDao.saveOrUpdate(user);
+				
+				}	
+			}/*else{
+				if( Messagebox.show("Are you sure you want to delete Billing Admin role for user? ","Confirm",
+						Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION) == Messagebox.OK ){
+				
+				for (SecRoles secRoles : userRoles) {
+					
+					if(secRoles.getName().equals(biilingRole.getName())){
+						
+						if(setRolesSet.contains(secRoles))setRolesSet.remove(secRoles);
+					}else{
+						
+						setRolesSet.add(secRoles);
+					}
+					
+				}
+			}
+				
+			}*/
+			user.setRoles(setRolesSet);
+			usersDao.saveOrUpdate(user);
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+
+	/*public void onCheck$submitCbId() {
+			try {
+				logger.debug("--Just Entered--");
+				int confirm = Messagebox.show("Are you sure you want to update the user?","Update User", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION); 
+				if(confirm != Messagebox.OK) {
+					return;
+				}
+				
+				user.setEnabled(enabledCbId.isChecked());
+				
+				Calendar startDt = startDbId.getServerValue();
+				Calendar expDt = expDbId.getServerValue();
+				user.setPackageExpiryDate(startDt);
+				user.setPackageStartDate(expDt);
+				
+				if(vmtaCbId.getSelectedIndex() > 0 ) {
+					user.setVmta(vmtaCbId.getSelectedItem().getLabel());
+				}else if(user.isEnabled()) {
+					MessageUtil.setMessage("Select VMTA for enabled user.", "color:red", "TOP");
+					return;
+				}
+				
+				user.setEmailCount(totalLimitLbId.getValue());
+				
+				
+				UsersDao usersDao = (UsersDao) SpringUtil.getBean("usersDao");
+				try {
+					usersDao.saveOrUpdate(user);
+					MessageUtil.setMessage("User updated successfully.", "color:blue", "TOP");
+				} catch (Exception e) {
+					MessageUtil.setMessage("Problem while updating the user.", "color:red", "TOP");
+					logger.error("** Exception : Problem while updating the user" , e);
+				}
+			} catch (WrongValueException e) {
+				logger.error("** Exception : " ,e );
+			} catch (InterruptedException e) {
+				logger.error("** Exception : " ,e );
+			} catch (Exception e) {
+				logger.error("** Exception : " ,e );
+				MessageUtil.setMessage("Problem while updating user.", "color:red", "TOP");
+			}
+			
+			logger.debug("--Exit--");
+			
+	}
+	*/
+	public void onClick$updatePwdBtnId() {
+		
+		MessageUtil.clearMessage();
+		String newPwdStr = newPass.getValue();
+		String reNewPwdStr = reNewPass.getValue();
+		
+		if(newPwdStr.trim().equals("")) {
+			MessageUtil.setMessage("New Password field cannot be left empty.", "color:red","TOP"); 
+			 newPass.setFocus(true);
+			 return;
+		}
+		if(reNewPwdStr.trim().equals("")) {
+			MessageUtil.setMessage("Retype Password field cannot be left empty.", "color:red","TOP");
+			reNewPass.setFocus(true);
+			return;
+		}
+		
+		if(newPwdStr ==null || newPwdStr.trim().length() <= 3 
+				|| reNewPwdStr ==null || reNewPwdStr.trim().length() <= 3) {
+			responseLblId.setValue("Password must be greater than 3 characters");
+			return;
+		}
+		
+		newPwdStr = newPwdStr.trim();
+		reNewPwdStr = reNewPwdStr.trim();
+		String newPwdHash = Utility.encryptPassword(user.getUserName(), newPwdStr);
+		/*Md5PasswordEncoder md5 = new Md5PasswordEncoder();
+		String newPwdHash = md5.encodePassword(newPwdStr,user.getUserName());*/
+		
+		if( !newPwdStr.equals(reNewPwdStr) ) {
+			responseLblId.setValue("Two password must be same");
+			return;
+		} //try
+		
+		responseLblId.setValue("");
+		
+		user.setPassword(newPwdHash);
+		
+		UsersDao usersDao = (UsersDao) SpringUtil.getBean("usersDao");
+		try {
+			usersDao.saveOrUpdate(user);
+			//pwdLblId.setValue(newPwdStr);
+			pwdTdId.setVisible(false);
+			MessageUtil.setMessage("Password updated successfully.", "color:blue", "TOP");
+		} catch (Exception e) {
+			logger.error("** Exception : Problem while upadating the password" ,e );
+			MessageUtil.setMessage("Problem experienced while updating the password.", "color:red", "TOP");
+		}
+		
+		logger.debug("--Exit--");
+		
+	}
+	public void onClick$disableUserBtnId() {
+		try {
+			logger.debug("--Just Entered--");
+			MessageUtil.clearMessage();
+			String msg=user.isEnabled()?"disable":"enable";
+			String msgHeader=user.isEnabled()?"Disable User":"Enable User";
+					
+			try {
+				
+				int confirm = Messagebox.show("Are you sure you want to "+msg+" the user : " + user.getUserName() + "?",
+						msgHeader, Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION); 
+				if(confirm != Messagebox.OK) {
+					return;
+				}
+				
+				UsersDao usersDao = (UsersDao) SpringUtil.getBean("usersDao");
+				user.setEnabled(!user.isEnabled());				
+				usersDao.saveOrUpdate(user);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				logger.error("Exception  ::", e);
+			}
+			
+			try {
+				Messagebox.show("User "+msg +"d successfully.", "Information", Messagebox.OK, Messagebox.INFORMATION);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				logger.error("Exception  ::", e);
+			}
+			Redirect.goTo(PageListEnum.EMPTY);
+			Redirect.goTo(PageListEnum.ADMIN_LIST_USERS);
+			//Executions.getCurrent().getDesktop().invalidate();
+		} catch (Exception e) {
+			logger.error("Exception  ::", e);
+		}
+		
+}
+	
+	public void onClick$deleteUserBtnId() {
+			try {
+				logger.debug("--Just Entered--");
+				MessageUtil.clearMessage();
+
+				if(GetUser.getUserId() == user.getUserId() ) {
+					MessageUtil.setMessage("Cannot delete a currently logged-in user.", "color:red", "TOP");
+					return;
+				}
+				
+				try {
+					int confirm = Messagebox.show("Are you sure you want to delete the user : " + user.getUserName() + "?",
+							"Delete User", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION); 
+					if(confirm != Messagebox.OK) {
+						return;
+					}
+					
+					UsersDao usersDao = (UsersDao) SpringUtil.getBean("usersDao");
+					
+					
+					usersDao.delete(user);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					logger.error("Exception  ::", e);
+				}
+				
+				try {
+					Messagebox.show("User deleted successfully.", "Information", Messagebox.OK, Messagebox.INFORMATION);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					logger.error("Exception  ::", e);
+				}
+				Redirect.goTo(PageListEnum.EMPTY);
+				Redirect.goTo(PageListEnum.ADMIN_LIST_USERS);
+				//Executions.getCurrent().getDesktop().invalidate();
+			} catch (Exception e) {
+				logger.error("Exception  ::", e);
+			}
+			
+	}
+	
+	public void onClick$editUserBtnId() {
+		//((Include)editUserWinId.getParent()).setSrc("/zul/admin/createUser.zul?type=edit");
+		
+		
+		
+		Executions.getCurrent().setAttribute("type", "edit");
+		Redirect.goTo(PageListEnum.ADMIN_CREATE_USER);
+		
+		
+		
+	}
+	
+	public void onClick$clickHereTlbId() throws Exception {
+		Redirect.goTo(PageListEnum.ADMIN_USER_SMTP);
+	}
+	
+	public void onClick$resetBtnId() {
+			newPass.setValue("");
+			reNewPass.setValue("");
+	}
+	
+	private Checkbox transationalSMSChkBxId;
+	private Textbox senderIdTxtBxId;
+	public void onClick$smsSettingsSaveBtnId() {
+		if(!transationalSMSChkBxId.isChecked()) {
+			MessageUtil.setMessage("Please enable transactional SMS.", "red", "top");
+			return;
+		}
+		else if(senderIdTxtBxId.getValue().trim().length() == 0 ) {
+			MessageUtil.setMessage("Please provide a valid sender ID.", "red", "top");
+			return;
+		}
+		
+		List<UserSMSSenderId> senderIdList = userSMSSenderIdDao.findByUserId(user.getUserId());
+		UserSMSSenderId userSMSSenderIdObj = null;
+		
+		if(senderIdList != null && senderIdList.size() > 0){
+			for (UserSMSSenderId userSMSSenderId : senderIdList) {
+				
+				if(senderIdTxtBxId.getValue().trim().equals(userSMSSenderId.getSenderId())) {
+					userSMSSenderIdObj = userSMSSenderId;
+					break;
+				}else if(userSMSSenderId.getSmsType() != null &&  userSMSSenderId.getSmsType().equals("TR")) {
+					userSMSSenderIdObj = userSMSSenderId;
+					break;
+				}
+			}
+		}
+			
+		
+		
+		logger.info("user details >> "+user.getUserName());
+		if(transationalSMSChkBxId.isChecked()){
+			user.setMsgChkType("TR");
+			user.setUserSMSTool(Constants.USER_SMSTOOL_MVAYOO);
+		}else{
+			user.setMsgChkType(null);
+		}
+		usersDao.saveOrUpdate(user);
+		
+		if(userSMSSenderIdObj == null) {
+			userSMSSenderIdObj = new UserSMSSenderId();
+			userSMSSenderIdObj.setUserName(user.getUserName());
+			userSMSSenderIdObj.setUserId(user.getUserId());
+		}
+		
+		if(transationalSMSChkBxId.isChecked()){
+			userSMSSenderIdObj.setSmsType("TR");
+		}else {
+			userSMSSenderIdObj.setSmsType(null);
+		}
+		userSMSSenderIdObj.setSenderId(senderIdTxtBxId.getValue());
+		userSMSSenderIdDao.saveOrUpdate(userSMSSenderIdObj);
+		
+		
+		MessageUtil.setMessage("SMS settings saved successfully.", "color:green;");
+		
+	}
+	
+	
+	
+	private Window previewIframeWin; 
+	private  Iframe previewIframeWin$iframeId;
+	public void onClick$tempContPreviewTbId() {
+		//String htmlContent=campaign.getHtmlText();
+		if(approveTempCmbBoxId.getSelectedIndex()==0) return;
+		Comboitem combItem = approveTempCmbBoxId.getSelectedItem();
+		TransactionalTemplates trTemplateObj = (TransactionalTemplates) combItem.getValue();
+		Utility.showPreview(previewIframeWin$iframeId,user.getUserName(), trTemplateObj.getTemplateContent());
+		previewIframeWin.setVisible(true);
+		
+	} //onClick$tempContPreviewTbId
+	
+	
+	
+	
+	
+	
+	public void onClick$approveTempTbId() {
+		if(approveTempCmbBoxId.getSelectedIndex()==0) return;
+		Comboitem combItem = approveTempCmbBoxId.getSelectedItem();
+		TransactionalTemplates trTemplateObj = (TransactionalTemplates) combItem.getValue();
+		if(trTemplateObj.getStatus() == 0){
+			trTemplateObj.setStatus(1);
+			transactionalTemplatesDao.saveOrUpdate(trTemplateObj);
+		}else return;
+		combItem.setDescription("Approved");
+		MessageUtil.setMessage("Template  approved successfully.", "color:green;");
+	} //onClick$approveTempTbId
+	
+	
+	public void onClick$logInToUserAnchId(){
+		
+		/*Sessions.getCurrent().removeAttribute("userRoleSet");
+		Sessions.getCurrent().removeAttribute("userName");
+		Sessions.getCurrent().removeAttribute("userObj");
+		Sessions.getCurrent().removeAttribute(Constants.LISTIDS_SET);
+		Sessions.getCurrent().removeAttribute(Constants.SEGMENTIDS_SET);
+		Sessions.getCurrent().removeAttribute("currentPage");
+		sessionScope.remove("currentPage");
+		
+		session.setAttribute("userObj", user);*/
+		
+		HttpServletRequest request =(HttpServletRequest) Executions.getCurrent().getNativeRequest();
+		
+		HttpSession httpSession =(HttpSession)request.getSession(true);
+		httpSession.setAttribute("userObj", user);
+		Executions.getCurrent().sendRedirect("/loginRedirect.jsp");
+		/*try{
+			
+			Authentication request = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
+		
+			SecurityContext securityContext = new SecurityContextImpl();
+			
+			Sessions.getCurrent().removeAttribute("userRoleSet");
+			Sessions.getCurrent().removeAttribute("userName");
+			Sessions.getCurrent().removeAttribute("userObj");
+			Sessions.getCurrent().removeAttribute(Constants.LISTIDS_SET);
+			Sessions.getCurrent().removeAttribute(Constants.SEGMENTIDS_SET);
+			
+//			SecurityContextHolder.clearContext();
+	        SecurityContextHolder.setContext(securityContext);
+	        AuthenticationManager authenticationManager = (AuthenticationManager) SpringUtil.getBean("switchUserAuthMgr");
+	        Authentication result = authenticationManager.authenticate(request);
+	        SecurityContextHolder.getContext().setAuthentication(null);
+	        SecurityContextHolder.getContext().setAuthentication(result);
+	        
+	        GetUser.getUserInfo();
+	        
+	        String sesId = ((HttpSession)session.getNativeSession()).getId();
+			if( ActiveUsers.sessions.contains(sesId) ) {
+				logger.info("the Session id is====>"+sesId+" "+GetUser.getUserObj());
+				ActiveUsers.activeUsersMap.put(sesId, GetUser.getUserObj());
+				logger.info("the size of active users are===>"+ActiveUsers.activeUsersMap.size()+GetUser.getUserName());
+			}
+			
+			String useMQS = PropertyUtil.getPropertyValueFromDB("useMQS");
+			if(useMQS!=null){
+				if(!useMQS.equalsIgnoreCase("true")){
+					Menubar menubar = (Menubar)Utility.getComponentById("indexMenubarId");
+					List menus = menubar.getChildren();
+					for(Object obj:menus){
+						if(obj instanceof Menu){
+							Menu menu = (Menu)obj;
+							String id = menu.getId();
+							if(!id.contains("mqs")){
+								Menupopup menuPopup= menu.getMenupopup();
+								List<Component> mis = menuPopup.getChildren();
+								String miValue = "";
+								for(Component eachComp : mis){
+									if(!(eachComp instanceof Menuitem)) {
+										continue;
+									}
+									Menuitem mi=(Menuitem)eachComp;
+									miValue = mi.getId();
+									if(miValue.contains("Mqs")){
+										mi.setVisible(false);
+									}
+								}
+							}else
+								menu.setVisible(false);
+							
+						}
+					}//for
+				}//if
+			}//if
+	        
+	        sessionScope.put("isAdmin",SecurityUtil.isAllGranted(RightsEnum.Menu_Adminstrator_VIEW.name()));
+	        Redirect.goTo(PageListEnum.RM_HOME);
+		} catch (Exception e) {
+			logger.error("Exception  ::", e);
+		}
+*/
+	}
+	
+	
+	/*private class MyComboboxRenderer implements ComboitemRenderer{
+
+		@Override
+		public void render(Comboitem ci, Object obj) throws Exception {
+			if(obj instanceof Vmta) {
+				Vmta vmta = (Vmta) obj;
+//				logger.debug("VMTA : " + vmta.getVmtaName());
+				ci.setLabel(vmta.getVmtaName());
+				ci.setDescription(vmta.getDescription());
+				ci.setImage("img/index1.jpg");
+			}
+		}
+		
+	}*/
+	
+	
+	
+}
+
+
+/*	
+			StringBuffer message = new StringBuffer("");
+			
+			logger.info("Start Date :" + startDt);
+			logger.info("Exp Date :" + expDt);
+			logger.info("startDt.after(expDt) :" + startDt.after(expDt));
+			
+			if(startDt.after(expDt)) {
+				message.append("Start Date must be before Expiry Date \n");
+			}
+			
+			if(expDt.before(new Date())) {
+				message.append("Expiry Date must be future Date \n");
+			}
+			
+			if(totalLimitLbId.getValue() == null) {
+				message.append("Enter Total Limit count");
+			}
+			
+			if(message.length()>0) {
+				MessageUtil.setMessage(message.toString(), "color:red", "TOP");
+				return;
+			}*/

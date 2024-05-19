@@ -1,0 +1,441 @@
+<zk>
+<window id="custWin" apply="org.mq.marketer.campaign.controller.useradmin.UpdateViewSubscriptionsController" 
+					  xmlns:w="client"
+					  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+					  
+		<h:table width="750" border="0" align="center" cellspacing="0" cellpadding="0">
+			<h:tr>
+				<h:td >
+				<label value ="" />
+				</h:td>
+				
+				<h:td align="center" valign="top" >
+				<label value ="Page as viewed by subscriber" />
+				<button  id="ExitbtnId" label="Exit" />
+				</h:td>
+				
+				<h:td>
+				<label value ="" />
+				
+				</h:td>
+			</h:tr>
+		</h:table>			  
+			<h:table width="750" border="0" align="center" style="background:url(img/bg_texure.png) 0 0;" cellspacing="0" cellpadding="0">
+			      <h:tr>
+			        <h:td height="550" align="center" valign="top" style="padding:50px 0">
+			        
+			        
+			        <h:table style="background:#FFFFFF; border:1px solid #c5c5c5;" width="570" border="0" align="center" cellpadding="0" cellspacing="0">
+			      <h:tr>
+			        <h:td height="60" align="left" valign="bottom" style="padding-left:15px;">
+					  
+					  		
+					  
+					  	<h:table cellspacing="0" cellpadding="2" width="100%" >
+						  	
+								  		<h:tr>
+								  			<h:td colspan="2" align="center">
+								  				<label value="Manage Your Subscription" style="line-height: 62px;font-size:25px;font-weight:bold;align:right;text-decoration:underline; text-align:center;" />
+								  			</h:td>
+								  		</h:tr>
+						  	<h:tr>
+							  	<h:td width="50%">
+								  	<h:table >
+								  		<h:tr>
+										  		<h:td>
+											  		<h:p>
+											  		<label value="Hi there! Your subscription to our mailing list was created on " style="color:#666666;" />
+											  		<label value=""	 id="createDateLblId" />
+											  		<label value="through our store. " style="color:#666666;"/>
+										  		</h:p>
+										  		
+										  		</h:td>
+									  	</h:tr>
+								  		<h:tr>
+									  			<h:td>
+												  		<h:p style="text-align:justify;"><label style="color:#7c7c7c;" value = "Let us know your subscription preferences so we can communicate better with you. We don't believe in spamming or filling your inbox with marketing messages not relevant to you, and this is the surest way for us to achieve that." /></h:p>
+												</h:td>
+							  		
+							  			</h:tr>
+								  	
+								  	
+								  	
+								  	</h:table>
+							  	
+							  	
+							  	</h:td>
+							  	
+						  		<h:td><h:div style="border-radius:5px; padding:10px;background:#e7e3d7;border:1px solid #c8c8c4;margin: 7px; padding: 1px;">
+							  			<h:table border="0" cellspacing="5" cellpadding="5" align="center">
+									  		<h:tr>
+										  		<h:td colspan="2">
+										  		<label style="font-size:14px; color:#333333;" value="Your contact details stored with us " />
+										  		</h:td>
+									  		</h:tr>
+							  		
+									  		<h:tr>
+										  		<h:td >
+										  		<textbox id="fnameTxtId" value="First Name"  w:onClick="javascript: if(this.getValue()=='First Name') {  this.setValue(''); }" 
+												    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('First Name'); }" 
+												     w:onFocus="javascript: if(this.getValue()=='First Name') {  this.setValue(''); }" 
+												    focus="true" 
+										  		style="width:106%; background:#FFFFFF; border-radius:3px; height:20px; border:1px solid #cccccc; font-size:12px;" disabled="true"></textbox>
+										  		</h:td>
+										  		
+										  		<h:td>
+										  		<textbox id="lnameTxtId" value="Last Name" w:onClick="javascript: if(this.getValue()=='Last Name') {  this.setValue(''); }" 
+												    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Last Name'); }" 
+												     w:onFocus="javascript: if(this.getValue()=='Last Name') {  this.setValue(''); }" 
+												    focus="true"  
+										  		style="width:106%; background:#FFFFFF; border-radius:3px; height:20px; border:1px solid #cccccc; font-size:12px;" disabled="true" ></textbox>
+										  		</h:td>
+									  		</h:tr>
+							  		
+								  			<h:tr>
+										  		<h:td colspan="2">
+										  		<textbox id="emailTxtId" width="103%" value="Primary Email Address"
+										  		w:onClick="javascript: if(this.getValue()=='Primary Email Address') {  this.setValue(''); }" 
+												    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Primary Email Address'); }" 
+												     w:onFocus="javascript: if(this.getValue()=='Primary Email Address') {  this.setValue(''); }" 
+												    focus="true"    style="width:100%; background:#FFFFFF; border-radius:3px; height:20px; border:1px solid #cccccc;  font-size:12px;" disabled="true" ></textbox>
+										  		</h:td>
+									  		
+									  			<h:td />
+								  		
+									  		</h:tr>
+								  		
+								  			<h:tr>
+										  		<h:td>
+										  		<textbox id="mblTxtId" value="MobileNumber" w:onClick="javascript: if(this.getValue()=='MobileNumber') {  this.setValue(''); }" 
+												    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('MobileNumber'); }" 
+												     w:onFocus="javascript: if(this.getValue()=='MobileNumber') {  this.setValue(''); }" 
+												    focus="true" disabled="true" 
+										  	 style="width:106%; background:#FFFFFF; border-radius:3px; height:20px; border:1px solid #cccccc;  font-size:12px;"  ></textbox>
+										  		</h:td>
+										  		
+										  		<h:td>
+										  		<textbox id="pinTxtId"  value="Postal Code" w:onClick="javascript: if(this.getValue()=='Postal Code') {  this.setValue(''); }" 
+												    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Postal Code'); }" 
+												     w:onFocus="javascript: if(this.getValue()=='Postal Code') {  this.setValue(''); }" 
+												    focus="true" 
+										  		style="width:106%; background:#FFFFFF; border-radius:3px; height:20px; border:1px solid #cccccc;  font-size:12px;" disabled="true"></textbox>
+										  		</h:td>
+								  			</h:tr>
+								  	
+							  		
+							  		</h:table>
+						  	</h:div>
+						  	
+						  	</h:td>
+						  	
+						  	
+						  	
+						 </h:tr> 
+						 <h:tr>
+						 
+						<h:td></h:td>
+						  <h:td height="30" valign="top" style="padding-left: 10px;">
+						 <label value="Do correct us if we have it wrong:" style="font-size: 11px; font-style:italic; color:#666666; " visible="false"/>
+						 <a id="editAId" label="Edit" style="color:#3300ff;" visible="false"/>
+						
+						 </h:td>
+						 </h:tr>
+					</h:table> 
+					
+					
+					
+					<div id="categoriesDivId" style="margin-top:5px; line-height: 30px;">
+					
+					<label style="font-size:12px; font-weight:bold; color:#333333; "  value="On what occasions would you like to hear from us?" />
+					
+						<div id="pesrinalisedDivId"  visible="false">
+						
+												
+							<h:table>
+									
+									<h:tr><h:td>
+								<label style="font-size:12px; color:#333333; padding-left: 27px;padding-right: 10px;" value="Birthday:" /></h:td>
+									<h:td >
+									
+							<listbox  width="90px;"  style="background:#FFFFFF; border-radius:3px; height:30px;padding: 1px; border:1px solid#ccc:" mold="select" id="birthdayCb"     > 
+							
+								<listitem label="Day" selected="true" />
+							
+							</listbox>
+							
+							
+									
+							<listbox  width="90px;"  style="background:#FFFFFF; border-radius:3px; height:25px;padding: 1px;" mold="select"  id="birthdmnthCb"     > 
+								<listitem label="Month" selected="true" />
+							</listbox>
+							
+							<listbox  width="90px;"  style="background:#FFFFFF; border-radius:3px; height:25px;padding: 1px;" mold="select"  id="birthYearCb"      >
+								<listitem label="Year" selected="true" /> 
+							</listbox>
+							</h:td>
+							</h:tr>
+									
+							<h:tr><h:td >
+							<label style="font-size:12px; color:#333333; padding-left: 27px;padding-right: 10px;" value="Anniversary:" />
+							</h:td>
+							<h:td>
+							<listbox   width="90px;" style="background:#FFFFFF; border-radius:3px; height:25px;padding: 1px;" id="anniversartDayCb"  mold="select"   > 		
+								<listitem label="Day" selected="true" />
+							</listbox>		
+							<listbox  width="90px;"  style="background:#FFFFFF; border-radius:3px; height:25px;padding: 1px;"  id="anniversaryMnthCb"  mold="select"     > 	
+								<listitem label="Month" selected="true" />
+							</listbox>
+							<listbox   width="90px;"  style="background:#FFFFFF; border-radius:3px; height:25px;padding: 1px;"  id="anniversaryYearCb"  mold="select"   > 
+								<listitem label="Year" selected="true" />
+							</listbox>
+							</h:td>
+									</h:tr>
+		
+		<h:tr>
+		<h:td >
+		<label style="font-size:12px;color:#333333;padding-left: 27px;padding-right: 10px;" value="Gender:" /></h:td>
+		<radiogroup id="genderRgId"/>
+		<h:td height="30" valign="top">
+		<radio  id="maleRgId"  radiogroup="genderRgId" label=" Male" style="padding-right:10px;" />
+		<radio  id="femaleRgId" radiogroup="genderRgId"  label=" Female" style="padding-right:10px;" />
+		
+		</h:td></h:tr>
+		
+					
+		</h:table>
+						
+		</div>
+						
+						
+					
+					
+		<div id="storeDivId" visible="false" >
+					
+			<label style="font-size:12px; font-weight:bold; color:#000000;padding-left: 27px; padding-right: 10px;" value="Store:" />
+			<listbox  id="storeListBxId" width="135px" mold="select" style="background:#FFFFFF;margin-left: 47px;height:30px;">
+				<listitem label="Select your store" selected="true" />
+			</listbox>
+			
+			</div>	
+				
+			
+			
+			</div>
+			
+			<div id="noteDivId">
+				<h:p>	
+				<label value="Note:" style="font-size:12px;font-weight:bold;color:#333333" />
+				<label value ="This preference setting does not apply to" style="color:#666666;" />
+				<a id="transEmailsId"  sclass="tbbLink" label="transactional emails / sms" style="color:#666666;text-decoration: underline;" tooltiptext="like e-receipt of your purchase"  />
+				<label value="or" style="color:#666666;"/>
+				<a id="subsEmailsId"  sclass="tbbLink" label="subscription related emails / sms" style="color:#666666;text-decoration: underline;" tooltiptext="like loyalty program"/>
+				 <label value="as it's important for you to be in the know." style="color:#666666;"/>
+				</h:p>
+			</div>
+					
+					
+				<label value="How often would you like to hear from us?" style="font-size:12px;font-weight:bold;align:right;line-height: 28px;color:#333333" ></label>
+					
+					<h:table cellspacing="0" cellpadding="2" width="100%" style="margin-top:5px" >
+					
+						  	<h:tr>
+							  	<radiogroup id="emailRgId"/>
+								  	<h:td>
+								  	<label value="Email:" style="color:#333333;"></label>
+								  	</h:td>
+								  	<h:td>
+								  	<radio  id="weekRgId"  radiogroup="emailRgId" label="Once weekly" style="color:#333333;"></radio>
+								  	
+								  	</h:td>
+								  	
+								  	<h:td>
+								  	<radio  id="mnthRgId"  radiogroup="emailRgId" label="Once monthly" style="color:#333333;"></radio>
+								  	</h:td>
+								  	
+								  	<h:td>
+								  	<radio  id="quarterRgId" radiogroup="emailRgId" label="Once quarterly" style="color:#333333;"></radio>
+								  	</h:td>
+								  	
+								  	<h:td>
+								  	<radio  id="allRgId"  radiogroup="emailRgId" label="Receive all" style="color:#333333;"></radio>
+								  	</h:td>
+							  	
+						  	</h:tr>
+						  	
+						  	<h:tr>
+							  	<radiogroup id="smsRgId"/>
+								  	<h:td>
+								  	<label value="SMS:" style="color:#333333;"></label>
+								  	</h:td>
+								  	<h:td>
+								  	<radio  id="weekSmsRgId"  radiogroup="smsRgId" label="Once weekly" style="color:#333333;"></radio>
+								  	
+								  	</h:td>
+								  	
+								  	<h:td>
+								  	<radio  id="mnthSmsRgId"  radiogroup="smsRgId" label="Once monthly" style="color:#333333;"></radio>
+								  	</h:td>
+								  	
+								  	<h:td>
+								  	<radio  id="quarterSmsRgId"  radiogroup="smsRgId" label="Once quarterly" style="color:#333333;"></radio>
+								  	</h:td>
+								  	
+								  	<h:td >
+								  	<radio  id="allSmsRgId" radiogroup="smsRgId" label="Receive all" style="color:#333333;"></radio>
+								  	</h:td>
+								  
+							  	
+						  	</h:tr>
+						  	<h:tr style="height:15px;"></h:tr>
+						  	
+						  	</h:table>
+						
+						
+						  	
+					
+					<label value="How would you like us to reach you?" style="font-size:12px;align:right; line-height: 28px;color:#333333;font-weight:bold;" ></label>
+					
+					<h:table cellspacing="0" cellpadding="2" width="100%"  style="margin-top:5px;line-height: 32px;" >
+					  	<h:tr>
+				
+							<h:td  width="20%" >
+						  		<label value="Email:" style="color:#333333;"></label>
+						  	</h:td>
+						  	<h:td width="47%">
+						  	<textbox  id="emailTxtBoxId"  width="90%" maxlength="100"  value="Primary Email Address"  w:onClick="javascript: if(this.getValue()=='Primary Email Address') {  this.setValue(''); }" 
+												    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Primary Email Address'); }" 
+												     w:onFocus="javascript: if(this.getValue()=='Primary Email Address') {  this.setValue(''); }" 
+												    focus="true" disabled="true" />
+						  	
+						  	</h:td>
+						  	
+						  	<h:td  width="25%">
+						  	<a  id="unsubsAId" label="Unsubscribe" style="color:#3300ff;" />
+						  	</h:td>
+							  	
+						  	<h:td  width="15%">
+						  	<a  id="modifyAId" label="Modify" style="color:#3300ff;" visible="false"/>
+						  	</h:td>
+						  	
+							 </h:tr>
+								 
+					  <h:tr>
+			
+						<h:td>
+					  		<label value="Mobile Number:" style="color:#333333;"></label>
+					  	</h:td>
+					  	<h:td>
+					  	<textbox  id="mblTxtBoxId"  maxlength="100" value="MobileNumber"  width="90%"   w:onClick="javascript: if(this.getValue()=='MobileNumber') {  this.setValue(''); }" 
+												    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('MobileNumber'); }" 
+												     w:onFocus="javascript: if(this.getValue()=='MobileNumber') {  this.setValue(''); }" 
+												    focus="true" disabled="true"  style="color:#3300ff;"/>
+					  	
+					  	</h:td>
+						  	<h:td>
+						  	<a  id="optoutAId" label="Opt-out" style="color:#3300ff;" />
+						  	</h:td>
+							  	
+					  		<h:td>
+						  	<a  id="modifySmsAId" label="Modify" style="color:#3300ff;" visible="false"/>
+						  	</h:td>
+						  	
+							 </h:tr>
+						  	
+						
+					 <h:tr>
+		
+						<h:td>
+					  		<label value="Mailing Address:" style="color:#333333;"></label>
+					  	</h:td>
+					  	<h:td>
+					  	<textbox  id="addrTxtBoxId" value="Enter Street"   w:onClick="javascript: if(this.getValue()=='Enter Street') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Street'); }" 
+								    focus="true"  disabled="true"  width="90%" style="margin-bottom: 5px;position:relative;"/>
+					  	
+					  	</h:td>
+					  	<h:td>
+						  	<a  id="modifyAddrAId" label="Modify" style="color:#3300ff;" visible="false"/>
+						  	</h:td>
+					  	</h:tr>
+					  	 <h:tr>
+					  	 <h:td></h:td>
+					  	 <h:td>
+					  	
+					  			<textbox  id="cityTxtBoxId"  value="Enter city"  w:onClick="javascript: if(this.getValue()=='Enter city') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter city'); }" 
+								     w:onFocus="javascript: if(this.getValue()=='Enter city') {  this.setValue(''); }" 
+								    focus="true" disabled="true"   width="43%" style="margin-bottom: 5px;position:relative;"/>
+								    
+								<textbox  id="stateTxtBoxId"  value="Enter State"  w:onClick="javascript: if(this.getValue()=='Enter State') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter State'); }" 
+								    w:onFocus="javascript: if(this.getValue()=='Enter State') {  this.setValue(''); }"
+								    focus="true" disabled="true"   width="43%" style="margin-bottom: 5px;position:relative;" />
+					  	
+					  	</h:td>
+					  	<h:td>
+				
+					  	
+					  	</h:td>
+					  
+					  		
+					  	</h:tr>
+					  	 <h:tr>
+					  	<h:td></h:td>
+					  		<h:td>
+					  	<textbox  id="countryTxtBoxId" value="Enter Country"   w:onClick="javascript: if(this.getValue()=='Enter Country') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Country'); }" 
+								     w:onFocus="javascript: if(this.getValue()=='Enter Country') {  this.setValue(''); }" 
+								     focus="true" disabled="true"   width="43%"  style="margin-bottom: 5px;position:relative;" />
+					  	
+					  	<textbox  id="pinTxtBoxId" value="Enter ZIP"  w:onClick="javascript: if(this.getValue()=='Enter ZIP') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter ZIP'); }" 
+								    w:onFocus="javascript: if(this.getValue()=='Enter ZIP') {  this.setValue(''); }" 
+								    focus="true"  disabled="true"  width="43%" style="margin-bottom: 5px;position:relative;"/>
+					  	</h:td>
+					  
+					  	
+					  	</h:tr>
+					  	 <h:tr>
+					  	
+					 </h:tr>
+				
+					 
+					 
+				</h:table>	
+					
+					
+					<div align="center" style="padding:21px;">
+						
+					    <button label="Save Changes"  sclass="idle140 greenbtn" id="saveBtnId" style="background: none repeat scroll 0 0 #527f0a;border: medium none; color:#FFFFFF;
+    font-family: arial,sans-serif; font-size: 12px;font-weight: bold; line-height: 29px; margin: 6px;border-radius:5px;"/>
+					    <button label="Exit" sclass="idle140 " id="cancelBtnId" style="background: none repeat scroll 0 0 #c3c3c3;border: medium none; color: #000000;
+    font-family: arial,sans-serif; font-size: 12px;font-weight: bold; line-height: 29px; margin: 6px;border-radius:5px;"/>
+				        
+				</div>
+						
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+		</h:td>
+		</h:tr>
+		</h:table>	
+					
+					
+					
+					
+		</h:td>
+		</h:tr>
+		</h:table>			  
+		  
+</window>
+</zk>

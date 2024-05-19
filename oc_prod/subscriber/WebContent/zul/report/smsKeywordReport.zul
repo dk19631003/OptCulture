@@ -1,0 +1,219 @@
+<zk>
+
+<style>
+
+
+	.hovergridcolumn > div.z-listheader-cnt { 
+	  color: #FFFFFF;
+	  font-weight: bold;
+	  cursor: pointer;
+	  }
+
+</style>
+<window id="rcptActWinId" apply="org.mq.marketer.campaign.controller.report.SMSKeywordsReportController" width="100%"  xmlns:h="native" xmlns:w="client">
+				
+				<tabbox    id="editorTabboxId" >
+			  <tabs>
+			  		<tab label="Promotional Keyword" id="keywordtabId" />
+					<tab label="Inbound Message" id="responseTabId" />
+					<tab label="Compliancy Keyword " id="complaincyResponseTabId" />
+					
+			  </tabs>
+			  <tabpanels>
+			  	<tabpanel>
+			  	
+			  
+			  	
+				<listbox id="keywordsLbId" sclass="contactsView" width="99%" emptyMessage="No Records Found..." mold="paging" >
+					<listhead >
+					<listheader label="Keyword" id="sortbyKeyword" sclass="hovergridcolumn"></listheader>
+					<listheader label="Receiving Number" id="sortbyReceivingNumber" sclass="hovergridcolumn"></listheader>
+					<listheader label="No. of Responses" ></listheader>
+					</listhead>
+				
+				</listbox>
+			
+				<h:table  width="99%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="keywordPageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="280px"  >
+						<paging id="keywordListPaging" detailed="true" pageSize="10" width="280px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table>
+			
+			
+			<h:table style="padding-top:20px;">
+	 				<h:tr >
+					<h:td colspan="2">
+						<label value="Export as a" /> 
+						<combobox sclass="cb_100w" id="exportKeywordCbId" readonly="true">
+					 	   			<comboitem label=" .csv file." value="csv" />    
+						</combobox> 
+						<button label="Export" sclass="idle140 greenbtn" style="margin-left:15px;" id="exportKeywordBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+			  	</tabpanel>
+			  	<tabpanel>
+			  	
+			  	<label value = "Search by Mobile Number:" /> <space/> <space/> <textbox id="mobileFilterTbId" /> <a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+			  	<separator />
+			  	<listbox id="responsesLbId" sclass="contactsView"  emptyMessage="No Records Found..." mold="paging" >
+					<listhead >
+					<listheader label="Mobile Number" id="sortbyMobileNumber" sclass="hovergridcolumn"></listheader>
+					<listheader label="Keyword" id="sortbyReponseKeyword" sclass="hovergridcolumn"></listheader>
+					<listheader label="Receiving Number" id="sortbyReponseReceivingNumber" sclass="hovergridcolumn"></listheader>
+					<listheader label="Received Message" id="sortbyReceivedMessage" sclass="hovergridcolumn"></listheader>
+					<listheader label="Received Time" id="sortbyReceivedTime" sclass="hovergridcolumn"></listheader>
+					<listheader label="Auto Response" id="sortbyAutoResponse" sclass="hovergridcolumn"></listheader>
+					<listheader label="Delivery Status" id="sortbyDeliveryStatus" sclass="hovergridcolumn"></listheader>
+					<listheader label="Delivered Time" id="sortbyDeliveredTime" sclass="hovergridcolumn"></listheader>
+					</listhead>
+				
+				</listbox>
+			
+				<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="responsePageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="280px"  >
+						<paging id="responseListPaging" detailed="true" pageSize="10" width="280px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table>
+			  	
+			  	<h:table style="padding-top:20px;">
+	 				<h:tr >
+					<h:td colspan="2">
+						<label value="Export as a" /> 
+						<combobox sclass="cb_100w" id="exportResponseCbId" readonly="true">
+					 	   			<comboitem label=" .csv file." value="csv" />    
+						</combobox> 
+						<button label="Export" sclass="idle140 greenbtn" style="margin-left:15px;" id="exportResponseBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+			  	</tabpanel>
+			  		<tabpanel>
+			  	
+			  
+			  	
+				<listbox id="complaincyKeywordsLbId" sclass="contactsView" width="99%" emptyMessage="No Records Found..." mold="paging" >
+					<listhead >
+					<listheader label="Keyword" sort="auto"></listheader>
+					<listheader label="Type" sort="auto"></listheader>
+					<listheader label="No. of Responses" sort="auto"></listheader>
+					</listhead>
+				
+				</listbox>
+			
+				<!-- <h:table  width="99%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="compalincyKeywordPageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="280px"  >
+						<paging id="complaincyKeywordListPaging" detailed="true" pageSize="10" width="280px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table> -->
+			
+			
+			<h:table style="padding-top:20px;">
+	 				<h:tr >
+					<h:td colspan="2">
+						<label value="Export as a" /> 
+						<combobox sclass="cb_100w" id="exportComplaincyKeywordCbId" readonly="true">
+					 	   			<comboitem label=" .csv file." value="csv" />    
+						</combobox> 
+						<button label="Export" sclass="idle140 greenbtn" style="margin-left:15px;" id="exportComplaincyKeywordBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+			  	</tabpanel>
+			  	
+			  	
+			  	
+			  	</tabpanels>
+			  	</tabbox>
+			  	
+			  	
+			  	
+			  	
+			  	
+			  	<!--
+			  	
+				<h:table style="padding-top:30px;">
+       			<h:tr style="line-height:10px;"> 
+			    	<h:td id="tabId1" class="tabmenu tabmenusel" onclick="changeRepTabMenu('tabId',1,2)"><toolbarbutton label="Keyword" id="keywordtoolbarBtnId" style="font-weight:bold;color:#43A0BA;"/></h:td>
+			    	<h:td style="padding:5px 15px;"></h:td>
+			    	<h:td id="tabId2" class="tabmenu" onclick="changeRepTabMenu('tabId',2,2)"><toolbarbutton label="Response"  id="responseToolbarBtnId" style="font-weight:bold;color:#43A0BA;"/></h:td>
+			    	</h:tr>
+       			
+       		</h:table>	
+       		
+       		--><!--<listbox id="genericLbId" sclass="contactsView" width="99%" emptyMessage="No Records Found..." mold="paging" paginal="${repPagingId}">
+				<listhead id="genericLbHeaderId">
+				<listheader label="Mobile Number"></listheader>
+				<listheader label="Keyword"></listheader>
+				<listheader label="Response"></listheader>
+				</listhead>
+				
+			</listbox>
+			<paging id="repPagingId" pageSize="10" detailed="true"  sclass="contactsViewPaging"/>
+			
+			<h:table style="padding-top:20px;">
+	 				<h:tr >
+					<h:td colspan="2">
+						<label value="Export as a" /> 
+						<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+					 	   			<comboitem label=" .csv file." value="csv" />    
+						</combobox> 
+						<button label="Export" sclass="idle140 greenbtn" style="margin-left:15px;" id="exportBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+	
+		--><window id="popupWindow" style="overflow:auto" border="normal" visible="false" width="500px" height="400px">
+			<caption>        
+            	<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="popupWindow.setVisible(false)"/>            
+        	</caption>
+        	<div id="popDivId" />
+        </window>
+		<script>
+			function spamAlert(){
+				alert("Spam Report feature will come soon");
+			}
+		</script>
+	</window>
+	
+       		
+</zk>

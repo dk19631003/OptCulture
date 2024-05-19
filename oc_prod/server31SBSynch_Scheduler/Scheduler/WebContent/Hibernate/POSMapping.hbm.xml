@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+
+	<class name="org.mq.captiway.scheduler.beans.POSMapping" table="pos_mapping">
+    	<id name="posId" type="java.lang.Long">
+			<column name="pos_id" />
+			<generator class="native" />
+		</id>
+		<property name="customFieldName" type="java.lang.String">
+			<column name="cust_field_name" />
+		</property>
+		<property name="displayLabel" type="java.lang.String">
+			<column name="display_label" />
+		</property>
+		<property name="dataType" type="java.lang.String">
+			<column name="data_type" />
+		</property>
+		<property name="mappingType" type="java.lang.String">
+			<column name="mapping_type" />
+		</property>
+		<property name="posAttribute" type="java.lang.String">
+			<column name="pos_attribute" />
+		</property>
+		<property name="optionalValues" type="string">
+			<column name="optional_values" />
+		</property>
+		<property name="uniquePriority" type="java.lang.Integer">
+			<column name="unique_priority" />
+		</property>
+		<property name="uniqueInAcrossFiles" type="java.lang.Integer">
+			<column name="unique_in_across_files" />
+		</property>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		
+		<!--  Added for DR Extraction -->
+		<property name="defaultPhValue" type="string">
+			<column name="default_Ph_Value" />
+		</property>
+		
+		<property name="defaultPhValueSet" type="string">
+			<column name="default_Ph_Value_set" />
+		</property>
+		
+		<property name="drDataType" type="string">
+			<column name="dr_data_type" />
+		</property>
+		
+		<property name="digitalReceiptAttribute" type="string">
+			<column name="digital_receipt_attribute" />
+		</property>
+		
+		
+		
+		
+	</class>
+   	
+</hibernate-mapping>
+
+

@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<?link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" ?>
+<?link rel="icon" type="image/x-icon" href="img/favicon.ico" ?>
+<?page id="indexPageId" title="OptCulture" ?>
+<?taglib uri="http://www.zkoss.org/zkspring/security" prefix="sec"?>
+<zk xmlns:h="native" >
+	<!-- <div align="center" onClientInfo="onClientInfo(event)" onBookmarkChange="indexWinId.goToPage(event.bookmark)" style="min-width:990px;"> -->
+	<!-- <script>
+		//<![CDATA[
+		(function() {var s=document.createElement('script');
+		s.type='text/javascript';s.async=true;
+		s.src=('https:'==document.location.protocol?'https':'http') +
+		'://oc.groovehq.com/widgets/b5be14c1-0def-4057-ad4c-2dd7efce268d/ticket.js'; var q = document.getElementsByTagName('script')[0];q.parentNode.insertBefore(s, q);})();
+		//]]>
+	</script> -->
+
+<script>
+ <![CDATA[
+        // ...
+!function(){
+var analytics=window.analytics||[];
+if(!analytics.initialize)
+if(analytics.invoked)console.error("Segment snippet included twice.");
+else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];
+analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);
+return analytics}};
+for(var t=0;t<(analytics.methods.length);t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){ var e=document.createElement("script");
+e.type="text/javascript";e.async=!0;
+e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";
+var n=document.getElementsByTagName("script")[0];
+n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+  analytics.load("Kkvvu8CEGiMSVSYFrZFPPbu0ED1HBUxM");
+  analytics.page();
+
+  }}();
+  ]]>
+</script>
+		<window  width="100%" id="indexWinId" apply="org.mq.marketer.campaign.controller.HomeController" 
+	 style="min-width:990px;min-height:100%;">
+	 
+		<script type="text/javascript" src="/js/jsconfig.js" />
+	 	<script type="text/javascript" src="/js/popup.js" />
+		
+		<script type="text/javascript" src="/js/rmGlobal.js" />
+		<!--<script type="text/javascript" src="/js/overrideDND.js" /> 
+	    
+	    --><script type="text/javascript" src="/js/tinymce/tiny_mce.js" />
+	    <script type="text/javascript" src="/js/tinymce/jquery.tinymce.js" />
+	     
+	    <script type="text/javascript" src="/js/buttonDown.js"   />
+	    <script type="text/javascript" src="js/quill/DynamicQuillTools.js"></script>
+		<style src="/css/RMStyle.css"  />
+		<style src="/css/quill/quill.snow.css"  />
+		<!-- <style src="/css/theme.css"  /> -->
+		
+		<!-- <style id="style1Id" src="/css/style.css"  />
+		<style id="style2Id" src="/css/zk_overrides.css"  /> -->
+		
+		<style id="style1Id"   />
+		<style id="style2Id"   />
+		
+		<style>
+			
+			.zk .z-window-embedded{
+				margin:auto;
+			}
+			td.z-hbox-sep {
+				   width: 0;
+			}
+			.z-drag-over {
+			background:none;
+			}
+		</style>
+
+	    <include id="headerIncId"  src="zul/header.zul" />
+		    
+
+		<div width="100%" align="left" sclass="menubarback" style="overflow:hidden;">
+		<h:div style="float:left;">
+		<!--<hlayout width="100%"  style="background-color:black;" >
+			-->
+			
+			<menubar id="indexMenubarId"    autodrop="true" sclass="mymenubar" >
+				<menuitem  id="homeMenuItemId" label="Dashboard"  value="RMHome"></menuitem>
+				
+				<menu label="Contacts" id="contactsMenuId" if="${sec:isAllGranted('Menu_Contacts_VIEW')}" >
+					<menupopup>
+						
+						<menuitem id="myContactsMenuItemId"  label="Lists" if="${sec:isAllGranted('MenuItem_Lists_VIEW')}" value="contact/myLists"  />
+						<menuitem id="singleViewOfContactsMenuItemId"  label="Single View Of Contact" value="contact/singleViewContact"  />	
+						<menuitem id="uploadContactsMenuItemId"  label="Add/Import Contacts" if="${sec:isAllGranted('MenuItem_AddImport_Contacts_VIEW')}" value="contact/upload"  />
+						<menuseparator />
+						<menuitem id="mySegmentsMenuItemId" label="Segments" if="${sec:isAllGranted('MenuItem_ViewContactSegments_VIEW')}" value="contact/viewSegments" />
+						<menuitem id="homesPassedSegmentsMenuItemId" visible="false" label="BCRM Segments"  if="${sec:isAllGranted('MenuItem_ViewBCRMSegments_VIEW')}"  value="contact/viewHomesPassedSegments"  />
+						<menuitem id="manageSegmentsMenuItemId"  label="Create Segment" if="${sec:isAllGranted('MenuItem_CreateSegment_VIEW')}" value="contact/createSegments"  />
+						<menuitem id="manageBcrmSegmentsMenuItemId" visible="false" label="Create BCRM Segment" if="${sec:isAllGranted('MenuItem_CreateBCRMSegemnt_VIEW')}" value="contact/manageBcrmSegments"  />
+							<menuseparator />
+						<menuitem id="webformsMenuItemId"  label="Web-forms"  if="${sec:isAllGranted('MenuItem_Webforms_VIEW')}"  value="contact/webform"  />	
+						<menuitem id="parentalConsentMenuItemId"  label="Parent Consent Approvals" if="${sec:isAllGranted('MenuItem_ParentalConsentApprovals_VIEW')}" value="contact/parentalConsentMsg" />
+						<menuitem id="manageContactsMenuItemId"  label="Suppressed Contacts" if="${sec:isAllGranted('MenuItem_Suppressed_Contacts_VIEW')}" value="contact/manageContacts" />
+						<menuitem id="fileDownloadMenuItemId" label="Downloads"  if="${sec:isAllGranted('MeanuItem_ViewDownload_VIEW')}"   value="contact/download" />
+					</menupopup>
+				</menu>
+				
+					<menu label="Campaigns" id="campaignsMenuId" if="${sec:isAllGranted('Menu_Campaigns_VIEW')}" >
+							<menupopup>
+							
+								<menuitem id="createEmailMenuItemId"   label="Create Email"	if="${sec:isAllGranted('MenuItem_CreateEmail_VIEW')}" value="campaign/CampCreateIndex"  />
+								<menuitem id="createSmsCampaignMenuItemId" label="Create SMS"  if="${sec:isAllGranted('MenuItem_CreateSMS_VIEW')}" value="sms/SMSCampCreateIndex" />
+								<menuitem id="createWACampaignMenuItemId" label="Create WhatsApp"  if="${sec:isAllGranted('MenuItem_CreateWA_VIEW')}" value="wa/WACampCreateIndex" />
+								<menuitem id="notificationMenuItemId"  label="Create Push Notification"  if="${sec:isAllGranted('MenuItem_Notification_VIEW')}"  value="contact/notificationWebIndex"/>
+								<!-- <menuitem id="createSMMenuItemId" label="Create SM Campaign"  value="social/mySocialCampaigns" /> -->
+								
+								<menuseparator />
+								
+								<menuitem id="myEmailsMenuItemId"   label="Email Campaigns" if="${sec:isAllGranted('MenuItem_MyEmailsCampaigns_VIEW')}" value="campaign/CampaignList" />
+								<menuitem id="MySMSCampaignsMenuItemId" label="SMS Campaigns"  if="${sec:isAllGranted('MenuItem_MySMSCampaigns_VIEW')}" value="campaign/SMSCampaignList" />
+								<!-- app-4288 -->
+								<menuitem id="MyWACampaignsMenuItemId" label="WhatsApp Campaigns"  if="${sec:isAllGranted('MenuItem_MyWACampaigns_VIEW')}" value="campaign/WACampaignList" />
+								<menuitem id="notificationMenuItemListId" label="Push Notification Campaigns"  if="${sec:isAllGranted('MenuItem_Notification_VIEW')}" value="contact/notificationWebList" />
+								<!-- <menuitem id="mySMMenuItemId" label="Social Campaigns"  value="social/mySocialCampaigns" /> -->
+								
+							</menupopup>
+					</menu>
+									
+					<menu label="Marketing Tools" id="marketingToolsMenuId" if="${sec:isAllGranted('Menu_MarketingTools_VIEW')}" >
+									
+								<menupopup>
+									<menuitem label="Create Discount Code" id="createCouponMenuItemId"  if="${sec:isAllGranted('MenuItem_CreatePromocodes_VIEW')}" value="admin/createCoupon"  />
+									<menuitem label="Discount Codes" id="couponMenuItemId"  if="${sec:isAllGranted('MenuItem_Promocodes_VIEW')}" value="admin/viewCoupons"  />
+									<menuseparator />
+								<menuitem id="viewLoyaltyCardsMenuItemId" label="Loyalty Program"  if="${sec:isAllGranted('MenuItem_LoyaltyEnrollmentReports_VIEW')}"  value="report/viewLoyaltyCards" ></menuitem>
+									<!-- <menuitem id="loyaltyReportsMenuItemId" label="Loyalty  Reports"  if="${sec:isAllGranted('MenuItem_LoyaltyReports_VIEW')}"  value="Loyalty Reports" ></menuitem> -->
+									<menuitem id="digitalRecieptsMenuItemId"  label="Digital Receipts" if="${sec:isAllGranted('MenuItem_DigitalReceipt_VIEW')}" value="campaign/DigitalReciepts"  />
+									<menuitem label="Event Triggers" id="eventTriggersMenuItemId" if="${sec:isAllGranted('MenuItem_Event_Triggers_VIEW')}" value="campaign/EventTriggerEmail"  />
+									<menuseparator />
+									<!-- <menuitem id="autoEmailMenuItemId"  label="Auto-Emails" if="${sec:isAllGranted('MenuItem_ManageAutoEmails_VIEW')}" value="contact/manageAutoEmails"  /> -->
+									<menuitem id="autoEmailMenuItemIdBeeId"  label="Auto-Emails" if="${sec:isAllGranted('MenuItem_ManageAutoEmail_BEE_VIEW')}" value="contact/manageAutoEmailBee"  />
+									<menuitem id="autoSmsMenuItemId"  label="Auto-SMS" if="${sec:isAllGranted('MenuItem_ManageAutoSMS_VIEW')}" value="contact/manageAutoSms"  />
+									<menuseparator />
+									<menuitem id="SmsCampSetupMenuItemId" label="Keywords"  if="${sec:isAllGranted('MenuItem_ManageKeywords_VIEW')}" value="sms/smsCampSetup"  />
+									<menuitem id="SmsSettingsMenuItemId" label="SMS Program"  if="${sec:isAllGranted('MenuItem_SMSSettings_VIEW')}" value="sms/SMSSettings"  />
+									<menuitem id="optinSmsSettingsMenuItemId" label="SMS Opt-in Program"  if="${sec:isAllGranted('MenuItem_Optin_SMSSettings_VIEW')}" value="sms/optinSMSSettings"  />
+									<!-- <menuitem id="programMenuItemId"  label="Program Builder" if="${sec:isAllGranted('MenuItem_ProgramBuilder_VIEW')}"  value="program/AutoProgramSettings"  /> -->
+									<menuseparator />
+							
+									
+									<menuitem id="createEventMenuItemId"  label="Create Event" if="${sec:isAllGranted('MenuItem_Create_Event_VIEW')}" value="ocevents/CreateOCEvent"  />
+									<menuitem id="manageEventMenuItemId"  label="Manage Event" if="${sec:isAllGranted('MenuItem_Manage_Event_VIEW')}" value="ocevents/ManageOCEvent" />						 
+								
+								
+
+								</menupopup>
+												
+					</menu>
+					
+					<menu label="e-Receipts" id="eReceiptMenuId" if="${sec:isAllGranted('Menu_E_Receipt_VIEW')}" >
+								<menupopup>
+									<menuitem label="Templates" id="templatesMenuItemId"  if="${sec:isAllGranted('MenuItem_E_Receipt_Templates_VIEW')}" value="campaign/ERecieptsLaunchingPage"  />
+									<menuitem id="templatesSettingsMenuItemId"  label="Settings" if="${sec:isAllGranted('MenuItem_E_Receipt_TemplatesSettings_VIEW')}" value="campaign/ERecieptsSettings"  />
+								</menupopup>				
+					</menu>
+					<!-- 
+					  <menu label="Events" id="eventMenuId" if="${sec:isAllGranted('Menu_Events_VIEW')}" >
+					<menupopup>
+						<menuitem id="createEventMenuItemId"  label="Create Event" if="${sec:isAllGranted('MenuItem_Create_Event_VIEW')}" value="ocevents/CreateOCEvent"  />
+						<menuitem id="manageEventMenuItemId"  label="Manage Event" if="${sec:isAllGranted('MenuItem_Manage_Event_VIEW')}" value="ocevents/ManageOCEvent" />						        
+					</menupopup>
+					 </menu>  -->
+					
+					<menu label="Loyalty" id="loyaltyMenuId" if="${sec:isAllGranted('Menu_Loyalty_VIEW')}">
+								<menupopup>
+									<menuitem id="createLtyPrgmMenuItemId"  label="Create Loyalty Program" if="${sec:isAllGranted('MenuItem_Create_Loyalty_VIEW')}" value="loyalty/loyaltyCreateIndex"  />
+									<menuitem id="createSpecialRewardsId" label="Create Reward" if="${sec:isAllGranted('MenuItem_Loyalty_Create_Special_Rewards_VIEW')}" value="loyalty/createSpecialRewards" />						
+						        <menuseparator /> 
+									<menuitem id="myLtyPrgmsMenuItemId"  label="Loyalty Programs" if="${sec:isAllGranted('MenuItem_My_Loyalty_VIEW')}" value="loyalty/loyaltyProgram"  />
+									<menuitem id="valueCodesMenuItemId"  label="Manage Value Codes" if="${sec:isAllGranted('MenuItem_Value_codes')}" value="loyalty/valueCodes"  />
+									<menuitem id="mySpecialRewardsId" label="Manage Rewards" if="${sec:isAllGranted('MenuItem_Loyalty_My_Special_Rewards_READ')}" value="loyalty/mySpecialRewards" />
+								<menuseparator />
+								    <menuitem id="ltyCustomerLookUpMenuItemId"  label="Customer Look-up" if="${sec:isAllGranted('MenuItem_Loyalty_Customer_LookUp_VIEW')}" value="loyalty/loyaltyCustomerLookUp"  />  
+									<menuitem id="ltyMenuTransferCardMenuItemId"  label="Transfer or Merge Cards" if="${sec:isAllGranted('Menu_Lty_Transfer_Card_VIEW')}" value="loyalty/loyaltyTransferCard"  /> 
+									<menuitem id="fraudLtyPrgmMenuItemId"  label="Fraud Alert " if="${sec:isAllGranted('MenuItem_Loyalty_Fraud_Alert_VIEW')}" value="loyalty/fraudAlertsView"  />
+								<menuseparator />
+								    <menuitem id="ltyDashboardMenuItemId"  label="Loyalty Dashboard" if="${sec:isAllGranted('MenuItem_Loyalty_Dashboard_VIEW')}" value="loyalty/LoyaltyDashboard"  />
+								    <menuitem id="loyaltyReportMenuItemId" label="Loyalty Program Reports" if="${sec:isAllGranted('MenuItem_LoyaltyReports_VIEW')}"   value="report/ltyProgramReports" />
+									<menuitem id="RewardReportsMenuItemId" label="Reward Reports" if="${sec:isAllGranted('MenuItem_RewardReports_VIEW')}"   value="loyalty/rewardsReports" visible="true"/>
+									<menuitem id="LtyROIReportsMenuItemId" label="Loyalty Revenue Reports" if="${sec:isAllGranted('MenuItem_LtyROIReports_VIEW')}"   value="loyalty/ltyROIReport" visible="true"/>
+									<menuitem id="liabilityReportsMenuItemId" label="Liability Reports" if="${sec:isAllGranted('MenuItem_LiabilityReports_VIEW')}"   value="loyalty/liabilityReports" visible="true"/>
+									<menuitem id="addMemberMenuItemId" label="Add Member" if="${sec:isAllGranted('MenuItem_AddMember_VIEW')}"   value="loyalty/addMember" visible="true"/>
+								<menuseparator />
+									<menuitem id="ReferalSettingsMenuItemId" label="Referral Program"  if="${sec:isAllGranted('MenuItem_MYREFERALPrograms_VIEW')}" value="loyalty/myreferralprograms"  />
+									<menuitem id="ReferalReportsMenuItemId" label="Referral Reports"  if="${sec:isAllGranted('MenuItem_REFERRALReports_VIEW')}" value="loyalty/referralreports"  />
+		
+									<!-- <menuitem id="filesUploadMenuItemId"  label="Files Upload" if="${sec:isAllGranted('MenuItem_FilesUpload_VIEW')}" value="loyalty/etlFilesUpload"  /> -->														
+</menupopup>
+								
+								
+						</menu>
+						
+						<menuitem id="ltyCustomerLookUpFBBMenuItemId"  label="Look-up &amp; Redeem" if="${sec:isAllGranted('MenuItem_Loyalty_Menu_Customer_LookUp_Fbb_VIEW')}" value="loyalty/loyaltyCustomerLookUpFbb"  />
+						
+						<menuitem id="ltyCustomerLookUpAndRedeemMenuItemId"  label="Customer Look-up" if="${sec:isAllGranted('MenuItem_Loyalty_Menu_Customer_LookUp_And_Redeem_VIEW')}" value="loyalty/loyaltyCustomerLookUpAndRedeem"  />
+						
+						<menuitem id="storeFilesUploadMenuItemId"  label="Files Upload" if="${sec:isAllGranted('MenuItem_FilesUpload_VIEW')}" value="loyalty/etlFilesUpload"  />														
+												
+						<menuitem id="customerLookUpMenuItemId"  label="Customer Look-up" if="${sec:isAllGranted('MenuItem_Loyalty_Menu_Customer_LookUp_VIEW')}" value="loyalty/customerLookUp"  />
+						
+						<menuitem id="ltyTransferCardMenuItemId"  label="Transfer Cards" if="${sec:isAllGranted('MenuItem_Loyalty_Transfer_Card_VIEW')}" value="loyalty/transferCard"  />
+						
+						<menu label="Assets" id="assetsMenuId" if="${sec:isAllGranted('Menu_Assets_VIEW')}">
+								<menupopup>
+									<menuitem id="myTemplatesMenuItemId"  label="Templates" if="${sec:isAllGranted('MenuItem_MyEmailTemplates_VIEW')}" value="gallery/myTemplates"  />
+									<menuitem id="myImagesMenuItemId"  label="Images" if="${sec:isAllGranted('MenuItem_MyImages_VIEW')}" value="gallery/gallery"  />
+									
+								</menupopup>
+								
+								
+						</menu>
+								
+			
+				
+				<menu label="Reports" id="reportsMenuId" if="${sec:isAllGranted('Menu_Reports_VIEW')}">
+								<menupopup>
+									<menuitem id="reportsMenuItemId"  label="Email Campaign Reports" if="${sec:isAllGranted('MenuItem_EmailCampaignReports_VIEW')}" value="report/Report" ></menuitem>
+									<menuitem id="smsCampaignReportsMenuItemId" label="SMS Campaign Reports"  if="${sec:isAllGranted('MenuItem_SMSCampaignReports_VIEW')}"  value="report/SMSCampaignReports" ></menuitem>
+									
+									<menuitem id="WACampaignReportsMenuItemId" label="Whatsapp Campaign Reports"  if="${sec:isAllGranted('MenuItem_WACampaignReports_VIEW')}"  value="report/WACampaignReports" ></menuitem>
+									
+									<menuitem id="smsKeywordUsageReportsMenuItemId" label="SMS Keyword Reports"  if="${sec:isAllGranted('MenuItem_SMSKeywordUsageReports_VIEW')}" value="report/smsKeywordReport" ></menuitem>
+									<menuitem id="notificationReportsMenuItemId" label="Push Notification Campaign Reports"  if="${sec:isAllGranted('MenuItem_Notification_report_VIEW')}"  value="report/NotificationReports" ></menuitem>
+									<menuseparator />
+									<!-- <menuitem id="loyaltyReportMenuItemId" label="Loyalty Reports" if="${sec:isAllGranted('MenuItem_LoyaltyReports_VIEW')}"   value="report/ltyProgramReports" ></menuitem> -->
+									<menuitem id="couponReportsMenuItemId" label="Discount Code Reports" if="${sec:isAllGranted('MenuItem_PromocodeReports_VIEW')}"   value="report/couponReports" ></menuitem>
+									<menuitem id="digitalReceiptMenuItemId" label="e-Receipt Reports" visible="false" if="${sec:isAllGranted('MenuItem_Digital_Receipts_Reports_VIEW')}"  value="report/drReport" ></menuitem>
+									<menuitem id="eReceiptMenuItemId" label="e-Receipt Reports" visible="false" if="${sec:isAllGranted('MenuItem_E_Receipts_Reports_VIEW')}"  value="report/eReceiptReport" ></menuitem>
+									
+									<menuitem id="eventTriggerNewReportMenuItemId" label="Event Trigger Reports" if="${sec:isAllGranted('MenuItem_Event_Trigger_New_Reports_VIEW')}"  value="report/eventTriggerNewReport" ></menuitem>
+									<menuitem id="autoEmailReportsMenuItemId"  label="Auto-Email Reports" if="${sec:isAllGranted('MenuItem_Auto_EmailCampaignReports_VIEW')}" value="report/autoEmailReports" ></menuitem>
+									<menuitem id="autoSmsReportsMenuItemId"  label="Auto-SMS Reports" if="${sec:isAllGranted('MenuItem_AUTO_SMS_REPORTS_VIEW')}" value="report/autoSmsReports" visible="true"></menuitem>									
+									<menuseparator />
+									<!-- <menuitem id="optIntelReportsMenuItemId" label="Optintel Reports"  if="${sec:isAllGranted('MenuItem_OptIntelReports_VIEW')}"  value="report/optIntelReports" ></menuitem> -->
+									<menuitem id="optIntelReportsMenuItemId" label="In-Store Promotions Report"  if="${sec:isAllGranted('MenuItem_OptIntelReports_VIEW')}"  value="report/optIntelReports" ></menuitem>
+									</menupopup>
+				</menu>
+			
+				<menu label="My Account" id="myAccountMenuId" if="${sec:isAllGranted('Menu_MyAccounts_VIEW')}">
+					<menupopup>
+						<menuitem id="myProfileMenuItemId"  label="Profile Settings" if="${sec:isAllGranted('MenuItem_MyProfile_VIEW')}"   value="myAccount/userDetails" />
+					<menu label="Other Settings" id="settingsMenuId" if="${sec:isAllGranted('Menu_MyAccounts_VIEW')}">
+						<menupopup>
+					<!-- 	<menuitem id="mySettingsMenuItemId"  label="My Settings" if="${sec:isAllGranted('MenuItem_MySettings_VIEW')}"   value="My Settings" /> -->
+							<menuitem id="posSettingsMenuItemId" visible="false" label="POS Settings" if="${sec:isAllGranted('MenuItem_AdminPOSSettings_VIEW')}" value="admin/POSSettings" />
+							<menuitem id="bcrmSettingsMenuItemId" visible="false"  label="BCRM Settings" if="${sec:isAllGranted('MenuItem_AdminBCRMSettings_VIEW')}" value="admin/BCRMSettings" />
+							<menuitem id="listSettingsMenuItemId"  label="List Settings" if="${sec:isAllGranted('MenuItem_ListSettings_VIEW')}" value="admin/ListSettings" />
+							<menuitem id="loyaltySettingsMenuItemId"  label="Loyalty Settings" if="${sec:isAllGranted('MenuItem_LoyaltySettings_VIEW')}" value="admin/loyaltySettings" />
+						</menupopup>
+					</menu>	
+						
+						    <menuitem id="mySharingsMenuItemId"  label="Share" if="${sec:isAllGranted('MenuItem_PowerShare_VIEW')}" value="myAccount/mySharings" />
+						    <menuitem id="adminMySharingsMenuItemId"  label="Share" if="${sec:isAllGranted('MenuItem_SuperShare_VIEW')}" value="useradmin/MySharings" />
+					<menu label="Manage"  id="manageMenuId" if="${sec:isAllGranted('Menu_MyAccounts_VIEW')}">
+							<menupopup>
+								<menuitem id="manageusersMenuItemId" label=" Users" if="${sec:isAllGranted('MenuItem_ManageUsers_VIEW')}" value="useradmin/manageUsers" />
+								<menuitem id="organizationStoresMenuItemId"  label=" Stores" if="${sec:isAllGranted('MenuItem_ManageStores_VIEW')}" value="useradmin/organizationStores" />
+								<menuitem id="manageOptSyncUsersMenuItemId"  label=" OptSync" if="${sec:isAllGranted('MenuItem_ManageStores_VIEW')}" value="useradmin/manageOptSyncUsers" />
+								<menuitem id="ftpSettingsMenuItemId"  label="FTP Settings" if="${sec:isAllGranted('MenuItem_FTP_SETTINGS_VIEW')}" value="useradmin/ftpSettings" />
+								<menuitem id="billingAdmingMenuItemId"  label=" Billing Details" if="${sec:isAllGranted('MenuItem_ManageBilling_VIEW')}" value="useradmin/billingDetails" />
+								<menuitem id="zoneAdmingMenuItemId"  label="Zones" visible="false" if="${sec:isAllGranted('MenuItem_ManageZones_VIEW')}" value="useradmin/zone" />
+								<menuitem id="manageItemsMenuItemId" label=" Items/SKU" if="${sec:isAllGranted('MenuItem_ManageItems_VIEW')}" value="useradmin/manageItems" />
+								
+							</menupopup>
+					</menu>
+						<menuitem id="recentActivityMenuItemId"  label="Recent Activities" if="${sec:isAllGranted('MenuItem_RecentActivities_VIEW')}" value="myAccount/recentActivity" />
+						<menuitem id="updateSubscriptionMenuItemId" label="Subscriber Preference Center" if="${sec:isAllGranted('MenuItem_Subscriber_Settings_VIEW')}" value="useradmin/subscriberSettings" />
+					<menu label="Mobile App Settings"  id="mobileAppSettingsMenuId" if="${sec:isAllGranted('Menu_MyAccounts_VIEW')}">
+							<menupopup>
+								<menuitem id="faqMenuItemId"  label="FAQ" if="${sec:isAllGranted('MenuItem_Faq_VIEW')}" value="useradmin/faq" />
+								<menuitem id="termsMenuItemId"  label="Terms and Conditions" if="${sec:isAllGranted('MenuItem_Terms_VIEW')}" value="useradmin/terms" />
+							</menupopup>
+					</menu>
+					</menupopup>
+				</menu>
+				
+				<menu label="Billing" id="mqsBillingMenuId">
+					<menupopup>
+						<menuitem id="myBillsMqsMenuItemId"  label="My Bills"  value="myBills" />
+						<menuitem id="myPaymentsMqsMenuItemId" label="My Payments"  value="MyPayments" />
+						<menuitem id="AccSummaryMqsMenuItemId" label="Account Summary"  value="AccountSummary" />
+						<menuitem id="usageInfoMqsMenuItemId" label="Usage Info"  value="UsageInfo" />
+						<menuitem id="topupMqsMenuItemId" label="Topup"  value="Topup" />
+					
+					</menupopup>
+				</menu>
+			
+				<menu label="Tickets" id="mqsTicketsMenuId" >
+					<menupopup>
+						<menuitem id="regTicketMqsMenuItemId" label="Register Ticket"  value="RegisterTicket" />
+						<menuitem id="myTicketsMqsMenuItemId" label="My Tickets"  value="MyTickets" />
+					
+					</menupopup>
+				</menu>
+
+				
+				<menu label="Administrator" id="adminMenuId" if="${sec:isAllGranted('Menu_Adminstrator_VIEW')}">
+					<menupopup>
+						<menuitem id="createuserMenuItemId" label="Create User" value="admin/createUser" />
+						<menuitem id="listusersMenuItemId" label="List Users"  value="admin/listUsers" />
+						<menuitem id="manageusersAdminMenuItemId" label="Manage Users" value="admin/manageUsersAdmin" />
+						<menuitem id="rightsManagementsMenuItemId" label="Rights Management"  value="admin/rightsManagement" />
+						<menuseparator />
+						<menuitem id="createOptSyncUserMenuItemId" label="OptSync Settings"  value="admin/createOptSyncUser" />
+						<menuseparator />
+						<menuitem id="posSettingMenuItemId"  label="POS Settings"  value="admin/POSSettings" />
+						<menuitem id="bcrmSettingMenuItemId"  label="BCRM Settings"  value="admin/BCRMSettings" />
+						<menuitem id="missingSalesReceiptsMenuItemId"  label="Missing Sales And Receipts"  value="admin/missingSalesAndReceipts" />
+						<menuitem id="sparkBaseSettingMenuItemId"  label="SparkBase Settings"  value="admin/sparkBaseSettings" />
+						<menuitem id="loyaltySettingMenuItemId"  label="Loyalty Settings"  value="admin/loyaltySettings" />
+						<menuitem id="digiRcptMenuItemId"  label="Digital Receipt Setting"  value="admin/digitalRecieptJSONConfig" />
+						<menuseparator />
+						<menuitem id="dashBoardMenuItemId" label="Dashboard"  value="admin/dashBoard" />
+						
+						<menuitem id="viewTicketsMenuItemId" label="View Tickets"  value="admin/viewTickets" />
+						
+						<menuitem id="viewSmsGatewaysMenuItemId" label="SMS Gateways"  value="admin/createSMSGateway" />
+						
+						<menuitem id="latestSalesDetailsMenuItemId"  label="Latest Sales Details"  value="admin/latestSalesDetails" />
+						<menuseparator />
+						<menuitem id="editVmtaMenuItemId" label="Add/Edit Vmta" visible="true" value="admin/editVmta" />
+						<menuitem id="scoreActivityMenuItemId"  label="Score Settings"  value="contact/Score" />
+						<menuseparator />
+					
+						
+					
+				<menu label="Social Media" if="${sec:isAllGranted('Menu_Adminstrator_VIEW')}">
+								
+					<menupopup>
+						<menuitem id="mySocialMenuItemId" label="Social Campaigns"  value="social/mySocialCampaigns"  />
+						<menuitem id="createSocialMenuItemId" label="Create Social Campaign"  value="social/createCampaign"  />
+						<menuitem id="socialSettingsMenuItemId" label="Social Networking Settings"  value="social/networkSettings"  />
+						<menuitem id="customCodesMenuItemId" label=" URL Short Codes"  value="social/generateCustomShortCode"  />
+					
+					</menupopup>
+								
+				</menu>	
+					</menupopup>
+				</menu>
+			</menubar>
+			</h:div>
+			<h:div style="float:right;">
+			<bandbox  id="usersBandBoxId"  visible="false"  mold="rounded" 
+						 readonly="true" value="Show Me" 
+						style="width:120px;font-size:13px;font-weight:bold;margin-top:2px;margin-right:4px;">
+									
+				<bandpopup id="usersBandpopupId" width="250px" >
+				
+					<listbox checkmark="true"  id="userFilterListBoxId" 
+					multiple="true" style="border:0 none;">
+						<listhead>
+							<listheader label="My Items"  />
+							
+							
+						</listhead>
+						
+					</listbox>
+					<separator></separator>
+					<listbox checkmark="true"  id="sharedUserFilterListBoxId" 
+					multiple="true" style="border:0 none;">
+						<listhead>
+							<listheader label="Shared By Others" />
+							
+							
+						</listhead>
+						
+					</listbox>
+					<div style="padding:5px;" align="left" >
+						<button id="showFilterBtnId" label = "OK" sclass="idle70 greenbtn"/>
+						<button id="cancelFilterBtnId"  label ="Close" sclass="idle70"/>
+					</div>
+				</bandpopup>
+			</bandbox>
+			</h:div>
+			
+			<!--</hlayout>-->
+		</div>
+										
+	<div id="rootDivId" style="padding-bottom:60px;">
+	
+		<h:table cellspacing="0" cellpadding="0" width="100%" align="center" 
+			style="margin-top:9px;margin-bottom:4px;" >
+			<h:tr>
+				<h:td colspan="2" width="100%" id="msgsDivId">
+					<div id="globalMsgDivId" visible="false"/>
+					<div  id="msgsDivId" visible="false">
+						<label id="topMsgLbId" multiline="true" />
+					</div>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="50%" style="line-height:23px;">
+					<label id="homeHeaderLableId" visible="false" sclass="homeHeaderLable" style="font-size:14px; color:#000000;" />
+				</h:td>
+				<h:td align="right"  width="50%">
+					<label id="homeHeaderLableRightId" visible="false" />
+					<div id="userLblDivId" visible="false">
+					<label  visible="true" value="In Current View :" style="color:#2886B9;font-weight:bold;" />
+					<label id="homeHeaderUserLableRightId" style="color:#2886B9;font-weight:bold;padding-right:10px;"  />
+					</div>
+					<!--<bandbox id="usersBandBoxId" visible="false"  mold="rounded" 
+						 readonly="true" width="240px" value="Filter by Users" 
+						style="font-size:13px;font-weight:bold; margin-right:10px;" >
+									
+						<bandpopup id="usersBandpopupId" width="234px" >
+						
+							<listbox checkmark="true"  id="userFilterListBoxId" 
+							multiple="true" style="border:0 none;">
+								
+							</listbox>
+							<div style="padding:5px;" align="right" >
+								<button id="cancelFilterBtnId"  label = "Cancel" sclass="idle70" />
+								<button id="showFilterBtnId" label = "Show" sclass="idle70 greenbtn" />
+							</div>
+						</bandpopup>
+					</bandbox>	
+
+				--></h:td>
+			</h:tr>
+		</h:table>
+		
+
+		
+	<div id="mainNavDivId" visible="false" style="margin-bottom:4px;"  />
+
+	<div id="navigationDivId" visible="false">
+
+		<!-- <box orient="horizontal" width="100%" style="margin:10px 0 15px 0;"> -->
+		<hlayout style="margin:10px 0 15px 0;">
+		
+			<div id="campCreationFirstStepId" sclass="create_email_step_current" >
+				<label  value="1" sclass="create_email_steps_number"  />					
+				<label  value="Configure Email" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="campCreationSecondStepId" sclass="create_email_step_incomplete" >
+				<label  value="2" sclass="create_email_steps_number"  />					
+				<label  value="Choose Recipients" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="campCreationThirdStepId" sclass="create_email_step_incomplete" >
+				<label  value="3" sclass="create_email_steps_number"  />					
+				<label  value="Select Template" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="campCreationFourthStepId" sclass="create_email_step_incomplete" >
+				<label  value="4" sclass="create_email_steps_number"  />					
+				<label  value="Modify Template" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="campCreationFifthStepId" sclass="create_email_step_incomplete" >
+				<label  value="5" sclass="create_email_steps_number"  />					
+				<label  value="Enter Plain-Text" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="campCreationSixthStepId" sclass="create_email_step_incomplete" >
+				<label  value="6" sclass="create_email_steps_number"  />					
+				<label  value="Review &amp; Schedule" sclass="create_email_steps_label"  />					
+			</div>
+		
+		<!-- </box> -->
+		</hlayout>
+
+	</div> 
+	
+	
+		
+		<div id="ltyNavigationDivId" visible="false">
+
+		<hlayout style="margin:10px 0 15px 0;">
+		
+			<div id="ltyPrgmFirstStepId" sclass="create_email_step_current" >
+				<label  value="1" sclass="create_email_steps_number"  />					
+				<label  value="Configure Program" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="ltyPrgmSecondStepId" sclass="create_email_step_incomplete" >
+				<label  value="2" sclass="create_email_steps_number"  />					
+				<label  value="Earn &amp; Redeem Rules" sclass="create_email_steps_label"  />					
+			</div>
+			
+			<div id="ltyPrgmThirdStepId" sclass="create_email_step_incomplete" >
+				<label  value="3" sclass="create_email_steps_number"  />					
+				<label  value="Add Cards" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="ltyPrgmFourthStepId" sclass="create_email_step_incomplete" >
+				<label  value="4" sclass="create_email_steps_number"  />					
+				<label  value="Additional Settings" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="ltyPrgmFifthStepId" sclass="create_email_step_incomplete" >
+				<label  value="5" sclass="create_email_steps_number"  />					
+				<label  value="Auto-Communication" sclass="create_email_steps_label"  />					
+			</div>
+		
+			<div id="ltyPrgmSixthStepId" sclass="create_email_step_incomplete" >
+				<label  value="6" sclass="create_email_steps_number"  />					
+				<label  value="Program Overview" sclass="create_email_steps_label"  />					
+			</div>
+		
+		<!-- </box> -->
+		</hlayout>
+
+	</div> 
+		
+						
+		<!-- <h:table cellspacing="0" cellpadding="0"  width="100%" >
+			<h:tr>
+				<h:td class="lbg"  />
+				<h:td class="tbg"  />
+				<h:td class="rbg"  />
+			</h:tr>
+		</h:table> -->
+
+
+		<div id="xcontentsDivId" sclass="mdl" >
+			<include id="xcontents" use="org.mq.marketer.campaign.controller.IncludeController"  />
+		</div>
+		
+		<div id="ycontentsDivId" sclass="mdl" visible="false" >
+			<include id="ycontents" use="org.mq.marketer.campaign.controller.IncludeController" />
+		</div>
+
+		<!-- <h:table cellspacing="0" cellpadding="0"  width="100%" >
+			<h:tr>
+				<h:td class="ldbg"  />
+				<h:td class="tdbg"  />
+				<h:td class="rdbg"  />
+			</h:tr>
+		</h:table> -->
+		
+ 	</div>
+	
+	<window id="browserWinId" title="Browser Not Supported" border="normal" visible="false" width="350px" height="100px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+				
+				
+				
+	        	<label id="" style="font-style:verdena;size:14px;" value="For best application performance, 
+	        	please open the application in Firefox or MS Internet Explorer 9 or Chrome."  />
+	        	
+	        	<div align="center" width="100%">
+	        		<button label="Ok" onClick="browserWinId.setVisible(false);event.stopPropagation();" />
+	        		<button label="Ok, Log me out" href="j_spring_security_logout"  />
+	        	</div>
+	        	
+	 </window>
+						
+						
+	<!-- <include id="footerIncId" src="footer.jsp" /> -->
+	
+	
+			
+		<timer id="clearMsgDivTimerId" delay="3000" repeats="false">
+			<attribute name="onTimer">
+				org.mq.marketer.campaign.general.MessageUtil.clearMessage();
+			</attribute>
+		</timer>
+		
+</window>
+
+<html>
+<head>
+	<!--Including JQuery-->
+	<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+	</script>
+	<script>
+
+	// Function to check internet connection
+	function checkInternetConnection() {
+
+		// Detecting the internet connection
+		var online = navigator.onLine;
+		if (!online) {
+		
+		// Showing alert when connection is not available
+		window.alert("Please Check Your Internet Connection");
+		}
+	}
+
+	// Setting interval to 2 seconds
+	setInterval(checkInternetConnection, 2000);
+	</script>
+</head>
+</html>
+
+
+<include src="footer.zul"></include>
+
+</zk>

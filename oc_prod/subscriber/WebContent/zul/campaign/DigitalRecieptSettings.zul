@@ -1,0 +1,42 @@
+<?page title="Digital Reciept Settings Page" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  border="none" apply="org.mq.marketer.campaign.controller.campaign.DigiRcptSettingController" xmlns:h="native">
+   <label value="Please select the template to  use for all the Digital Reciepts JSON requestion" style="font-size: 13px;font-family: ariel;padding-left:30px;" /> <h:br/> 
+   <label value="Please select either from Sytem Templates or from My templates List ." style="font-size: 13px;font-family: ariel;padding-left:30px;" /> 
+   
+   <div width="70%" style="padding:30px">
+    <tabbox> 
+    		<tabs>
+    			<tab>System Templates</tab>
+    			<tab>My Templates</tab>
+    		</tabs>
+
+    		<tabpanels>
+    			<tabpanel>
+    						<listbox id="digitalRecieptsListId"  checkmark="true">
+  							<listhead>
+  								<listheader> Template Names</listheader>
+  								</listhead>
+  							</listbox>
+  							<hbox  style="padding:30px">
+  	       				       <button label="Use this template" id="sysTemplateBtnId" />
+  							</hbox>				
+    			</tabpanel>
+    			<tabpanel>
+    						<listbox id="myDigiRecieptsListId"  checkmark="true">
+  								<listhead>
+  									<listheader> Templates Names</listheader>
+  								</listhead>
+  							</listbox>
+  							
+  							<hbox  style="padding:30px">
+  	       				       <button label="Use this template"  id="myTemplateBtnId" />
+  							</hbox>			
+    			</tabpanel>
+    		</tabpanels>
+    </tabbox>  
+  
+  	</div>
+  
+</window>
+</zk>

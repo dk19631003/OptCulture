@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.Bounces" table="bounces">
+    <id name="bounceId" type="java.lang.Long">
+      <column name="bounce_id"/>
+      <generator class="native"/>
+    </id>
+	<many-to-one name="sentId" class="org.mq.captiway.scheduler.beans.CampaignSent"  unique-key="Unique_Bounce_SentId" foreign-key="click_sentFkey"  fetch="select" lazy="false">
+      <column name="sent_id" not-null="true"/>
+    </many-to-one>
+	<property name="category" type="string">
+      <column name="category"/>
+    </property>
+	<property name="message" type="string">
+      <column name="message" length="2000"/>
+    </property>
+	<property name="bouncedDate" type="timestamp">
+      <column name="date"/>
+    </property>
+	<property name="crId" type="long">
+      <column name="cr_id"/>
+    </property>
+    <property name="statusCode" type="string">
+      <column name="status_code" length="10"/>
+    </property>
+ </class>
+</hibernate-mapping>

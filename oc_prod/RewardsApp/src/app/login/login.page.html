@@ -1,0 +1,99 @@
+
+
+<ion-content    dir="{{textDir}}" > 
+
+  
+  <ion-grid class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0">
+  <div [style.background]="'url(' + imageurl +  ')'" class="imgClass">
+    <ion-item lines="none" class="transparent-backgroound" text-center >
+      <ion-label class="brandname">{{customerName}}</ion-label>
+    </ion-item>
+  </div>
+   
+
+  <div class="mr-right-5 mr-left-5" [ngStyle]="{'padding-bottom':  keyboardHeight  }">
+    <ion-list class="pdbottom0">
+    <ion-grid>
+      <ion-row >
+        <ion-col>
+          <ion-label position="stacked" class="textFont">{{'EmailorMobile' | translate}}</ion-label>
+          <ion-item class="box-border">
+              <ion-input type="text" name="phone" [(ngModel)]="mobileNumber" required></ion-input>
+            </ion-item>
+          </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col>
+          <ion-label position="stacked" class="textFont">{{ 'Password' | translate }} </ion-label>
+          <ion-item class="box-border">
+              <ion-input id="password" appShowHideInput  type="text" name="password" [(ngModel)]="password" required></ion-input>
+              <ion-button (click)="showPassword()" class="iconButton" fill="clear" slot="end" color="transparent">
+                  <ion-icon   *ngIf="show" slot="icon-only" name="eye"  style="color:#8b959a;width:20px;height:80%;"></ion-icon>
+                  <ion-icon *ngIf="!show" slot="icon-only" name="eye-off" style="color:#8b959a;width:20px;height:80%;"></ion-icon>
+                </ion-button>
+          </ion-item>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+
+   
+
+
+      <ion-row>
+        <ion-col size="6">
+                <ion-checkbox mode="ios"   class="remember-icon"  [(ngModel)]="rememberMe"></ion-checkbox>
+                <ion-label class="textFont">{{'Rememberme' | translate}}</ion-label>
+        </ion-col>
+        <ion-col size="6" (click)="forgotPassword()">
+              <ion-text class="textFont right" text-wrap>{{'ForgotPassword' |translate}}</ion-text>
+        </ion-col>
+      </ion-row>
+    
+      <ion-row>
+        <ion-col>
+          <ion-button expand="full" type="button" shape="round"   class="Login-Button textFont text_transform" (click)="login(false)"> 
+            {{'Login' |translate}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+         
+           
+           <div class="textCenter">
+              <ion-text class="BY-TEXT">{{'OR' | translate}}</ion-text>
+           </div>
+           <ion-row>
+             <ion-col class="pdtop0">
+              <ion-button expand="full" type="button" fill="outline" shape="round"  class="Login-Button textFont text_transform" (click)="goToOTP()">
+               {{'LoginUsingOTP' | translate}} 
+              </ion-button>
+             </ion-col>
+           </ion-row>
+   
+ 
+  </div>
+ 
+
+  <div class=" mr-right-5 mr-left-5" *ngIf="!isKeyboardOpen">
+    <ion-grid>
+      <ion-row>
+         <ion-col class="textCenter">
+            <ion-text class="textFont">{{ 'Donothaveanaccount' | translate }} </ion-text>
+            <a (click)="navigateToSignUp()" class="textFont blue"> {{'RegisterNow' | translate}}</a>  
+         </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-button   expand="full" *ngIf="showBtn" (click)="add_to_home($event)"  >Add to Homescreen</ion-button>
+        <!-- <div class="textCenter">
+            <ion-text class="BY-TEXT">{{ 'BY' | translate }}</ion-text>
+         </div>
+        <img src="assets/images/beside.png" height="13" class="logo bottomSpace"> -->
+  </div>
+</ion-col>
+<ion-col *ngIf="!isMobile" class="bgimage " size="0" size-md="8" size-lg="8"></ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>

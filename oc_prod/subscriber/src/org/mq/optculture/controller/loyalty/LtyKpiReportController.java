@@ -1,0 +1,1303 @@
+package org.mq.optculture.controller.loyalty;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.sql.ResultSet;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.LoyaltyCardSet;
+import org.mq.marketer.campaign.beans.LoyaltyProgram;
+import org.mq.marketer.campaign.beans.LoyaltyProgramTier;
+import org.mq.marketer.campaign.beans.OrganizationStores;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.custom.MyDatebox;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.LineChartEngine;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.optculture.business.loyalty.LoyaltyProgramService;
+import org.mq.optculture.data.dao.JdbcResultsetHandler;
+import org.mq.optculture.data.dao.LoyaltyCardSetDao;
+import org.mq.optculture.data.dao.LoyaltyProgramTierDao;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zul.Bandbox;
+import org.zkoss.zul.CategoryModel;
+import org.zkoss.zul.Chart;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Filedownload;
+import org.zkoss.zul.Foot;
+import org.zkoss.zul.Footer;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
+import org.zkoss.zul.SimpleCategoryModel;
+
+public class LtyKpiReportController extends GenericForwardComposer  {
+	
+	private LoyaltyProgramService ltyPrgmSevice;
+	private Long userId;
+	private Long prgmId;
+	private LoyaltyProgram prgmObj;
+	private TimeZone clientTimeZone;
+	private Listbox timeDurLbId,cardsetLbId,storeLbId,tierLbId,subsidiaryLbId;
+	private Chart revenueChartId,visitsChartId;
+	private Label revenueLblId,visitsLblId,tierLblId,customerLblId;
+	private Bandbox storeBandBoxId;
+	private Div datesDivId,tiersKPIDivId,exportDivId,cardSetDivId;
+	private Combobox exportCbId;
+	private Rows tiersKPIRowsId;
+	private Foot tiersKPIFooterId;
+	private MyDatebox fromDateboxId,toDateboxId;
+	private static final String DATE_DIFF_TYPE_DAYS = "days";
+	private static final String DATE_DIFF_TYPE_MONTHS = "months";
+	private static final String DATE_DIFF_TYPE_YEARS = "years";
+	private String typeDiff;
+	private Calendar startDate,endDate;
+	private int monthsDiff;
+	
+	public static Map<String,String> MONTH_MAP = new HashMap<String, String>();
+	
+	static{
+		
+		MONTH_MAP.put("1", "Jan");
+		MONTH_MAP.put("2", "Feb");
+		MONTH_MAP.put("3", "Mar");
+		MONTH_MAP.put("4", "Apr");
+		MONTH_MAP.put("5", "May");
+		MONTH_MAP.put("6", "Jun");
+		MONTH_MAP.put("7", "Jul");
+		MONTH_MAP.put("8", "Aug");
+		MONTH_MAP.put("9", "Sep");
+		MONTH_MAP.put("10", "Oct");
+		MONTH_MAP.put("11", "Nov");
+		MONTH_MAP.put("12", "Dec");
+		
+		
+	}
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	public LtyKpiReportController() {
+		ltyPrgmSevice = new LoyaltyProgramService();
+		userId = GetUser.getUserObj().getUserId();
+		session = Sessions.getCurrent();
+		prgmId = (Long) session.getAttribute("PROGRAM_REPORT_DETAILS");
+		prgmObj = ltyPrgmSevice.getProgmObj(prgmId);
+	}
+
+	public void doAfterCompose(Component comp) throws Exception {
+
+		super.doAfterCompose(comp);
+		logger.debug(":: before start time in doAftertCompose compose time in millis ::"+System.currentTimeMillis());
+		clientTimeZone =(TimeZone)Sessions.getCurrent().getAttribute("clientTimeZone");
+		if(prgmObj.getTierEnableFlag() == 'Y'){
+			tiersKPIDivId.setVisible(true);
+			exportDivId.setVisible(true);
+		}else{
+			tiersKPIDivId.setVisible(false);
+			exportDivId.setVisible(false);
+		}
+		
+		getDateValues();
+		setDefaultStores();
+		setDefaultSubsidiaries();
+		exportCbId.setSelectedIndex(0);
+		logger.info("====Program name :"+prgmObj.getProgramName()+" type:"+prgmObj.getProgramType());
+		if(prgmObj.getProgramType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD)) {
+			cardsetLbId.setDisabled(false);
+			cardSetDivId.setVisible(true);
+			setCardSets();
+		}else {
+			cardsetLbId.setDisabled(true);
+			cardSetDivId.setVisible(false);
+		}
+		if(prgmObj.getTierEnableFlag() == 'Y'){
+			tierLbId.setDisabled(false);
+			setTiers();
+		}else{
+			tierLbId.setDisabled(true);	
+		}
+		revenueLblId.setValue(MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) + " - " +
+								MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) );
+		visitsLblId.setValue( MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) + " - " +
+								MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) );
+		tierLblId.setValue(MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) + " - " +
+				                MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) );
+		customerLblId.setValue( MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) + " - " +
+				                MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) );
+		revenueChartId.setEngine(new LineChartEngine());
+		visitsChartId.setEngine(new LineChartEngine());
+		setRevenuePlotData();
+		//setVisitsPlotData();
+		//redrawTierSummary(prgmId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null),null,null);
+		logger.debug(":: after start time in doAfterCompose compose time in millis ::"+System.currentTimeMillis());
+	}
+	private void setDefaultSubsidiaries() {
+
+		//List<String> ltySbsList = ltyPrgmSevice.findAllLtySubsidiaries(userId,OCConstants.LOYALTY_SERVICE_TYPE_OC); APP-4728
+				//if (ltySbsList == null || ltySbsList.size() == 0)return;
+				Long orgId = ltyPrgmSevice.getOrgId(userId);
+				List<OrganizationStores> sbsIdList = ltyPrgmSevice.getAllStores(orgId);
+				if (sbsIdList == null || sbsIdList.size() == 0)return;
+				Listitem sbsItem = null;
+				String subId = null;
+				for (OrganizationStores org : sbsIdList) {
+					logger.info("org - sub id === "+org.getSubsidiaryId());
+					if(subId == null || !subId.equals(org.getSubsidiaryId())) {
+						sbsItem = new Listitem(org.getSubsidiaryName()!=null?org.getSubsidiaryName():"Subsidiary ID "+org.getSubsidiaryId(), org.getSubsidiaryId());
+						sbsItem.setParent(subsidiaryLbId);
+						subId = org.getSubsidiaryId();
+						logger.info("subId === "+subId);
+					}
+				} 
+
+	}
+	/*public void onSelect$subsidiaryLbId(){// APP-4728 - commented
+		
+		String subsidiaryNo = null;
+		
+		if (!subsidiaryLbId.getSelectedItem().getValue().toString()
+				.equalsIgnoreCase("All")) {
+			subsidiaryNo = subsidiaryLbId.getSelectedItem().getValue().toString();
+		}
+		logger.info("subsidiaryNumber in onselect$subsidiaryLbId::"+subsidiaryNo);
+		if(subsidiaryNo != null){
+			List<Object[]> ltyStoreList = ltyPrgmSevice.findAllStoresForSubsdiaries(userId,subsidiaryNo);
+			logger.info("loyaltystoreIdList" + ltyStoreList);
+			Long orgId = ltyPrgmSevice.getOrgId(userId);
+			logger.info("orgId" + orgId);
+			List<OrganizationStores> storeIdList = ltyPrgmSevice.getAllStores(orgId);
+			logger.info("storeIdList" + storeIdList);
+			if (storeIdList == null || storeIdList.size() == 0)return;
+			//Components.removeAllChildren(storeLbId);
+		   int count	=storeLbId.getItemCount();
+		   if( count> 1) {
+				for(;count>=1;count--) {
+					storeLbId.removeItemAt(count-1);
+				}
+			}
+			Listitem storeItem = null;
+			outer: for (Object[] obj : ltyStoreList) {
+				for (OrganizationStores org : storeIdList) {
+					if (org.getHomeStoreId().equalsIgnoreCase(obj[1].toString()) &&
+							org.getSubsidiaryId().equalsIgnoreCase(obj[0].toString())) {
+						storeItem = new Listitem(org.getStoreName(), obj[1]);
+						storeItem.setParent(storeLbId);
+						continue outer;
+					}
+				}
+				storeItem = new Listitem("Store ID " + obj[1],  obj[1]);
+
+				storeItem.setParent(storeLbId);
+			}
+		}else{
+			setDefaultStores();
+		}
+		
+	}*/
+	private void setTiers() {
+		List<LoyaltyProgramTier> tierList = ltyPrgmSevice.getTierList(prgmId);
+		logger.info("tierList" + tierList);
+		if (tierList == null || tierList.size() == 0)
+			return;
+		for (LoyaltyProgramTier eachTier : tierList) {
+			Listitem li = new Listitem(eachTier.getTierType(),
+					eachTier.getTierId());
+			li.setParent(tierLbId);
+		}
+	}
+
+	private void getDateValues() {
+		endDate = new MyCalendar(clientTimeZone);
+		endDate.set(MyCalendar.HOUR_OF_DAY, 23);
+		endDate.set(MyCalendar.MINUTE, 59);
+		endDate.set(MyCalendar.SECOND, 59);
+		
+		startDate = new MyCalendar(clientTimeZone);
+		startDate.set(MyCalendar.HOUR_OF_DAY, 00);
+		startDate.set(MyCalendar.MINUTE, 00);
+		startDate.set(MyCalendar.SECOND, 00);
+		
+		if(timeDurLbId.getSelectedItem().getLabel().equalsIgnoreCase("Last 30 Days")) {
+			typeDiff = DATE_DIFF_TYPE_DAYS;
+			monthsDiff = 30;
+			startDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - monthsDiff);
+			endDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - 1);
+		}else if(timeDurLbId.getSelectedItem().getLabel().equalsIgnoreCase("Last 3 Months")) {
+			typeDiff = DATE_DIFF_TYPE_MONTHS;
+			monthsDiff = 3;
+			startDate.set(MyCalendar.MONTH, (endDate.get(MyCalendar.MONTH) - monthsDiff)+1);
+			startDate.set(MyCalendar.DATE, 1);
+			endDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - 1);
+		}else if(timeDurLbId.getSelectedItem().getLabel().equalsIgnoreCase("Last 6 Months")) {
+			typeDiff = DATE_DIFF_TYPE_MONTHS;
+			monthsDiff =6;
+			startDate.set(MyCalendar.MONTH, (endDate.get(MyCalendar.MONTH) - monthsDiff)+1);
+			startDate.set(MyCalendar.DATE, 1);
+			endDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - 1);
+		}else if(timeDurLbId.getSelectedItem().getLabel().equalsIgnoreCase("Last 1 Year")) {
+			typeDiff = DATE_DIFF_TYPE_MONTHS;
+			monthsDiff = 12;
+			startDate.set(MyCalendar.MONTH, (endDate.get(MyCalendar.MONTH) - monthsDiff)+1);
+			startDate.set(MyCalendar.DATE, 1);
+			endDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - 1);
+		}else if(timeDurLbId.getSelectedItem().getLabel().equalsIgnoreCase("Custom Dates")) {
+			startDate = getStartDate();
+			endDate = getEndDate();
+			
+			if(startDate.get(Calendar.DATE) == endDate.get(Calendar.DATE) && startDate.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
+					&& startDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)) {
+				typeDiff = DATE_DIFF_TYPE_DAYS;
+				return;
+			}
+	
+	
+//			endDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE) - 1);
+			
+			int diffDays =  (int) ((endDate.getTime().getTime() - startDate.getTime().getTime() ) / (1000*60*60*24));
+			
+			int maxDays = startDate.getActualMaximum(Calendar.DAY_OF_MONTH);
+			
+			monthsDiff = (   
+					(endDate.get(Calendar.YEAR)*12 +endDate.get(Calendar.MONTH)) - (startDate.get(Calendar.YEAR)*12 + startDate.get(Calendar.MONTH)))+1;
+			
+			if(diffDays >= maxDays ) {
+				if(monthsDiff > 12) {
+					typeDiff = DATE_DIFF_TYPE_YEARS;
+					monthsDiff = endDate.get(Calendar.YEAR) - startDate.get(Calendar.YEAR) + 1;
+				}
+				else {
+					typeDiff = DATE_DIFF_TYPE_MONTHS;
+				}
+			}
+			else {
+				typeDiff = DATE_DIFF_TYPE_DAYS;
+				monthsDiff = diffDays;
+			}
+		}else{
+			startDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE));
+			endDate.set(MyCalendar.DATE, endDate.get(MyCalendar.DATE));
+		
+		}
+		
+		
+		logger.info("str endDate 2"+ startDate + " "+endDate);
+		
+//		startDateStr = MyCalendar.calendarToString(startDate, null);
+//		endDateStr = MyCalendar.calendarToString(endDate, null);
+	}
+
+	public Calendar getStartDate(){
+		
+		if(fromDateboxId.getValue() != null && !fromDateboxId.getValue().toString().isEmpty()) {
+			Calendar serverFromDateCal = fromDateboxId.getServerValue();
+			Calendar tempClientFromCal = fromDateboxId.getClientValue();
+			serverFromDateCal.set(Calendar.HOUR_OF_DAY, 
+					serverFromDateCal.get(Calendar.HOUR_OF_DAY)-tempClientFromCal.get(Calendar.HOUR_OF_DAY));
+			serverFromDateCal.set(Calendar.MINUTE, 
+					serverFromDateCal.get(Calendar.MINUTE)-tempClientFromCal.get(Calendar.MINUTE));
+			serverFromDateCal.set(Calendar.SECOND, 0);
+			
+			return serverFromDateCal;
+		}
+		else {
+			MessageUtil.setMessage("From date cannot be empty.", "color:red", "TOP");
+			return null;
+		}
+		
+	}
+	
+	public Calendar getEndDate() {
+		
+		if(toDateboxId.getValue() != null && !toDateboxId.getValue().toString().isEmpty()) {
+			Calendar serverToDateCal = toDateboxId.getServerValue();
+			Calendar tempClientToCal = toDateboxId.getClientValue();
+
+			serverToDateCal.set(Calendar.HOUR_OF_DAY, 
+					23+serverToDateCal.get(Calendar.HOUR_OF_DAY)-tempClientToCal.get(Calendar.HOUR_OF_DAY));
+			serverToDateCal.set(Calendar.MINUTE, 
+					59+serverToDateCal.get(Calendar.MINUTE)-tempClientToCal.get(Calendar.MINUTE));
+			serverToDateCal.set(Calendar.SECOND, 59);
+
+			return serverToDateCal;
+		}
+		else{
+			MessageUtil.setMessage("To date cannot be empty.", "color:red", "TOP");
+			return null;
+		}
+		
+	}
+	
+private void setDefaultStores() {
+		
+		//List<String> ltyStoreList = ltyPrgmSevice.findAllLtyStores(userId,OCConstants.LOYALTY_SERVICE_TYPE_OC); APP-4728
+		//logger.info("loyaltystoreIdList" + ltyStoreList);
+		Long orgId = ltyPrgmSevice.getOrgId(userId);
+		logger.info("orgId" + orgId);
+		List<OrganizationStores> storeIdList = ltyPrgmSevice.getAllStores(orgId);
+		logger.info("storeIdList" + storeIdList);
+		if (storeIdList == null || storeIdList.size() == 0)return;
+		/*Listitem storeItem = null;
+		outer: for (String storeName : ltyStoreList) {
+		for (OrganizationStores org : storeIdList) {
+			if (org.getHomeStoreId().equalsIgnoreCase(storeName)) {
+				storeItem = new Listitem(org.getStoreName(), storeName);
+                storeItem.setParent(storeLbId);
+				continue outer;
+			}
+		}
+		storeItem = new Listitem("Store ID " + storeName, storeName);
+
+		storeItem.setParent(storeLbId);
+	}*/
+		for (OrganizationStores store : storeIdList) {
+			 Listitem li = new Listitem(store.getStoreName(),
+					 store.getHomeStoreId());
+			 li.setParent(storeLbId);
+		 }
+}
+
+	private void setCardSets() {
+		List<LoyaltyCardSet> cardsetList = ltyPrgmSevice.getCardsetList(prgmId);
+		logger.info("cardsetList"+cardsetList);
+		if(cardsetList == null || cardsetList.size() == 0) return;
+		for (LoyaltyCardSet eachCardset : cardsetList){
+			Listitem li = new Listitem(eachCardset.getCardSetName(),eachCardset.getCardSetId());
+			li.setParent(cardsetLbId);
+		}
+	}
+	
+	private void setRevenuePlotData() {
+		try{
+			logger.debug(" >> before setPlotData time In millis ::"+System.currentTimeMillis());
+			
+			String storeNo = Constants.STRING_NILL;
+			String subsidiaryNo = Constants.STRING_NILL;
+			for (Listitem item : subsidiaryLbId.getSelectedItems()) {
+				if (item.getValue() != null && !item.getValue().toString().equalsIgnoreCase("All")) {
+					if (subsidiaryNo.length() == 0) {
+						subsidiaryNo = subsidiaryNo + "'" + item.getValue() + "'";
+					} else {
+						subsidiaryNo = subsidiaryNo + Constants.DELIMETER_COMMA + "'" + item.getValue() + "'";
+					}
+				}
+			}
+			for (Listitem item : storeLbId.getSelectedItems()) {
+				if (item.getValue() != null && !item.getValue().toString().equalsIgnoreCase("All")) {
+					if (storeNo.length() == 0) {
+						storeNo = storeNo + "'" + item.getValue() + "'";
+					} else {
+						storeNo = storeNo + Constants.DELIMETER_COMMA + "'" + item.getValue() + "'";
+					}
+				}
+			}
+			
+			Long cardsetId = null;
+			if(!cardsetLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+				cardsetId = Long.parseLong(cardsetLbId.getSelectedItem().getValue().toString());
+			}
+			Long tierId = null;
+			if (!tierLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+				tierId = Long.parseLong(tierLbId.getSelectedItem().getValue().toString());
+			}
+			logger.debug(" startDateStr :"+MyCalendar.calendarToString(startDate, null)+ " AND endDateStr Str ::"+MyCalendar.calendarToString(endDate, null));
+			
+			CategoryModel model = new SimpleCategoryModel();
+			
+			List<Object[]>  loyaltyRevenue = ltyPrgmSevice.getLoyaltyRevenue(userId,prgmId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,cardsetId,typeDiff,subsidiaryNo,tierId);
+			List<Object[]> totalRevenue = ltyPrgmSevice.getTotalRevenue(userId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,typeDiff);
+			List<Object[]> nonLoyaltyRevenue = ltyPrgmSevice.getNonLoyaltyRevenue(userId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,typeDiff);
+			Map<String, Double> loyaltyRevenueMap = null;
+			if(loyaltyRevenue != null && loyaltyRevenue.size() > 0) {
+				loyaltyRevenueMap = new HashMap<String, Double>();
+				/*for (Object[] obj : loyaltyRevenue) {
+					logger.info("-------date :: "+obj[1].toString() + " -----------revenue ::"+obj[0].toString());
+					loyaltyRevenueMap.put(obj[1].toString(), Double.parseDouble(obj[0].toString()));
+				}*/
+				for (Object[] obj : loyaltyRevenue) {
+					if(loyaltyRevenueMap.containsKey(obj[1].toString())){
+						Double revenuForDay = Double.parseDouble(obj[0].toString())+loyaltyRevenueMap.get(obj[1].toString());
+						loyaltyRevenueMap.put(obj[1].toString(),revenuForDay);
+					}else{
+						
+						loyaltyRevenueMap.put(obj[1].toString(),Double.parseDouble(obj[0].toString()));
+					}
+					/*double revRate = (Double.parseDouble(obj[0].toString()) / totalRevenue) *100;
+					revenueMap.put(obj[1].toString(), revRate);*/
+				}
+				
+			}
+			
+			Map<String, Double> nonLoyaltyRevenueMap = null;
+			if(nonLoyaltyRevenue != null && nonLoyaltyRevenue.size() > 0) {
+				nonLoyaltyRevenueMap = new HashMap<String, Double>();
+				for (Object[] obj : nonLoyaltyRevenue) {
+					nonLoyaltyRevenueMap.put(obj[1].toString(), Double.parseDouble(obj[0].toString()));
+				}
+			}
+			
+			Map<String, Double> totalRevenueMap = null;
+			if(totalRevenue != null && totalRevenue.size() > 0) {
+				totalRevenueMap = new HashMap<String, Double>();
+				for (Object[] obj : totalRevenue) {
+					totalRevenueMap.put(obj[1].toString(), Double.parseDouble(obj[0].toString()));
+				}
+			}
+			
+			
+			Calendar tempCal=Calendar.getInstance();
+			tempCal.setTimeZone(clientTimeZone);
+			tempCal.setTimeInMillis(startDate.getTimeInMillis());
+			String currDate = "";
+			
+			if(typeDiff.equalsIgnoreCase(DATE_DIFF_TYPE_DAYS)) {
+				revenueChartId.setXAxis("Days");
+				do {
+					currDate = ""+tempCal.get(startDate.DATE);
+					if(totalRevenueMap != null) {
+						model.setValue("All Customers", currDate, totalRevenueMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? totalRevenueMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0.0);
+					}
+					else {
+						model.setValue("All Customers", currDate, 0);
+					}
+					
+					if(loyaltyRevenueMap != null) {
+						model.setValue("Loyalty Customers", currDate, loyaltyRevenueMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? loyaltyRevenueMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0.0);
+					}
+					else {
+						model.setValue("Loyalty Customers", currDate, 0.0);
+					}
+					
+					if(nonLoyaltyRevenueMap != null) {
+						model.setValue("Non-Loyalty Customers", currDate, nonLoyaltyRevenueMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? nonLoyaltyRevenueMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0.0);
+					}
+					else {
+						model.setValue("Non-Loyalty Customers", currDate, 0.0);
+					}
+					
+					
+					tempCal.set(Calendar.DATE, tempCal.get(Calendar.DATE) + 1);
+				}while(tempCal.before(endDate) || tempCal.equals(endDate));
+			}
+			
+			
+			else if(typeDiff.equals(DATE_DIFF_TYPE_MONTHS)) {
+				revenueChartId.setXAxis("Months");
+				 int i=1;
+				 do {
+					 i++;
+
+					 currDate = ""+(tempCal.get(startDate.MONTH)+1);
+					 if(totalRevenueMap != null) {
+						 model.setValue("All Customers", MONTH_MAP.get(currDate), totalRevenueMap.containsKey(currDate) ? totalRevenueMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("All Customers", MONTH_MAP.get(currDate), 0);
+					 }
+
+					 if(loyaltyRevenueMap != null) {
+						 model.setValue("Loyalty Customers", MONTH_MAP.get(currDate), loyaltyRevenueMap.containsKey(currDate) ? loyaltyRevenueMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Loyalty Customers", MONTH_MAP.get(currDate), 0);
+					 }
+					 
+					 if(nonLoyaltyRevenueMap != null) {
+						 model.setValue("Non-Loyalty Customers", MONTH_MAP.get(currDate), nonLoyaltyRevenueMap.containsKey(currDate) ? nonLoyaltyRevenueMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Non-Loyalty Customers", MONTH_MAP.get(currDate), 0);
+					 }
+					 
+					 
+					 tempCal.set(Calendar.MONTH, tempCal.get(Calendar.MONTH) + 1);
+
+				 } while(i<= monthsDiff);
+			 }
+			
+			else if(typeDiff.equals(DATE_DIFF_TYPE_YEARS)) {
+				revenueChartId.setXAxis("Years");
+				 int i=1;
+				 do {
+					 i++;
+
+					 currDate = ""+(tempCal.get(startDate.YEAR));
+					 if(totalRevenueMap != null) {
+						 model.setValue("All Customers", currDate, totalRevenueMap.containsKey(currDate) ? totalRevenueMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("All Customers", currDate, 0);
+					 }
+					 
+					 if(loyaltyRevenueMap != null) {
+						 model.setValue("Loyalty Customers", currDate, loyaltyRevenueMap.containsKey(currDate) ? loyaltyRevenueMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Loyalty Customers", currDate, 0);
+					 }
+					 
+					 if(nonLoyaltyRevenueMap != null) {
+						 model.setValue("Non-Loyalty Customers", currDate, nonLoyaltyRevenueMap.containsKey(currDate) ? nonLoyaltyRevenueMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Non-Loyalty Customers", currDate, 0);
+					 }
+					 
+					
+					 tempCal.set(Calendar.YEAR, tempCal.get(Calendar.YEAR) + 1);
+
+				 } while(i<= monthsDiff);
+			 }
+			revenueChartId.setModel(model);
+			
+			
+			
+			
+			//set visits plot data 
+			Map<String, Long> loyaltyVisitsMap = null;
+			if(loyaltyRevenue != null && loyaltyRevenue.size() > 0) {
+				loyaltyVisitsMap = new HashMap<String, Long>();
+				for (Object[] obj : loyaltyRevenue) {
+					logger.info("-------date :: "+obj[1].toString() + " -----------count ::"+obj[2].toString());
+					
+					if(loyaltyVisitsMap.containsKey(obj[1].toString())){
+						Long visitsForDay = Long.parseLong(obj[2].toString())+loyaltyVisitsMap.get(obj[1].toString());
+						loyaltyVisitsMap.put(obj[1].toString(),visitsForDay);
+					}else{
+						
+						loyaltyVisitsMap.put(obj[1].toString(),Long.parseLong(obj[2].toString()));
+					}
+					loyaltyVisitsMap.put(obj[1].toString(), Long.parseLong(obj[2].toString()));
+				}
+			}
+			
+			List<Object[]> nonLoyaltyVisits = ltyPrgmSevice.getNonLoyaltyVisits(userId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,typeDiff);
+			Map<String, Long> nonLoyaltyVisitsMap = null;
+			if(nonLoyaltyVisits != null && nonLoyaltyVisits.size() > 0) {
+				nonLoyaltyVisitsMap = new HashMap<String, Long>();
+				for (Object[] obj : nonLoyaltyVisits) {
+					nonLoyaltyVisitsMap.put(obj[1].toString(), Long.parseLong(obj[0].toString()));
+				}
+			}
+			
+			/*List<Object[]> totalVisits = ltyPrgmSevice.getTotalVisits(userId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,typeDiff);*/
+			Map<String, Long> totalVisitsMap = null;
+			if(totalRevenue != null && totalRevenue.size() > 0) {
+				totalVisitsMap = new HashMap<String, Long>();
+				for (Object[] obj : totalRevenue) {
+					totalVisitsMap.put(obj[1].toString(), Long.parseLong(obj[2].toString()));
+				}
+			}
+			
+			if(typeDiff.equalsIgnoreCase(DATE_DIFF_TYPE_DAYS)) {
+				visitsChartId.setXAxis("Days");
+				do {
+					currDate = ""+tempCal.get(startDate.DATE);
+
+					if(totalVisitsMap != null) {
+						model.setValue("All Customers", currDate, totalVisitsMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? totalVisitsMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+					}
+					else {
+						model.setValue("All Customers", currDate, 0);
+					}
+					
+					if(loyaltyVisitsMap != null) {
+						model.setValue("Loyalty Customers", currDate, loyaltyVisitsMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? loyaltyVisitsMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+					}
+					else {
+						model.setValue("Loyalty Customers", currDate, 0);
+					}
+					
+					if(nonLoyaltyVisitsMap != null) {
+						model.setValue("Non-Loyalty Customers", currDate, nonLoyaltyVisitsMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? nonLoyaltyVisitsMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+					}
+					else {
+						model.setValue("Non-Loyalty Customers", currDate, 0);
+					}
+					
+					tempCal.set(Calendar.DATE, tempCal.get(Calendar.DATE) + 1);
+				}while(tempCal.before(endDate) || tempCal.equals(endDate));
+			}
+			
+			
+			else if(typeDiff.equals(DATE_DIFF_TYPE_MONTHS)) {
+				visitsChartId.setXAxis("Months");
+				 int i=1;
+				 do {
+					 i++;
+
+					 currDate = ""+(tempCal.get(startDate.MONTH)+1);
+					 if(totalVisitsMap != null) {
+						 model.setValue("All Customers", MONTH_MAP.get(currDate), totalVisitsMap.containsKey(currDate) ? totalVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("All Customers", MONTH_MAP.get(currDate), 0);
+					 }
+
+					 if(loyaltyVisitsMap != null) {
+						 model.setValue("Loyalty Customers", MONTH_MAP.get(currDate), loyaltyVisitsMap.containsKey(currDate) ? loyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Loyalty Customers", MONTH_MAP.get(currDate), 0);
+					 }
+					 
+					 if(nonLoyaltyVisitsMap != null) {
+						 model.setValue("Non-Loyalty Customers", MONTH_MAP.get(currDate), nonLoyaltyVisitsMap.containsKey(currDate) ? nonLoyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Non-Loyalty Customers", MONTH_MAP.get(currDate), 0);
+					 }
+					 
+					 
+					 tempCal.set(Calendar.MONTH, tempCal.get(Calendar.MONTH) + 1);
+
+				 } while(i<= monthsDiff);
+			 }
+			
+			else if(typeDiff.equals(DATE_DIFF_TYPE_YEARS)) {
+				visitsChartId.setXAxis("Years");
+				 int i=1;
+				 do {
+					 i++;
+
+					 currDate = ""+(tempCal.get(startDate.YEAR));
+					 if(totalVisitsMap != null) {
+						 model.setValue("All Customers", currDate, totalVisitsMap.containsKey(currDate) ? totalVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("All Customers", currDate, 0);
+					 }
+					 
+					 if(loyaltyVisitsMap != null) {
+						 model.setValue("Loyalty Customers", currDate, loyaltyVisitsMap.containsKey(currDate) ? loyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Loyalty Customers", currDate, 0);
+					 }
+					 
+					 if(nonLoyaltyVisitsMap != null) {
+						 model.setValue("Non-Loyalty Customers", currDate, nonLoyaltyVisitsMap.containsKey(currDate) ? nonLoyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Non-Loyalty Customers", currDate, 0);
+					 }
+					 
+					 
+					 tempCal.set(Calendar.YEAR, tempCal.get(Calendar.YEAR) + 1);
+
+				 } while(i<= monthsDiff);
+			 }
+			visitsChartId.setModel(model);
+
+			logger.debug(" >> after setPlotData time In millis ::"+System.currentTimeMillis());
+		
+			Components.removeAllChildren(tiersKPIRowsId);
+			Components.removeAllChildren(tiersKPIFooterId);
+
+			DecimalFormat f = new DecimalFormat("#0.00");
+			long totVisits = 0;
+		    double totRevenue = 0.00;
+		    LoyaltyProgramTierDao loyaltyProgramTierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+			//List<LoyaltyProgramTier> listOfTiers = loyaltyProgramTierDao.fetchTiersByProgramId(prgmId,tierId);
+		    List<LoyaltyProgramTier> listOfTiers = loyaltyProgramTierDao.fetchByTier(prgmId,tierId);
+		    if(listOfTiers != null && listOfTiers.size() > 0 && loyaltyRevenue !=null && !loyaltyRevenue.isEmpty()){
+		    	
+
+				
+				Map<String, Double> TierrevenueMap = new HashMap<String, Double>();
+				Map<String, Double> TierVisitseMap  = new HashMap<String, Double>();
+				
+				//List<Object[]> tierobjArr = null;
+				
+				for (Object[] obj : loyaltyRevenue) {
+					if(TierrevenueMap.containsKey(obj[3].toString())){
+						Double revenueForDay = Double.parseDouble(obj[0].toString())+TierrevenueMap.get(obj[3].toString());
+						TierrevenueMap.put(obj[3].toString(),revenueForDay);
+					}else{
+						
+						TierrevenueMap.put(obj[3].toString(),Double.parseDouble(obj[0].toString()));
+					}
+					if(TierVisitseMap.containsKey(obj[3].toString())){
+						Double revenueForDay = Double.parseDouble(obj[2].toString())+TierVisitseMap.get(obj[3].toString());
+						TierVisitseMap.put(obj[3].toString(),revenueForDay);
+					}else{
+						
+						TierVisitseMap.put(obj[3].toString(),Double.parseDouble(obj[2].toString()));
+					}
+				}
+				
+				//tierobjArr =ltyPrgmSevice.getTierVisitsAndRevenue(userId, prgmId,startDate,endDateStr, null);
+				for(LoyaltyProgramTier tier : listOfTiers){
+				
+				Row row = null;
+				row = new Row();
+				row.appendChild(new Label(tier.getTierName()+" "+"("+tier.getTierType()+")"));
+				/*if(!prgmObj.getMembershipType().equalsIgnoreCase(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE)) {
+				row.appendChild(new Label(enrolledCount.get(tier.getTierId())!= null? enrolledCount.get(tier.getTierId())+"":0+""));
+				totCount = totCount +( enrolledCount.get(tier.getTierId()) != null? enrolledCount.get(tier.getTierId()):0);
+				}
+				upgradedCount = ltyPrgmSevice.getTierUpgradedCount(userId,prgmId,startDateStr,endDateStr,tier.getTierId());
+				if(upgradedCount != null && upgradedCount.size()>0) {
+					for(Object[] obj : upgradedCount) {
+					    row.appendChild(new Label(obj[0]==null? 0+"" :obj[0]+""));
+					    totCount1 = totCount1 + (obj[0] == null ? 0 : Long.parseLong(obj[0]+""));
+					}}else{
+						row.appendChild(new Label(0+""));
+					}*/
+
+				/*if(tierobjArr != null && tierobjArr.size()>0) {
+					for(Object[] obj : tierobjArr) {
+						if(obj[2] == null || ((Long)obj[2]).longValue() != tier.getTierId()) continue;
+                        row.appendChild(new Label(obj[0]==null? 0+"" :obj[0]+""));
+						row.appendChild(new Label(obj[1]==null? f.format(0.00):f.format(obj[1])));
+						totVisits = totVisits + (obj[0] == null ? 0 : Long.parseLong(obj[0].toString()));
+						totRevenue = totRevenue + (obj[1] == null ? 0.00 : Double.parseDouble(obj[1].toString()));
+
+					}
+					}else{
+						row.appendChild(new Label(0+""));
+						row.appendChild(new Label(f.format(0.00)+""));
+						
+					}
+				*/
+				if(TierVisitseMap.get(tier.getTierId().toString()) != null){
+					row.appendChild(new Label(TierVisitseMap.get(tier.getTierId().toString()).longValue()+""));
+					totVisits = totVisits +TierVisitseMap.get(tier.getTierId().toString()).longValue();
+				}else{
+					row.appendChild(new Label(0+""));
+				}
+				if(TierrevenueMap.get(tier.getTierId().toString()) != null){
+					row.appendChild(new Label(f.format(TierrevenueMap.get(tier.getTierId().toString()))));
+					totRevenue = totRevenue +TierrevenueMap.get(tier.getTierId().toString()+"");
+				}else{
+					row.appendChild(new Label(f.format(0.00)));
+				}
+				
+				
+					row.setParent(tiersKPIRowsId);
+				}
+
+					Footer footer = new Footer();
+					footer.appendChild(new Label("TOTAL"));
+					footer.setParent(tiersKPIFooterId);
+					
+					
+					footer = new Footer();
+					footer.appendChild(new Label(totVisits+""));
+					footer.setParent(tiersKPIFooterId);
+					
+					footer = new Footer();
+					footer.appendChild(new Label(f.format(totRevenue)));
+					footer.setParent(tiersKPIFooterId);
+				
+		    }
+					
+			logger.debug(" >> after setPlotData time In millis ::"+System.currentTimeMillis());
+		} catch(Exception e) {
+			logger.debug(" Exception : while generating the line chart ",(Throwable)e);
+		}
+		
+	}
+	
+	private void setVisitsPlotData() {
+		try{
+			logger.debug(" >> before setPlotData time In millis ::"+System.currentTimeMillis());
+			
+			String storeNo = Constants.STRING_NILL;
+			String subsidiaryNo = Constants.STRING_NILL;
+			for (Listitem item : subsidiaryLbId.getSelectedItems()) {
+				if (item.getValue() != null && !item.getValue().toString().equalsIgnoreCase("All")) {
+					if (subsidiaryNo.length() == 0) {
+						subsidiaryNo = subsidiaryNo + "'" + item.getValue() + "'";
+					} else {
+						subsidiaryNo = subsidiaryNo + Constants.DELIMETER_COMMA + "'" + item.getValue() + "'";
+					}
+				}
+			}
+			for (Listitem item : storeLbId.getSelectedItems()) {
+				if (item.getValue() != null && !item.getValue().toString().equalsIgnoreCase("All")) {
+					if (storeNo.length() == 0) {
+						storeNo = storeNo + "'" + item.getValue() + "'";
+					} else {
+						storeNo = storeNo + Constants.DELIMETER_COMMA + "'" + item.getValue() + "'";
+					}
+				}
+			}
+			Long cardsetId = null;
+			if(!cardsetLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+				cardsetId = Long.parseLong(cardsetLbId.getSelectedItem().getValue().toString());
+			}
+			Long tierId = null;
+			if (!tierLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+				tierId = Long.parseLong(tierLbId.getSelectedItem().getValue().toString());
+			}
+			logger.debug(" startDateStr :"+MyCalendar.calendarToString(startDate, null)+ " AND endDateStr Str ::"+MyCalendar.calendarToString(endDate, null));
+			
+			CategoryModel model = new SimpleCategoryModel();
+			
+			List<Object[]>  loyaltyVisits = ltyPrgmSevice.getLoyaltyVisitsByPrgmId(userId,prgmId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,cardsetId,typeDiff,subsidiaryNo,tierId);
+			Map<String, Long> loyaltyVisitsMap = null;
+			if(loyaltyVisits != null && loyaltyVisits.size() > 0) {
+				loyaltyVisitsMap = new HashMap<String, Long>();
+				for (Object[] obj : loyaltyVisits) {
+					logger.info("-------date :: "+obj[1].toString() + " -----------count ::"+obj[0].toString());
+					loyaltyVisitsMap.put(obj[1].toString(), Long.parseLong(obj[0].toString()));
+				}
+			}
+			
+			List<Object[]> nonLoyaltyVisits = ltyPrgmSevice.getNonLoyaltyVisits(userId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,typeDiff);
+			Map<String, Long> nonLoyaltyVisitsMap = null;
+			if(nonLoyaltyVisits != null && nonLoyaltyVisits.size() > 0) {
+				nonLoyaltyVisitsMap = new HashMap<String, Long>();
+				for (Object[] obj : nonLoyaltyVisits) {
+					nonLoyaltyVisitsMap.put(obj[1].toString(), Long.parseLong(obj[0].toString()));
+				}
+			}
+			
+			List<Object[]> totalVisits = ltyPrgmSevice.getTotalVisits(userId,MyCalendar.calendarToString(startDate, null),
+					MyCalendar.calendarToString(endDate, null),storeNo,typeDiff);
+			Map<String, Long> totalVisitsMap = null;
+			if(totalVisits != null && totalVisits.size() > 0) {
+				totalVisitsMap = new HashMap<String, Long>();
+				for (Object[] obj : totalVisits) {
+					totalVisitsMap.put(obj[1].toString(), Long.parseLong(obj[0].toString()));
+				}
+			}
+			
+			
+			Calendar tempCal=Calendar.getInstance();
+			tempCal.setTimeZone(clientTimeZone);
+			tempCal.setTimeInMillis(startDate.getTimeInMillis());
+			String currDate = "";
+			
+			if(typeDiff.equalsIgnoreCase(DATE_DIFF_TYPE_DAYS)) {
+				visitsChartId.setXAxis("Days");
+				do {
+					currDate = ""+tempCal.get(startDate.DATE);
+
+					if(totalVisitsMap != null) {
+						model.setValue("All Customers", currDate, totalVisitsMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? totalVisitsMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+					}
+					else {
+						model.setValue("All Customers", currDate, 0);
+					}
+					
+					if(loyaltyVisitsMap != null) {
+						model.setValue("Loyalty Customers", currDate, loyaltyVisitsMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? loyaltyVisitsMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+					}
+					else {
+						model.setValue("Loyalty Customers", currDate, 0);
+					}
+					
+					if(nonLoyaltyVisitsMap != null) {
+						model.setValue("Non-Loyalty Customers", currDate, nonLoyaltyVisitsMap.containsKey(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) ? nonLoyaltyVisitsMap.get(MyCalendar.calendarToString(tempCal, MyCalendar.FORMAT_YEARTODATE)) : 0);
+					}
+					else {
+						model.setValue("Non-Loyalty Customers", currDate, 0);
+					}
+					
+					tempCal.set(Calendar.DATE, tempCal.get(Calendar.DATE) + 1);
+				}while(tempCal.before(endDate) || tempCal.equals(endDate));
+			}
+			
+			
+			else if(typeDiff.equals(DATE_DIFF_TYPE_MONTHS)) {
+				visitsChartId.setXAxis("Months");
+				 int i=1;
+				 do {
+					 i++;
+
+					 currDate = ""+(tempCal.get(startDate.MONTH)+1);
+					 if(totalVisitsMap != null) {
+						 model.setValue("All Customers", MONTH_MAP.get(currDate), totalVisitsMap.containsKey(currDate) ? totalVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("All Customers", MONTH_MAP.get(currDate), 0);
+					 }
+
+					 if(loyaltyVisitsMap != null) {
+						 model.setValue("Loyalty Customers", MONTH_MAP.get(currDate), loyaltyVisitsMap.containsKey(currDate) ? loyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Loyalty Customers", MONTH_MAP.get(currDate), 0);
+					 }
+					 
+					 if(nonLoyaltyVisitsMap != null) {
+						 model.setValue("Non-Loyalty Customers", MONTH_MAP.get(currDate), nonLoyaltyVisitsMap.containsKey(currDate) ? nonLoyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Non-Loyalty Customers", MONTH_MAP.get(currDate), 0);
+					 }
+					 
+					 
+					 tempCal.set(Calendar.MONTH, tempCal.get(Calendar.MONTH) + 1);
+
+				 } while(i<= monthsDiff);
+			 }
+			
+			else if(typeDiff.equals(DATE_DIFF_TYPE_YEARS)) {
+				visitsChartId.setXAxis("Years");
+				 int i=1;
+				 do {
+					 i++;
+
+					 currDate = ""+(tempCal.get(startDate.YEAR));
+					 if(totalVisitsMap != null) {
+						 model.setValue("All Customers", currDate, totalVisitsMap.containsKey(currDate) ? totalVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("All Customers", currDate, 0);
+					 }
+					 
+					 if(loyaltyVisitsMap != null) {
+						 model.setValue("Loyalty Customers", currDate, loyaltyVisitsMap.containsKey(currDate) ? loyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Loyalty Customers", currDate, 0);
+					 }
+					 
+					 if(nonLoyaltyVisitsMap != null) {
+						 model.setValue("Non-Loyalty Customers", currDate, nonLoyaltyVisitsMap.containsKey(currDate) ? nonLoyaltyVisitsMap.get(currDate) : 0);
+					 }
+					 else {
+							model.setValue("Non-Loyalty Customers", currDate, 0);
+					 }
+					 
+					 
+					 tempCal.set(Calendar.YEAR, tempCal.get(Calendar.YEAR) + 1);
+
+				 } while(i<= monthsDiff);
+			 }
+			visitsChartId.setModel(model);
+
+			logger.debug(" >> after setPlotData time In millis ::"+System.currentTimeMillis());
+		} catch(Exception e) {
+			logger.debug(" Exception : while generating the line chart ",(Throwable)e);
+		}
+		
+		
+	}
+	
+	public void onSelect$timeDurLbId() {
+		 if(timeDurLbId.getSelectedItem().getLabel().equalsIgnoreCase("Custom Dates")) {
+			 fromDateboxId.setText("");
+			 toDateboxId.setText("");
+			 datesDivId.setVisible(true);
+		 }
+		 else {
+			 datesDivId.setVisible(false);
+		 }
+	 }
+
+	public void onClick$filterBtnId() {
+		
+		 int storeSelectedCount = storeLbId.getSelectedCount();
+			int storeItemCount = storeLbId.getItemCount();
+	        if(storeSelectedCount == storeItemCount){
+	        	storeBandBoxId.setValue("All");
+	        }
+	        else if((storeSelectedCount>1) && !(storeSelectedCount == storeItemCount)){
+				storeBandBoxId.setValue("Multiple");
+			}
+	        else if((storeSelectedCount==1) && !(storeSelectedCount == storeItemCount)){
+	        	storeBandBoxId.setValue(storeLbId.getSelectedItem().getLabel());
+	        }
+	        else if(storeLbId.getSelectedIndex() == -1){
+				storeBandBoxId.setValue("");
+			}
+			
+		String storeNo = Constants.STRING_NILL;
+		for (Listitem item : storeLbId.getSelectedItems()) {
+			if (item.getValue() != null && !item.getValue().toString().equalsIgnoreCase("All")) {
+				if (storeNo.length() == 0) {
+					storeNo = storeNo + "'" + item.getValue() + "'";
+				} else {
+					storeNo = storeNo + Constants.DELIMETER_COMMA + "'" + item.getValue() + "'";
+				}
+			}
+		}
+		Long cardsetId = null;
+		if(!cardsetLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+			cardsetId = Long.parseLong(cardsetLbId.getSelectedItem().getValue().toString());
+		}
+
+		if(timeDurLbId.getSelectedItem().getLabel().equalsIgnoreCase("Custom Dates")){ 
+			 if(!isValidate()){
+				 return;
+			 }
+		 }
+		
+		getDateValues();
+
+		revenueLblId.setValue( MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) + " - " +
+				MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) );
+		visitsLblId.setValue( MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) + " - " +
+				MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) );
+		tierLblId.setValue( MyCalendar.calendarToString(startDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) + " - " +
+				MyCalendar.calendarToString(endDate, MyCalendar.FORMAT_MONTHDATE_ONLY, clientTimeZone) );
+
+		revenueChartId.setEngine(new LineChartEngine());
+		visitsChartId.setEngine(new LineChartEngine());
+		setRevenuePlotData();
+		setVisitsPlotData();
+		redrawTierSummary(prgmId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null),storeNo,cardsetId);
+		}
+	
+	private boolean isValidate() {
+
+		 if(fromDateboxId.getValue() != null && !fromDateboxId.getValue().toString().isEmpty()) {
+			 startDate = MyCalendar.getNewCalendar();
+			 startDate.setTime(fromDateboxId.getValue());
+		 }
+		 else {
+			 MessageUtil.setMessage("From date cannot be empty.", "color:red", "TOP");
+			 return false;
+		 }
+
+		 if(startDate == null) {
+			 return false;
+		 }
+
+		 if(toDateboxId.getValue() != null && !toDateboxId.getValue().toString().isEmpty()) {
+			 endDate = MyCalendar.getNewCalendar();
+			 endDate.setTime(toDateboxId.getValue());
+		 }
+		 else{
+			 MessageUtil.setMessage("To date cannot be empty.", "color:red", "TOP");
+			 return false;
+		 }
+
+		 if(endDate == null) {
+			 return false;
+		 }
+		 if(endDate.before(startDate)) {
+			 MessageUtil.setMessage("To date must be later than From date", "color:red", "TOP");
+			 return false;
+		 }
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		 if(!sdf.format(startDate.getTime()).equals(sdf.format(prgmObj.getCreatedDate().getTime()))){
+			 if(startDate.before(prgmObj.getCreatedDate())) {
+				 MessageUtil.setMessage("From date should be after the program creation date.", "color:red", "TOP");
+				 return false;
+			 }
+		 }
+		 return true;
+	 }
+public void onClick$exportBtnId(){
+		
+		logger.debug("-- just entered --");
+		StringBuffer sb = null;
+		String userName = GetUser.getUserName();
+		String type = (String)exportCbId.getSelectedItem().getValue();
+		String usersParentDirectory = (String)PropertyUtil.getPropertyValue("usersParentDirectory");
+		String exportDir = usersParentDirectory + "/" + userName + "/Export/" ;
+		File downloadDir = new File(exportDir);
+		BufferedWriter bw = null;
+		if(tiersKPIRowsId.getChildren().size() == 0){
+			MessageUtil.setMessage("No records found to export", "color:red", "TOP");
+			return;
+		}
+		if(downloadDir.exists()){
+			try {
+				FileUtils.deleteDirectory(downloadDir);
+				logger.debug(downloadDir.getName() + " is deleted");
+			} catch (Exception e) {
+				logger.error("Exception ::" , e);
+				
+				logger.debug(downloadDir.getName() + " is not deleted");
+			}
+		}
+		if(!downloadDir.exists()){
+			downloadDir.mkdirs();
+		}
+		
+		if(type.contains("csv")){
+			
+			DecimalFormat f = new DecimalFormat("#0.00");
+			String prgmName = prgmObj.getProgramName();
+			if(prgmName.contains("/")) {
+				
+				prgmName = prgmName.replace("/", "_") ;
+				
+			}
+			String filePath = exportDir +  "Loyalty_Tiers_Report_" + prgmName + "_" +
+					MyCalendar.calendarToString(Calendar.getInstance(), MyCalendar.FORMAT_YEARTOSEC, clientTimeZone);
+					try {
+							filePath = filePath + "_Tiers KPI.csv";
+							logger.debug("Download File path : " + filePath);
+							File file = new File(filePath);
+							bw = new BufferedWriter(new FileWriter(filePath));
+						    sb =  new StringBuffer();
+							sb.append("\""+"Tiers KPI"+"\"\n");
+							sb.append("\""+"Tier Name (Tier Level)"+"\","+"\""+"Visits"+"\","+"\""+"Revenue"+"\"\n");
+					        long totVisits = 0;
+						    double totRevenue = 0.00;
+						    String storeNo = Constants.STRING_NILL;
+							for (Listitem item : storeLbId.getSelectedItems()) {
+								if (item.getValue() != null
+										&& !item.getValue().toString().equalsIgnoreCase("All")) {
+									if (storeNo.length() == 0) {
+										storeNo = storeNo + "'" + item.getValue() + "'";
+									} else {
+										storeNo = storeNo + Constants.DELIMETER_COMMA + "'"
+												+ item.getValue() + "'";
+									}
+								}
+							}
+								Long cardsetId = null;
+								if(!cardsetLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+									cardsetId = Long.parseLong(cardsetLbId.getSelectedItem().getValue().toString());
+								}
+								Long tierId = null;
+								if (!tierLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+									tierId = Long.parseLong(tierLbId.getSelectedItem().getValue().toString());
+								}
+						    LoyaltyProgramTierDao loyaltyProgramTierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+							//List<LoyaltyProgramTier> listOfTiers = loyaltyProgramTierDao.fetchTiersByProgramId(prgmId,tierId);
+							List<LoyaltyProgramTier> listOfTiers = loyaltyProgramTierDao.fetchByTier(prgmId,tierId);
+							if(listOfTiers != null && listOfTiers.size() > 0){
+									for(LoyaltyProgramTier tier : listOfTiers){
+									
+									List<Object[]> tierobjArr = null;
+									
+									tierobjArr =ltyPrgmSevice.getTierVisitsAndRevenue(userId, prgmId,MyCalendar.calendarToString(startDate, null),MyCalendar.calendarToString(endDate, null),storeNo,cardsetId,tier.getTierId());
+
+									if(tierobjArr != null && tierobjArr.size()>0) {
+										for(Object[] obj : tierobjArr) {
+											sb.append("\"");sb.append(tier.getTierName()+" "+"("+tier.getTierType()+")");sb.append("\",");
+											sb.append("\"");sb.append(obj[0]==null? 0+"" :obj[0]+"");sb.append("\",");
+											sb.append("\"");sb.append(obj[1]==null? f.format(0.00):f.format(obj[1]));sb.append("\"\n");
+											totVisits = totVisits + (obj[0] == null ? 0 : Long.parseLong(obj[0].toString()));
+											totRevenue = totRevenue + (obj[1] == null ? 0.00 : Double.parseDouble(obj[1].toString()));
+											
+
+										}}else{
+											sb.append("\"");sb.append(tier.getTierName()+ "("+tier.getTierType()+")");sb.append("\",");
+											sb.append("\"");sb.append(0+"");sb.append("\",");
+											sb.append("\"");sb.append(f.format(0.00)+"");sb.append("\"\n");
+											
+										}
+											}
+									
+									
+										bw.write(sb.toString());
+										sb =  new StringBuffer();
+										}
+							
+							sb.append("\""+"TOTAL"+"\","+"\""+totVisits+"\","+"\""+f.format(totRevenue)+"\"\n");
+							bw.write(sb.toString());
+		
+							bw.flush();
+							bw.close();
+							Filedownload.save(file, "text/csv");
+							
+					}catch(Exception e){
+						logger.error("Exception :: ",e);
+					}finally{
+						sb = null;
+						bw = null;
+						userName = null;
+						usersParentDirectory = null;
+						exportDir = null ;
+						downloadDir = null;
+
+			
+		}}}
+	
+	
+	
+	private void redrawTierSummary(Long prgmId,String startDateStr,
+			String endDateStr,String storeNo, Long cardsetId){
+		Components.removeAllChildren(tiersKPIRowsId);
+		Components.removeAllChildren(tiersKPIFooterId);
+
+		DecimalFormat f = new DecimalFormat("#0.00");
+		long totVisits = 0;
+	    double totRevenue = 0.00;
+	    try
+	    {
+	    	Long tierId = null;
+			if (!tierLbId.getSelectedItem().getValue().toString().equalsIgnoreCase("All")) {
+				tierId = Long.parseLong(tierLbId.getSelectedItem().getValue().toString());
+			}
+	    LoyaltyProgramTierDao loyaltyProgramTierDao = (LoyaltyProgramTierDao)ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_TIER_DAO);
+		//List<LoyaltyProgramTier> listOfTiers = loyaltyProgramTierDao.fetchTiersByProgramId(prgmId,tierId);
+	    List<LoyaltyProgramTier> listOfTiers = loyaltyProgramTierDao.fetchByTier(prgmId,tierId);
+	    if(listOfTiers != null && listOfTiers.size() > 0){
+				for(LoyaltyProgramTier tier : listOfTiers){
+				
+				Row row = null;
+				row = new Row();
+				
+				List<Object[]> tierobjArr = null;
+				
+				tierobjArr =ltyPrgmSevice.getTierVisitsAndRevenue(userId, prgmId,startDateStr,endDateStr,storeNo,cardsetId,tier.getTierId());
+
+				if(tierobjArr != null && tierobjArr.size()>0) {
+					for(Object[] obj : tierobjArr) {
+						row.appendChild(new Label(tier.getTierName()+" "+"("+tier.getTierType()+")"));
+					    row.appendChild(new Label(obj[0]==null? 0+"" :obj[0]+""));
+						row.appendChild(new Label(obj[1]==null? f.format(0.00):f.format(obj[1])));
+						totVisits = totVisits + (obj[0] == null ? 0 : Long.parseLong(obj[0].toString()));
+						totRevenue = totRevenue + (obj[1] == null ? 0.00 : Double.parseDouble(obj[1].toString()));
+						
+
+					}}else{
+						row.appendChild(new Label(tier.getTierName()+ "("+tier.getTierType()+")"));
+						row.appendChild(new Label(0+""));
+						row.appendChild(new Label(f.format(0.00)+""));
+						
+						
+						
+					}
+				row.setParent(tiersKPIRowsId);
+				   
+				}
+					Footer footer = new Footer();
+					footer.appendChild(new Label("TOTAL"));
+					footer.setParent(tiersKPIFooterId);
+					
+					footer = new Footer();
+					footer.appendChild(new Label(totVisits+""));
+					footer.setParent(tiersKPIFooterId);
+					
+					footer = new Footer();
+					footer.appendChild(new Label(f.format(totRevenue)));
+					footer.setParent(tiersKPIFooterId);
+				}	}
+				catch(Exception e){
+					logger.error("Exception ::",e);
+				}
+				}
+}
+
+	
+	
+	

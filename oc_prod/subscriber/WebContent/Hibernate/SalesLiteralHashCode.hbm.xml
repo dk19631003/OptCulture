@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.SalesLiteralHashCode" table="sales_literal_hashCode">
+    
+    <id name="salesLiteralId" type="java.lang.Long">
+     <column name="sales_literal_id"/>
+      <generator class="native"/>
+    </id>
+    
+	
+	<property name="salesLiteralHashCode" type="string">
+      <column name="sales_literal_hashCode" length="100"/>
+    </property>
+	<property name="listId" type="long">
+      <column name="list_id"/>
+    </property>
+    <property name="userId" type="java.lang.Long">
+      <column name="user_id"/>
+    </property>
+    <property name="createdDate" type="calendar">
+      <column name="created_date"/>
+    </property>
+   <property name="currentFile" type="boolean">
+      <column name="current_file"/>
+    </property> 
+    
+ </class>
+ 
+</hibernate-mapping>

@@ -1,0 +1,392 @@
+<?page title="Edit Subscription Form" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="subscrptnFrmSettgsWinID"  border="normal" 
+	apply="org.mq.marketer.campaign.controller.contacts.SubscriptionFrmSettgsController"
+ 	xmlns:w="http://www.zkoss.org/2005/zk/client" width="950px">
+		<style src="/css/campaign.css"/>
+		<!--<zscript>
+			<![CDATA[
+		     	import org.mq.marketer.campaign.general.PageUtil;
+		
+		     	String style = "font-weight:bold;font-size:15px;color:#313031;font-family:Arial,Helvetica,sans-serif;align:left";
+		     	PageUtil.setHeader("Edit Subscription Form","",style,true);
+			]]>
+		</zscript>
+		--><script >
+				<![CDATA[
+				         
+						function setFinalHTMLId(hiddenfield, selectedFormDivId) {
+							var selectedDiv = document.getElementById(selectedFormDivId);
+							hiddenfield.value = selectedDiv.innerHTML;
+							//alert("hiddenfield.value: "+ hiddenfield.value);
+							hiddenfield.fire('onChange',{value:hiddenfield.value},{toServer:true},0);
+						}
+						
+						function deleteFn(thisObj){
+							
+							var row = (zk.Widget.$(jq(thisObj)).parent);
+							var rows = zk.Widget.$(jq(row)).parent;
+							var flag=zk.Widget.$(jq(rows)).removeChild(row);
+							alert(flag);
+						}
+				]]>                 
+		</script>
+	
+		<textbox id="finalHtmlHiddenId" value="default" visible="false"/>
+		<h:table xmlns:h="http://www.zkoss.org/2005/zk/native" width="900px" cellpadding="10" >
+			
+				<h:tr>
+					
+					<h:td align="right" colspan="5">
+						<button label="Back" id="back"/>
+						<h:hr />
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td align="right" style="padding:0px;"><label value="Form Name :*" /></h:td>
+					
+					<h:td align="left" style="padding:0px;"><textbox id="formNameTbId" value="" /></h:td>
+					<h:td align="right" style="padding:0px;"><label value="Mailing List :*" /></h:td>
+					<h:td align="left" style="padding:0px;"><listbox mold="select" rows="1" id="mailingListLbId" /></h:td>
+						   
+					<h:td align="center"><checkbox id="doubleOptInCbId" label="Display double Opt-in list only" /></h:td>
+					
+				</h:tr>
+				<h:hr/>
+			</h:table>
+			 <!-- <h:tr>
+		  	 	<h:td>
+		  	 		<label value="Form Name :*" />
+					<textbox id="formNameTbId" value="" />
+				</h:td>
+				
+				<h:td rowspan="2">
+					<label value="Background :" />
+						<html>
+						   <![CDATA[ 
+								<div id="BODY_color" style="display: inline;left:0px;background-color: #e1e1e1;"><a href="#" onClick="document.getElementById('color_picker').contentWindow.ActivateColorPicker(this,'BODY_color','formId','color_picker'); return false;"><img src="/subscriber/img/tb_bkgrdcolorsmall.gif" alt="Color" title="Change body background" name="BODY" id="BODY"  border="0" height="20" width="20"/></a></div>
+								<iframe name="color_picker" id="color_picker" src="/subscriber/colorPicker.htm" style="visibility: visible; position: absolute; left: 132px; top: 884px; z-index: 100000; display: none;" height="270" scrolling="no" width="400"></iframe>
+								&nbsp;<img src="/subscriber/img/down.jpg" id="bodyColorUndobtn" onclick="color_picker.RMUndoColor('formId');" title="Undo" disabled="true" style="text-align:center;cursor:pointer" class="mytext"/>
+						   ]]> 
+						</html>
+				</h:td>
+					
+			</h:tr>
+			<h:tr>
+				<h:td>	
+					<label value="Mailing List :*" />
+				    <listbox mold="select" rows="1" id="mailingListLbId" />
+				    <h:br/>
+				    <checkbox id="doubleOptInCbId" label="Display double Opt-in list only" />
+			 	</h:td>
+		 	</h:tr>
+		 	<h:hr/> -->
+		<h:table xmlns:h="http://www.zkoss.org/2005/zk/native" width="900px" cellpadding="10" >
+			<h:tr>
+				<h:td  >
+				
+				  <hbox pack="start" >
+				  
+					<toolbarbutton  id="addFieldToolbarId" style="font-size:13px;" image="/img/icons/add_icon.png" label="Add New Fields" onClick="fieldsSettingsTabBoxId.setVisible(true)" popup="editPopup" />
+					<menupopup id="editPopup" >
+						<menuitem id="textMenuItemId" label="Text Box"/>
+						<menuitem id="numberMenuItemId" label="Number"/>
+					</menupopup><space width="80px"/>
+					
+					<toolbarbutton label="Delete Field" style="font-size:13px;" id="deleteFldBtnId" image="/img/action_delete.gif"/><space width="80px"/>
+						
+					<toolbarbutton image="/img/theme/preview_icon.png"  id="previewFormTBtnId" style="font-size:13px;cursor:pointer;" label="Preview" />
+					<space width="80px"/>
+					 <label value="Background :" style="font:12px;" visible="false"/>
+						<html visible="false">
+						   <![CDATA[ 
+								<div id="BODY_color" style="display: inline;left:0px;background-color: #e1e1e1;"><a href="#" onClick="document.getElementById('color_picker').contentWindow.ActivateColorPicker(this,'BODY_color','formId','color_picker'); return false;"><img src="/subscriber/img/tb_bkgrdcolorsmall.gif" alt="Color" title="Change body background" name="BODY" id="BODY"  border="0" height="20" width="20"/></a></div>
+								<iframe name="color_picker" id="color_picker" src="/subscriber/colorPicker.htm" style="visibility: visible; position: absolute; left: 132px; top: 884px; z-index: 100000; display: none;" height="270" scrolling="no" width="400"></iframe>
+								&nbsp;<img src="/subscriber/img/down.jpg" id="bodyColorUndobtn" onclick="color_picker.RMUndoColor('formId');" title="Undo" disabled="true" style="text-align:center;cursor:pointer" class="mytext"/>
+						   ]]> 
+						</html> 
+				 </hbox>
+				</h:td>
+			
+			</h:tr>
+			
+			<h:tr>
+				 		<h:td colspan="2"> <label value="Select the form rows to edit : " /> </h:td>
+			</h:tr>
+			
+			<h:tr>
+			
+			<h:td  colspan="2" width="100%" >	
+				
+				 <h:table width="100%">
+				 	<h:tr>
+				 		<h:td width="70%" valign="top">
+				 			<h:table>
+				 				<h:tr>
+				 				  <h:td width="20%">
+				 				  	
+				 				  </h:td>
+				 				  <h:td width="60%">
+					 				<div>
+										<listbox id="editFormViewLbId" width="100%" sclass="contactsView">
+										</listbox>
+					   				</div>
+					   			  </h:td>
+					   			  <h:td width="20%">
+					   			  </h:td>
+					   			 </h:tr> 	
+					   	  </h:table>
+					  </h:td>
+					  
+					  <h:td width="30%" valign="top">
+						<div id="fieldsDivId">
+							<tabbox   id="fieldsSettingsTabBoxId" visible="true" >
+							  <tabs>
+					  		
+								<tab label="Element Settings" id="fldSettingTabId" />
+							
+						  	  </tabs>
+						  
+						  	<tabpanels height="100%">
+							
+							<tabpanel  height="100%">
+							  <div align="left" id="formFldPropsDivId">
+								<h:table>
+									
+									<h:tr>	
+										<h:td style="width:100px;text-align:left;">
+											<label id="fldTypeLblId" value="Element Type : "/>
+										<h:br/><h:br/>
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td style="width:100px;text-align:left;">
+											<label value="Element Label :" />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<textbox id="fldLblTbId" value=""/>
+										<h:br/><h:br/>
+										
+										</h:td>
+									</h:tr>
+									<h:tr >
+										<h:td  style="width:200px;text-align:left;" >
+											<label value="Element Id *:"  />
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<textbox id="fldIdTbId" value=""/>
+										<h:br/><h:br/>
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<label value="Map Field To:"/>
+											<h:br/>
+											<listbox mold="select" rows="1" id="mlFieldsLbId" />
+											<h:br/><h:br/>
+										</h:td>
+									</h:tr>
+									
+									<h:tr>
+										<h:td style="width:100px;text-align:left;">
+											<checkbox label=" Is Mandatory" id="rqrFldCbId"/>
+										<h:br/><h:br/>
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<label value="Element Visibility"/>
+											<h:br/>
+											<radiogroup id="fldVisibilityRgId" orient="horizontal" >
+												<radio label="Visible" checked="true" value="visible" />
+												<radio label="Hidden" value="hidden" />
+											</radiogroup>
+											<h:br/><h:br/>
+										</h:td>
+									</h:tr>
+									
+									<h:tr>
+										<h:td style="width:100px;text-align:left;">
+											<label value="Default Value "/>
+											<h:br/>
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											<textbox id="fldDefValTbId" value=""/>
+											
+										</h:td>
+									</h:tr>
+									<h:tr>
+										<h:td>
+											
+											<label id="errLabelId" value="" />
+											<h:br/><h:br/>
+										</h:td>
+									</h:tr>
+									
+									
+									
+									<h:tr>
+										<h:td align="center">
+											<button label="Save Field" id="saveFldBtnId"/>
+										
+										</h:td>
+									 	<!-- <h:td align="center">   
+											<button label="Save" id="saveBtnId" w:onClick="setFinalHTMLId(this.$f('finalHtmlHiddenId'),'FormDivId')" />
+										</h:td> -->
+									</h:tr>
+									
+								</h:table>
+							  </div>
+							  <div id="formBtnPropsDivId" visible="false" align="left">
+							  	<h:table>
+							  		<h:tr>
+							  			<h:td>
+							  				<label value="Submit Button Setting:" style="font-size:12px;font-weight:bold"/>
+						  				</h:td>
+					  				</h:tr>
+					  				<h:tr>
+					  					<h:td>
+							  				
+							  				<label value="Button Label"/>
+							  				<h:br/>
+							  				<textbox id="submitBtnLblTbId"/>
+							  				
+							  				<h:br/><h:br/>
+							  			</h:td>
+							  		</h:tr>
+							  		<h:tr>
+							  			<h:td>
+							  				<label value="Button Width"/>
+							  				<h:br/>
+							  				<intbox id="submitBtnWidthIbId"/>
+							  				<h:br/><h:br/>
+						  				</h:td>
+					  				</h:tr>
+					  				<h:tr>
+					  					<h:td>
+							  				<label value="Reset Button Setting:" style="font-size:12px;font-weight:bold"/>
+							  			</h:td>
+							  		</h:tr>
+					  				<h:tr>
+					  					<h:td>
+					  						<checkbox label="Required ?" id="resetBtnRqrCbId" checked="true"/>
+					  						<h:br/><h:br/>
+					  						
+					  					</h:td>
+					  				</h:tr>
+							  		<h:tr>
+							  			<h:td>
+							  				
+							  				<label value="Button Label"/>
+							  				<h:br/>
+							  				<textbox id="resetBtnLblTbId"/>
+							  				
+							  				<h:br/><h:br/>
+							  			</h:td>
+							  		</h:tr>
+							  		<h:tr>
+							  			<h:td>
+							  				<label value="Button Width"/>
+							  				<h:br/>
+							  				<intbox id="resetBtnWidthIbId"/>
+							  				<h:br/><h:br/>
+						  				</h:td>
+					  				</h:tr>
+					  				<h:tr>
+					  					<h:td>
+					  						<label value="Alignment of Buttons" style="font-size:12px;font-weight:bold"/>
+					  						<h:br/>
+					  					</h:td>
+					  				</h:tr>
+					  				<h:tr>
+					  					<h:td>
+					  						<radiogroup id="buttonsAlignmntRgId" orient="horizontal" onCheck="">
+												<radio id="lftAlignRadioId" label="left"  value="left"/>
+												<radio id="centerAlignRadioId" label="center" value="center" checked="true"/>
+												<radio id="rghtAlignRadioId" label="right" value="right"/>
+											</radiogroup>
+											<h:br/><h:br/>
+					  					</h:td>
+					  				</h:tr>
+					  				<h:tr>
+										<h:td>
+											
+											<label id="frmBtnsErrLabelId" value="settings saved successfully!" style="font-size:10px;color:green;" visible="false" />
+											<h:br/><h:br/>
+										</h:td>
+									</h:tr>
+									
+					  				<h:tr>
+					  					<h:td>
+					  						<button label="Save Button Settings" id="saveBtnSettingsBtnId"/>
+					  					</h:td>
+					  				</h:tr>
+							  	</h:table>
+							  </div>
+							  <div id="formTitleDivId" visible="false">
+							  	<h:table>
+							  		<h:tr>
+							  			<h:td>
+							  				<label value="Form Heading" style="font-size:12px;font-weight:bold"/>
+							  				<h:br/>
+							  				<textbox  multiline="true" height="100px" id="frmHeadngTbId" draggable="false"/>
+							  				<h:br/><h:br/>
+							  				<button id="saveFrmHdngBtnId" label="Save"/>
+							  			
+							  			</h:td>
+							  		</h:tr>
+							  	</h:table>
+							  </div>
+							</tabpanel>
+						  </tabpanels>
+					  </tabbox>
+					
+					
+					</div>
+		      		</h:td>
+		      		</h:tr>
+		      	</h:table>	
+		      
+		      
+		      
+				</h:td>
+					
+			</h:tr>	
+			<h:tr>
+				<h:td>
+					<button label="Save Form" id="saveFormBtnId"  />
+				</h:td>
+					 
+			</h:tr>				
+			
+			<h:tr>
+				<h:td  width="40%" align="center" colspan="2">
+					<div id="finalLinkDivId" visible="false"  >
+					  <groupbox >
+					  	  <caption label="Iframe Source" />
+						<textbox id="finalLinkTbId" rows="2" cols="70" height="75px" readonly="true"/>	
+						<button label="Close" id="closeBtId" />
+					 </groupbox>	
+					</div>
+				</h:td>
+			</h:tr>
+		</h:table>	
+			
+   <window id="inputFieldsWinId" title="Supported Input Fields" border="normal" mode="overlapped" visible="false" position="center">
+	<caption>
+				<toolbarbutton label="Close" onClick="inputFieldsWinId.setVisible(false)"/>
+	</caption>
+	 <div id="fieldsDivId" width="550px" height="200px" style="overflow:auto">
+		<html id="previewContentHTMLId1" ></html>
+	</div> 
+   </window> 
+			
+</window>
+
+</zk>

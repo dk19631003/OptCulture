@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserDesignedCustomRows" table="UserDesignedCustomRows" lazy="true"> 
+		<id name="templateRowId" type="java.lang.Long" column="templaterow_id">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="user_id"/>
+		<property name="rowCategory" type="string" column="rowcategory" length="50"/>
+		<property name="templateName" type="string" column="templatename" length="50"/>
+		<property name="rowJsonData" type="text" column="rowjsondata"/>
+		<property name="rowHtmlData" type="text" column="rowhtmldata"/>
+		<property name="createdDate" type="calendar" column="created_date" />
+		<property name="modifiedDate" type="calendar" column="modified_date" />
+	</class>
+</hibernate-mapping>
+

@@ -1,0 +1,594 @@
+<zk>
+<style>
+ .custCheck {
+  width:150px;
+ }
+ 
+ 
+</style>
+<window id="viewContactListWinId"  border="0" apply="org.mq.marketer.campaign.controller.contacts.ViewContactsController"  
+		xmlns:h="native" xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%">
+		
+		<window id="viewScoreWinId" title="Score BreakUp" closable="false" 
+			visible="false" border="normal" width="800px" height="300px" position="center" >
+				<caption>
+					<toolbarbutton label="Close" onClick="viewScoreWinId.setVisible(false)"/>
+				</caption>
+				<div  width="781px" height="290px" style="overflow:auto">
+					<grid>
+						<columns>
+							<column label="Date"  width="250px" />
+							<column label="Cause of Score" width="300px"/>
+							<column label="Score"  />
+						</columns>
+						<rows id="scoreBreakUpRowsId">
+						
+							<row>
+								<label value="" />
+								<label value="PageVisited"/>
+								<label id ="pageVisitedScoreLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="DownLoaded"/>
+								<label id ="downloadedLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Source of visited"/>
+								<label id ="srcOfVisitedLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Email Opened"/>
+								<label id ="emailOpenedLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Email Clicked"/>
+								<label id ="emailClickedLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Email Not Opened"/>
+								<label id ="emailNotOpenedLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Email Unsubscribed"/>
+								<label id ="emailUnsubscribedLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Form Submitted"/>
+								<label id ="formSubmitLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Form Abondoned"/>
+								<label id ="formAbondonedLblId"/>
+							</row>
+							
+							<row>
+								<label value="" />
+								<label value="Form Fill Ratio"/>
+								<label id ="formFillRatioLblId"/>
+							</row>
+							
+						</rows>
+						<foot>
+						 	<footer label="Total :" span="2" style="text-align:right;padding-right:25px;" width="500px" />
+        					<footer  width="150px"  id="totalLblId"/>
+    					</foot>
+						
+					</grid>
+				</div>
+		</window>
+		
+		
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;display:none;">
+		<h:tr bgcolor="#F4F5F9">
+			<h:td >
+				<label value="Email Contains: " sclass="boldLabel"/>
+			
+				<textbox id="searchBoxId"  style="position:relative;left:10px;" value="Search Email..." 
+					w:onClick="javascript: if(this.getValue()=='Search Email...') {  this.setValue(''); }" 
+					w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Search Email...'); }" focus="true"/> 
+				 
+			</h:td>
+			
+			<h:td align="left" >
+				<label value="Contacts By Email Status:" sclass="boldLabel"/>
+			
+				<listbox id="contactStatusLbId1" rows="1" mold="select" style="position:relative;left:10px;">
+						<listitem label="--All--" selected="true"/>
+						<listitem label="Active"/>
+						<listitem label="Validation Pending"/>
+						<listitem label="Optin Pending" />
+						<listitem label="Parental pending"/>
+						<listitem label="Not a Mail Server"/>
+						<listitem label="Invalid Domain"/>
+						<listitem label="Unsubscribed"/>
+						<listitem label="Invalid Email"/>
+						<listitem label="Inactive"/>
+						<listitem label="Bounced"/>
+				</listbox>
+			</h:td>
+			
+			<h:td align="left" >
+				 <button  id="searchEmailBtnId1" sclass="idle140"	label="Filter" />
+				 <a label="Reset" id="resetSearchCriteriaAnchId1" />
+			</h:td>
+		
+		</h:tr>
+		</h:table >
+		
+				<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+			<h:tr bgcolor="#eef2f5">
+				<h:td   width  = "7%">
+					<label value="Search By "  sclass="boldLabel"/>
+								 
+				</h:td>
+				<h:td  align="left"  width  = "40px">
+					<listbox id="searchLBId" rows="1" mold="select" style="position:relative;left:10px;"  >
+							<listitem label="--Select Criteria--" selected="true" value="0" />
+							<listitem label="Email Address Contains" value="1"/>
+							<listitem label="Mobile Phone Contains" value="2"/>
+							<listitem label="Membership Number is" value="3" />
+							<listitem label="Name is like" value="4" />
+							<!-- <listitem label="Last Name is" value="5" /> -->
+							<listitem forEach="${viewContactListWinId$ViewContactsController.posMappingLists}" label="${each.displayLabel}" value="${each}"/>
+					</listbox>
+					
+				
+				</h:td>
+				
+				<h:td  align="left" width  = "100%">
+					<textbox id="searchTBId"   style="position:relative;left:10px;" value="Search..." 
+						w:onClick="javascript: if(this.getValue()=='Search...') {  this.setValue(''); }" 
+						w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Search...'); }" focus="true" /> 
+					<span id= "fullNameSpanId" visible="false">
+										<textbox id="first_nameTbId" width="130px"  placeholder="first name" style="margin-left:5px;"/>
+										<textbox id="last_nameTbId" width="130px" placeholder="last name" style="margin-left:5px;"/>
+					</span>	
+					
+				</h:td>
+				<h:td>
+					<datebox use="org.mq.marketer.campaign.custom.MyDatebox" id="searchByDateBxId" visible="false" />
+				</h:td>
+				</h:tr>
+		</h:table >
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+			<h:tr bgcolor="#eef2f5">
+				
+				<h:td align="left" >
+					<label value="Email Status:" sclass="boldLabel"/>
+				
+					<listbox id="contactStatusLbId" rows="1" mold="select" style="position:relative;left:10px;">
+							<listitem label="All" selected="true" />
+							<listitem label="Active"/>
+							<listitem label="Validation Pending" />
+							<listitem label="Optin Pending" />
+							<listitem label="Parental pending" />
+							<listitem label="Not a Mail Server" />
+							<listitem label="Invalid Domain" />
+							<listitem label="Unsubscribed" />
+							<listitem label="Invalid Email" />
+							<listitem label="Inactive" />
+							<listitem label="Bounced"/>
+							<listitem label="Suppressed"/>
+					</listbox>
+				</h:td>
+				
+				<h:td align="left" >
+					<label value="Mobile Status:" sclass="boldLabel"/>
+				
+					<listbox id="mobileStatusLbId" rows="1" mold="select" style="position:relative;left:10px;">
+							<listitem label="All" selected="true"/>
+							<listitem label="Active"/>
+							<listitem label="Not Available"/>
+							<listitem label="Optin Pending"/>
+							<listitem label="Invalid Number"/>
+							<listitem label="Opted-out"/>
+					</listbox>
+				</h:td>
+				
+				<h:td align="left" >
+					<label value="Membership Status" sclass="boldLabel"/>
+				
+					<listbox id="membershipStatusLbId" rows="1" mold="select" style="position:relative;left:10px;">
+							<listitem label="All" selected="true" />
+							<listitem label="Active"/>
+							<listitem label="Expired" />
+							<listitem label="Suspended" />
+							<listitem label="Closed" />
+					</listbox>
+				</h:td>
+			
+				<h:td align="left" >
+					 <button  id="searchEmailBtnId" sclass="idle140"	label="Filter" />
+					 <a label="Reset" id="resetSearchCriteriaAnchId" />
+				</h:td>
+		
+			</h:tr>
+		</h:table >
+		
+		
+		
+		<h:table cellspacing="0" cellpadding="4" width="100%" border="0" bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;display:none;">
+		<h:tr bgcolor="#F4F5F9">
+		<h:td width="210" >
+		<label value="Mobile is: " sclass="boldLabel"/>
+	
+		<textbox id="mobileSearchBoxId" style="position:relative;left:10px;" value="Search Mobile..." 
+			w:onClick="javascript: if(this.getValue()=='Search Mobile...') {  this.setValue(''); }" 
+			w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Search Mobile...'); }" /> 
+		 
+	</h:td>
+	
+	<h:td align="left"  width="400">
+		<label value="Contacts By Mobile Status:" sclass="boldLabel"/>
+	
+		<listbox id="contactMobileStatusLbId" rows="1" mold="select" style="position:relative;left:10px;">
+				<listitem label="--All--" selected="true"/>
+				<listitem label="Active"/>
+				<listitem label="Not Available"/>
+				<listitem label="Optin Pending"/>
+				<listitem label="Invalid Number"/>
+				<listitem label="Opted-out"/>
+				<listitem label="Pending"/>
+		</listbox>
+	</h:td>
+	
+	</h:tr >
+	
+	</h:table>
+	<separator/>
+		
+		<h:table  cellspacing="0" cellpadding="0" width="100%" 
+			border="0" bgcolor="#F9F9F9" >
+			
+		<h:tr >
+		
+		<h:td align="left">
+		
+			<bandbox id="contActionsBandBoxId" buttonVisible="false" mold="rounded" disabled="true" readonly="true" width="200px" value="Bulk Actions" 
+			style="font-size:13px;font-weight:bold;padding:10px;">
+						
+			<bandpopup id="actionsBandpopupId" >
+			
+						
+				<h:table width="100%" cellspacing="0" cellpadding="2">
+					<h:tr height="40">
+						<h:td>
+							<label  value="Delete Selected: " sclass="boldLabel" />
+						</h:td>
+						
+						<h:td width="200">
+						</h:td>
+						
+						<h:td width="100">
+						<button id="delContactsBtnId" label="Delete" sclass="idle70 greenbtn"/>
+						<!--<a id="delContactsBtnId" label="Delete Selected" visible="false"/>
+						--></h:td>
+					</h:tr>
+						
+					<h:tr height="40" bgcolor="#f5f8fb">
+						<h:td>
+						<label value="Move to List: " sclass="boldLabel" />
+						</h:td>
+						<h:td>
+						<listbox id="toMlistlbId" name="ContactListLB"  mold="select"  style="position:relative;left:10px;" width="140px" >
+						<listitem label="Select a list" selected="true" value="Select a list"></listitem>
+					<!-- <listitem  forEach="${viewContactListWinId$ViewContactsController.mailingLists}" value="${each}">
+					  <listcell label="${each.listName}"/>
+					</listitem> -->
+				</listbox>
+						</h:td>
+						<h:td>
+						<button id="moveToListBtnId" label="Move" sclass="idle70 greenbtn"/>
+						</h:td>
+						
+						</h:tr>
+						
+						<h:tr height="40" >
+						<h:td>
+						<label value="Change Email Status:" sclass="boldLabel"/>
+						</h:td>
+						<h:td>
+						
+				<listbox id="statusLBId" width="140px" rows="1" mold="select" style="position:relative;left:10px;">
+					<listitem label="Active" selected="true"/>
+					<listitem label="Inactive"/>
+				</listbox>
+						</h:td>
+						<h:td>
+						<button id="changeStatusBtnId" label="Ok" sclass="idle70 greenbtn"/>
+						</h:td>
+						</h:tr>
+						
+						
+						<h:tr height="40" >
+						<h:td>
+						<label value="Change Mobile Status:" sclass="boldLabel"/>
+						</h:td>
+						<h:td>
+						
+				<listbox id="mstatusLBId" width="140px" rows="1" mold="select" style="position:relative;left:10px;">
+					<listitem label="Active" selected="true"/>
+					<listitem label="Inactive"/>
+				</listbox>
+						</h:td>
+						<h:td>
+						<button id="mchangeStatusBtnId" label="Ok" sclass="idle70 greenbtn"/>
+						</h:td>
+						</h:tr> 
+						
+						
+						
+					<h:tr >
+						<h:td colspan="3"><h:hr/> </h:td>
+					</h:tr>
+					
+					<h:tr bgcolor="#f5f8fb" height="40" >
+						<h:td colspan="3" align="right" style="padding-right:26px;">
+						<button label="Close" sclass="idle70"  id="actionsBndBoxCloseBtnId" onClick="contActionsBandBoxId.close()" />
+						 </h:td>
+					</h:tr>
+						
+						</h:table>
+						
+						</bandpopup>
+					</bandbox>
+		
+		
+		
+		</h:td>
+		
+		<h:td align="right">
+		<checkbox label="Show Filters" id="showFilter" onCheck="contactsFilterAhId.setVisible(self.isChecked()); " />
+		</h:td>
+		<h:td width="350px"  >
+			<paging id="contactsPagingId" detailed="true" pageSize="25" width="100%" visible="false" />
+			<paging id="myPagingId" detailed="true" pageSize="25" width="350px" 
+				class="contactsViewPaging" style="border:none;"/>
+		</h:td>
+		
+		</h:tr>
+		</h:table>
+		<separator/>
+		
+		<!-- <div width="100%"> -->
+	<h:table cellspacing="2" cellpadding="0" width="100%" border="0" >
+		
+		<h:tr>
+			<h:td align="left" colspan="2">
+				<separator />
+					<menupopup id="contactMpId"/>
+					<listbox id="contactListLBId" width="99%" emptyMessage="No contact match for your search..." style="align:center"  checkmark="true"  multiple="true" sclass="contactsView" >
+						<listhead sizable="false" menupopup="contactMpId">
+							<listheader label="" width="50px" align="center"/>
+							<listheader label="Email Address"  width="210px" maxlength="40" style="padding-left:15px;"/>
+							<listheader label="List(s) Name"  maxlength="40"/>
+							<listheader label="Mobile Number"   width="95px"/>
+							<listheader label="Membership#"   />
+							<listheader label="First Name"  />
+							<listheader label="Last Name"  />
+							<listheader label="Created Date"   />
+							<listheader label="Modified Date"   />
+							<listheader label="Email Status"   width="95px"/>
+							<listheader label="Mobile Status"   width="95px"/>
+							<listheader label="Last Mail Date"   width="150px"  visible="false"/>
+							<!--new column added  -->
+							<listheader label="Balance Points"    visible="false"/>
+							<listheader label="Reward Balance"    visible="false"/>
+							<listheader label="Actions" width="80px"  />
+						</listhead>
+						<auxhead id="contactsFilterAhId" visible="false">
+		              		<auxheader align="center">
+		             			<toolbarbutton tooltiptext="filters|cl" />
+		             		</auxheader> 
+		             		<auxheader> <!--Email  -->
+		             			<menupopup id="emailMpId" sclass="myfilter" />
+             					<toolbarbutton context="emailMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		 
+		             		<auxheader /><!--Lists  -->
+		             		
+		             		<auxheader><!-- Mobile -->
+		             			<menupopup id="mobileMpId" sclass="myfilter" />
+             					<toolbarbutton context="mobileMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader> 
+		            			
+		            		<auxheader /><!--Membership  -->
+		            			
+		             		<auxheader><!-- first name -->
+		             			<menupopup id="fnMpId" sclass="myfilter" />
+             					<toolbarbutton context="fnMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		
+		             		<auxheader><!--last name  -->
+		             			<menupopup id="lnMpId" sclass="myfilter" />
+             					<toolbarbutton context="lnMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		
+		             		<auxheader><!-- created date -->
+		             			<menupopup id="createdDateId" sclass="myfilter" />
+             					<toolbarbutton context="createdDateId" tooltiptext="filters|ge|le|ne|-|gt|lt"/>
+		             			<datebox format="dd-MM-yyyy" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+		             		</auxheader>  
+		             		<auxheader><!-- modified date -->
+		             			<menupopup id="modifiedDateId" sclass="myfilter" />
+             					<toolbarbutton context="modifiedDateId" tooltiptext="filters|ge|le|ne|-|gt|lt"/>
+             					<datebox format="dd-MM-yyyy" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+		             			
+		             		</auxheader> 
+		             	
+		             		<auxheader><!--email status  -->
+		             			<menupopup id="emailStatusMpId" sclass="myfilter" />
+             					<toolbarbutton context="emailStatusMpId" tooltiptext="filters|eq|ne"/>
+             					<listbox mold="select" width="60%">
+              						<listitem label="" value="" selected="true"/>
+									<listitem label="Active"/>
+									<listitem label="Validation Pending"/>
+									<listitem label="Optin Pending" />
+									<listitem label="Parental pending"/>
+									<listitem label="Not a Mail Server"/>
+									<listitem label="Invalid Domain"/>
+									<listitem label="Unsubscribed"/>
+									<listitem label="Invalid Email"/>
+									<listitem label="Inactive"/>
+									<listitem label="Bounced"/>
+									<listitem label="Suppressed"/>
+              					</listbox>
+              				</auxheader>
+		             		
+		             		<auxheader><!--mobile status  -->
+		             			<menupopup id="mobileStatusMpId" sclass="myfilter" />
+             					<toolbarbutton context="mobileStatusMpId" tooltiptext="filters|eq|ne"/>
+             						<listbox mold="select" width="60%">
+              						<listitem label="" value="" selected="true"/>
+									<listitem label="Active"/>
+									<listitem label="Not Available"/>
+									<listitem label="Optin Pending"/>
+									<listitem label="Invalid Number"/>
+									<listitem label="Opted-out"/>
+              					</listbox>
+              				</auxheader>
+              				
+              				<auxheader visible="false"> <!--last modified date  -->
+		             			<menupopup id="lastModDateMpId" sclass="myfilter" />
+             					<toolbarbutton context="lastModDateMpId" tooltiptext="filters|eq|ne|-|gt|ge|lt|le"/>
+		             			<datebox format="dd MMM, yyyy" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+		             		</auxheader>  
+              				
+		             	</auxhead>
+					</listbox>
+				
+			</h:td>
+		</h:tr>
+		<h:tr>
+		
+		</h:tr>
+		<h:tr>
+			<h:td align="right">
+	   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+	   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+				<listitem label="25" selected="true"  />
+				<listitem label="50"  />
+				<listitem label="100"/>
+			</listbox>
+		</h:td>
+		<!-- <h:td width="360px"  >
+			<paging id="contactsPaging1Id" detailed="true" pageSize="25" width="360px" 
+				class="contactsViewPaging" style="border:none;" visible="false"/>
+		</h:td> -->
+
+		<!-- <h:td width="280px">
+			<paging id="contactsPaging1Id" detailed="true"
+				pageSize="10" width="280px" class="contactsViewPaging"
+				style="border:none;" />
+				
+		</h:td> -->
+		<h:td width="350px"  >
+			<paging id="contactsPaging1Id" detailed="true" pageSize="25" width="100%" visible="false" />
+			<paging id="myPaging1Id" detailed="true" pageSize="25" width="350px" 
+				class="contactsViewPaging" style="border:none;"/>
+		</h:td>
+		
+		
+		</h:tr>
+		
+		<h:tr>
+			<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"><image src="/img/theme/preview_icon.png " /></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- View" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td  align="right">
+						<button label="Back" id="backBtnId" style="margin-right: 10px;" sclass="idle140"/>
+			</h:td>
+					</h:tr>
+			</h:table>
+			</h:tr>
+		
+		<h:tr>
+			<h:td  valign="center">
+			<div id="exportDivId" visible="false">
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file." style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId" />
+				</div>
+			</h:td>
+							
+		<!-- 	<h:td  align="right">
+				<button label="Back" id="backBtnId" style="margin-right: 10px;" sclass="idle140"/>
+			</h:td> -->
+		</h:tr>
+		<!-- <h:tr>
+			<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"><image src="/img/theme/preview_icon.png " /></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- View" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td  align="right">
+						<button label="Back" id="backBtnId" style="margin-right: 10px;" sclass="idle140"/>
+			</h:td>
+					</h:tr>
+			</h:table>
+			</h:tr> -->
+	</h:table>
+<!-- 	</div> -->
+
+
+
+<window id="custExport" title="Select Fields to Export" border="normal"  width="680px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="650px" style="margin:15px;" />
+					<!-- <checkbox label="Email Name" sclass="custCheck"/> 
+				</div>  -->
+								
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td ><a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />   <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+</window>
+
+</window>
+</zk>
+

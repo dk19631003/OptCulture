@@ -1,0 +1,122 @@
+<zk>
+	<window border="normal" width="550px" xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:h="native" apply="org.mq.marketer.campaign.controller.gallery.ImageLibraryController">
+	
+	
+	<script  src="/js/tinymce/tiny_mce_popup.js"></script>
+<style>
+div.layout-split, div.layout-split-h{
+background:#7D91A1;
+width: 6px;
+}
+
+
+</style>
+	
+		<borderlayout height="300px">
+		
+		<north  size="20%" style="background:#7D91A1;border:0px;">
+				<div height="100%" >
+				<vbox>
+				<hbox style="margin-top:5px;margin-bottom:5px;">
+					<label value="Select Gallery" style="margin-left:10px;margin-rigth:20px;font-weight:bold;font-size:15px;color:#fff" />
+					<separator spacing="10px" orient="horizontal"/>
+					<!--<listbox id="galLBId" rows="1" mold="select"  model="${strset}" onSelect="onSelect()" />-->
+					<listbox id="galLBId" mold="select" width="150px" />
+				</hbox>
+				<hbox style="margin-left:5px;margin-right:5px" >
+					<space width="5px"/>
+					<label value="URL" width="80px" style="margin-right:5pxfont-size:14px;color:white;editable:false;" />
+					<textbox id="imgPathTbId" width="300px"/>
+					<button id="insertTinyMCEBtnId" w:onClick="insertImageToTinymce(this.$f('imgPathTbId').getValue());" label="Insert" visible="false"/>
+					<button id="insertckEditorBtnId" w:onClick="insertImageToCkEditor(this.$f('imgPathTbId').getValue());" label="Insert" visible="false"/>
+				</hbox>
+				
+				
+				
+				</vbox>
+				</div>
+			</north>
+			<west  size="170px" flex="true" border="0" splittable="true" style="margin-top:5px;">
+				<vbox>
+				<label value="Image List"/>
+				<listbox id="ImageNamesLBId" width="160px" rows="6" visible="false" >
+				</listbox>
+				</vbox>
+			</west>
+			<center border="0" style="background:#EFEFE7;margin-top:5px;">
+				<div>
+					<hlayout style="margin-bottom:5px;margin-left:5px;margin-right:5px">
+						<label value="Height :" style="font-weight:bold;margin-right:5px"/>
+						<label id="heightLbId" value=" " style="margin-right:15px"/>
+						<label value="Width  :" style="font-weight:bold;margin-right:5px"/>
+						<label id="widthLbId" value=" "/>
+					</hlayout>
+					<div id="imageDivId" style="margin-top:10px;margin-left:25px;">
+					</div>
+				</div>
+			</center>
+		</borderlayout>
+	<script>
+		<![CDATA[
+		     // this is  a temporary workaround in plaingeditor .
+		     // it copies the browse server popup URL to editor window URL input box.
+			 function insertImageToCkEditor(url){
+		    	 
+		    	 
+				 var cells = window.opener.document.getElementsByTagName("input");
+				 //alert('====***'+asd);
+				 
+				 
+				 for (var i = 0; i < cells .length; i++) {
+				     var status = cells [i].getAttribute("class");
+				     //alert(cells[i].getAttribute("id"));
+				     if ( status == "cke_dialog_ui_input_text" || status == "mceFocus") {   
+				    	 srcId = cells[i].getAttribute("id");
+				        //alert("status="+status +" ==== "+srcId);
+				         break;
+				     }  
+				 }  
+				
+				var src = window.opener.document.getElementById(srcId);
+				//alert('src is==='+src);
+				src.value = url;
+				 
+				if (src.onchange)
+					src.onchange();
+				self.close();
+				 
+			} //insertImageToCkEditor
+		     
+		     
+		     function insertImageToTinymce(url) {
+		    	// alert('Window ='+tinyMCEPopup.getWindowArg("window"));
+					
+				// alert("URL="+url);
+				 var win = tinyMCEPopup.getWindowArg("window");
+				 
+				// alert("window tiny :"+ window.parent.document.getElementsByTagName("tinyMCEPopup"));
+				 //alert("window parent :"+ window.parent);
+				 //alert("window opener:"+ window.opener);
+				 
+				 //alert(tinyMCEPopup.getWindowArg("window").name); 
+				 
+				 //alert("window is ::"+win);
+				// win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = URL;
+			        // insert information now
+			     win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = url;
+
+				 //alert('win.getImageData='+win.getImageData);
+				 
+				  // for image browsers: update image dimensions
+				  if (win.getImageData) win.getImageData();
+
+				  // close popup window
+				  tinyMCEPopup.close();
+				
+		     } // insertImageToTinymce
+
+		]]>
+	</script>
+		
+	</window>	
+</zk>

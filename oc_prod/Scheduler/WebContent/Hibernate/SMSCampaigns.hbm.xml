@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.SMSCampaigns"
+		table="SMS_campaigns">
+		
+		<id name="smsCampaignId" type="java.lang.Long">
+			<column name="sms_campaign_id" />
+			<generator class="native" />
+		</id>
+		<property name="smsCampaignName" type="string">
+			<column name="sms_campaign_name" length="100" not-null="true"
+				unique-key="Unique_Campaign" />
+		</property>
+		
+		<property name="createdDate" type="java.util.Calendar" not-null="true" >
+			<column name="created_date" />
+		</property>
+		
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="30" />
+		</property>
+		<property name="draftStatus" type="string">
+			<column name="draft_status" length="30" />
+		</property>
+		<property name="senderId" type="string">
+			<column name="sms_sender_id" length="30" />
+		</property>
+		
+		<property name="messageContent" type="text">
+			<column name="message_content" />
+		</property>
+		
+		<property name="scheduleType" type="string">
+			<column name="schedule_type" length="30" />
+		</property>
+		
+		<property name="listType" type="text">
+			<column name="list_type" />
+		</property>
+		
+		
+		<property name="messageType" type="string">
+			<column name="message_type" length="10" />
+		</property>
+		
+		<property name="messageSizeOption" type="java.lang.Byte">
+			<column name="message_size_option"/>
+		</property>
+		
+		<set name="mailingLists" table="mlists_sms_campaigns"
+			lazy="false">
+			<key column="sms_campaign_id" />
+			<many-to-many
+				class="org.mq.captiway.scheduler.beans.MailingList" column="list_id" />
+		</set>
+		<many-to-one name="users"
+			class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false">
+			<column name="user_id" unique-key="Unique_Campaign" />
+		</many-to-one>
+		
+		<property name="enableEntireList" type="boolean">
+			<column name="enable_entire_list" default="true" />
+		</property>	
+		
+			<property name="category" type="java.lang.Long">
+			<column name="category"  />
+		</property>
+		<property name="templateRegisteredId" type="text">
+			<column name="template_registered_id"  />
+		</property>
+		
+	</class>
+</hibernate-mapping>
+

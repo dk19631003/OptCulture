@@ -1,0 +1,233 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+	<style src="/css/campaign.css"/>
+	<!-- <style src="/css/theme.css" /> -->   
+	<window id="programdesignerWinId"     
+		apply="org.mq.marketer.campaign.controller.program.ProgramAnalysisController" 
+		xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%"   xmlns:w="http://www.zkoss.org/2005/zk/client"
+		style=" min-width:920px; min-height:650px">
+		
+	<h:table width="100%" border="0" bgcolor="lightgray" cellspacing="1" cellpadding="0" align="left">
+	<h:tr>
+	<h:td>
+	
+		<h:table style="width:100%; min-width: 350px;" height="80" border="0" cellspacing="0" bgcolor="white"> 
+		<h:tr>
+		<h:td align="right" width="120" style="font-size:13px;">
+		Program Name : 
+		</h:td>
+		<h:td width="220"><label id="programNameLblId" value="program name" /></h:td>
+		</h:tr>
+		<h:tr>
+		<h:td align="right" style="font-size:13px;">
+		Description : 
+		</h:td>
+		<h:td><label value="" id="programDescLblId" width="10px" /></h:td>
+		</h:tr>
+		
+		<h:tr>
+		<h:td align="right" style="font-size:13px;">
+		 Mailing List(s) : 
+		</h:td>
+		<h:td><label value="" id="progMlListLblId" /></h:td>
+		</h:tr>
+		
+		</h:table>
+	</h:td>
+<h:td width="2"></h:td>
+	<h:td>
+	
+		<h:table width="100%" style="min-width:440px;" height="80" border="0" cellspacing="0" cellpadding="0" bgcolor="white">
+		<h:tr>
+		<h:td >
+		
+		
+		<radiogroup id="fetchrepRgId" />
+		    
+									<radio id="specificDayOrHourRBtnId" label="Within the last " selected="true" radiogroup="fetchrepRgId" style="display:inline;"/>
+												<listbox id="withInLastLbId" mold="select" width="60px">
+													<listitem  label="0(Immediately)" value="0"></listitem>
+													<listitem label="1" value="1"></listitem>
+													<listitem label="2" value="2"></listitem>
+													<listitem label="3" value="3"></listitem>
+													<listitem label="4" value="4"></listitem>
+													<listitem label="5" value="5"></listitem>
+													<listitem label="6" value="6"></listitem>
+													<listitem label="7" value="7"></listitem>
+													<listitem label="8" value="8"></listitem>
+													<listitem label="9" value="9"></listitem>
+													<listitem label="10" value="10"></listitem>
+													<listitem label="11" value="11"></listitem>
+													<listitem label="12" value="12"></listitem>
+													<listitem label="13" value="13"></listitem>
+													<listitem label="14" value="14"></listitem>
+													<listitem label="15" value="15"></listitem>
+													<listitem label="16" value="16"></listitem>
+													<listitem label="17" value="17"></listitem>
+													<listitem label="18" value="18"></listitem>
+													<listitem label="19" value="19"></listitem>
+													<listitem label="20" value="20"></listitem>
+													<listitem label="21" value="21"></listitem>
+													<listitem label="22" value="22"></listitem>
+													<listitem label="23" value="23"></listitem>
+													<listitem label="24" value="24" selected="true"></listitem>
+												</listbox>
+												 <listbox id="hoursDaysLbId" width="80px" mold="select" >
+													<listitem label="hour(s)" value="60" selected="true"></listitem>
+													<listitem label="day(s)" value="1440" ></listitem>
+												</listbox>	
+		
+		</h:td>
+		
+		<h:td width="130">
+			<radiogroup id="fetchOptionRgId" />
+			<radio id="totalCountRBtnId" label="Total Contacts" selected="true" radiogroup="fetchOptionRgId"/>
+		</h:td>
+		
+		</h:tr>
+		
+		<h:tr>
+		<h:td>
+		<radio id="createdDateRBtnId" label="From The Created Date" radiogroup="fetchrepRgId"/>
+		</h:td>
+		
+		<h:td>
+			<radio id="uniqueCountRBtnId" label="Unique Contacts" radiogroup="fetchOptionRgId"/>
+		</h:td>
+		
+		</h:tr>
+		
+		<h:tr>
+		<h:td>
+		 <radio id="betweenDateRBtnId" label="From" radiogroup="fetchrepRgId"  style="display:inline;" />
+		 
+		 <datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+			format="dd-MMM-yyyy" constraint="no future"/><space/>
+	 
+		 <label value="To"/>
+		 
+		 <datebox id="toDateboxId" readonly="true"
+			use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy"/>
+			
+		</h:td>
+		<h:td>
+		 <button id="fetchReportsBtnId" label="Fetch" sclass="idle56"/>
+		</h:td>
+		
+		</h:tr>
+		
+		</h:table>
+	</h:td>
+<h:td width="1"></h:td>
+	<h:td>
+	
+		<h:table width="100%" height="80" border="0" cellspacing="1" cellpadding="2" bgcolor="lightgray">
+		<h:tr >
+			<h:td width="150" height="20" bgcolor="#00A7D5"></h:td>
+			<h:td width="150" bgcolor="#5ACCE5"></h:td>
+		</h:tr>
+		<h:tr bgcolor="white"><h:td height="20">Current</h:td><h:td>Passed Through</h:td></h:tr>
+		<h:tr bgcolor="white">
+			<h:td height="20"><label value="1161" /></h:td>
+			<h:td><label value="153" /></h:td>
+		</h:tr>
+		
+		</h:table>
+
+	</h:td>
+
+
+	</h:tr>
+	</h:table>
+		
+	<h:table width="100%">
+		<h:tr>
+			<h:td align="left">
+				<div>
+					<h:table>
+						<h:tr>
+							<h:td >
+								
+							</h:td>
+						</h:tr>
+					</h:table>
+				</div>
+
+			</h:td>
+			<h:td align="right">
+				
+			</h:td>
+		</h:tr>
+	</h:table>
+
+	<borderlayout width="99%" height="610px" id="borderLayoutId">
+			<center  id="centerPanel" autoscroll="false" >
+				
+				<div id="centerPanelDiv" width="100%" height="100%" >
+					
+				<!-- <canvas id="centerDiv" width="820px" onClick="freeSelection(self)" style="position:absoulte;top:50px;left:50px;background:url(img/program/canvas_bg_test.png)" height="520px" /> -->
+				<!--<canvas id="cvs2" width="100%" height="100%" 
+				style="position:absolute; left:1px; top:1px; z-index:1; background-image:url(img/program/canvas_bg_test.png);" />
+		 		-->
+		 		
+		 		<canvas id="centerDiv" width="100%" height="100%"  
+		 		style="position:absolute; left:1px; top:1px; z-index:2" />
+				
+				</div>
+			</center>
+		
+		</borderlayout>
+	<script type="text/javascript" src="js/jquery.disable.text.select.js"></script>
+    <script type="text/javascript" src="js/jquery.disable.text.select.pack.js"></script>
+ 
+ 	<script><![CDATA[
+		function disableCompTextSelection() {
+			$('.disableSelection').disableTextSelect();
+		}
+	]]></script>
+	
+		<label id="shapeDataLb" visible="false" />
+		<label id="selectedShapeDataLb" visible="false" />
+		<label id="menuNavPageTbId" visible="false"/>
+		
+		<label id="tempLblId" value="" visible="false"/>
+		
+	<script defer="true"><![CDATA[
+			zk.Widget.$(jq('$tempLblId')[0]).fire('onChange',{value:'testing'},{toServer:true},0);
+		]]></script>
+		
+		
+	<!--<zscript><![CDATA[
+	                  
+	public void freeSelection(org.zkforge.canvas.Canvas canvas) {
+				List children = canvas.getChildren();
+				for (int i = 0; i < children.size(); i++) {
+					Window obj = (Window) children.get(i);
+					obj.setBorder("none");
+					obj.setStyle("position:absolute;padding:1px");
+				}
+			}
+	]]></zscript>
+	--></window>
+	<window id="popupWindow" style="overflow:auto" border="normal" visible="false" width="800px" height="400px">
+			<caption>        
+            	<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="popupWindow.setVisible(false)"/>            
+        	</caption>
+        	<div id="popDivId" >
+        		
+        	<listbox id="contactsListLbId" sclass="contactsView" width="100%" mold="paging" pageSize="10">
+        	
+	        	<listhead sizable="false" style="background-color:#488eb0;">
+																
+					<listheader label="First Name" width="150px"/>
+					<listheader label="Email Id" />
+					<listheader label="Phone" width="100px"/>
+					<listheader label="Activity Date" width="200px"/>
+				</listhead>
+	        	
+        	</listbox>
+        	
+        	</div>
+        </window>
+</zk>

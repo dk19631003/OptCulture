@@ -1,0 +1,31 @@
+<ion-tabs dir="{{textDir}}" (ionTabsDidChange)="tabChanged()" mode="md">
+
+  <ion-tab-bar slot="bottom" [ngStyle]="{'width':  width  }">
+
+    <ion-tab-button tab="home" (click)="changeHomeIcon()">
+        <ion-icon [src]="isHomeSelected?homeClickIcon:homeIcon" ></ion-icon>
+        <ion-label class="tabText">{{'Home' | translate}} </ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab2" (click)="changeOffersIcon()">
+      <ion-icon  [src]="isOffersSelcted?offersClickIcon:offersIcon" ></ion-icon>
+      <ion-label class="tabText">{{'offers' | translate}}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab3" (click)="changeCheckInIcon()">
+      <ion-icon  [src]="isCheckInselected?cardClickIcon:cardIcon"></ion-icon>
+      <ion-label class="tabText">{{'CheckIn' | translate}} </ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab4" (click)="changeStoreIcon()">
+      <ion-icon  [src]="isStoreSelected?storeClickIcon:storeMaterialIcon" ></ion-icon>
+      <ion-label class="tabText">{{'Stores' | translate}} </ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab5" (click)="changeProfileIcon()">
+        <ion-icon  [src]="isProfileSelected?profileClickIcon:profileIcon"   ></ion-icon>
+        <ion-label class="tabText">{{'Profile' | translate}} </ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+</ion-tabs>

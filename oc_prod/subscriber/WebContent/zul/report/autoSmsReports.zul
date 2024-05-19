@@ -1,0 +1,116 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style>
+ .custCheck {
+  width:140px;
+ }
+
+ .hovergridcolumn > div.z-column-cnt { 
+		color: #FFFFFF;
+		font-weight: bold;
+		cursor: pointer;
+		}
+		
+</style>
+	<window id="reportsWinId"  apply="org.mq.marketer.campaign.controller.report.AutoSmsReportsController" xmlns:w="client"  xmlns:h="native" width="100%">
+	<h:table width="100%"  cellspacing="0" cellpadding="0">
+                 <h:tr >
+                         <h:td style="padding: 5px 0px 15px 5px;">
+                             <label value="NOTE : " style="font-weight:bold"/>
+                             <label value="Reports for auto-sms are available from Oct, 2019." />
+                         </h:td>
+                 </h:tr>
+     </h:table>
+	<h:table cellspacing="0" cellpadding="8" width="100%" border="0" style="padding:3px;border-radius:5px;">
+		<h:tr bgcolor="#F4F5F9">
+			<h:td>
+				<label value="Date" sclass="theme-lbHeading"/>
+							<space/>
+							<label value="From"/>
+							<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							format="dd-MMM-yyyy" constraint="no future"/><space/>
+							<label value="To "/>
+							<datebox id="toDateboxId" readonly="true"
+							use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy"/>
+							
+			
+			</h:td>
+			<h:td>
+				<label value="Auto-Sms Category" sclass="theme-lbHeading" />
+				<listbox mold="select" rows="1" id="smsFilterLbId">
+					<listitem label="All" value="All" selected="true" />
+					<!-- <listitem label="Double Opt-in" value="needtochange" style="display:none;"/> -->
+					<!-- <listitem label="Parental Consent" value="TestParentalMail"/> -->
+					<listitem label="Loyalty Enrollment" value="LoyaltyDetails"/>
+					<!-- <listitem label="Welcome Message" value="WelcomeEmail"/> -->
+					<listitem label="Gift-Card Issuance" value="LoyaltyGiftCardIssuance" />
+					<listitem label="Tier Upgradation" value="LoyaltyTierUpgradation"/>
+					<listitem label="Earning Bonus" value="LoyaltyEarningBonus"/>
+					<listitem label="Reward Expiration" value="LoyaltyRewardExpiry"/>
+					<listitem label="Membership Expiration" value="LoyaltyMembershipExpiry"/>
+					<listitem label="Gift Amount Expiration" value="LoyaltyGiftAmountExpiry" />
+					<listitem label="Gift-Card Expiration" value="LoyaltyGiftCardExpiry" />
+					<listitem label="FeedBack Form" value="feedbackform"/>
+					<listitem label="Special Rewards" value="specialRewards"/>
+					<listitem label="Welcome SMS" value="welcomeSms"/>
+					<listitem label="Loyalty Adjustment" value="loyaltyAdjustment"/>
+					<listitem label="Loyalty Issuance" value="loyaltyIssuance"/>
+					<listitem label="Loyalty Redemption" value="loyaltyRedemption"/>
+				</listbox>
+			</h:td>
+			<h:td>
+				<button label="Get Reports" sclass="idle140 greenbtn" id="getBitweenDatesBtnId"/>
+				<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+			</h:td>
+		
+		
+		</h:tr>
+		<h:tr height="15" />
+	
+	</h:table>
+	<grid id="reportGridId" mold="paging"   emptyMessage="No Records Found..."  >
+					<columns menupopup="auto" >
+						<column label="Message Name" width="250px" />
+						<column label="Auto-Sms Category"  width="200px"/>
+						<!-- <column label="Configured To" width="200px"/> -->
+						<column label="Last Sent Date"  id="sortbyLastSentDate" sclass="hovergridcolumn" />
+						<column label="Total Sent"  id="sortbyTotalSent" sclass="hovergridcolumn"  />
+						<column label="Delivered" id="sortbyDelivered" sclass="hovergridcolumn" />
+						<column label="Unique Clicks" id="sortbyUniqueClicks" sclass="hovergridcolumn" />
+						<column label="Bounced" id="sortbyUniqueOpens" sclass="hovergridcolumn"  />
+						</columns>
+						<rows id="reportGridrowsId"></rows>
+				</grid>
+				
+			<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+			<h:tr bgcolor="#F9F9F9" >
+				<h:td  valign="center">
+				<label value="Export as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=" .csv " value="csv" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file." style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId"  />
+			</h:td >
+				<h:td align="right">
+		   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+		   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+					<listitem label="5" value="5"/>
+					<listitem label="10" selected="true" value="10"/>
+					<listitem label="15" value="15"/>
+				</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="autoSmsRepListBottomPagingId" detailed="true" pageSize="10" width="280px" 
+						class="contactsViewPaging" style="border:none;"/>
+				</h:td>
+			</h:tr>
+		</h:table>	
+	</window>
+</zk>

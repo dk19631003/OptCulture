@@ -1,0 +1,58 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="autoProgramCustActivatedEventWinId"  width="520px" height="300px"
+		apply="org.mq.marketer.campaign.controller.program.AutoProgramCustActivatedEventController" 
+		xmlns:h="http://www.zkoss.org/2005/zk/native" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+		
+		<div id="centerDivId" height="300px">
+			<h:table width="100%" height="100%" >
+			
+				
+				<h:tr >
+					<h:td style="padding:20px; background-color: #F4F8FC;">
+						
+						<label width="150px" multiline="true" style="font-family:arial;font-size:12px;">
+									---This COMPONENT act as a starting point of your Program and it is get activated when the 
+										customers are added into configured mailing lists.
+																											
+										---If you selects the check box,Your program runs only for those contacts 
+											which are added after the program created date.
+											
+										---If you deselect the check box,Your Program runs for all the new contacts. 
+						</label>
+						</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<checkbox id="runForCbId" label="Run for only Newly Added Contact(s)?" style="font-weight:bold;font-size:13px;"  checked="false"/>
+						
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td align="center">
+						<label value="select it If u want to Run this program for only Newly added contact(s). " multiline="true"/>
+						<image src="/img/QuestionmarkButton-16x16.png" tooltip="mail" style="cursor: help" />
+						<popup id="mail" width="300px">
+							<html>
+							   <![CDATA[
+								 <span style="font-family:arial;font-size:12px;">   
+										-> If you selcets this Check Box,this program will run for those contacts <br/>
+										-> which are added newly after this program created date.<br/><br/>
+										-> The default option given is(i.e if you deselect the Check Box)enable<br/>
+										->this program to run for all new the contacts.<br/>
+								</span>
+								]]>
+							</html>
+						</popup>
+					</h:td>
+				</h:tr>
+				
+			</h:table>
+		
+		
+		
+		</div>
+	
+	</window>
+</zk>

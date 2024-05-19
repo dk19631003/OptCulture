@@ -1,0 +1,120 @@
+
+
+<ion-content dir="{{textDir}}" forceOverscroll="false">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0">
+  <div class="colorClass ht25" >
+    <ion-grid>
+      <ion-row>
+        <ion-col size="7">
+            <ion-toolbar color="#ffe000">
+                <ion-buttons slot="start" >
+                    <ion-button  (click)="backButtonEvent()">
+                      <ion-icon mode="md" color="light" slot="icon-only" name="arrow-back"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+          <ion-item lines="none"  class="mr-right-5 mr-left-5 color-background">
+            <ion-label  text-wrap class="title">
+               {{'FilterBy' | translate}}
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col size="5">
+            <ion-button  *ngIf="isSelected" mode="ios" (click)="clearAll()" color="light" shape="round" class="Login-Button mrtop45 text_transform mgtop0" >
+                <ion-icon  mode="md"   name="close"  ></ion-icon>
+                <ion-text class="Login-Button-Text ">{{'ClearAll' | translate}}</ion-text>
+            </ion-button>
+            <!-- <div class="mrtop45" *ngIf="!isSelected">
+                <ion-icon name="more" mode="md" size="large" (click)="changeType('Brand')"></ion-icon>
+            </div> -->
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+   </div>
+   
+   <div class="split left">
+    <ion-list class="pdbottom0" mode="md" [ngClass]="{'bgColor': type == 'Brand'}">
+      <ion-item lines="full"  (click)="changeType('Location')" [ngClass]="{'itemBg': type == 'Brand'}">
+        <ion-label class="typeText bold" >
+            {{'Location' | translate}}
+        </ion-label>
+      </ion-item>
+      <ion-item lines="{{lines}}" (click)="changeType('Brand')" [ngClass]="{'itemBg': type == 'Location'}" >
+          <ion-label class="typeText bold">
+            {{'Brand' | translate}} 
+          </ion-label>
+        </ion-item>
+    </ion-list>
+    </div>
+    
+    <div class="split right">
+      <ion-grid class="col1 pdleft0"  *ngIf="type == 'Location'">
+          <ion-row>
+              <ion-col class="col1 pdbottom0">
+                  <ion-list mode="md">
+                      <ion-item class="box-border borderColor " lines="none">
+                          <ion-label class="textFont" *ngIf="!country">{{'EnterCountry' |translate}}</ion-label>
+                          <ion-select  class="textFont colorCheck maxwd" mode="ios" [(ngModel)]="country" [interfaceOptions]="customPopoverOptions"  interface="popover" (ngModelChange)="getCitiesFromStoreInquiry(country,true)">
+                            
+                            <ion-select-option *ngFor="let country of countries" class="textFont"  value="{{country}}"  >{{country}}</ion-select-option>
+                          </ion-select>
+                      </ion-item>
+                  
+                  </ion-list>
+              </ion-col>
+             
+            </ion-row>
+            <ion-row>
+                <ion-col class="col1">
+                  <ion-list mode="md">
+                    <ion-item class="box-border borderColor" lines="none">
+                        <ion-label class="textFont" *ngIf="!city">{{'EnterCity' |translate}}</ion-label>
+                        <ion-select mode="ios" class="textFont colorCheck" [(ngModel)]="city" [interfaceOptions]="customPopoverOptions"  interface="popover" (ngModelChange)="getLocalitiesFromStoreInquiry(city)">
+                            <ion-select-option mode="md" *ngFor="let city of cities" class="textFont"  value="{{city}}"  >{{city}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-list>
+                </ion-col>
+               
+              </ion-row>
+              <ion-row>
+                <ion-col class="col1">
+                  
+                    <ion-item class="box-border borderColor" lines="none">
+                        <ion-label class="textFont" *ngIf="!locality">{{'EnterLocality'| translate}}</ion-label>
+                        <ion-select mode="ios" class="textFont colorCheck" [(ngModel)]="locality" [interfaceOptions]="customPopoverOptions"  interface="popover" >
+                            <ion-select-option mode="md" *ngFor="let locality of localities" class="textFont"  value="{{locality}}"  >{{locality}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-list>
+                
+                    </ion-list>
+                </ion-col>
+               
+              </ion-row>
+      </ion-grid>
+
+      <ion-grid class="col1 pdleft0" *ngIf="type == 'Brand'">
+        <ion-list lines="full">
+            <ion-item *ngFor="let brand of modifiedBrands">
+                <ion-label class="textFont">{{brand.name}}</ion-label>
+                <ion-checkbox slot="end"  class="checkbox-icon" mode="ios" [(ngModel)]="brand.isEntryChecked" (ionChange)="selectBrand()"></ion-checkbox>
+              </ion-item>
+        </ion-list>
+        
+      </ion-grid>
+    </div>
+
+    <div class="wd100   posabsolute ht5">
+        <ion-button expand="full"  type="submit" (click)="dismiss()"   class="Login-Button text_transform margin0" > 
+            <ion-text class="Login-Button-Text ">{{'Apply' |translate}} </ion-text>
+          </ion-button>
+    </div>
+
+  </ion-col>
+  <ion-col  *ngIf="!isMobile" class="bgimage "></ion-col>
+  </ion-row>
+  </ion-grid>
+</ion-content>

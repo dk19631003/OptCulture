@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>
+        Ionic 4 Multiple Slides
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content padding>
+  
+  
+    <ion-grid>
+      <ion-row>
+        <ion-col size="10">
+          <ion-slides pager="true" [options]="slideOptsOne" #slideWithNav
+            (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+            <ion-slide *ngFor="let s of sliderOne.slidesItems">
+              <img style="height:200px;width: 100%;" src="../../assets/images/1.jpg">
+            </ion-slide>
+          </ion-slides>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  
+  
+  </ion-content>

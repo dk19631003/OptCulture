@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.POSMapping"
+		table="pos_mapping">
+		<id name="posId" type="long">
+			<column name="pos_id" />
+			<generator class="native" />
+		</id>
+		<property name="customFieldName" type="string">
+			<column name="cust_field_name" />
+		</property>
+		<property name="displayLabel" type="string">
+			<column name="display_label" />
+		</property>
+		<property name="defaultPhValue" type="string">
+			<column name="default_Ph_Value" />
+		</property>
+		<property name="defaultPhValueSet" type="string">
+			<column name="default_Ph_Value_set" />
+		</property>
+		<property name="dataType" type="string">
+			<column name="data_type" />
+		</property>
+		<property name="drDataType" type="string">
+			<column name="dr_data_type" />
+		</property>
+		<property name="mappingType" type="string">
+			<column name="mapping_type" />
+		</property>
+		<property name="posAttribute" type="string">
+			<column name="pos_attribute" />
+		</property>
+		<property name="digitalReceiptAttribute" type="string">
+			<column name="digital_receipt_attribute" />
+		</property>
+		<property name="optionalValues" type="string">
+			<column name="optional_values" />
+		</property>
+		
+		<property name="uniquePriority" type="java.lang.Integer">
+			<column name="unique_priority" />
+		</property>
+		<property name="uniqueInAcrossFiles" type="java.lang.Integer">
+			<column name="unique_in_across_files" />
+		</property>
+		<property name="userId" type="long">
+			<column name="user_id" />
+		</property>
+	</class>
+</hibernate-mapping>
+
+

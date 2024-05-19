@@ -1,0 +1,78 @@
+<zk>
+
+<style src="/css/campaign.css"/>
+<window id="custShrtCodeWinId" width="100%" apply="org.mq.marketer.campaign.controller.social.GenerateCustomShortCodeController" 
+		xmlns:h="native"  xmlns:w="client">
+		
+		<grid id="custmShrtCodeGridId" fixedLayout="true"  emptyMessage="No Records found...." >
+				 	
+
+		 	<columns >
+		       <column   label="URL"/>
+		       <column   label="Short Code"/>
+		      
+		     </columns>
+				
+		</grid>	
+		<separator />
+		<h:table cellspacing="0" width="100%" cellpadiing="0"> 
+			<h:tr>
+				<h:td >
+					<button label="Add Short Code" sclass="idle140" onClick="addCustomCodeDivId.setVisible(true);"  />
+				
+				</h:td>
+			
+			
+			</h:tr>
+			<h:tr height="20" />
+			<h:tr>
+				<h:td >
+				
+					<groupbox closable="false" width="800px" id="addCustomCodeDivId" sclass = "" visible="false">
+						<caption label="Create New Short Code" style="font-weight:bold;"/>
+						<h:table>
+							<h:tr>
+								<h:td>
+									<label value="Enter URL:"/><label value="*" sclass="redStar"/>
+								</h:td>
+								<h:td colspan="2">
+									<textbox width="450px" value="http://" id="urlTxtBoxId"/>
+									
+								</h:td>
+								<h:td>
+									<button label="Generate" id="generateCodeBtnId" sclass="idle140 greenbtn" />
+								</h:td>
+							</h:tr>
+							<h:tr height="30" />
+							<h:tr>
+								<h:td>
+									<label value="Generated URL:" />
+								</h:td>
+								<h:td colspan="2">
+									<textbox id="generatedUrlTxtBoxId"  width="450px"/>
+								</h:td>
+								<h:td>
+									<button label="Cancel" onClick="addCustomCodeDivId.setVisible(false);" sclass="idle70" />
+									<button label="Save" sclass="idle70 greenbtn" id="savecodeBtnId"/>
+								</h:td>
+								
+							</h:tr>
+						
+						</h:table>
+					
+					
+					
+				</groupbox>
+				</h:td>
+			
+			</h:tr>
+		
+		
+		</h:table>
+		
+		
+		
+
+</window>
+
+</zk>

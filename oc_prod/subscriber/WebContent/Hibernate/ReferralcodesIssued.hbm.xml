@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.ReferralcodesIssued"
+		table="referral_codes_issued">           
+		
+		
+		<id name="referralCodeId" type="java.lang.Long" column="referral_code_id">
+			<generator class="native" />
+		</id>
+		
+		
+		<property name="Refcode" type="string">
+			<column name="code"  />
+		</property>
+		
+		<many-to-one name="couponId" lazy="false"
+			class="org.mq.marketer.campaign.beans.Coupons" fetch="select">
+			<column name="coupon_id" not-null="true"  />
+		</many-to-one>
+		
+		<!-- <property name="couponId" type="java.lang.Long">
+			<column name="coupon_id" />
+		</property>
+		 -->
+		<property name="RefprogramName" type="string">
+			<column name="name" length="60"/>
+		</property>
+			
+		
+		<property name="referredCId" type="java.lang.Long">
+			<column name="referred_cid" />
+		</property>
+			
+			
+			
+		<property name="status" type="string">
+			<column name="status" />
+		</property>
+		
+		
+		<property name="issuedDate" type="calendar">
+			<column name="issued_date" />
+		</property>
+		
+		
+		<property name="userId" type="long">
+			<column name="created_by" />
+		</property>
+		
+		
+		<property name="orgId" type="long">
+			<column name="org_id" />
+		</property>
+	
+	
+	
+		<property name="campaignType" type="string">
+			<column name="campaign_type" />
+		</property>
+		
+	
+		<property name="sentTo" type="string">
+			<column name="sent_to" />
+		</property>
+		
+		
+		
+
+	</class>
+</hibernate-mapping>
+
+
+
+

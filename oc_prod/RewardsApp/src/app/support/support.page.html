@@ -1,0 +1,53 @@
+
+<ion-content>
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent">
+<div>
+    <ion-toolbar>
+        <ion-buttons slot="start" >
+            <ion-button  (click)="backButtonEvent()">
+              <ion-icon mode="md" color="dark" slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-item lines="none"  >
+          <ion-label text-wrap class="titleText">
+           Help & Support
+          </ion-label>
+        </ion-item>
+</div>
+    
+<ion-grid class="mr-right-5 mr-left-5">
+  <!-- <ion-row>
+    <ion-col > -->
+      <ion-row>
+          <ion-col>
+          <ion-label class="textFont coolGrey"> Email  </ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col class="pdtop0">
+                <ion-label class="textFont navy" text-wrap>support@optculture.com</ion-label> 
+          </ion-col>
+      </ion-row>
+    <!-- </ion-col> -->
+    <!-- <ion-col > -->
+      <ion-row>
+          <ion-col dir="ltr">
+                <ion-label class="textFont coolGrey"> Support (International) </ion-label>
+          </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col class="pdtop0">
+                <ion-label class="textFont navy" dir="ltr" text-wrap>+91 9100108074</ion-label> 
+          </ion-col>
+      </ion-row>
+      <!-- </ion-col>
+  </ion-row> -->
+</ion-grid>
+</ion-col>
+<ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>

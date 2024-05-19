@@ -1,0 +1,190 @@
+<zk>
+	<window width="100%" id="ltyTransactionReportWinId" apply="org.mq.optculture.controller.loyalty.LtyKpiReportController"
+	 xmlns:h="http://www.zkoss.org/2005/zk/native"
+	xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<groupbox sclass="gbStyle" closable="false" >
+			<caption label="KPIs Report"  />
+			<h:table cellspacing="0" cellpadding="0" width="90%" align="left" style="padding-top:20px;"	>
+				<h:tr>
+					<h:td width="100%">
+						<h:table cellspacing="0" cellpadding="0" width="100%" align="left" 
+							style="background-color: #F8F8F8; border: 1px solid #CCCCCC;border-radius:5px; padding: 10px;margin-left:10px;">
+							<h:tr>
+								<h:td width="60px">
+									<label value="Filter By:" style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<label value="Time Duration " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<listbox id="timeDurLbId" width="130px" mold="select" style="position:relative;">
+										<listitem label="Last 30 Days" selected="true" />
+										<listitem label="Last 3 Months"  />
+										<listitem label="Last 6 Months"  />
+										<listitem label="Last 1 Year"  />
+										<listitem label="Custom Dates"  />
+										<listitem label="Today"  />
+									</listbox>
+								</h:td>
+								<h:td colspan="6"   >
+									<div id="datesDivId" visible="false">
+										<label value="From " style="display:inline-block;font-weight:bold;" />
+										<datebox id="fromDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+										format="dd-MMM-yyyy" constraint="no future"/>
+										<label value="To " style="display:inline-block;font-weight:bold;" />
+										<datebox id="toDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+										format="dd-MMM-yyyy" constraint="no future"/>
+									</div>
+								</h:td>
+							</h:tr>
+							<h:tr height="10" />
+							<h:tr >
+								<h:td />
+								<div id="cardSetDivId" >
+								<h:td >
+									<label value="Card-Set " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<listbox id="cardsetLbId" width="100px" mold="select" style="position:relative;">
+										<listitem label="All" value="All" selected="true" />
+									</listbox>
+								</h:td>
+								</div>
+								<h:td  align="right">
+									<label value="Tier " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td >
+									<listbox id="tierLbId" width="100px" mold="select" style="position:relative;">
+										<listitem label="All" value="All" selected="true" />
+										</listbox>
+								</h:td>
+								
+								<h:td  align="right">
+									<label value="Subsidiary " style="display:inline-block;font-weight:bold;" />
+								</h:td>
+								<h:td>
+									<listbox id="subsidiaryLbId" width="100px" mold="select" style="position:relative;">
+										<listitem label="All" value="All" selected="true" />
+										</listbox>
+								</h:td>
+									<h:td >
+									<label value="Store" style="display:inline-block;font-weight:bold;" />
+							<bandbox  id="storeBandBoxId" mold="rounded" 
+							style="width:100px;font-size:13px;margin-top:2px;margin-right:4px;"
+						            readonly="true" value="All" >
+									
+				           <bandpopup id="storeBandpopupId" width="120px">
+				
+					       <listbox checkmark="true"  id="storeLbId" 
+					       multiple="true" width="120px" style="position:relative;">
+						    <listhead>
+							<listheader label="All"/>
+							
+							
+						</listhead>
+						
+					</listbox>
+					</bandpopup>
+					</bandbox>
+					</h:td>
+								<h:td>
+									<button label="Apply" id="filterBtnId" sclass="idle70" ></button>
+								</h:td>
+							</h:tr>
+						</h:table>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td valign="bottom" >
+						<div style="margin-left:10px;">
+							<label value="Total Revenue Between " style="font-weight:bold;"/>
+							<label value="" id="revenueLblId" style="font-weight:bold;"/>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr style="padding-top:20px;">
+					<h:td>
+						<div height="350px" width="100%"  style="padding-top:20px;margin-left:10px;">
+							<chart id="revenueChartId" width="800px"  showTooltiptext="true" 
+							showLegend="true" height="320px" orient="vertical" paneColor="#FFFFFF" 
+							type="line" threeD="false" fgAlpha="255" yAxis="Revenue"/>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td valign="bottom" >
+						<div style="margin-left:10px;">
+							<label value="Total Visits Between " style="font-weight:bold;"/>
+							<label value="" id="visitsLblId" style="font-weight:bold;"/>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr style="padding-top:20px;">
+					<h:td>
+						<div height="350px" width="100%"  style="padding-top:20px;margin-left:10px;">
+							<chart id="visitsChartId" width="800px"  showTooltiptext="true" 
+							showLegend="true" height="320px" orient="vertical" paneColor="#FFFFFF" 
+							type="line" threeD="false" fgAlpha="250" yAxis="Visits"/>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<div id="tiersKPIDivId" style="padding-top:20px;margin-left:10px;" visible="false">
+							<label value="Tiers KPI Between " style="font-weight:bold" />
+							<label value="" id="tierLblId" style="font-weight:bold;"/>
+							<grid id="tiersKPILbId" sclass="contactsView" emptyMessage="No Records Found" width="50%" style="margin-top:10px;">
+								<columns style="background-color:#488eb0;">
+									<column label="Tier Name (Tier Level)" width="50%" align="left" />
+									<column label="Visits" width="30%" align="center" />
+									<column label="Revenue" width="30%" align="center" />
+									</columns>
+								<foot id="tiersKPIFooterId" />
+								<rows id="tiersKPIRowsId" />
+							</grid>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr style="display:none">
+					<h:td>
+						<div style="padding-top:20px;margin-left:10px;">
+							<label value="Loyalty Customers KPI Between " style="font-weight:bold" />
+							<label value="" id="customerLblId" style="font-weight:bold;"/>
+							<grid id="loyaltyCustomerLbId" sclass="contactsView" emptyMessage="No Records Found" width="100%" style="margin-top:10px;">
+								<columns style="background-color:#488eb0;">
+									<column label="Loyalty Customers KPI" width="100%" align="left" />
+									<column label="Day 1" width="50%" align="center" />
+									<column label="Day 2" width="50%" align="center" />
+									<column label="Day 3" width="50%" align="center" />
+									<column label="Day 4" width="50%" align="center" />
+									<column label="Day 5" width="50%" align="center" />
+									<column label="Day 6" width="50%" align="center" />
+									<column label="Day 7" width="50%" align="center" />
+									<column label="Total" width="50%" align="center" />
+								    </columns>
+								<foot id="loyaltyCustomerFooterId" />
+								<rows id="loyaltyCustomerRowsId" />
+							</grid>
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+				<h:table cellspacing="10" cellpadding="10" width="100%">
+				
+				<h:tr width="300">
+				
+				<h:td>
+				<div id="exportDivId" visible="false">
+					<label value="Export as a " />
+					<combobox  id="exportCbId" readonly="true" sclass="cb_100w">
+		 	  			<comboitem label=" .csv file" value="csv" />    
+					</combobox> 
+					<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId" />
+					</div>
+				</h:td>
+				</h:tr>
+			</h:table>
+		</groupbox>
+	</window>
+</zk>

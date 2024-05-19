@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.LoyaltyTransactionExpiry"
+		table="loyalty_transaction_expiry">
+		<id name="transExpiryId" type="java.lang.Long" column="trans_expiry_id">
+			<generator class="native" />
+		</id>
+		<property name="transChildId" type="java.lang.Long">
+	      <column name="trans_child_id" />
+	    </property>
+		<property name="membershipNumber" type="string">
+			<column name="membership_number" />
+		</property>
+		<property name="membershipType" type="string">
+			<column name="membership_type" />
+		</property>
+		<property name="rewardFlag" type="string">
+			<column name="reward_flag" />
+		</property>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_id" />
+		</property>
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id" />
+		</property>
+		<property name="tierId" type="java.lang.Long">
+			<column name="tier_id" />
+		</property>
+		<property name="expiryPoints" type="java.lang.Long">
+			<column name="expiry_points" />
+		</property>
+		<property name="expiryAmount" type="double">
+			<column name="expiry_amount" />
+		</property>
+		<!-- <property name="valueExpirationDate" type="calendar">
+			<column name="value_expiration_date" />
+		</property> -->
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="loyaltyId" type="java.lang.Long">
+			<column name="loyalty_id" />
+		</property>
+		<!-- <property name="expiryStatus" type="string">
+			<column name="expiry_status" />
+		</property> -->
+		<property name="transferedTo" type="java.lang.Long">
+       <column name="transfered_to"/>
+    </property>
+    <property name="transferedOn" type="calendar">
+		<column name="transfered_on"  />
+	</property>
+	</class>
+</hibernate-mapping>

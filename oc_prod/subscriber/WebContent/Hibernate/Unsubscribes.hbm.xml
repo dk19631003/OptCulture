@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:26:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.Unsubscribes"
+		table="unsubscribes">
+		<id name="unsubscribeId" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="emailId" type="string">
+			<column name="email_id" not-null="true" length="60" />
+		</property>
+		<property name="reason" type="string">
+			<column name="reason" />
+		</property>
+		<property name="date" type="calendar">
+			<column name="date" />
+		</property>
+		   <property name="unsubcategoriesWeight" type="java.lang.Short">
+	      <column name="unsub_categories_Weight"/>
+	    </property>
+		<property name="userId" type="java.lang.Long">
+	      <column name="user_id"/>
+	    </property>
+		<!-- <many-to-one name="users"
+			class="org.mq.marketer.campaign.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false">
+			<column name="user_id" unique-key="Unique_CampaignReport" />
+		</many-to-one> -->
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,50 @@
+ <zk>
+	<window id="manageContactsWinId" border="0" xmlns:h="http://www.w3.org/1999/xhtml"  apply="org.mq.marketer.campaign.controller.contacts.ManagingContctsForSubcribtion"
+		xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%">
+		
+		<tabbox id="manageContcsTabBoxId" width="99%">
+			<tabs>
+				<!--<tab label="Segment your contact lists" id="segmentTbId" 
+					onClick="selectPage(&quot;/zul/contact/ListSegmentation.zul&quot;,manageContactsIncId)" w:onClick="toggleFontStyle(0);"/>
+				
+				<tab id="suppContTbId" label="Suppress Contacts" onClick="selectPage(&quot;/zul/contact/suppressContacts.zul&quot;,supressContctIncId)" w:onClick="toggleFontStyle(1);"/>
+				-->
+				
+				<tab id="suppContTbId" label="Email Addresses"  w:onClick="toggleFontStyle(1);"/>
+				<tab id="suppPhnTbId" label="Phone Numbers"  w:onClick="toggleFontStyle(1);"/>
+				<tab visible="false" label="Manage your contact list(s)" id="segmentTbId"  w:onClick="toggleFontStyle(0);"/>
+				
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<include id="supressContctIncId" src="/zul/contact/suppressContacts.zul" />
+				</tabpanel>
+				<tabpanel>
+					<include id="supressPhnNumberIncId" src="/zul/contact/suppressPhoneNumbers.zul" />
+				</tabpanel>
+				<tabpanel >
+					<include id="manageContactsIncId" src=""/>
+				</tabpanel>
+				
+			</tabpanels>
+		
+		
+		</tabbox>
+		
+	<script><![CDATA[
+		var currentTb;
+		function toggleFontStyle(index) {
+			if(index == 0 ) {
+				zk.Widget.$(jq('$segmentTbId')).setStyle("font-weight:bold");
+				zk.Widget.$(jq('$suppContTbId')).setStyle("font-weight:normal");
+			} else if(index == 1 ) {
+				zk.Widget.$(jq('$suppContTbId')).setStyle("font-weight:bold");
+				zk.Widget.$(jq('$segmentTbId')).setStyle("font-weight:normal");
+			}	
+		}
+		
+	]]>
+	</script>
+
+	</window>
+</zk> 

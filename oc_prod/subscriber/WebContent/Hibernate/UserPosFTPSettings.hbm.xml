@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserPosFTPSettings" table="user_pos_ftp_settings">
+		<id name="userFTPId" type="java.lang.Long">
+	      <column name="user_ftp_id"/>
+	      <generator class="native"/>
+    	</id>
+		<property name="userId" type="long">
+	      <column name="user_id"/>
+	    </property>
+	    
+		<property name="hostAddress" type="string">
+	      <column name="host_address"/>
+	    </property>
+	    
+	    <property name="directoryPath" type="string">
+	      <column name="directory_path"/>
+	    </property>
+	    
+	    <property name="ftpUserName" type="string">
+	      <column name="ftp_user_name"/>
+	    </property>
+	    
+	    <property name="ftpPassword" type="string">
+	      <column name="ftp_password"/>
+	    </property>
+	    
+	    <property name="fileFormat" type="string">
+	      <column name="file_format"/>
+	    </property>
+	    
+	    <property name="fileType" type="string">
+	      <column name="file_type"/>
+	    </property>
+	    
+	    <property name="lastFetchedTime" type="calendar">
+	      <column name="last_fetched_time"/>
+	    </property>
+	    
+	    <property name="scheduledFreqInMintues" type="long">
+	      <column name="scheduled_freq_in_minutes"/>
+	    </property>
+	    
+	    <property name="scheduleType" type="string">
+	      <column name="schedule_type"/>
+	    </property>
+	    
+	    <property name="enabled" type="boolean">
+	      <column name="enabled" default="false"/>
+	    </property> 
+	    
+	     <property name="checkProcessPeriod" type="int">
+	    	<column name="check_process_period"/>
+	    </property>
+	    
+	    <property name="alertEmailAddress" type="string">
+	    	<column name="alert_email_address"/>
+	    </property>
+	    
+	     <property name="checkAlert" type="boolean">
+	    	<column name="check_alert" default="false" />
+	    </property>
+	    
+	</class>
+</hibernate-mapping>

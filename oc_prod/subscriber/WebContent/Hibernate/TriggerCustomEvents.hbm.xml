@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:53:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.TriggerCustomEvent" 
+	table="trigger_custom_events" >
+		  
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		
+		<property name="eventName" type="string" column="event_name"/>
+		
+		<property name="eventDate" type="calendar" column="event_date"/>
+		
+		<property name="userName" type="string" column="user_name"/>	
+		  
+	</class>
+</hibernate-mapping>
+ 

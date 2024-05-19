@@ -1,0 +1,64 @@
+<zk>
+<window id="viewTicketWinId" border="0" width="100%"	apply="org.mq.marketer.campaign.controller.admin.ViewTicketsController"
+						xmlns:h="http://www.zkoss.org/2005/zk/native" 	xmlns:w="http://www.zkoss.org/2005/zk/client">
+						
+			<groupbox closable="false"  sclass="gbStyle" style="margin-top:10px;">
+				     <caption label="View Tickets" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+				     
+				     <h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+							bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+				<h:tr >
+					<h:td width="400px">
+						<label value="User Organization ID:" sclass="theme-lbHeading"/>
+						<listbox id="userOrgLbId" width="200px" mold="select" />
+					</h:td>
+					<h:td >
+						<label value="User Name :" sclass="theme-lbHeading"/>
+						<listbox id="userNameLbId" width="200px" mold="select" >
+							<listitem label="--All--" selected="true"/>
+						</listbox>
+					</h:td>
+					<h:td width="400px"  >
+						<a label="Reset" id="resetSearchCriteriaAnchId" />
+					</h:td>
+					
+				</h:tr>
+			</h:table>
+				     
+				    
+				<div id="ticketListDivId" >
+					<grid id="ticketsGId" emptyMessage="No Tickets Found..." >
+						<columns  menupopup="auto" >
+						   <column label="Ticket ID"  />
+					       <column label="Type"  />
+				           <column label="Organization Name" />
+					       <column label="User Name" />
+					       <column label="Client Name" />
+					      <column label="Created Date" />
+					      </columns>
+					      <rows id="ticketRowsId" />
+					</grid>
+				</div>
+					</groupbox>
+					
+					<h:table width="98%">
+					    <h:tr>
+							<h:td align="right">
+						   		<label value="Tickets per page:"  style="padding-right:5px;font-size:11px;"/>
+						   		<listbox rows="1" mold="select" id="ticketsPerPageLBId" style="margin-right:30px;">
+									<listitem label="5" selected="true" />
+									<listitem label="10"  />
+									<listitem label="15"/>
+								</listbox>
+							</h:td>
+							<h:td width="280px"  >
+								<paging id="ticketsPagingId" detailed="true" pageSize="5" width="280px" 
+									class="contactsViewPaging" style="border:none;"  />
+							</h:td>
+					   </h:tr>
+				   </h:table>
+				
+					
+			
+</window>
+</zk>

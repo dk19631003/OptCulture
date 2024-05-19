@@ -1,0 +1,165 @@
+<zk>
+<style src="/css/mobileStyleDisplay.css" />
+<window  id="detailedNotificationCampaignRepWinId" width="100%" apply="org.mq.marketer.campaign.controller.report.DetailedNotificationCampaignReportController" xmlns:h="native">
+     <h:table cellspacing="0" cellpadding="4"  width="100%" border="0" bgcolor="#F2F6F9" style="padding:3px;border-solid:1px;border-color:#FFFFFF">
+		<h:tr bgcolor="#F2F6F9">
+		
+		<h:td width="300px" > <label value="Notification Campaign Name :" width="100px" style="font-weight:bold"/><label id="notificationCampNameLblId" /></h:td>
+			
+			<h:td width="200px" ><label value="Sent on: " id="dateLblId" style="font-weight:bold"/> 
+			<label id="sentDateLblId" value=""/></h:td>
+			
+			<h:td >
+			<label value="Included promotions:"  style="font-weight:bold"/>
+			<label id="includePromotionsLblIdNotification" maxlength="15" />
+			</h:td>
+			
+			<h:td width="120px" >
+   				<a label="View Notification" style="font-weight:bold;color:#43A0BA;" id="viewNotificationBtnId" />
+	   			<window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="previewWin.setVisible(false)"/>
+					</caption>
+					<!-- <div id="contentDivId" width="305px" height="500px" style="overflow:auto">
+						<html id="html" />
+					</div> -->
+					<div class="smartphone">
+							  <div class="content">
+							  	<image class="imgStyleMobile" src="https://img.icons8.com/ios-glyphs/64/medium-battery.png"></image>
+							  	<image class="imgStyleMobile" src="http://simpleicon.com/wp-content/uploads/signal-64x64.png"></image>
+							  	<image class="imgStyleMobileLeft" src="https://img.icons8.com/windows/2x/medium-connection.png"></image>
+							  	<label value="10:10 AM" style="font-size:16px;float: left;margin-top: 6px;"></label>
+								<div id="myNav" style="height=100%;">
+										<div style="border-radius: 10px;">
+											<div class="rectangle"><label value="Notification"></label></div>
+											<div class="rectangleNotification">
+												<div style="display: inline-flex;position: relative;margin: 5px 0px 5px 1px;" >
+													<div class="img-circular"></div>
+													<div style="margin: 3px 6px 0px 6px"><label value="Application Name : Now"></label></div>
+												</div>
+												<div style="margin: 7px;">
+													<div class="splitRightLogo"></div>
+													<div style="margin-bottom: 5px;">
+														<image style="border-radius: 8px;float: right;" width="40px" height="40px" id="imgLogo" />												
+														<label class="notificationHeader" id="headderContentId"></label>
+													</div>
+													
+													<div>
+														<label class="block-ellipsis" style="font-size: 70%;" id="bodyContentDisplayId"></label>
+													</div>
+													<div>
+														<image style="height: 105px;width: 277px;" id="img" />
+													</div>
+												</div>
+											</div>
+											<div>
+												<div onClick='Clients.evalJavaScript("openNav();")' class="close"></div>
+											</div>
+										</div>
+								</div>
+							</div>
+					</div>
+				</window>
+	   		</h:td>	
+		
+		</h:tr>
+		
+	</h:table >
+		
+		<h:table cellspacing="0" cellpadding="4"  width="100%" border="0">
+		
+		
+		<h:tr>
+		
+		<h:td valign="top" width="235">
+			<groupbox sclass="gbStyle" closable="false" >
+			<caption label="Notification Campaign Reports"  />
+				
+					<h:table cellspacing="0px" cellpadding="0px"  align="center"  >
+					
+						<h:tr >
+					     <h:td  valign="center">  
+					       <toolbarbutton label="Snapshot" image="/img/icons/snapshot.png" 
+					       style="font-weight:bold;color:#6EB6CB;padding-left:2px;" id="snapShtTbBtnId"/>
+							<div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Summary of sent campaign"/>
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					   <h:tr >
+					        <h:td valign="center"  >   
+					       <toolbarbutton label="Recipient Activity Report" image ="/img/icons/recipient.gif" 
+					       style="font-weight:bold;color:#6EB6CB;" id="rcpntActvtyTbBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext"  value="Tracks received Notification and opt-out requests" />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					   <h:tr >
+						 <h:td  valign="center" >	
+					       <toolbarbutton label="URLs Clicked Report" image ="/img/icons/urls_clicked.gif" style="font-weight:bold;color:#6EB6CB;" id="urlClickedReportToolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Tracks clicks by hour." />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					  <!-- <h:tr style="display:none;"> -->
+					  <h:tr>
+					     <h:td valign="center">	
+					       <toolbarbutton label="Clicks Report" image ="/img/icons/opensnclicks.gif" 
+					       style="font-weight:bold;color:#6EB6CB;" id="clicksToolbarBtnId"/>
+					       <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="When did subscribers open and click." />
+					       </div>
+					     </h:td>
+					   </h:tr>
+					   
+					    <!-- <h:tr style="display:none;"> -->
+					    <!-- <h:tr>
+					    <h:td valign="bottom">	
+					       <toolbarbutton label="Keyword Usage Report" image ="/img/icons/emailclient_usage.gif" 
+					       style="font-weight:bold;color:#6EB6CB;" id="keyWordUsageReportToolbarBtnId"/>
+					       <div style="padding-left:23px;">  
+					       <label sclass="lefttext" value="Tracks opens and clicks by hour." />
+					       </div>
+					     </h:td>
+					   </h:tr> -->
+					   
+					   <!-- <h:tr >
+					    <h:td valign="center">	
+					       <toolbarbutton label="Bounced Report" image ="/img/icons/bouncereport.gif"
+					         <toolbarbutton label="Non-Delivery Report" image ="/img/icons/bouncereport.gif" 
+					        style="font-weight:bold;color:#6EB6CB;" id="bouncereportToolbarBtnId"/>
+					        <div style="padding-left:23px;">
+					       <label sclass="lefttext" value="Track messages that were not delivered." />
+					       </div>
+					     </h:td>
+					   </h:tr>  -->
+					   
+					 
+					</h:table>
+				
+			
+			
+			</groupbox>
+		 </h:td>
+		
+		<h:td colspan="2" valign="top" height="100%">
+			
+			<include id="rightId" width="100%" 	src="/zul/report/NotificationSnapShot.zul" use="org.mq.marketer.campaign.controller.IncludeController" />
+		
+		</h:td>
+		
+</h:tr>
+		
+		
+	</h:table>
+	<div align="right" style="padding:10px 10px;">
+		
+				<button label="Back to Reports"  sclass="idle140" id="backBtnId" />
+		</div>
+</window>
+</zk>

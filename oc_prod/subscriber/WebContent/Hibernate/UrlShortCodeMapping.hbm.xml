@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 Mar, 2012 11:42:19 AM by Hibernate Tools 3.1.0.beta4 -->
+<hibernate-mapping>
+    <class name="org.mq.marketer.campaign.beans.UrlShortCodeMapping" table="url_short_code_mapping" >
+        <id name="shortCodeId" type="java.lang.Long">
+            <column name="short_code_id" />
+            <generator class="native" />
+        </id>
+        <property name="shortCode" type="string">
+            <column name="short_code" unique="true" />
+        </property>
+        <property name="urlContent" type="string">
+            <column name="url_content" />
+        </property>
+        <property name="urlType" type="string">
+            <column name="url_type" />
+        </property>
+        <property name="userId" type="java.lang.Long">
+            <column name="user_id" />
+        </property>
+    </class>
+</hibernate-mapping>

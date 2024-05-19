@@ -1,0 +1,445 @@
+<zk>
+	<window id="rightsManagementWinId" apply="org.mq.marketer.campaign.controller.admin.RightsManagementController" 
+				 xmlns:w="client"  xmlns:h="native" width="100%">
+
+<!-- <style>
+ .filterSearchOpt {
+ 	max-width:100px;
+ 	min-width:30px;
+ 	width:29%;
+ 	margin: 0;
+    padding: 3px 2px;
+ }
+ .filterSearchOpt:hover {
+ 	width:100px;
+ }
+ .filterSearchVal { 
+ 	padding:0 2%;
+ 	width:60%;
+ }
+</style> -->
+
+	<tabbox  orient="horizontal">
+		<tabs>
+	  		<tab id="usersRolesTabId" label="User &amp; Roles" />
+			<tab id="rolesGroupsTabId" label="Roles &amp; Groups" />
+			<tab id="groupsRightsTabId" label="Groups &amp; Rights" />
+	  	</tabs>
+	  
+		<tabpanels >
+		
+<!-- ROLES -->		
+			<tabpanel style="padding:6px;">
+				<div style="padding:10px;" align="right">
+		            <button id="saveRoleChangesBtnId" label="Save Role Changes" sclass="idle180 greenbtn" />
+	            </div>
+	            
+				<borderlayout height="500px" >
+	           
+	            <west title="Users" size="40%" minsize="300" maxsize="600" flex="true" splittable="true"  collapsible="true" > 
+				<div>
+				<h:table width="100%" cellpadding="0">
+	                <h:tr>
+                	<h:td align="right">
+						<checkbox id="usersFiltersChkId" label="Show Filters" onCheck="usersFilterAhId.setVisible(self.isChecked()); " />
+                	</h:td>
+                	</h:tr>
+                </h:table>
+	                
+					
+					<listbox id="usersURLBId" multiple="false" emptyMessage="No Users" checkmark="true" rows="10">
+	              			<listhead >
+	              				<listheader width="40px" align="center"/>
+	              				<listheader label="Username" sort="auto" />
+	              				<listheader label="Org. Id." />
+	              			</listhead>
+	              			
+	              			<auxhead id="usersFilterAhId" visible="false">
+	              				<auxheader align="center">
+	              					<toolbarbutton tooltiptext="filters|cl" />
+	              				</auxheader> 
+	              				<auxheader>
+              						<menupopup id="testId1" sclass="myfilter" />
+			             			<toolbarbutton context="testId1" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader> 
+
+	              				<auxheader>
+              						<menupopup id="testId2" sclass="myfilter" />
+			             			<toolbarbutton context="testId2" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader>
+	              				
+	              			</auxhead>
+	                   </listbox>
+	               	</div>	
+	            </west>
+	            
+	            
+	            <center title="Roles" flex="true" autoscroll="true" >
+	                <div >
+	                <h:table width="100%" cellpadding="0">
+	                	<h:tr>
+	                	<h:td width="5"></h:td>
+	                	<h:td width="120">
+	                		<toolbarbutton image="/images/action_add.gif"  label="Add New Role" id="addRoleBtnId" />
+	                	</h:td>
+	                	<h:td width="150">
+	                		<toolbarbutton image="/images/action_delete.gif"  label="Delete Selected Role" id="deleteRoleBtnId" />
+	                	</h:td>
+	                	<h:td>	</h:td>
+	                	<h:td width="150" align="right">
+							<checkbox id="rolesGrantedChkId" label="Only Granted Roles"	/>
+	                	</h:td>
+	                	<h:td width="120" align="right">
+						<checkbox id="rolesFiltersChkId" label="Show Filters" onCheck="rolesFilterAhId.setVisible(self.isChecked()); " />
+	                	</h:td>
+	                	</h:tr>
+	                </h:table>
+					
+					<listbox id="rolesURLBId" multiple="true" emptyMessage="No Roles"  checkmark="true" rows="10">
+	              			<listhead >
+	              				<listheader width="40px" align="center"/>
+	              				<listheader label="Role Name" sort="auto" />
+	              				<listheader label="Description" />
+	              			</listhead>
+	              			
+	              			<auxhead id="rolesFilterAhId" visible="false">
+	              				<auxheader align="center">
+	              					<toolbarbutton tooltiptext="filters|cl" />
+	              				</auxheader> 
+	              				<auxheader>
+              						<menupopup id="testId3" sclass="myfilter" />
+			             			<toolbarbutton context="testId3" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader> 
+
+	              				<auxheader>
+              						<menupopup id="testId4" sclass="myfilter" />
+			             			<toolbarbutton context="testId4" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader>
+	              			</auxhead>
+	              			
+	                   </listbox>
+	                </div>
+	            </center>
+	            </borderlayout>
+								
+	            
+			</tabpanel>
+			
+			
+<!-- GROUPS -->			
+			<tabpanel style="padding:6px;">
+				<div style="padding:10px;" align="right">
+		            <button id="saveGroupChangesBtnId" label="Save Group Changes" sclass="idle180 greenbtn" />
+	            </div>
+				<borderlayout height="500px" >
+	           
+	            <west title="Roles" size="40%" minsize="300" maxsize="600" flex="true" splittable="true"  collapsible="true" > 
+				<div>
+				<h:table width="100%" cellpadding="0">
+	                <h:tr>
+                	<h:td align="right">
+						<checkbox id="rolesRGFiltersChkId" label="Show Filters" onCheck="rolesRGFilterAhId.setVisible(self.isChecked()); " />
+                	</h:td>
+                	</h:tr>
+                </h:table>
+	                
+					<listbox id="rolesRGLBId" multiple="false" emptyMessage="No Roles" checkmark="true" rows="10">
+              			<listhead >
+              				<listheader width="40px" align="center"/>
+              				<listheader label="Role Name" sort="auto" />
+              				<listheader label="Description" />
+              			</listhead>
+              			
+	              			<auxhead id="rolesRGFilterAhId" visible="false">
+	              				<auxheader align="center">
+	              					<toolbarbutton tooltiptext="filters|cl" />
+	              				</auxheader> 
+	              				<auxheader>
+              						<menupopup id="testId5" sclass="myfilter" />
+			             			<toolbarbutton context="testId5" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader> 
+
+	              				<auxheader>
+              						<menupopup id="testId6" sclass="myfilter" />
+			             			<toolbarbutton context="testId6" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader>
+	              			</auxhead>
+	                   </listbox>
+	               	</div>	
+	            </west>
+	            
+	            
+	            <center title="Groups" flex="true" autoscroll="true" >
+	                <div >
+	                <h:table width="100%" cellpadding="0">
+	                	<h:tr>
+	                	<h:td width="5"></h:td>
+	                	<h:td width="120">
+	                		<toolbarbutton image="/images/action_add.gif"  label="Add New Group" id="addGroupBtnId" />
+	                	</h:td>
+	                	<h:td width="150">
+	                		<toolbarbutton image="/images/action_delete.gif"  label="Delete Selected Group" id="deleteGroupBtnId" />
+	                	</h:td>
+	                	<h:td>	</h:td>
+	                	<h:td width="180" align="right">
+							<checkbox id="groupsGrantedChkId" label="Only Granted Groups"	/>
+	                	</h:td>
+	                	<h:td width="120" align="right">
+						<checkbox id="groupsFiltersChkId" label="Show Filters" onCheck="groupsRGFilterAhId.setVisible(self.isChecked()); " />
+	                	</h:td>
+	                	</h:tr>
+	                </h:table>
+					
+					<listbox id="groupsRGLBId" multiple="true" emptyMessage="No Groups"  checkmark="true" rows="10">
+	              			<listhead >
+	              				<listheader width="40px" align="center"/>
+	              				<listheader label="Group Name" sort="auto" />
+	              				<listheader label="Description" />
+	              			</listhead>
+	              			
+	              			<auxhead id="groupsRGFilterAhId" visible="false">
+	              				<auxheader align="center">
+	              					<toolbarbutton tooltiptext="filters|cl" />
+	              				</auxheader> 
+	              				<auxheader>
+              						<menupopup id="testId7" sclass="myfilter" />
+			             			<toolbarbutton context="testId7" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader> 
+
+	              				<auxheader>
+              						<menupopup id="testId8" sclass="myfilter" />
+			             			<toolbarbutton context="testId8" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader>
+	              			</auxhead>
+	              			
+	                   </listbox>
+	                </div>
+	            </center>
+	            </borderlayout>
+								
+	            
+			</tabpanel>			
+			
+			
+<!-- RIGHTS -->
+			<tabpanel style="padding:6px;">
+				<div style="padding:10px;" align="right">
+		            <button id="saveRightChangesBtnId" label="Save Right Changes" sclass="idle180 greenbtn" />
+	            </div>
+				<borderlayout height="510px" >
+	           
+	            <west title="Groups" size="30%" minsize="300" maxsize="500" flex="true" splittable="true"  collapsible="true" > 
+				<div>
+				<h:table width="100%" cellpadding="0">
+	                <h:tr>
+                	<h:td align="right">
+						<checkbox id="groupsGRFiltersChkId" label="Show Filters" onCheck="groupsGRFilterAhId.setVisible(self.isChecked()); " />
+                	</h:td>
+                	</h:tr>
+                </h:table>
+	                
+					<listbox id="groupsGRLBId" multiple="false" emptyMessage="No Groups" checkmark="true" rows="10">
+	              			<listhead >
+	              				<listheader width="40px" align="center"/>
+	              				<listheader label="Group Name" sort="auto" />
+	              				<listheader label="Description" />
+	              			</listhead>
+	              			
+	              			<auxhead id="groupsGRFilterAhId" visible="false">
+	              				<auxheader align="center">
+	              					<toolbarbutton tooltiptext="filters|cl" />
+	              				</auxheader> 
+	              				<auxheader>
+              						<menupopup id="testId9" sclass="myfilter" />
+			             			<toolbarbutton context="testId9" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader> 
+
+	              				<auxheader>
+              						<menupopup id="testId10" sclass="myfilter" />
+			             			<toolbarbutton context="testId10" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader>
+	              				
+	              			</auxhead>
+	                   </listbox>
+	               	</div>	
+	            </west>
+	            
+	            
+	            <center title="Rights" flex="true" autoscroll="true" >
+	                <div >
+	                <h:table width="100%" cellpadding="0">
+	                	<h:tr>
+	                	<h:td width="5"></h:td>
+	                	<h:td width="50">
+	                		<label value="Show : "/>
+	                	</h:td>
+	                	<h:td width="150">
+	                		<listbox id="rightsTypesLBId" mold="select">
+	                			<listitem label="-- All --" value="--All--" selected="true"/>
+	                			<listitem label="Menu" value="Page"/>
+	                			<listitem label="MenuItem" value="MenuItem"/>
+	                			<listitem label="Page" value="Page"/>
+				                <listitem label="Tab" value="Tab"/>
+	                			<listitem label="Component" value="Component"/>
+	                		</listbox>
+	                		
+	                	</h:td>
+	                	<h:td>	</h:td>
+	                	<h:td width="180" align="right">
+							<checkbox id="rightsGrantedChkId" label="Only Granted Rights"	/>
+	                	</h:td>
+	                	<h:td width="120" align="right">
+						<checkbox id="rightsFiltersChkId" label="Show Filters" onCheck="rightsGRFilterAhId.setVisible(self.isChecked());" />
+	                	</h:td>
+	                	</h:tr>
+	                </h:table>
+					
+					<listbox id="rightsGRLBId" multiple="true" emptyMessage="No Rights"  checkmark="true" rows="10">
+	              			<listhead >
+	              				<listheader width="40px" align="center"/>
+	              				<listheader label="Right Name" sort="auto" />
+	              				<listheader label="Type" sort="auto" width="150px"/>
+	              				<listheader label="Description" sort="auto"/>
+	              			</listhead>
+	              			
+	              			<auxhead id="rightsGRFilterAhId" visible="false">
+	              				<auxheader align="center">
+	              					<toolbarbutton tooltiptext="filters|cl" />
+	              				</auxheader> 
+	              				<auxheader>
+              						<menupopup id="testId11" sclass="myfilter" />
+			             			<toolbarbutton context="testId11" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader> 
+
+	              				<auxheader>
+              						<menupopup id="testId12" sclass="myfilter" />
+			             			<toolbarbutton context="testId12" tooltiptext="filters|eq|ne"/>
+              						<listbox id="rightTypeGRFilterValLBId" mold="select" width="60%">
+	              						<listitem label="" value="" selected="true"/>
+			                			<listitem label="Menu" value="Page"/>
+			                			<listitem label="MenuItem" value="MenuItem"/>
+			                			<listitem label="Page" value="Page"/>
+			                			<listitem label="Tab" value="Tab"/>
+			                			<listitem label="Component" value="Component"/>
+	              					</listbox>
+	              				</auxheader>
+	              				
+	              				<auxheader>
+              						<menupopup id="testId13" sclass="myfilter" />
+			             			<toolbarbutton context="testId13" tooltiptext="filters|eq|ne|-|lt|gt|le|gt|"/>
+			             			<textbox sclass="filterSearchVal" />
+	              				</auxheader>
+	              				
+	              			</auxhead>
+	              			
+	                   </listbox>
+	                </div>
+	            </center>
+	            </borderlayout>
+								
+	            
+			</tabpanel>				
+			
+		</tabpanels>
+	</tabbox>
+	
+	<window id="subWinId" visible="false" position="center" onClose="self.setVisible(false); event.stopPropagation();"  
+			  			 width="600px"   title="INFO" closable="true" style="font-family:arial;font-size: 14px;">
+			
+		<div visible="false" id="addRoleDivId">
+			<h:table border="0" width="100%" cellpadding="4" align="center" >
+			<h:tr>
+			<h:td height="200" align="center" valign="middle">
+
+				<h:table border="0" cellpadding="4" align="center" >
+					<h:tr>
+						<h:td>Role Name : <label sclass="errormsg" value=" * "/> </h:td>
+						<h:td>
+							<textbox width="300px" maxlength="32" id="roleNameTBId" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>Description : </h:td>
+						<h:td>
+							<textbox width="300px" maxlength="100" id="roleDescTBId" rows="3" height="60px"/>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td colspan="3" class="errormsg" align="center" height="50">
+							<h:div style="width:520px;"> 
+							<label id="rolesErrormsgLblId" visible="false"	value="Please provide the mandatory values"/> 
+							</h:div>
+						</h:td>
+					</h:tr>
+				</h:table>
+				
+			</h:td>
+			</h:tr>
+
+			<h:tr>
+				<h:td height="60" valign="middle" align="center">
+					<button  label="Save" sclass="idle140 greenbtn"  id="rolesSaveBtnId" />
+					<button  label="Cancel" sclass="idle140" onClick="subWinId.setVisible(false);" />
+				</h:td>
+			</h:tr>		
+			</h:table>
+		</div>
+		
+		<div visible="false" id="addGroupDivId">
+			<h:table border="0" width="100%" cellpadding="4" align="center" >
+			<h:tr>
+			<h:td height="200" align="center" valign="middle">
+
+				<h:table border="0" cellpadding="4" align="center" >
+					<h:tr>
+						<h:td>Group Name : <label sclass="errormsg" value=" * "/> </h:td>
+						<h:td>
+							<textbox width="300px" maxlength="32" id="groupNameTBId" />
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td>Description : </h:td>
+						<h:td>
+							<textbox width="300px" maxlength="100" id="groupDescTBId" rows="3" height="60px"/>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td colspan="3" class="errormsg" align="center" height="50">
+							<h:div style="width:520px;"> 
+							<label id="groupErrormsgLblId" visible="false"	value="Please provide the mandatory values"/> 
+							</h:div>
+						</h:td>
+					</h:tr>
+				</h:table>
+				
+			</h:td>
+			</h:tr>
+
+			<h:tr>
+				<h:td height="60" valign="middle" align="center">
+					<button  label="Save" sclass="idle140 greenbtn"  id="groupSaveBtnId" />
+					<button  label="Cancel" sclass="idle140" onClick="subWinId.setVisible(false);" />
+				</h:td>
+			</h:tr>		
+			</h:table>
+		</div>
+		
+		
+		
+	</window>	
+	
+	</window>
+</zk>
+
+			

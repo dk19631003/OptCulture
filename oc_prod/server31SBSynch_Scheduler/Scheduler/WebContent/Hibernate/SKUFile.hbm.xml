@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+
+	<class name="org.mq.captiway.scheduler.beans.SkuFile" table="retail_pro_sku">
+    	<id name="skuId" type="java.lang.Long">
+    
+     	 	<column name="sku_id"/>
+     	 	<generator class="native"/>
+    	</id>
+    	
+    	
+    	<property name="listId" type="long">
+      		<column name="list_id"/>
+    	</property>
+    	
+    	
+    	<property name="userId" type="java.lang.Long">
+      		<column name="user_id"/>
+    	</property>
+    	
+    	<property name="storeNumber" type="string">
+      		<column name="store_number"/>
+    	</property>
+    	
+    	<property name="sku" type="string">
+      		<column name="sku"/>
+    	</property>
+    
+	    <property name="description" type="string">
+	      <column name="description"/>
+	    </property>
+	    
+	    <property name="listPrice" type="double">
+      		<column name="list_price"/>
+    	</property>
+    	
+     	<property name="itemCategory" type="string">
+	      <column name="item_category"/>
+	    </property>
+    	
+    	 <property name="udf1" type="string">
+      		<column name="udf1"/>
+    	</property>
+	    <property name="udf2" type="string">
+	      <column name="udf2"/>
+	    </property>
+	    <property name="udf3" type="string">
+	      <column name="udf3"/>
+	    </property>
+	    <property name="udf4" type="string">
+	      <column name="udf4"/>
+	    </property>
+	    <property name="udf5" type="string">
+	      <column name="udf5"/>
+	    </property>
+	    <property name="udf6" type="string">
+	      <column name="udf6"/>
+	    </property>
+	    <property name="udf7" type="string">
+	      <column name="udf7"/>
+	    </property>
+	    <property name="udf8" type="string">
+	      <column name="udf8"/>
+	    </property>
+	    <property name="udf9" type="string">
+	      <column name="udf9"/>
+	    </property>
+	    <property name="udf10" type="string">
+	      <column name="udf10"/>
+	    </property>
+	    <property name="udf11" type="string">
+	      <column name="udf11"/>
+	    </property>
+	    <property name="udf12" type="string">
+	      <column name="udf12"/>
+	    </property>
+	    <property name="udf13" type="string">
+	      <column name="udf13"/>
+	    </property>
+	    <property name="udf14" type="string">
+	      <column name="udf14"/>
+	    </property>
+	   <property name="udf15" type="string">
+	      <column name="udf15"/>
+	    </property>
+	   
+	    <property name="itemSid" type="string">
+      		<column name="item_sid"/>
+    	</property>
+    	
+    	 <property name="vendorCode" type="string">
+      		<column name="vendor_code"/>
+    	</property>
+    	 <property name="departmentCode" type="string">
+      		<column name="department_code"/>
+    	</property>
+    	 <property name="classCode" type="string">
+      		<column name="class_code"/>
+    	</property>
+    	 <property name="subClassCode" type="string">
+      		<column name="subclass_code"/>
+    	</property>
+    	 <property name="DCS" type="string">
+      		<column name="dcs"/>
+    	</property>
+    	
+    	
+    	
+    	
+	    <!--<set name="skuUdfSet" cascade="all" lazy="false" >
+            <key column="sku_id"/>
+            <one-to-many class="org.mq.captiway.scheduler.beans.SKUCustFiledData"/>
+        </set>
+   		-->
+   	</class>
+   	
+</hibernate-mapping>
+
+

@@ -1,0 +1,653 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  apply="org.mq.marketer.campaign.controller.admin.LoyaltySettingsController" xmlns:h="native" xmlns:w="client">
+	<style >
+		.redStar{
+			font-size:14px;color:red;
+		}
+	</style>
+<div visible="false" id="valueCodeDivId">
+	<groupbox width="100%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+		<caption> <label value="Loyalty Custom Value-Codes"/> </caption>
+		<h:table>
+			<h:tr>
+			
+					<h:td width="200">
+					<label value="Value-Code Name: " /><label value="*" style="color:red;" />			
+					</h:td>
+					<h:td>
+					<textbox  width="150px" id="valueCodeNameTbId" />
+					</h:td>
+			</h:tr>
+			<h:tr>
+					<h:td >
+					<label value="Description:" />
+					<h:td ><textbox  id="descriptionTbId" rows="2" height="40px" width="300px"/></h:td>			
+					</h:td>
+				
+			</h:tr>
+			
+		</h:table>
+
+	<button label="Save" id="saveValueCodesBtnId"	sclass="idle140 greenbtn" />
+	</groupbox>	
+	<h:table  width="100%" style="margin-top:10px;">
+	<h:tr>
+	<h:td width="70%">
+	<menupopup id="valueCodeMpId" />
+		<listbox id="valueCodeLbId" emptyMessage="No records  exist.." width="100%">
+			<listhead sizable="true"  style="background-color:#488eb0;" menupopup="auto">
+			<listheader label="Value-Code Name"  width="40%"  ><space/><textbox id="searchBoxId" placeholder="Search Value Code"
+								    w:onClick="javascript: if(this.getValue()=='') {  this.setValue(''); }" 
+								    w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue(''); }"/> </listheader>
+			<listheader label="Description"  width="40%"/>			
+			<listheader label="Actions" width="20%" />
+			</listhead>
+		             		 
+		</listbox>	
+		</h:td>
+		</h:tr>
+		<h:tr>
+	     <h:td>
+				   		<h:table  align="right" width="50%">
+				   		<h:td width="220px">
+				   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+				   		<listbox rows="1" mold="select" id="valueCodePerPageLBId" style="margin-right:30px;position: absolute;">
+							<listitem label="5" />
+							<listitem label="10"  selected="true"  />
+							<listitem label="15"/>
+						</listbox>
+						</h:td>
+						
+						<h:td>
+						<paging id="valueCodePagingId" detailed="true" pageSize="10" width="250px" 
+							class="contactsViewPaging" style="border:none;"  />
+						</h:td>	
+						</h:table>	
+						</h:td>
+						<h:td width="50%" align="right">
+						<h:table cellspacing="0" cellpadding="2" align="right"
+				          style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			        <h:td align="right"> <image src="/images/Edit_icn.png"/></h:td>
+					<h:td align="right" style="padding-right:30px;"> <label value="- Edit Value-Code" style="font-size:11px;"/> </h:td>
+		</h:table>  
+						</h:td>
+						</h:tr>	
+					
+</h:table>
+</div>
+	<groupbox width="100%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+		<caption> <label value="Loyalty Web-Portal"/> </caption>
+		<h:table>
+			<div visible="true" id="orgDivId"> 
+				<h:tr>
+					<h:td width="200">
+						<label value="Select Organization : "></label>
+					</h:td>
+					<h:td>
+						<listbox  id="selOrgLbId" width="150px" mold="select" style="margin-top:10px;position:relative;">
+							<listitem label="--Select--"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+			</div>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td>
+					<label value="Choose Web-Portal URL : " />
+				</h:td>
+				<h:td>
+					<!-- <label value="http://" id="emailLbId"/> -->
+					<label id="emailLbId"/>
+					<textbox value="" width="150px" id="urlTbId" />
+					<a label="Check Availability" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;"
+								id="chckAvailbilityBtnId" />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Pick Brand Theme : " />
+				</h:td>
+				<h:td>
+					<combobox id="themeId"	width="220px" />
+					<a label="Preview Theme" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;"
+								id="themePreviewBtnId"  />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Set Loyalty Type : " />
+				</h:td>
+				<h:td>
+					<listbox  id="ltyTypeId" width="150px" mold="select" style="margin-top:10px;position:relative;">
+					<listitem label="--Select--" selected="true"></listitem>
+					<listitem label="Card Number" value="Card Number"></listitem>
+					<listitem label="Mobile Number" value="Mobile Number"></listitem>
+					</listbox>
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+			<h:td width="120">
+					<label value="Email : " />
+			</h:td>
+			<h:td>
+			<textbox  id="emailTBoxId" cols="25" maxlength="50"   tabindex="3" />
+	        </h:td>
+	        </h:tr>
+	        <h:tr height="10" />
+			<h:tr>
+			<h:td width="120">
+					<label value="Mobile : " />
+			</h:td>
+			<h:td>
+			<textbox  id="mobileTBoxId" cols="25" maxlength="50"   tabindex="3" name="mobileTBoxId"/>
+			
+	        </h:td>
+	        <h:td>
+	        <label id="statusLabelId1" value=""/>
+	        </h:td>
+	        </h:tr>
+			<h:tr height="30" />
+			<h:tr>
+				<h:td />
+				<h:td>
+					<button label="Save" id="saveBtnId"	sclass="idle140 greenbtn" />
+				</h:td>
+			</h:tr>
+			<h:tr height="20" />
+		</h:table>
+	</groupbox>
+			
+				<groupbox width="100%" sclass="gbStyle"
+						style="margin-top:10px;" closable="false">
+						<caption>
+							<label value="Prerequisite Settings" />
+						</caption>
+                       
+                       	<h:table cellspacing="0" cellpadding="0"
+								width="100%"  height="75%" align="left" style="padding-left:20px;">
+							
+			<h:tr height="50"></h:tr>
+				     		<h:tr>
+				     			
+				     		<h:td width="10%" >
+				     					<checkbox id="firstNameChkBxId" label="First Name" checked="true" style="display:inline-block;" />
+				     			</h:td>
+				     			<h:td width="10%">
+				     					<checkbox id="lastNameChkBxId" label="Last Name" checked="true" style="display:inline-block;"  />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="mobileNumberChkBxId" label="Mobile Number" checked="true" style="display:inline-block;"   />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="emailAddressChkBxId" label="Email Address" checked="false" style="display:inline-block;"   />
+				     			</h:td>
+				     			
+				     		</h:tr>
+				    	
+					
+			<h:tr height="50"></h:tr>		
+					
+					<h:tr>
+				     			<h:td width="10%" >
+				     					<checkbox id="streetChkBxId" label="Street" checked="false" style="display:inline-block;" />
+				     			</h:td>
+				     			<h:td width="10%">
+				     					<checkbox id="cityChkBxId" label="City" checked="false" style="display:inline-block;"  />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="stateChkBxId" label="State" checked="false" style="display:inline-block;"   />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="postalCodeChkBxId" label="Postal Code" checked="false" style="display:inline-block;"   />
+				     			</h:td>
+				     			
+				     	</h:tr>
+					
+					<h:tr height="50"></h:tr>		
+					
+					<h:tr>
+				     			<h:td width="10%" >
+				     					<checkbox id="countryChkBxId" label="Country" checked="false" style="display:inline-block;" />
+				     			</h:td>
+				     			<h:td width="10%">
+				     					<checkbox id="birthdayChkBxId" label="Birthday" checked="false" style="display:inline-block;"  />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="anniversaryChkBxId" label="Anniversary" checked="false" style="display:inline-block;"   />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="genderChkBxId" label="Gender" checked="false" style="display:inline-block;"   />
+				     			</h:td>
+				     			
+				     	</h:tr> 
+					
+		</h:table>
+		  
+		   <h:table>
+			<h:tr>
+			<h:td style="padding:30px;">
+				<button label="Save" sclass="idle140 greenbtn" id="prerequsitesaveBtnId"  />
+			</h:td>
+
+			</h:tr>
+		</h:table>
+				</groupbox>	
+		
+			<groupbox width="100%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+		<caption> <label value="WebApp / MobileApp Settings"/> </caption>
+		<h:table>
+			<div visible="true" id="appSettingsDivId"> 
+			<h:tr>
+				<h:td width="200">
+					<label value="Update Company's Logo :" />
+				</h:td>
+				<h:td>
+					<textbox value="" width="250px" id="logoTbId" />
+					<button id="browseBtnId" sclass="idle140 " height="28px" label="Browse" upload="true,maxsize=-1" ></button>
+					<!-- <button id="uploadBtnId" sclass="idle140 greenbtn"  label="Upload"></button> -->
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Upload Banner Image :" />
+				</h:td>
+				<h:td>
+					<textbox value="" width="250px" id="mobileApplogoTbId" />
+					<button id="browseLogoBtnId" sclass="idle140 " height="28px" label="Browse" upload="true,maxsize=-1" ></button>
+					<!-- <button id="uploadBtnId" sclass="idle140 greenbtn"  label="Upload"></button> -->
+					<image src="/img/icons/icon_i.png" style="margin-left:10px;" />	
+					<label value="Banner image for mobile app" sclass="labelPos" />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Upload Cover Image :" />
+				</h:td>
+				<h:td>
+					<textbox value="" width="250px" id="homePageImageTbId" />
+					<button id="browseHomePageBtnId" sclass="idle140 " height="28px" label="Browse" upload="true,maxsize=-1" ></button>
+				<image src="/img/icons/icon_i.png" style="margin-left:10px;" />	
+				<label value="Image resolution should be 1200*900" sclass="labelPos" />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Upload Fav icon :" />
+				</h:td>
+				<h:td>
+					<textbox value="" width="250px" id="tabImageTbId" />
+					<button id="browseTabImageBtnId" sclass="idle140 " height="28px" label="Browse" upload="true,maxsize=-1" ></button>
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Home Page Theme : " />
+				</h:td>
+				<h:td>
+					<combobox id="brandingThemeId"	width="220px" />
+					<a label="Preview Theme" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;"
+								id="brandingThemePreviewBtnId"  />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Balance Card Theme : " />
+				</h:td>
+				<h:td>
+					<combobox id="balanceCardThemeId"	width="220px" />
+					<a label="Preview Theme" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;"
+								id="balanceCardThemePreviewBtnId"  />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="200">
+					<label value="Balance Card Text Theme : " />
+				</h:td>
+				<h:td>
+					<combobox id="balanceCardTextThemeId"	width="220px" />
+					<a label="Preview Theme" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;"
+								id="balanceCardTextPreviewBtnId"  />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td>
+					<label value="App Name : " />
+				</h:td>
+				<h:td>
+					<textbox value="" width="150px" id="bannerNameTbId" />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td>
+					<label value="Tab Text : " />
+				</h:td>
+				<h:td>
+					<textbox value="" width="150px" id="tabNameTbId" />
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td>
+					<label value="Font : " />
+				</h:td>
+				<h:td>
+					<listbox  id="fontId" width="150px" mold="select" style="margin-top:10px;position:relative;">
+					<listitem label="Select" selected="true"></listitem>
+					</listbox>
+				</h:td>
+			</h:tr>
+			<h:tr height="30" />
+			<h:tr>
+				<h:td />
+				<h:td>
+					<button label="Save" id="saveAppSettingsBtnId"	sclass="idle140 greenbtn" />
+				</h:td>
+			</h:tr>
+			</div>
+		</h:table>
+</groupbox>
+	
+	<groupbox id="ltySecurityGbId" width="100%" sclass="gbStyle" style="margin-top:20px;" closable="false" visible="false">
+		<caption> <label value="Loyalty Program Security"/> </caption>
+		<h:table>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="300">
+					<label value="Password Authentication for Program Edit : " />
+				</h:td>
+				<h:td>
+					<a label="Change Password" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;" id="changePwdAId" />
+				</h:td>
+				<h:td>
+					<a label="Forgot Password" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;" id="forgotPwdAId" />
+				</h:td>
+			</h:tr>
+			<h:tr height="20" />
+		</h:table>
+	</groupbox>	
+	
+	<groupbox id="ltyAlertsGbId" width="100%" sclass="gbStyle" style="margin-top:20px;" closable="false" visible="false">
+		<caption> <label value="Loyalty Alerts Settings"/> </caption>
+		
+		<h:table>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td>
+					<label value="Send Loyalty Performance Report : " />
+				</h:td>
+				<h:td>
+					<checkbox label= "Daily" id="ltyReportAlertsDailyChkId" checked="false" value="1" />
+					<checkbox label= "Weekly" id="ltyReportAlertsWeeklyChkId" checked="false" value="2" />
+					<!-- <checkbox label= "Monthly" id="ltyReportAlertsMonthlyChkId" checked="true" value="3" /> -->
+				</h:td>
+			</h:tr>
+			
+			<h:tr height="10" />
+		</h:table>
+			<!-- <h:tr>
+			<h:td> -->
+			
+			<div id="ltyRprtDivId" visible = "false">
+			<h:table>
+			<h:tr>
+				<h:td width="220" />
+				
+				<h:td>
+			<!-- <div id="allThreeLbDivId" visible="true"> -->
+			
+				<div id="dailyDivId" visible="true">
+				
+					<label value="Day &amp; Time :"  />
+					<label value="At" />
+					<listbox mold="select" id="hoursLbId">
+											<listitem label="1 AM" value = "1" selected="true" />
+											<listitem label="2 AM" value = "2"  />
+											<listitem label="3 AM" value = "3" />
+											<listitem label="4 AM" value = "4" />
+											<listitem label="5 AM" value = "5" />
+											<listitem label="6 AM" value = "6" />
+											<listitem label="7 AM" value = "7" />
+											<listitem label="8 AM" value = "8" />
+											<listitem label="9 AM" value = "9" />
+											<listitem label="10 AM" value = "10" />
+											<listitem label="11 AM" value = "11" />
+											<listitem label="12 PM" value = "12"/>
+											<listitem label="1 PM" value = "13"  />
+											<listitem label="2 PM" value = "14"  />
+											<listitem label="3 PM" value = "15" />
+											<listitem label="4 PM" value = "16" />
+											<listitem label="5 PM" value = "17" />
+											<listitem label="6 PM" value = "18" />
+											<listitem label="7 PM" value = "19" />
+											<listitem label="8 PM" value = "20" />
+											<listitem label="9 PM" value = "21" />
+											<listitem label="10 PM" value = "22" />
+											<listitem label="11 PM" value = "23" />
+										</listbox>
+										
+					</div>
+					
+					 </h:td>
+					
+				<h:td> 	
+				<div id="weeklyDivId" visible="true">
+					<label value="every" />
+					<listbox mold="select" id="daysLbId">
+											<listitem label="Sunday"  value = "0"/>
+											<listitem label="Monday" selected="true" value = "1" />
+											<listitem label="Tuesday" value = "2" />
+											<listitem label="Wednesday"  value = "3" />
+											<listitem label="Thursday"  value = "4" />
+											<listitem label="Friday"  value = "5" />
+											<listitem label="Saturday" value = "6" />
+										</listbox>
+				</div>
+				</h:td>
+				
+				<!-- <h:td>
+				<div id="monthlyDivId" visible="true">
+					<label value="on" />
+					<listbox mold="select" id="whichDayLbId">
+						<listitem label="First day of the month"  value = "0" selected="true"/>
+						<listitem label="Last day of the month"  value = "1" />
+					</listbox>
+				</div>
+				</h:td> -->
+			<!-- </div> -->
+				
+			</h:tr>
+			</h:table>
+			
+			<h:table>
+			<h:tr height="10" />
+			
+			<h:tr>
+				<h:td width="220" />
+				
+				<h:td>
+					<label value="Email Address :"  />
+					<textbox id="emailAddTxtBxId"  width="200px" />
+					<toolbarbutton id="addMoreEmailTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+						<div id="alertMailDivId" />
+				</h:td>
+			</h:tr>
+			</h:table>
+			</div>
+			
+			<!-- </h:td>
+			</h:tr> -->
+			
+	
+		
+		<h:table>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="220">
+					<label value="Send Alert on Low Cards Threshold : " />
+				</h:td>
+				<h:td>
+					<checkbox id="enableAlertsChkId" checked="false"/>
+				</h:td>
+			</h:tr>
+			<h:tr height="10" />
+		</h:table>
+		<div id="alertsDivId" visible="false">
+			<h:table>
+				<h:tr>
+					<h:td width="220" />
+					<h:td width="100">
+						<label value="Email Address : " />
+					</h:td>
+					<h:td>
+						<textbox id="emailTbId"  width="250px" />
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+				<h:tr>
+					<h:td />
+					<h:td width="100">
+						<label value="Mobile Number : " />
+					</h:td>
+					<h:td>
+						<textbox id="mobileTbId"  width="250px" />
+					</h:td>
+				</h:tr>
+				<h:tr height="10" />
+			</h:table>
+			<h:table>
+				<h:tr>
+					<h:td  width="220" />
+					<h:td valign="top" width="240">
+						<label value="Alert when available cards level reaches : " />
+					</h:td>
+					<h:td>
+						<radiogroup id="alertRdgrpId" orient="vertical" />
+						<vlayout>
+							<hlayout>
+								<radio id="percentRadioBtId" radiogroup="alertRdgrpId"  selected="true"/>
+								<textbox id="percentTbId" disabled="true"/>
+								<label value="% of total cards" />
+							</hlayout>
+							<hlayout>
+								<radio id="valueRadioBtId" radiogroup="alertRdgrpId"  />
+								<textbox id="valueTbId" disabled="true"/>
+								<label value="No of cards" />
+							</hlayout>
+						</vlayout>
+					</h:td>
+				</h:tr>
+				<h:tr height="30" />
+			</h:table>
+		</div>
+		<h:table>
+			<h:tr>
+				<h:td width="220"/>
+				<h:td>
+					<button label="Save" id="saveAlertsBtnId"	sclass="idle140 greenbtn" />
+				</h:td>
+			</h:tr>
+			<h:tr height="20" />
+		</h:table>
+	</groupbox>				
+
+	<window id="changePwdWinId" title="Change Password" border="normal"	mode="overlapped" visible="false" position="center" width="500px">
+		<caption>
+			<toolbarbutton label="Close"
+				onClick="changePwdWinId.setVisible(false);event.stopPropagation();" />
+		</caption>
+		<div id="contentDivId">
+			<label value="Please enter your current and new password below: "/>
+		</div>
+		<h:table>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td width="120">
+					<label value="Current Password: " />
+					<label value=" *" sclass="redStar"/>
+				</h:td>
+				<h:td width="170">
+					<textbox id="currPwdTbId" width="150px" />
+				</h:td>
+				<!-- <h:td>
+					<a label="Forgot Password" style="color:#2886B9;text-decoration: underline;margin-left:5px;font-weight:bold;" id="forgotPwdAId" />
+				</h:td> -->
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td>
+					<label value="New Password: " />
+					<label value=" *" sclass="redStar"/>
+				</h:td>
+				<h:td>
+					<textbox id="newPwdTbId" width="150px" />
+				</h:td>
+				<!-- <h:td /> -->
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td>
+					<label value="Retype Password: " />
+					<label value=" *" sclass="redStar"/>
+				</h:td>
+				<h:td>
+					<textbox id="retypePwdTbId" width="150px" />
+				</h:td>
+				<h:td />
+			</h:tr>
+			<h:tr height="10" />
+			<h:tr>
+				<h:td />
+				<h:td>
+					<button label="Update" id="updateBtnId"	sclass="idle70 greenbtn" />
+					<button label="Cancel" id="cancelBtnId"	sclass="idle70 " />
+				</h:td>
+				<h:td />
+			</h:tr>
+			<h:tr height="10" />
+		</h:table>
+	</window>
+
+	<window id="previewWin" title="Preview" border="normal"	mode="overlapped" visible="false" position="center">
+		<caption>
+			<toolbarbutton label="Close"
+				onClick="previewWin.setVisible(false);event.stopPropagation();" />
+		</caption>
+		<div id="contentDivId" width="900px" height="500px"
+			style="overflow:auto">
+			<!-- <image src="/images/loyalty/My Membership.jpg" /> -->
+		</div>
+	</window>
+	  <window id="ValueCodeEditWinId" title="Edit Value-code's description" border="normal" visible="false" width="1000px" height="100px" closable="true" 
+								  onClose="self.setVisible(false); event.stopPropagation();" >
+								  
+			<h:table>
+			<h:tr>
+			
+					<h:td width="200"> <label value="Value-Code Name:" /></h:td>			
+					<h:td ><textbox  width="150px" id="valueCodeNameTbId" /></h:td>		
+					<h:td ><label value="Description:" /></h:td>
+					<h:td ><textbox  id="descriptionTbId" rows="2" height="40px" width="300px"/></h:td>			
+					<h:td ><button label="Update" id="updateValueCodesBtnId" sclass="idle140 greenbtn"/></h:td>	
+				
+			</h:tr>
+		
+		</h:table>
+			
+			
+	</window>
+	
+</window>
+</zk>

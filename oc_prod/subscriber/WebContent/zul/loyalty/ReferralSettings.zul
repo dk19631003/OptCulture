@@ -1,0 +1,400 @@
+<?page title="Special Rules" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<window  id="createreferalprogramWinId"  xmlns:h="http://www.w3.org/1999/xhtml"                         
+	xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%" apply="org.mq.optculture.controller.loyalty.CreateReferralProgramController">
+	  
+	  <style>
+	  .mydiv{
+	  display:inline
+	  }
+	  </style>
+	  
+	  
+	 		<div id="basicsettingsDivId" visible="true">
+		
+				<groupbox closable="false">
+ 						<caption label="Basic Settings" style="font-weight:bold;font-size:12px;" ></caption>
+ 						<h:table cellspacing="2" cellpadding="2" width="100%">
+				  		  <h:tr height="2"/>
+				  			
+				  			<h:tr>
+				  				<h:td width="200"><label  value="Referral Program Name: "/> </h:td>
+				  				<h:td><textbox  id="referralNameTbId" width="200px" style="margin-right:10px;"/> <label id="nameStatusLblId" />
+				  				
+				  				
+							</h:td>
+				  		</h:tr>
+				  	</h:table>
+				  			
+		  		
+		  		
+		 		 	<!-- <h:table>
+		  				<h:tr height="6"/>
+				 		<h:tr>
+		  					<h:td width="200px"><label  value="Referral Type: "/> </h:td>
+		  					<h:td >
+		  						<listbox id="discountTypeLbId" mold="select">
+		  							<listitem label="One Sided" value="promotions" selected="true"/>
+									<listitem label="Double Sided" value="coupons" />
+								</listbox>
+		  					
+		  					</h:td>
+		  					</h:tr> 
+		  				</h:table> -->
+			
+			
+				<h:table>
+		  			<h:tr height="8"/>
+		  				<h:tr>
+		  				<h:td valign="top" width="200px" style="padding-top:5px;">
+		  					<label  value="Program Duration: "/> 
+		  				</h:td>
+		  				
+		  				<h:td  >
+						<div id="programValidityPeriodDivId">
+		  				
+		  				
+		  					<vlayout>
+		  						<hlayout>
+		  						
+		  							<label value="Start Date:" style="position: relative; top: 6px;" />
+		  				
+		  					 <datebox id="createDateBxId" format="yyyy-MM-dd HH:mm:ss" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"  cols="18" />
+ 	
+		  					
+		  						<!--	<datebox id="createDateBxId"
+		  					 			readonly="true"  style="marging:right-10px;"/> -->
+		  					
+		  							
+		  					<!-- <checkbox id="ActiveChkBxId23" label="Active" style="margin-left:40px" /> -->
+		  					
+	  						</hlayout>
+		  						
+		  						<separator height="10px"/>
+							</vlayout>
+		  			
+		  				
+		  				</div>	
+				</h:td>
+		  	</h:tr>
+		  	</h:table>
+			
+			
+			
+				<h:table>
+					<h:tr>
+				     	
+				     	<h:td>
+				     			<checkbox id="NolimitChkBxId" label="No End Date" checked="false" style="margin-left:202px" />
+			  			</h:td>	 
+		  				
+		  			
+		  				<h:td>	
+		  				<div id="expirydatedivID">
+		  				 <label value="(or)" style="font-weight: bold;padding-left:0px;" />
+		  					
+		  					<label Value="End Date: " style="margin-left:15px"  />
+		  					<datebox id="expiryDateBxId" format="yyyy-MM-dd HH:mm:ss" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"  cols="18" />
+ 						
+ 						</div>
+ 						</h:td>
+		  			
+		  				
+		  				<!-- <h:td>
+				     			<checkbox id="NolimitChkBxId" label="No Limit" style="margin-left:30px" />
+			  			</h:td>	  -->
+		  				
+		  				
+		  				<!-- <h:td  >	
+		  					<label Value="Date: " style="margin-left:5px"  />
+		  				 <datebox id="DateBxId" format="yyyy-MM-dd HH:mm:ss" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"  cols="18" />
+						</h:td> -->
+		  			
+		  			
+		  			
+		  			
+		  		<!--	<h:tr>
+		  			<h:td>
+		  					<label Value="Select RefDiscountcodes: " style="margin-left:5px"  />
+		  			
+		  							<listbox 
+											id="insertCouponLbId" mold="select" style="margin-left:60px" width="200px">
+											<listitem
+												label="Insert Discount Code" selected="true" />
+										</listbox> 
+		  			
+		  			</h:td>
+		  			</h:tr> -->
+		  			
+		  			
+		  			</h:tr>
+				</h:table>
+			</groupbox>
+	
+			
+			
+			<groupbox width="100%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			
+			<caption>
+					<label value="Referral Rules" />
+			</caption>
+			
+			
+			<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+				<h:tr height="25px">
+				<h:td >
+					
+					<label value="Discount for Referred Customer " sclass="theme-lbHeading" />
+			</h:td >
+			</h:tr>
+			</h:table>
+				
+				<h:table cellspacing="2" cellpadding="2" width="100%">
+				  		  <h:tr height="2"/>
+				  	<h:table>
+		  				<h:tr height="6"/>
+				 	
+				 	<h:tr>
+		  			<h:td>
+		  						<!-- <label Value="Select RefDiscountcodes: " style="margin-left:5px" /> -->
+		  			
+		  							<listbox 
+											id="insertCouponLbId" mold="select" style="margin-left:0px" width="200px">
+											<listitem
+												label="Select Discount Code" selected="true" />
+										</listbox> 
+		  			
+		  			</h:td>
+		  			</h:tr>
+					
+					
+					
+				 	
+				 	<!--	<h:tr>
+		  					<h:td width="270px"><label  value="When Referred Customer Makes a Purchase "/> </h:td>
+		  					
+		  					
+		  				
+		  					
+		  					<h:td width="150px"  > <label  value="Minimum Amount of" style="margin-left:7px;"/> </h:td>
+		  					
+				  			<h:td width="100px" ><textbox  id="minimumamountTbId" width="50px" style="margin-left:0px;"/> <label id="nameoStatusLblId" />
+				  			</h:td>
+		  					
+		  				</h:tr> 
+		  			
+		  			
+		  				<h:tr height="20"/>
+				 		<h:tr>
+		  					<h:td width="200px"><label  value="Referred Customer gets Discount of"/> </h:td>
+		  					<h:td width="50px" >
+		  						<listbox id="discountLbId" mold="select" >
+		  							<listitem label="Value" value="Value" selected="true"/>
+									<listitem label="Percentage" value="Percentage" />
+								</listbox>
+		  					</h:td>
+		  					
+		  					<h:td><textbox  id="discountvalueTbId" width="50px" style="margin-left:0px;"/> <label id="nameo0999StatusLblId" />
+				  			</h:td>
+		  					
+		  				</h:tr> -->
+		  				<h:tr height="6"/>
+				 	
+		  	</h:table>		
+				
+			<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+			<h:tr height="25px">
+			<h:td >
+					
+					<label value="Rewards for Referrer on reaching Milestones" sclass="theme-lbHeading" />
+			</h:td >
+			</h:tr>
+			</h:table>
+				
+			
+				
+				<h:table cellspacing="2" cellpadding="2" width="100%">
+				  		  <h:tr height="2"/>
+				  	<h:table>
+		  				<h:tr height="6"/>
+				 		<h:tr>
+		  					
+		  					
+		  				<h:table width="40%">		
+		  				<h:tr>
+		  					<h:td >
+		  						<radiogroup  id="referralRadioGrId" />
+		  						
+		  						<radio label="Flat" id="flatId"  radiogroup="referralRadioGrId"  value="Flat" style="margin-left:0px" selected="true" />
+		  						<radio label="Milestones" id="milestoneId"  radiogroup="referralRadioGrId" value="Milestones"  style="margin-left:20px" />
+		  					  
+		  					  <!--	<radio label="Flat" id="flatId"  radiogroup="referralRadioGrId"  value="flat" style="margin-left:20px" /> -->
+		  					
+		  					</h:td>
+		  						
+		  						</h:tr>
+		  					
+		  					</h:table>
+		  					
+		  					
+		  						
+		  			<div id="milestonesDivId"   visible="false">
+		  			
+					<h:table>
+				 		
+				 		
+				 		<h:tr height="10px">	
+		  				
+		  				
+		  			<!--		<h:td >
+		  			
+		  						<listbox id="currencyLbItd"  width="90px" mold="select">
+		  							<listitem label="First" value="Currency" selected="true"/>
+								</listbox>
+		  					
+		  					</h:td>
+		  				
+				  				
+					
+				  				<h:td><textbox  id="FirstofTbId" width="60px" style="margin-left:37px;"/> <label id="nameStatusesLblId" />
+				  				</h:td>
+		  			
+		  					
+		  					<h:td width="140px"><label  value="Referrences and get " style="margin-left:23px;"/> </h:td>
+		  				
+		  				
+		  					
+		  		
+		  					<h:td >
+		  						<listbox id="currencyLbId" mold="select" style="margin-left:20px;">
+		  							<listitem label="Currency" value="Currency" selected="true"/>
+									<listitem label="Points" value="Points" />
+						
+		
+		  						</listbox>
+		  					
+		  					</h:td>
+		  				
+		  					
+		  			
+		  	
+		  					<h:td width="120px"  > <label  value="Value of" style="margin-left:26px;"/> </h:td>
+		  					
+				  				<h:td><textbox  id="minamountTbId" width="60px" style="margin-left:10px;"/> <label id="namesStatusLblId" />
+				  				
+				  				
+				  			</h:td> -->
+		  	
+		  			
+		  				
+		  			
+		  			
+		
+		  		</h:tr> 
+		  	
+					
+		  			
+		  	</h:table>
+		  		
+		  			<div id="gridDivId" visible="false">
+				
+							<grid width="50%">
+				
+								<rows id="contactRowsId"/>
+				
+							</grid>
+					</div>	
+		  
+		  
+		 			<!-- 	<h:tr>
+		  					<h:td>
+		  					
+		  				
+		  					<div align="left" style ="margin-left:0px;" >
+		
+																					
+		  					<toolbarbutton image="/images/action_add.gif"  label="Add Row" id="addRowBtnId" />
+		  			
+							</div>
+		  						
+						</h:td>
+		  			
+		  			</h:tr>   -->
+		
+		  	 	</div>
+		  		
+		  	
+		  			
+		  		<div id="flatDivId" visible="true">
+		  			
+				 	<h:table>
+				 	
+				 		<h:tr height="10px">	
+		  					
+		  					
+		  					
+		  					<h:td width="200px"><label  value="Every Referrence gets " style="margin-left:3px;"/> </h:td>
+		  					
+		  					<h:td >
+		  						<listbox id="currencyLbIds" mold="select">
+		  							<listitem label="Currency" value="Currency" selected="true"/>
+									<listitem label="Points" value="Points" />
+								</listbox>
+		  					
+		  						</h:td>
+		  					
+		  							<h:td width="120px"  > <label  value="Value of" style="margin-left:30px;"/> </h:td>
+		  					
+				  				<h:td width="50px" ><textbox  id="referralvalueTbId" width="50px" style="margin-right:0px;"/> <label id="namesStatusLblIdi" />
+				  					</h:td>
+		  					
+		  						</h:tr> 
+		  			
+		  				</h:table>
+							
+								</div>
+		  			
+		  					</h:tr>
+		  		
+		  				</h:table>		
+			
+						</h:table>
+			
+					<h:table>
+		  			<h:tr height="6"/>
+					<h:tr>
+				
+					
+					
+					
+					
+					
+					
+					
+						<!--	<h:td width="130px"  > <label  value="Discount Expiry after" style="margin-left:0px;"/> </h:td>
+		  					
+				  			<h:td><textbox  id="discountexpiryid" width="50px" style="margin-left:10px;"/> <label id="disexpirynameLblId" />
+				  			
+				  			<label  value="Months" style="margin-left:10px;"/>
+				  	
+				  		</h:td>-->
+				  
+					</h:tr>
+					</h:table>
+					</h:table >		
+	
+			</groupbox>
+			<separator/>
+		
+			<div align="right" >
+			<button label="Save As Draft"  width="100px" id="draftBtnId" />
+			<button label="Save" id="proceedBtnId" sclass="idle140 greenbtn" />
+		
+			</div>
+			</div>	
+	
+</window>
+</zk>

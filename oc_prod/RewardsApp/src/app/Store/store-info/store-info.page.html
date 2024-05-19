@@ -1,0 +1,93 @@
+<ion-content  dir="{{textDir}}" forceOverscroll="false">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent wd100">
+  <div  *ngIf="storeInfo" [style.background]="'url(' + storeInfo.storeImagePath+  ')'" class="imgClass ht200">
+      <ion-toolbar color="#ffe000">
+          <ion-buttons slot="start" >
+              <ion-button  (click)="backButtonEvent()">
+                <ion-icon mode="md" color="light" class="white" slot="icon-only" name="arrow-back"></ion-icon>
+              </ion-button>
+          </ion-buttons>
+      </ion-toolbar>
+  </div>
+
+  <ion-grid class="mr-right-5 mr-left-5 pdtop20"  *ngIf="storeInfo">
+    <ion-row>
+      <ion-col>
+          <ion-label  text-wrap class="brandText">
+              {{storeInfo.storeName}}
+          </ion-label>
+      </ion-col>
+    </ion-row>
+      <ion-row>
+        <ion-col>
+            <ion-text class="textFont coolGrey">{{'Address' | translate}}</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+            <ion-text class="headerText">
+               {{storeInfo.locality}},{{storeInfo.city}},{{storeInfo.state}},{{storeInfo.country}},{{storeInfo.zipCode}}
+              </ion-text>
+        </ion-col>
+      </ion-row>
+     
+      <ion-row>
+        <ion-col (click)="getDirections()">
+            <a  class="headerText darkBlue bold">
+              {{'GetDirections' | translate}}
+                 <ion-icon  class="checkbox-icon"  name="arrow-forward"></ion-icon>
+             </a>
+        </ion-col>
+      </ion-row>
+      <br/>
+      <ion-row>
+          <ion-col size="6">
+            <ion-row>
+              <ion-col>
+                  <ion-label class="textFont coolGrey">{{'PhoneNumber' | translate}} </ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row >
+              <ion-col>
+                  <ion-label class="headerText darkBlue bold" text-wrap>{{storeInfo.mobileNo}}</ion-label> 
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col size="6">
+            <ion-row>
+              <ion-col>
+                  <ion-label class="textFont coolGrey "> {{'Email' | translate}} </ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row >
+              <ion-col>
+                  <ion-label  class="headerText darkBlue bold" text-wrap>
+                    {{storeInfo.emailId}}
+                  </ion-label> 
+              </ion-col>
+            </ion-row>
+            </ion-col>
+        </ion-row>
+       
+    </ion-grid>
+    <ion-list>
+        <ion-item class="line" lines="full">
+          </ion-item>
+    </ion-list>
+    
+    <ion-list *ngFor="let offer of storesOffers" class="mr-right-5 mr-left-5">
+      <ion-label class="textFont">{{offer.name}}</ion-label>
+   
+        <div *ngIf="offer.bannerImage" >
+            <ion-card class="imgHeight border-radius" (click)="gotoOfferDetail(offer)">  
+              <img  src="{{offer.bannerImage}}"  style="width:100%"/>
+             </ion-card>
+        </div>
+  </ion-list>
+</ion-col>
+<ion-col class="bgimage "></ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>

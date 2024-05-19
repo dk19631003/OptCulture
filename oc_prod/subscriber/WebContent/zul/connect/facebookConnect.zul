@@ -1,0 +1,19 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+<window title="Facebook" border="normal" xmlns:h="native"  
+	 >
+New Content Here!
+
+
+ <h:form action="/subscriber/connect/facebook" method="POST">
+	<h:div >
+		<h:p>You aren't connected to Facebook yet. Click the button to connect.</h:p>
+	</h:div>
+	<h:p><h:button type="submit"> Connect</h:button></h:p>
+</h:form>
+
+<button label="facebook CONNECT" href="/connect/facebook"  type="submit"/>	    
+
+</window>
+</zk>

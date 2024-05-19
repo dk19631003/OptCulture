@@ -1,0 +1,275 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="scoreWinId" width="100%" apply="org.mq.marketer.campaign.controller.ScoreController" 
+			xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:h="http://www.zkoss.org/2005/zk/native">
+			
+ 	<tabbox id="scoreTabbxId" >
+      			<tabs >
+			        <tab label="Activities" /><!--
+			        <tab label="Demographics" />
+			        <tab label="CRM"/>
+   				 --></tabs>
+   				 <tabpanels>
+   				 	<tabpanel>
+   				 		<grid id="scoreGridId">
+   				 			<columns>
+   				 				<column width="190px" valign="top"/>
+   				 				<column />
+   				 			</columns>
+   				 			
+   				 			<rows >
+   				 			 
+   				 				<row style="padding:6px;" visible="true">
+   				 					<label id="pageVisitedLabelId" value="Page Visited" />
+   				 					<div id="pageVisitedDivId" >
+   				 						<hbox style="padding:2px;" id="pVisitHboxId_0">
+   				 							<hbox  align="center" width="500px">
+   				 								<checkbox label="All Visits" id="pVisitChkId_0"/><space/>
+   				 							 	<label value="OR" style="font-weight:bold"/> <space/>
+	   				 							<listbox mold="select" rows="1" id="pVisitQuryLstBxId_0">
+	   				 								<listitem  label="contains" selected="true"/>
+	   				 								<listitem  label="Reg Exp"/>
+	   				 							</listbox><space/>
+	   				 							<textbox id="pVisitQuryTxtBxId_0"/>
+	   				 						</hbox>
+	   				 						<hbox width="200px" pack="end" align="center">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" value="score"  id="pVisitQuryMinScoreTxtBxId_0"  name="minScore"/><space/> 
+	   				 							<textbox width="70px" value="max score" style="padding-right:5px;" id="pVisitedMaxScoreTbId" name="maxScore"/>
+	   				 							<image src="/img/icons/add_icon.png" id="pageVisitedImgId" style="cursor:pointer;cursor:hand;padding-left:6px;" />
+	   				 						</hbox>
+	   				 					</hbox>
+   				 					</div>
+   				 				</row>
+   				 				
+   				 				<row style="padding:6px;" visible="true">
+   				 					<label id="downloadedLabelId" value="Downloaded "/>
+   				 					<div id="downloadedDivId" >
+   				 						<hbox style="padding:2px;" id="dwLHboxId_0">
+   				 							<hbox align="center" width="500px"> 
+	   				 							<textbox id="dwLTxtBxId_0"/><space/>
+	   				 							<label value="OR" style="font-weight:bold"/><space/>
+	   				 							<checkbox label="All PDF" id="dwLAllPDFChkId_0" />
+	   				 							<checkbox label="All DOC" id="dwLAllDOCChkId_0"/>
+	   				 							<checkbox label="All PPT" id="dwLAllPPTChkId_0"/>
+   				 							</hbox>
+   				 							<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" value="score" name="minScore" id="dwLMinScoreTxtBxId_0"></textbox><space/>
+	   				 							<textbox width="70px" value="max score" style="padding-right:5px;" id="downloadedMaxScoreTbId" name="maxScore"/>
+	   				 							<image src="/img/icons/add_icon.png" id="downloadImgId" style="cursor:pointer;cursor:hand;padding-left:6px;" />
+	   				 						</hbox>
+   				 						</hbox>
+   				 					</div>
+   				 				</row>
+   				 			
+		   				 		<row style="padding:6px;" visible="true">
+		   				 			<label id="sourceOfVstedLabelId" value="Source of visit"/>
+		   				 			<div id="sourceOfVisitDivId" >
+		   				 				<hbox style="padding:2px;" id="sOfVisitHboxId_0">
+		   				 					<hbox  align="center" width="500px">
+			   				 					<listbox  mold="select" id="sOfVisitLstBxId_0">
+				   				 					<listitem label="Contains" selected="true"/>
+					   				 				<listitem  label="Does not contains"/>
+					   				 				<listitem  label="All these words"/>
+					   				 				<listitem  label="Any of these words"/>
+			   				 					</listbox><space/>
+			   				 					<textbox id="sOfVisitTxtBxId_0"/>
+		   				 					</hbox>
+		   				 					<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" value="score" name="minScore" id="sOfVisitMinScoreTxtBxId_0"></textbox><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="sourceOfVisitMaxScorTbId" name="maxScore"></textbox>
+	   				 						 	<image src="/img/icons/add_icon.png" id="sourceOfVisitImgId" style="cursor:pointer;cursor:hand;padding-left:6px;"/>
+	   				 						</hbox>
+		   				 				</hbox>
+		   				 			</div>		
+		   				 		</row>
+		   				 		
+		   				 		<row style="padding:6px;">
+		   				 			<label id="emailOpenedLabelId" value="Email Opened "/>
+		   				 			<div id="emailOpenedDivId">
+			   				 			<hbox style="padding:2px;" id="eOpnHboxId_0">
+			   				 				<hbox  align="center" width="500px">
+			   				 					<listbox mold="select" id="eOpnLstBxId_0">
+			   				 						<listitem label="--Select--" selected="true" />
+				   				 					<listitem  forEach="${scoreWinId$ScoreController.campaigns}" 
+											 			label="${each.campaignName}" value="${each.campaignName}" style="line-height:22px;"/>
+			   				 					</listbox>
+			   				 				</hbox>
+			   				 				<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" value="score" name="minScore" id="eOpnMinScoreTxtBxId_0"/><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="emailOpendMaxScorTbId" name="maxScore" />
+	   				 						 	<image src="/img/icons/add_icon.png" id="emailOpenedImgId" style="cursor:pointer;cursor:hand;padding-left:6px;" />
+		   				 					</hbox>
+			   				 			</hbox>
+		   				 			</div>
+		   				 		</row>
+		   				 		
+		   				 		<row style="padding:6px;">
+		   				 			<label id="emailClickedLabelId" value="Email Clicked "/>
+		   				 			<div id="ecl_DivId">
+			   				 			<hbox style="padding:2px;" id="eClKdHboxId_0" >
+			   				 				<hbox  align="center" width="500px">
+			   				 					<listbox  id="eClkLstBxId_0"  mold="select" >
+			   				 						<listitem label="--Select--" selected="true" />
+				   				 					<listitem  forEach="${scoreWinId$ScoreController.campaigns}" 
+											 			label="${each.campaignName}" value="${each.campaignName}" style="line-height:22px;"/>
+			   				 					</listbox>
+			   				 				</hbox>
+			   				 				<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" value="score" name="minScore" id="eClkdMinScoreTxtBxId_0"/><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="emailClickedMaxScorTbId" name="maxScore"/>
+	   				 						 	<image src="/img/icons/add_icon.png" id="emailClickedImgId" style="cursor:pointer;cursor:hand;padding-left:6px;" />
+		   				 					</hbox>
+			   				 			</hbox>
+		   				 			</div>
+		   				 		</row>
+		   				 		
+		   				 		<row style="padding:6px;" visible="false">
+		   				 			<label id="emailNotOpenedLabelId" value="Email Not Opened "/>
+		   				 			<div id="emailNotOpenDivId">
+			   				 			<hbox style="padding:2px;"  id="eNOpnHboxId_0">
+			   				 				<hbox  align="center" width="500px">
+			   				 					<listbox  id="eNOpnLstBxId_0" mold="select" >
+			   				 						<listitem label="--Select--" selected="true" />
+			   				 						<listitem  forEach="${scoreWinId$ScoreController.campaigns}" 
+										 				label="${each.campaignName}" value="${each.campaignName}" style="line-height:22px;"/>
+			   				 					</listbox>
+			   				 				</hbox>
+			   				 				<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" id="eNOpnMinScoreTxtBxId_0" value="score" name="minScore" /><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="emailNotOpenTbId" name="maxScore"/>
+	   				 						 	<image src="/img/icons/add_icon.png" id="emailNotOpenImgId" style="cursor:pointer;cursor:hand;padding-left:6px;"/>
+		   				 					</hbox>
+			   				 			</hbox>
+		   				 			</div>
+		   				 		</row>
+		   				 		
+		   				 		<row style="padding:6px;">
+		   				 			<label id="emailUnsubscribLabelId" value="Email Unsubscribed"/>
+		   				 			<div id="emailUnsubscribeDivId">
+			   				 			<hbox style="padding:2px;" id="eUSubHboxId_0">
+			   				 				<hbox  align="center" width="500px">
+			   				 					<listbox  id="eUSubLstBxId_0" mold="select" >
+			   				 						<listitem label="--Select--" selected="true" />
+				   				 					<listitem  forEach="${scoreWinId$ScoreController.campaigns}" 
+											 			label="${each.campaignName}" value="${each.campaignName}" style="line-height:22px;"/>
+			   				 					</listbox>
+			   				 				</hbox>
+			   				 				<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" id="eUSubMinScoreTxtBxId_0" value="score" name="minScore"/><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="emailUnsubscribTbId" name="maxScore" />
+	   				 						 	<image src="/img/icons/add_icon.png" id="emailUnsubscribeImgId" style="cursor:pointer;cursor:hand;padding-left:6px;" />
+		   				 					</hbox>
+			   				 			</hbox>
+		   				 			</div>
+		   				 		</row>
+		   				 	
+		   				 	
+		   				 		<row style="padding:6px;" visible="false">
+		   				 			<label id="formSubmitteddLabelId" value="Form Submitted"/>
+		   				 			<div id="formSubmitDivId">
+			   				 			<hbox style="padding:2px;" id="formSubHboxId_0">
+			   				 				<hbox  align="center" width="500px">
+			   				 					<listbox   mold="select" id="formSubLstBxId_0">
+			   				 					<listitem label="form1" selected="true"/>
+			   				 					</listbox>
+			   				 				</hbox>
+			   				 				<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" id="formSubMinScoreTxtBxId_0" value="score" name="minScore" ></textbox><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="formSubmitmaxScoreTbId" name="maxScore"></textbox>
+	   				 						 	<image src="/img/icons/add_icon.png" id="formSubscribeImgId" style="cursor:pointer;cursor:hand;padding-left:6px;"/>
+		   				 					</hbox>
+			   				 			</hbox>
+		   				 			</div>
+		   				 		</row>
+		   				 	
+		   				 	<row style="padding:6px;" visible="false">
+		   				 			<label id="formAbndLabelId" value="Form Abondoned"/>
+		   				 			<div id="formAbondonedDivId">
+			   				 			<hbox style="padding:2px;" id="fAbndHboxId_0" >
+			   				 				<hbox  align="center" width="500px">
+			   				 					<listbox   mold="select" id="fAbndLstBxId_0">
+			   				 					<listitem label="form1" selected="true"/>
+			   				 					</listbox>
+			   				 				</hbox>
+			   				 				<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" id="fAbndMinScoreTxtBxId_0" value="score" name="minScore"></textbox><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="formAbndMaxScorTbId" name="maxScore"></textbox>
+	   				 						 	<image src="/img/icons/add_icon.png" style="cursor:pointer;cursor:hand;padding-left:6px;" id="formAbondonedImgId" />
+	   				 						</hbox>
+			   				 			</hbox>
+		   				 			</div>
+		   				 		</row>
+		   				 		
+		   				 		<row style="padding:6px;" visible="false">
+		   				 			<label id="formFRatioLabelId" value="Form Fill Ratio"/>
+		   				 			<div id="formFillRatioDivId">
+			   				 			<hbox style="padding:2px;" id="fFRHboxId_0">
+			   				 				<hbox  align="center" width="500px" >
+			   				 					<listbox   mold="select" name="formnameListBox" id="fFRNLstBxId_0">
+			   				 						<listitem label="form1" selected="true"/>
+			   				 					</listbox>
+			   				 					<listbox   mold="select" name="formCndListBox" id="fFRCndLstBxId_0">
+			   				 						<listitem label="is equal to" selected="true"/>
+			   				 						<listitem label="is less than"/>
+			   				 						<listitem label="is greater than"/>
+			   				 					</listbox>
+			   				 						<space width="2px"/>
+				   				 					<intbox width="40px" id="fFRIntBxId_0" />
+				   				 					<label style="color:red;padding-left:2px;" value=" * " />
+				   				 					<label value="(Enter Form fill ratio between 0 to 100)" style="font-size:12px;color:#333;"/>
+			   				 				</hbox>
+			   				 				<hbox width="200px" pack="end">	
+	   				 							<label style="color:red;padding-right:5px" value=" * " />
+	   				 							<textbox width="40px" id="fFRMinScoreTxtBxId_0" value="score" name="minScore" ></textbox><space/>
+	   				 						 	<textbox width="70px" value="max score" style="padding-right:5px;" id="formFRatioMaxScorTbId" name="maxScore"></textbox>
+	   				 						 	<image src="/img/icons/add_icon.png" id="formFillRatioImgId" style="cursor:pointer;cursor:hand;padding-left:6px;"/>
+	   				 						</hbox>
+			   				 			</hbox>
+		   				 			</div>
+		   				 		</row>
+		   				 		
+   				 			</rows>
+   				 		</grid>
+   				 		
+   				 		<h:table width="100%">
+	   				 		<h:tr>
+	   				 			<h:td align="right" >
+		   				 				<button label="Save" id="saveBtnId" />
+	   				 			</h:td>
+	   				 		</h:tr>
+   				 		</h:table>
+   				 		
+   				 	</tabpanel>
+   				 </tabpanels>
+   				 </tabbox>
+   				<script>
+   					 function setLabel(self){
+   					 	if(self.getValue()=='score') {
+							self.setValue('');
+   					 	}else if(self.getValue()==''){
+   					 		self.setValue('score');
+   					 	}
+					}
+					
+   					 function setMaxLabel(self){
+   					 	if(self.getValue()=='max score') {
+							self.setValue('');
+   					 	}else if(self.getValue()==''){
+   					 		self.setValue('max score');
+   					 	}
+					}
+					
+   				 </script>
+   				 
+   				 
+	</window>
+</zk>

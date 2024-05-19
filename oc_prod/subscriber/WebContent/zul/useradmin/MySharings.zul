@@ -1,0 +1,128 @@
+<?page title="Change Password" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="mySharingWinId"  border="0"  xmlns:w="client" xmlns:h="native" 
+	apply="org.mq.marketer.campaign.controller.useradmin.MysharingsController">
+	
+	
+		<tabbox id="shareTabBoxId">
+			<tabs>
+				<tab label="Share List(s)" />
+				<tab label="Share Segment(s)" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<groupbox closable="false"  sclass="gbStyle">
+     					<caption label="Select list(s) &amp; Org. unit(s)" />
+					
+						<h:table width="100%" cellpadding="0" cellspacing="10">
+							<h:tr>
+								<h:td>
+								
+			     					<listbox  width="300px" height="200px"  id="shareMlLbId"  checkmark="true" multiple="true">
+			     						<listhead>
+			     							<listheader label="List Names">
+			     							</listheader>
+			     						</listhead>
+			     					</listbox>
+								</h:td>
+								<h:td>
+									<listbox  width="300px" height="200px"  id="shareMlWithDomainLbId"  checkmark="true" multiple="true">
+			     						<listhead>
+			     							<listheader label="Organization Units">
+			     							</listheader>
+			     						</listhead>
+			     					</listbox>
+								
+								</h:td>
+							</h:tr>
+						</h:table>
+     					
+						<div align="left" style="margin:10px 0px;">
+							<button id="mlShareBtnId" sclass="idle140 greenbtn" label="Share List(s)" />
+						</div>
+					</groupbox>
+					<listbox id="shareListlbId" style="margin:10px; 0px;"  emptyMessage="No items match for your search" 
+					sclass="contactsView" checkmark="true" multiple="false" >
+				
+						<listhead sizable="false" style="background-color:#488eb0;" >
+							
+		 					<listheader label="" width="50px" />
+							<listheader label="Shared List Names"  sort="auto"  align="left" style="padding-left:10px;" maxlength="40"/>
+							<listheader label="Shared With Organization Units"  sort="auto"  align="left" style="padding-left:50px;" maxlength="40"/>
+							<listheader label="" width="50px"/>
+						</listhead>
+						
+					
+				</listbox>
+				
+				<div align="right" style="padding:20px 0px;">
+				
+					<button label="Submit" sclass="idle140 greenbtn" id="submitMlSharesBtnId"/>
+				
+				</div>
+					
+				</tabpanel>
+				
+				<tabpanel>
+					<groupbox closable="false"  sclass="gbStyle">
+     					<caption label="Select Segment(s)  &amp; Org. unit(s)" />
+     					
+     					<h:table width="100%" cellpadding="0" cellspacing="10">
+							<h:tr>
+								<h:td>
+								
+			     					<listbox width="300px" height="200px"  id="shareSegmentsLbId" checkmark="true" multiple="true">
+			     						<listhead>
+			     							<listheader label="List Names">
+			     							</listheader>
+			     						</listhead>
+     					
+     								</listbox>
+			     					
+								</h:td>
+								<h:td>
+									<listbox  width="300px" height="200px"  id="shareSegmentsWithDomainLbId"  checkmark="true" multiple="true">
+			     						<listhead>
+			     							<listheader label="Organization Units">
+			     							</listheader>
+			     						</listhead>
+			     					</listbox>
+								
+								</h:td>
+							</h:tr>
+						</h:table>
+     					
+     					
+     					<div align="leftf" style="margin:10px; 0px;">
+							<button id="segmentShareBtnId" sclass="idle140 greenbtn" label="Share Segment(s)" />
+						</div>
+     					
+					</groupbox>
+					<listbox id="shareSegmentListlbId" style="margin:10px; 0px;" emptyMessage="No items match for your search" 
+					sclass="contactsView" checkmark="true" multiple="false">
+				
+						<listhead sizable="false" style="background-color:#488eb0;" >
+							
+		 					<listheader label="" width="50px"/>
+							<listheader label="Shared Segment Names"  sort="auto"  align="left" style="padding-left:10px;" maxlength="40"/>
+							<listheader label="Shared With Organization Units"  sort="auto"  align="left" style="padding-left:50px;" maxlength="40"/>
+							<listheader label="" width="50px"/>
+						</listhead>
+						
+					
+				</listbox>
+					
+					<div align="right" style="padding:20px 0px;">
+				
+					<button label="Submit" sclass="idle140 greenbtn" id="submitSegmentSharesBtnId"/>
+				
+				</div>
+					
+				</tabpanel>
+			</tabpanels>		
+		</tabbox>
+			
+		
+	
+</window>
+</zk>

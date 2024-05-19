@@ -1,0 +1,45 @@
+package org.mq.optculture.model.ocloyalty;
+
+public class ResponseHeader {
+
+	private String requestId;
+	private String requestDate;
+	private String transactionId;
+	private String transactionDate;
+	
+	public ResponseHeader() {
+	}
+
+	public String getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
+
+	public String getRequestDate() {
+		return requestDate;
+	}
+
+	public void setRequestDate(String requestDate) {
+		this.requestDate = requestDate;
+	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public String getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(String transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+	
+}

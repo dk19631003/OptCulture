@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.DomainStatus" table="domain_status">
+		<id name="domainId" type="java.lang.Long" column="domain_id">
+			<generator class="native"></generator>
+		</id>
+		<property name="domain" type="java.lang.String" column="domain" not-null="true" unique-key="unique_domain"/>
+		<property name="status" type="java.lang.String" column="status" not-null="true"></property>
+	</class>
+</hibernate-mapping>

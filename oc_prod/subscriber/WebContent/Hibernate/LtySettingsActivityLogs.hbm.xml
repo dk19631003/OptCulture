@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LtySettingsActivityLogs" 
+		table="lty_settings_activity_logs" >
+		
+		<id name="logId" type="java.lang.Long" >
+			<column name="log_id"/>
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id" />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="logType" type="string" >
+			<column name="log_type" />
+		</property>
+		<property name="logDetails" type="text" >
+			<column name="log_details" />
+		</property>
+		<property name="sendEmailFlag" type="char">
+			<column name="send_email_flag"/>
+		</property>
+		<property name="lastEmailSentDate" type="calendar">
+			<column name="last_email_sent_date" />
+		</property>
+	</class>
+</hibernate-mapping>

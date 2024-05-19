@@ -1,0 +1,69 @@
+package org.mq.optculture.model.loyalty;
+
+import javax.xml.bind.annotation.XmlElement;
+
+/**
+ * Loyalty redemption request data.
+ * @author Venkata Rathnam D
+ *
+ */
+public class RedemptionInfo {
+
+	private String EMPID;
+	private String CUSTOMERID;
+	private String STORELOCATIONID;
+	private String CARDNUMBER;
+	private String CARDPIN;
+	private String VALUECODE;
+	private String ENTEREDAMOUNT;
+	public String getEMPID() {
+		return EMPID;
+	}
+	@XmlElement(name = "EMPID")
+	public void setEMPID(String eMPID) {
+		EMPID = eMPID;
+	}
+	public String getSTORELOCATIONID() {
+		return STORELOCATIONID;
+	}
+	@XmlElement(name = "STORELOCATIONID")
+	public void setSTORELOCATIONID(String sTORELOCATIONID) {
+		STORELOCATIONID = sTORELOCATIONID;
+	}
+	public String getCARDNUMBER() {
+		return CARDNUMBER;
+	}
+	@XmlElement(name = "CARDNUMBER")
+	public void setCARDNUMBER(String cARDNUMBER) {
+		CARDNUMBER = cARDNUMBER;
+	}
+	public String getCARDPIN() {
+		return CARDPIN;
+	}
+	@XmlElement(name = "CARDPIN")
+	public void setCARDPIN(String cARDPIN) {
+		CARDPIN = cARDPIN;
+	}
+	public String getVALUECODE() {
+		return VALUECODE;
+	}
+	@XmlElement(name = "VALUECODE")
+	public void setVALUECODE(String vALUECODE) {
+		VALUECODE = vALUECODE;
+	}
+	public String getENTEREDAMOUNT() {
+		return ENTEREDAMOUNT;
+	}
+	@XmlElement(name = "ENTEREDAMOUNT")
+	public void setENTEREDAMOUNT(String eNTEREDAMOUNT) {
+		ENTEREDAMOUNT = eNTEREDAMOUNT;
+	}
+	public String getCUSTOMERID() {
+		return CUSTOMERID;
+	}
+	@XmlElement(name = "CUSTOMERID")
+	public void setCUSTOMERID(String cUSTOMERID) {
+		CUSTOMERID = cUSTOMERID;
+	}
+	
+}

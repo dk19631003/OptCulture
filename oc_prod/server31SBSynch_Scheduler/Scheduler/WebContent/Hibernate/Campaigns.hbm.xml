@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.Campaigns"
+		table="campaigns">
+		<id name="campaignId" type="java.lang.Long">
+			<column name="campaign_id" />
+			<generator class="native" />
+		</id>
+		<property name="campaignName" type="string">
+			<column name="campaign_name" length="30" not-null="true"
+				unique-key="Unique_Campaign" />
+		</property>
+		<property name="label" type="string">
+      		<column name="label" length="20"/>
+    	</property>
+		<property name="subject" type="string">
+			<column name="subject" length="200"  />
+		</property>
+		<property name="personalizeTo" type="boolean">
+			<column name="personalize_to"  />
+		</property>
+		<property name="toName" type="string">
+			<column name="to_name" length="60"  />
+		</property>
+		<property name="fromName" type="string">
+			<column name="from_name" length="60"  default="''" />
+		</property>
+		<property name="fromEmail" type="string">
+			<column name="from_email" length="60"  />
+		</property>
+		<property name="replyEmail" type="string">
+			<column name="reply_email" length="60"  default="''" />
+		</property>
+		<property name="companyName" type="string">
+			<column name="company_name" length="100"  default="''" />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="60"  />
+		</property>
+		<property name="draftStatus" type="string">
+			<column name="draft_status" length="60"  />
+		</property>
+	    <property name="editorType" type="string">
+	      <column name="editor_type" length="30" />
+	    </property>
+   		<property name="htmlText" type="text">
+			<column name="html_text"/>
+    	</property>
+   		<property name="finalHtmlText" type="text">
+			<column name="final_html"/>
+	    </property>
+    	<property name="prepared" type="boolean" column="is_prepared"/>
+   		<property name="textMessage" type="text">
+			<column name="text_message"/>
+	    </property>
+    	<property name="couponFlag" type="boolean">
+			<column name="coupon_flag" default="false"  />
+		</property>
+		<property name="scheduleType" type="string">
+			<column name="schedule_type" length="30" />
+		</property>
+		<property name="webLinkFlag" type="boolean">
+			<column name="web_link_flag" default="false"  />
+		</property>
+		<property name="webLinkText" type="string">
+			<column name="web_link_text"  default="''" />
+		</property>
+		<property name="webLinkUrlText" type="string">
+			<column name="web_link_urlText" default="''"  />
+		</property>
+		<property name="permissionRemainderFlag" type="boolean">
+			<column name="permission_remainder_flag" default="false"/>
+		</property>
+		<property name="permissionRemainderText" type="string">
+			<column name="permission_remainder_text" default="''"></column>
+		</property>
+		<property name="addressFlag" type="boolean">
+			<column name="address_flag" default="false"  />
+		</property>
+		<property name="addrsType" type="string">
+			<column name="addrs_type" length="30"  />
+		</property>
+		<property name="includeBeforeStr" type="string">
+			<column name="include_before_str" length="200"/>
+		</property>	
+		
+		
+		<property name="includeOrg" type="boolean">
+			<column name="include_org" default="false" />
+		</property>
+		<property name="includeOrgUnit" type="boolean">
+			<column name="include_org_unit" default="false" />
+		</property>
+		<property name="addressStr" type="string">
+			<column name="address" length="1000"/>
+		</property>
+		
+		<!-- 
+		<property name="lastSentDate" type="timestamp">
+			<column name="last_sent_date" />
+		</property>
+		<property name="schedStartDate" type="timestamp">
+			<column name="sched_start_date" />
+		</property>
+		<property name="addressOne" type="string">
+			<column name="address_one" length="45" default="''" />
+		</property>
+		<property name="addressTwo" type="string">
+			<column name="address_two" length="45" default="''" />
+		</property>
+		<property name="city" type="string">
+			<column name="city" length="20" default="''" />
+		</property>
+		<property name="state" type="string">
+			<column name="state" length="20" default="''" />
+		</property>
+		<property name="country" type="string">
+			<column name="country" length="20" default="''" />
+		</property>
+		<property name="pin" type="java.lang.Long">
+			<column name="pin" default="0"/>
+		</property>
+		<property name="phone" type="string">
+			<column name="phone" default="0"/>
+		</property>
+		
+		-->
+		
+		<property name="contentType" type="string">
+			<column name="content_type" length="20" default="'HTML'" />
+		</property>
+		<property name="listsType" type="string">
+			<column name="lists_type" length="20" default="'Total'" />
+		</property>
+		<property name="placeHoldersType" type="string">
+			<column name="place_holders_type" length="20"/>
+		</property>
+		
+		
+		<property name="categoryWeight" type="short">
+			<column name="category_weight" />
+		</property>
+		
+		<property name="googleAnalytics" type="boolean">
+			<column name="googleanalytics" default="false"/>
+		</property>
+		<property name="googleAnalyticsCampTitle" type="string">
+			<column name="googleanalytics_camptitle" length="128" />
+		</property>
+			
+		<property name="categories" type="java.lang.Long">
+			<column name="categories"  />
+		</property>
+		
+		<!--  
+		<set name="selectedDates" table="schedule_selected_dates" lazy="false">
+			<key column="campaign_id" />
+			<element type="timestamp" column="date"  />
+		</set>
+		-->
+		<set name="mailingLists" table="mlists_campaigns" lazy="false">
+			<key column="campaign_id" />
+			<many-to-many class="org.mq.captiway.scheduler.beans.MailingList" column="list_id" />
+		</set>
+		<many-to-one name="users" class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId" fetch="select" lazy="false">
+			<column name="user_id"  unique-key="Unique_Campaign" />
+		</many-to-one>
+		<many-to-one name="template" class="org.mq.captiway.scheduler.beans.SystemTemplates" foreign-key="layoutId"  fetch="select"  lazy="false">
+      		<column name="template_id" />
+    	</many-to-one> 
+	</class>
+</hibernate-mapping>

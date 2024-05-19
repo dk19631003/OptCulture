@@ -1,0 +1,798 @@
+<?page title="Change Password" contentType="text/html;charset=UTF-8"?>
+<zk>
+		 <style src="/css/campaign.css"/>
+<!--<zscript>
+	<![CDATA[
+     	import org.mq.marketer.campaign.general.PageUtil;
+
+     	String style = "font-weight:bold;font-size:15px;color:#313031;font-family:Arial,Helvetica,sans-serif;align:left";
+     	PageUtil.setHeader("Details","",style,true);
+	]]>
+</zscript>
+
+--><window id="mqUpdatePassWinId"  border="0"  
+		 xmlns:w="http://www.zkoss.org/2005/zk/client"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		 apply="org.mq.marketer.campaign.controller.UserController">
+	<style>
+	.divHeadercss {
+			background-color:#6297AF;
+			border:1px solid #B1CBD5;
+	}
+	.divHeadercss{
+			color:#FFFFFF;
+			font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif;
+			font-size:12px;
+			font-weight:bold;
+			padding:5px 3px 4px 5px;
+		}
+		
+	.boldLbl {
+	 	font-size:12px;
+	 	color:#333;
+	 	font-weight:bold;
+	 	font-style:verdana,Arial;
+	 	}
+	 	
+	 
+	 .redStar{
+	font-size:15px;color:red;
+}
+	 
+	</style>
+	
+	  <!--<zscript>
+		 <![CDATA[
+		  	import org.mq.marketer.campaign.beans.Users;
+		  	import org.mq.marketer.campaign.dao.UsersDao;
+		  	import org.mq.marketer.campaign.controller.GetUser;
+		  	import org.mq.marketer.campaign.general.Redirect;
+		  	import org.mq.marketer.campaign.custom.MyCalendar;
+		  	import java.util.List;
+		  	 UsersDao usersDao = (UsersDao)org.zkoss.zkplus.spring.SpringUtil.getBean("usersDao");
+		  	
+		    void reset(){
+		      currPass.setValue("");
+		      newPass.setValue("");
+		      reType.setValue("");
+		      
+		    } 
+		    
+		    Users user = GetUser.getUserObj();
+		    String userAddr = user.getAddressOne() +"\n"+user.getAddressTwo()+"\n"+user.getCity()+
+								"\n"+user.getState()+"\n"+user.getCountry()+"\n"+user.getPinCode()+"\n"+user.getPhone();
+		    if(user ==null) {
+		    	Redirect.goTo(PageListEnum.RM_HOME);
+		    }
+		    
+			/*String senderIds = "";
+			try{
+			   
+			    
+			   	List senderIdsLst  = usersDao.getSenderIdByUserName(user.getUserName());
+			   	String senderId = "";
+			   	if(senderIdsLst != null && senderIdsLst.size()!=0){
+				   	//System.out.println("val"+ senderIdsLst);
+				   	for(Object obj : senderIdsLst) {
+				   		senderId = (String)obj;
+				   		if(senderIds.length()>0) senderIds += ",";
+				   		senderIds += senderId;
+				   		
+				   	}
+			   	}
+			}catch(Exception e) {
+				e.printStackTrace();
+				
+			}*/
+		    String packExpDateStr = MyCalendar.calendarToString(user.getPackageExpiryDate(), MyCalendar.FORMAT_DATETIME_STDATE);
+		    String packStartDateStr = MyCalendar.calendarToString(user.getPackageStartDate(), MyCalendar.FORMAT_DATETIME_STDATE);
+		    
+		    
+			void updateUserAddr() {
+		  		
+		  		
+		  		user.setAddressOne(cAddressOneTbId.getValue());
+				user.setAddressTwo(cAddressTwoTbId.getValue());
+				user.setCity(cCityTbId.getValue());
+				user.setPinCode(""+cPinLbId.getValue());
+				user.setState(cStateTbId.getValue());
+				user.setCountry(cCountryTbId.getValue());
+				user.setPhone(cPhoneTbId.getValue());
+				
+				usersDao.saveOrUpdate(user);
+				
+				userAddr = user.getAddressOne() +"\n"+user.getAddressTwo()+"\n"+user.getCity()+
+				"\n"+user.getState()+"\n"+user.getCountry()+"\n"+user.getPinCode()+"\n"+user.getPhone();
+				
+				changeUserAddrDivId.setVisible(false);
+				userAddrLblId.setValue(userAddr);
+				userAddrDivId.setVisible(true);
+				
+				changeAddressId.setVisible(true);
+		  		
+		  		
+		  	}
+		  	
+	    ]]>   
+    </zscript>-->
+    
+    
+    <script>
+    	var visible = false;
+    	function viewPwd(btn) {
+    	
+    			if(!visible) {
+    			alert(zk.Widget.$(jq('$pwdTdId')));
+					(zk.Widget.$(jq('$pwdTdId'))).hide().slideDown();
+					//jq(btn.$f('createFolderId')).hide().slideDown();
+					visible = true;
+				}else { 
+				
+				(zk.Widget.$(jq('$pwdTdId'))).show().slideUp();
+			  			//jq(btn.$f('createFolderId')).show().slideUp();
+			   			visible = false;
+				}
+    	}
+    	
+    	function hidePwd() {
+    		document.getElementById("pwdTdId").style.display = 'none';
+    	}
+    </script>  
+					<groupbox closable="false"  sclass="gbStyle">
+					     	<caption label="Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+
+			   		 <h:table cellspacing="15px" cellpadding="0" align="left">
+			   		 	<h:tr>
+			   		 		<h:td width="200px">
+			   		 			<label value="User Name:" /><!-- <label value="*" sclass="redStar" /> -->
+			   		 		</h:td>
+			   		 		<h:td >
+			   		 			<label  id="userNameLblId"  style="font-size:13px;"/>
+			   		 		</h:td>
+			   		 		
+			   		 		<h:td  rowspan="4" valign="top" >
+			   		 			<a label="Change Password" style="font-weight:bold; font-size:13px;color:#43A0BA;"   onClick="pwdTdId.setVisible(!pwdTdId.isVisible());" />
+			   		 			<div id="pwdTdId" visible="false"  style="border:1px solid #E1E1E1;">
+								    <h:table cellspacing="10px" cellpadding="0"  width="100%">
+									   	<h:tr>
+							     			<h:td><label value="Current Password"  sclass="boldLbl" /></h:td>
+											<h:td><label value="*" sclass="astrick" /> <textbox id="currPass" type="password"  width="150px" /></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="New Password" sclass="boldLbl" /></h:td>
+											<h:td><label value="*" sclass="astrick" /> <textbox id="newPass" type="password"  width="150px" /></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Retype Password" sclass="boldLbl" /></h:td>
+											<h:td><label value="*" sclass="astrick" /> <textbox id="reType" type="password"  width="150px" /></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			 <h:td align="center" colspan="2"> 
+							     			 	
+							     			 	<!--<button label="Update" onClick="mqUpdatePassWinId.updatePassword(currPass,newPass,reType);"/>
+							     			  	<button label="Reset" onClick="reset();"/> 
+							     			  	-->
+							     			  	
+							     			  	<button label="Update" id="updateBtnId" sclass="idle70 greenbtn"/>
+							     			  	<button label="Reset" id="resetBtnId" sclass="idle70" /> 
+							     			  	<button label="Close" id="closeBtnId" sclass="idle70" onClick="pwdTdId.setVisible(!pwdTdId.isVisible());"/> 
+							     			 </h:td>
+								     	</h:tr>
+								    </h:table> 
+					     		</div>
+					     		
+			   		 			
+			   		 			
+			   		 			
+			   		 		</h:td>
+			   		 	</h:tr>
+			   		 	<h:tr>
+			   		 		<h:td>
+			   		 			<label value="Organization Id:"   /><!-- <label value="*" sclass="redStar" /> -->
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 			<label value="${mqUpdatePassWinId$UserController.user.userOrganization.orgExternalId}" style="font-size:13px;" />
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 	
+			   		 	</h:tr>
+			   		 	<h:tr>
+			   		 		<h:td>
+			   		 			<label value="Organization Unit:"   /><!-- <label value="*" sclass="redStar" /> -->
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 			<label value="${mqUpdatePassWinId$UserController.user.userDomainStr}" style="font-size:13px;" />
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 	
+			   		 	</h:tr>
+			   		 	<!-- <h:tr>
+			   		 		<h:td>
+			   		 			<label value="Role:"   /><label value="*" sclass="redStar" />
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 			<label value="${mqUpdatePassWinId$UserController.user.userRole}" style="font-size:13px;" />
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 	
+			   		 	</h:tr> -->
+			   		 	<h:tr>
+			   		 		<h:td>
+			   		 			<label value="First Name:"   /><!-- <label value="*" sclass="redStar" /> -->
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 			<label value="${mqUpdatePassWinId$UserController.user.firstName}" style="font-size:13px;" />
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 	
+			   		 	</h:tr>
+			   		 	<h:tr>
+			   		 		<h:td>
+			   		 			<label value="Last Name:"   /><!-- <label value="*" sclass="redStar" /> -->
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 			<label value="${mqUpdatePassWinId$UserController.user.lastName}" style="font-size:13px;" />
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 	
+			   		 	</h:tr>
+			   		 	<h:tr>
+			   		 		<h:td>
+			   		 			<label value="Email:"   /><!-- <label value="*" sclass="redStar" /> -->
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 			<label value="${mqUpdatePassWinId$UserController.user.emailId}" style="font-size:13px;" />
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 	
+			   		 	</h:tr>
+			   		 	<h:tr>
+			   		 		<h:td>
+			   		 			<label value="Organization:" /><!-- <label value="*" sclass="redStar" /> -->
+											
+			   		 		</h:td>
+			   		 		<h:td>
+								<label id="userOrgNameId" value="${mqUpdatePassWinId$UserController.user.userOrganization.organizationName}" style="font-size:13px;"/>
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 		
+			   		 	
+			   		 	</h:tr>
+			   		 	<h:tr>
+											
+			   		 		<h:td colspan="2">
+			   		 			<div id="userAddrDivId">
+			   		 			<h:table>
+			   		 			<h:tr>
+			   		 			<h:td>
+			   		 			<label value="Address:" width="200"/><!-- <label value="*" sclass="redStar" /> --></h:td>
+			   		 			<!-- <h:td style="padding-left:8px;" width ="400" > -->
+			   		 			<h:td style="padding-left:20px;" width="500">
+								<label id="userAddrLblId"  /></h:td>
+								<h:td/>
+								</h:tr>
+								<h:tr>
+				   		 		<h:td width="200">
+				   		 		</h:td>
+				   		 		<h:td  style="padding-left:8px;">
+				   		 			<button label="Modify" id="changeAddressId" style="margin-top:20px;" 
+										 />
+				   		 		
+				   		 		</h:td>
+				   		 		<h:td>
+				   		 		</h:td>
+				   		 		</h:tr>
+								
+								</h:table>
+								</div>
+								<div id="changeUserAddrDivId" visible="false">
+				     				<h:table >
+										<h:tr>
+											<h:td width="200">
+												<label value="Address line 1" />
+												<label value="*"  sclass="redStar" />
+											</h:td>
+											<h:td>
+												<textbox id="cAddressOneTbId" cols="25" maxlength="45" value="${mqUpdatePassWinId$UserController.user.addressOne}"/>
+											</h:td>
+											<h:td  >
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Address line 2" />
+											</h:td>
+											<h:td>
+												<textbox id="cAddressTwoTbId" cols="25" maxlength="45"  value="${mqUpdatePassWinId$UserController.user.addressTwo}"/>
+											</h:td>
+											<h:td>
+												
+											</h:td>
+										</h:tr>
+									 
+										<h:tr>
+											<h:td>
+												<label value="City" />
+												<label value="*" sclass="redStar"/>
+											</h:td>
+											<h:td>
+												<textbox id="cCityTbId" cols="25" maxlength="40" value="${mqUpdatePassWinId$UserController.user.city}"/>
+											</h:td>
+											<h:td>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="State" />
+												<label value="*" sclass="redStar"/>
+											</h:td>
+											<h:td>
+												<textbox id="cStateTbId" cols="25" maxlength="40" value="${mqUpdatePassWinId$UserController.user.state}"/>
+											</h:td>
+											<h:td >
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Country" />
+												<label value="*" sclass="redStar"/>
+											</h:td>
+											<h:td>
+												<textbox id="cCountryTbId" cols="25" maxlength="40" value="${mqUpdatePassWinId$UserController.user.country}"/>
+											</h:td>
+											<h:td >
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Zip / Pin" />
+												<!-- <label value="*" sclass="redStar"/> -->
+											</h:td>
+											<h:td>
+												<textbox id="cPinLbId" cols="25" maxlength="20" value="${mqUpdatePassWinId$UserController.user.pinCode}"/>
+												
+												<image
+											src="/img/icons/icon_q.png" tooltip="help4"
+											style="padding-left:40px;" />
+											<popup id="help4" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Required for countries where postal/ZIP codes are used."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+												
+											</h:td>
+											<h:td>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Phone" />
+											</h:td>
+											
+											<h:td>
+												<textbox id="cPhoneTbId"  maxlength="25" 
+												tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+													xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+												
+												value="${mqUpdatePassWinId$UserController.user.phone}" />
+											</h:td>
+											<h:td/>
+										</h:tr>
+										<h:tr>
+											<h:td/><h:td >
+												
+												<!--<a label="Done"  style="font-size:12px;color:#006690;" onClick="updateUserAddr();"/>-->
+												
+												<button label="Save" sclass="idle70 greenbtn"  style="margin-top:20px;" id="doneAnchrId"/>
+												
+												<space/>
+												<button label="Cancel" sclass="idle70" id="cancelAddressId" style="margin-top:20px;" 
+												 />
+											
+											
+											</h:td>
+											<h:td/>
+										</h:tr>
+										
+									</h:table>
+				     			</div>
+								
+								
+								
+			   		 		</h:td>
+			   		 		<h:td>
+			   		 		
+			   		 		</h:td>
+			   		 		
+			   		 		
+			   		 	
+			   		 	</h:tr>
+			   		 	
+			   		 
+			   		 </h:table>
+			   		 <!--<h:table>
+			   		 
+				        <h:tr>
+					        <h:td>
+					        	<div>
+					        		<h:table>
+					        			<h:tr>
+							     			<h:td width="200px"><label value="User Name" sclass="boldLbl" /></h:td>
+											<h:td ><label  id="userNameLblId" value="${mqUpdatePassWinId$UserController.user.firstName}" style="font-size:13px;"/>
+											</h:td>
+						     			</h:tr>
+						     			<h:tr>
+							     			<h:td width="200px"><label value="Email"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${mqUpdatePassWinId$UserController.user.emailId}" style="font-size:13px;" /> </h:td>
+										</h:tr>
+										<h:tr>
+											<h:td width="200px"><label value="Organization" sclass="boldLbl"/></h:td>
+											<h:td width="200px">
+											<label id="userOrgNameId" value="${mqUpdatePassWinId$UserController.user.companyName}" style="font-size:13px;"/>
+											</h:td>
+											
+										</h:tr>
+									</h:table>
+								</div>
+							</h:td>
+							<h:td></h:td>
+				     	</h:tr>
+				     	<h:tr>
+				     		<h:td>
+				     			<div id="userAddrDivId" visible="true">
+					     			<h:table>
+					     				--><!--<h:tr>
+				     						<h:td valign="top" width="200px"><label value="Address" sclass="boldLbl" /></h:td>
+											<h:td >
+												--><!--<label id="userAddrLblId" multiline="true" />
+											--><!--<h:div style="width:100%; overflow-x:auto;">
+												<label value="${user.addressOne}" style="font-size:13px;" /> <h:br/>
+												<label value="${user.addressTwo}" style="font-size:13px;" /> <h:br/>
+												<label value="${user.city}"  style="font-size:13px;"/> <h:br/>
+												<label value="${user.state}"  style="font-size:13px;"/> <h:br/>
+												<label value="${user.country} - ${user.pinCode}" style="font-size:13px;"  /> 
+											</h:div>
+											
+										--><!--</h:td>
+										</h:tr>
+									</h:table>
+				     			</div>
+				     			--><!--<div id="changeUserAddrDivId" visible="false">
+				     				<h:table >
+										<h:tr>
+											<h:td width="200">
+												<label value="Address one" />
+											</h:td>
+											<h:td width="5px" valign="top" >
+												<label value="*"  sclass="redStar" />
+											</h:td>
+											<h:td>
+												<textbox id="cAddressOneTbId" cols="25" maxlength="45" value="${mqUpdatePassWinId$UserController.user.addressOne}"/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Address two" />
+											</h:td>
+											<h:td width="5px">
+												<space/>
+											</h:td>
+											<h:td>
+												<textbox id="cAddressTwoTbId" cols="25" maxlength="45"  value="${mqUpdatePassWinId$UserController.user.addressTwo}"/>
+											</h:td>
+										</h:tr>
+									 
+										<h:tr>
+											<h:td>
+												<label value="City" />
+											</h:td>
+											<h:td width="5px" valign="top">
+												<label value="*" sclass="redStar"/>
+											</h:td>
+											<h:td>
+												<textbox id="cCityTbId" cols="25" maxlength="20" value="${mqUpdatePassWinId$UserController.user.city}"/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="State" />
+											</h:td>
+											<h:td width="5px" valign="top">
+												<label value="*" sclass="redStar"/>
+											</h:td>
+											<h:td>
+												<textbox id="cStateTbId" cols="25" maxlength="20" value="${mqUpdatePassWinId$UserController.user.state}"/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Country" />
+											</h:td>
+											<h:td width="5px" valign="top">
+												<label value="*" sclass="redStar"/>
+											</h:td>
+											<h:td>
+												<textbox id="cCountryTbId" cols="25" maxlength="20" value="${mqUpdatePassWinId$UserController.user.country}"/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Pin" />
+											</h:td>
+											<h:td width="5px" valign="top">
+												<label value="*" sclass="redStar"/>
+											</h:td>
+											<h:td>
+												<longbox id="cPinLbId" cols="25" maxlength="8" value="${mqUpdatePassWinId$UserController.user.pinCode}"/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td>
+												<label value="Phone" />
+											</h:td>
+											<h:td width="5px">
+												<space/>
+											</h:td>
+											<h:td>
+												<textbox id="cPhoneTbId" cols="25" maxlength="30" value="${mqUpdatePassWinId$UserController.user.phone}" />
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td/><h:td/><h:td>
+												
+												<a label="Done"  style="font-size:12px;color:#006690;" onClick="updateUserAddr();"/>
+												
+												<a label="Done"  style="font-size:12px;color:#006690;" id="doneAnchrId"/>
+												
+												<space/>
+												<a label="Cancel" id="cancelAddressId" style="font-size:12px;color:#006690;" 
+												onClick="changeUserAddrDivId.setVisible(false);userAddrDivId.setVisible(true);changeAddressId.setVisible(true);" />
+											
+											
+											</h:td>
+										</h:tr>
+										
+									</h:table>
+				     			</div>
+				     		-->
+			   		 </groupbox>	
+				     	
+				     	<h:br/>
+				     	
+				     	<groupbox closable="false"  sclass="gbStyle">
+					     	<caption label="Email Alert Settings" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+					     	<div id="weeklyReportDivId" visible="true">
+					     	<h:table cellspacing="15px" cellpadding="0" align="left">
+					     		<h:tr>
+					     		  <h:td width="200">
+							     		<label value="Send Weekly Campaign Report To:"   />
+							      </h:td>
+							      <h:td>
+							     	    <label id="sendWeeklyCampaignReportLbId"   />
+							     </h:td>
+							     </h:tr>
+							     <h:tr>
+							     	<h:td width="200">
+							     		<label value="Set Day and Time:"   />
+							      	</h:td>
+							      	<h:td>
+							     	    <label id="setDayTimeLbId"   />
+							     	</h:td>
+							     </h:tr>
+							     <h:tr>
+							    	 <h:td width="200">
+							     		<label value="Send Schedule Expiry Alert To:"   />
+							      </h:td>
+							     	 <h:td>
+							     	    <label id="sendScheduleExpiryAlertLbId"   />
+							     	</h:td>
+							     
+							    </h:tr>
+							    <h:tr>
+									<h:td></h:td>
+										<h:td>
+											<button label="Modify" id="modifyBtnId"  style="width:60px;"  />
+										</h:td>
+								</h:tr>
+					     	</h:table>
+					     	</div>
+					     	<div id="editWeeklyReportDivId" visible="false">
+					     	<h:table cellspacing="15px" cellpadding="0" >
+					     		<h:tr width="200">
+					     		  <h:td width="200">
+							     	<label value="Send Weekly Campaign Report For:"   />
+							      </h:td>
+							      
+								      <h:td>
+										<checkbox label= "Email Campaigns" id="emailCampaignChkId" checked="false" value="1" />
+										<checkbox label= "SMS Campaigns" id="smsCampaignChkId" checked="false" value="2" />
+									</h:td>
+							      
+							    </h:tr>
+							    </h:table>
+							    
+							    <div id="emailTextboxDivId" visible="false">
+							    <h:table>
+							    <h:tr>	
+							    <h:td width="220"/>
+							    <h:td width="160">
+							     	<label value="Send to email address: "   />
+							      </h:td>
+							      
+							      <h:td>
+							     	<textbox id = "weeklyReportEmailTbId" value= "Enter Email Address" width="150%" w:onClick="javascript: if(this.getValue()=='Enter Email Address') {  this.setValue(''); }" 
+										w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Email Address'); }" focus="true" />
+							     </h:td>
+							     
+							     </h:tr>
+							     </h:table>
+							     </div>
+							    
+							    <div id="dayTimeLBDivId" visible="false">
+							    <h:table>
+							     	<h:tr>
+							    	<h:td width="220"/>
+							    	
+							     	<h:td width="160">
+							     		<label value="Set Day and Time:"   />
+							     	</h:td>
+							     	<h:td>
+								     	<listbox mold="select" id="daysLbId">
+											<listitem label="Sunday"  value = "0"/>
+											<listitem label="Monday" selected="true" value = "1" />
+											<listitem label="Tuesday" value = "2" />
+											<listitem label="Wednesday"  value = "3" />
+											<listitem label="Thursday"  value = "4" />
+											<listitem label="Friday"  value = "5" />
+											<listitem label="Saturday" value = "6" />
+										</listbox>
+									
+										<listbox mold="select" id="hoursLbId">
+											<listitem label="01" value = "1"  />
+											<listitem label="02" value = "2"  />
+											<listitem label="03" value = "3" />
+											<listitem label="04" value = "4" />
+											<listitem label="05" value = "5" />
+											<listitem label="06" value = "6" />
+											<listitem label="07" value = "7" />
+											<listitem label="08" value = "8" />
+											<listitem label="09" value = "9" selected="true"/>
+											<listitem label="10" value = "10" />
+											<listitem label="11" value = "11" />
+											<listitem label="12" value = "0"/>
+										</listbox>
+									
+										<listbox mold="select" id="minLbId">
+											<listitem label="00"  value = "0" selected = "true" />
+											<listitem label="30" value = "30" />
+										</listbox>
+										
+										<listbox mold="select" id="ampmLbId">
+											<listitem label="AM" selected = "true" value = "0" />
+											<listitem label="PM" value = "1" />
+										</listbox>
+									</h:td>	
+									</h:tr>
+									</h:table>
+									</div>
+									<h:table>
+									<h:tr height="10" />
+							    <h:tr>
+							    	<h:td width="10"></h:td>
+							    	<h:td width="200">
+							    		<label
+							    			value="Send Schedule Expiry Alert To:" />
+							    	</h:td>
+							    	<h:td>
+							    		<textbox id="expiryEmailTbId"
+							    			value="Enter Email Address" width="150%"
+							    			w:onClick="javascript: if(this.getValue()=='Enter Email Address') {  this.setValue(''); }"
+							    			w:onBlur="javascript: if(this.getValue()=='') {  this.setValue('Enter Email Address'); }" />
+							    	</h:td>
+							    </h:tr>
+							    <h:tr height="10" />
+							    <h:tr>
+										<h:td>
+										</h:td>
+										<h:td>
+											<button label="Save" id="saveWeeklyReportDataBtnId"  style="width:60px;" sclass="greenbtn" />
+										</h:td>
+									</h:tr>
+							</h:table>
+							</div>
+					     </groupbox>	
+				     	<h:br/>
+				     	<groupbox closable="false"  sclass="gbStyle">
+					     	<caption label="Subscription Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+					     	<h:table cellspacing="15px" cellpadding="0"  width="98%" align="left">
+					     	
+						     	<h:tr>
+					     			<h:td width="17%"><label value="Total Email Credits"   /></h:td>
+									<h:td><label value="${mqUpdatePassWinId$UserController.user.emailCount}" /></h:td>
+						     	</h:tr>
+						     	<h:tr>
+					     			<h:td><label value="Used Email Credits"   /></h:td>
+									<h:td><label value="${mqUpdatePassWinId$UserController.user.usedEmailCount}" /></h:td>
+						     	</h:tr>
+						     	<h:tr>
+					     			<h:td><label value="Available Email Credits"   /></h:td>
+									<h:td><label value="${mqUpdatePassWinId$UserController.user.emailCount - mqUpdatePassWinId$UserController.user.usedEmailCount}" /></h:td>
+						     	</h:tr>
+						     	
+								</h:table >
+								<h:table   cellspacing="15px" cellpadding="0"  width="98%" align="left" >
+								<h:tr>
+					     			<h:td width="17%"><label value="Total SMS Credits"   /></h:td>
+									<h:td><label value="${mqUpdatePassWinId$UserController.user.smsCount}"/></h:td>
+						     	</h:tr>
+						     	<h:tr>
+					     			<h:td><label value="Used SMS Credits"   /></h:td>
+									<h:td><label value="${mqUpdatePassWinId$UserController.user.usedSmsCount}" /></h:td>
+						     	</h:tr>
+						     	
+						     	<h:tr>
+					     			<h:td><label value="Available SMS Credits"   /></h:td>
+									<h:td><label value="${mqUpdatePassWinId$UserController.user.smsCount - mqUpdatePassWinId$UserController.user.usedSmsCount}" /></h:td>
+						     	</h:tr>
+						     	<h:tr style="display:none;">
+						     		<h:td><label value="SMS Sender Id(s)" sclass="boldLbl"/></h:td>
+						     		<h:td><label value="${mqUpdatePassWinId$UserController.senderIds}" id="smsSenderLblId"/></h:td>
+						     	</h:tr>
+						     	<h:tr>
+									<h:td colspan="2">
+										<h:hr  width="100%" align="left"/>
+									</h:td>
+								</h:tr>
+								</h:table>
+								<h:table  cellspacing="15px" cellpadding="0" style="display:none;" width="98%" align="left">
+								
+								 <h:tr>
+					     			<h:td width="18%"><label value="Subscription Start Date"  sclass="boldLbl" /></h:td>
+									
+									<!--<h:td><label value="${packStartDateStr}"id="subscriptionStartdateLblId" /></h:td>-->
+									
+									<h:td><label id="subscriptionStartdateLblId" /></h:td>
+									
+						     	</h:tr>   
+				     	
+						     	<h:tr>
+					     			<h:td><label value="Subscription Exp Date"  sclass="boldLbl" /></h:td>
+									
+									<!--<h:td><label value="${packExpDateStr}" id="subscriptionExpDateLblId" /></h:td>-->
+									
+									<h:td><label  id="subscriptionExpDateLblId" /></h:td>
+						     	</h:tr>
+						     	
+						     	<h:tr>
+									<h:td colspan="2">
+										<h:hr  width="100%" align="left"/>
+									</h:td>
+								</h:tr>
+						    </h:table> 					
+						</groupbox>
+	<h:br/>
+</window>
+</zk>

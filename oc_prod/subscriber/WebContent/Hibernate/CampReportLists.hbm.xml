@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.CampReportLists"
+		table="campreports_lists">
+		<id name="campRepListId" type="java.lang.Long">
+			<column name="cr_list_id" />
+			<generator class="native" />
+		</id>
+		<property name="listsName" type="string">
+			<column name="list_name"   />
+		</property>
+		<property name ="campaignReportId" type="long">
+			<column name="cr_id"/>
+		
+		</property>
+		
+		<property name="segmentQuery" type="text">
+			<column name="segment_query"   />
+		</property>
+		
+	</class>
+</hibernate-mapping>

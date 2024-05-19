@@ -1,0 +1,147 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="subscriptionFormWinId" title="Subscription Form" border="normal" apply="org.mq.marketer.campaign.controller.contacts.SubscriptionFormController" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<style src="/css/campaign.css"/>
+		<script>
+			<![CDATA[
+				function setSelectedSubscriptionForm(hiddenId,selectedId) {
+					hiddenId.value= selectedId;
+					hiddenId.fire('onChange',{value:hiddenId.value},{toServer:true},0);
+				}
+			]]>         
+		</script>
+		<textbox id="selectedFormId" value="default" visible="false"/>
+	   <h:table cellpadding="2" width="100%" cellspacing="2" xmlns:h="http://www.zkoss.org/2005/zk/native" >
+		   <h:tr>
+		   		<h:td colspan="2"  align="right">
+		   			  <label value="Existing Forms :" />	
+		   			  <listbox mold="select" rows="1" id="existingFormsLbId" />
+		   			  <button label="Edit" id="editExistingFormsBtId" />
+		   			  <button label="Delete" id="deleteExistingFormsBtId" />
+		   		</h:td>
+		   </h:tr>
+		   <h:tr> 
+				   <h:td width="50%" valign="top">					   
+						<h:table cellpadding="2" cellspacing="2"  xmlns:h="http://www.zkoss.org/2005/zk/native" >
+							<h:tr>
+								<h:td height="20px" style="background-color:grey;" align="center" valign="top">
+									<label value="Default" />
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="100px"  valign="top" >
+								   <html id="previewContentHTMLId1">
+								   <![CDATA[
+									<form action='|^actionAttribute^|' method='get'>        
+									<table id="formId" cellpadding="2" cellspacing="2" style="background-color:#AF6962" width="300px">
+									 	<tr>
+									 		<td colspan="2" align="center"> <span>Subscribe to our MailingList</span> </td>
+									 	</tr>
+										<tr>
+								 			<td colspan="2" align="center"><div id='errorDivId'></div></td>
+								 		</tr>
+										<tr>
+											<td><span> Contact Name </span></td><td><input type="text" id="contactName" name="contactName" MAXLENGTH=100 /></td> 
+										</tr>
+										<tr>	
+											<td><span>Email Address</span></td><td><input type="text" id='emailId' name='emailId' MAXLENGTH=100 /></td>
+										</tr>
+										<tr>
+											<td>
+											<input type='HIDDEN' name='process' value='true' />
+											<input type='HIDDEN' name='uId' value='|^uId^|' />
+											<input type='HIDDEN' name='mId' value='|^mId^|' />
+											<input type='HIDDEN' name='dId' value='|^dId^|' />
+											<input type="button" value="Submit" /></td><td align="right"> <input type="reset" value="Reset" /></td>
+										</tr>	 
+									</table>
+									</form>
+									]]>
+									</html>
+								</h:td>
+							</h:tr>
+							<h:tr>
+							   <h:td height="20px" style="background-color:grey;">
+									<h:table width="100%"  xmlns:h="http://www.zkoss.org/2005/zk/native">
+									 	<h:tr>
+									 		<h:td>
+												<toolbarbutton image="/img/theme/preview_icon.png" sclass="note" id="previewImgId1" style="cursor:pointer;" label="Preview" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'HTMLId1:previewContentHTMLId1')"/>
+											</h:td>
+				  							<h:td>											
+												<toolbarbutton image="/img/theme/use_icon.png" label="Use it" sclass="note" id="useMeTlbarId" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'select1:previewContentHTMLId1')"/>
+											</h:td>	
+										</h:tr>	
+									</h:table>
+								</h:td>
+							</h:tr>
+						</h:table>
+					
+					</h:td>
+					
+					<h:td width="50%" valign="top">
+				
+						<h:table cellpadding="2" cellspacing="2" xmlns:h="http://www.zkoss.org/2005/zk/native">
+							<h:tr>
+								<h:td height="20px" style="background-color:grey;" align="center">
+									<label value="Classic" />
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td height="100px"  valign="top" align="center">
+									 <html id="previewContentHTMLId2">
+										   <![CDATA[
+											<form action='|^actionAttribute^|' method='get'>        
+											<table id="formId" cellpadding="2" cellspacing="2" style="background-color:#74ADCF" width="300px">
+												<tr>
+											 		<td colspan="2" align="center"> <span>Subscribe to our MailingList</span> </td>
+											 	</tr> 
+											 	<tr>
+											 		<td colspan="2" align="center"><div id='errorDivId'></div></td>
+											 	</tr>
+												<tr>
+													<td><span>Name: </span></td><td><input type="text" id="contactName" name="contactName" MAXLENGTH=100 /></td> 
+												</tr>
+												<tr>	
+													<td><span>Email Id: </span></td><td><input type="text" id='emailId' name='emailId' MAXLENGTH=100 /></td>
+												</tr>
+												<tr>
+													<td colspan="2" align="center">
+													<input type='HIDDEN' name='process' value='true' />
+													<input type='HIDDEN' name='uId' value='|^uId^|' />
+													<input type='HIDDEN' name='mId' value='|^mId^|' />
+													<input type='HIDDEN' name='dId' value='|^dId^|' />
+													<input type="button" value="Submit"  /></td>
+												</tr>	 
+											</table>
+											</form>
+											]]>
+										</html>
+									</h:td>
+								</h:tr>
+								<h:tr>
+								    <h:td height="20px" style="background-color:grey;">
+										<h:table width="100%" >
+										 	<h:tr>
+										 		<h:td>
+													<toolbarbutton image="/img/theme/preview_icon.png" sclass="note" id="previewImgId2" style="cursor:pointer;" label="Preview" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'HTMLId2:previewContentHTMLId2')">
+													</toolbarbutton>
+												</h:td>
+					  							<h:td>											
+													<toolbarbutton image="/img/theme/use_icon.png" label="Use it" sclass="note" w:onClick="setSelectedSubscriptionForm(this.$f('selectedFormId'),'select2:previewContentHTMLId2')"/>
+												</h:td>
+											</h:tr>	
+										</h:table>
+									</h:td>
+								</h:tr>
+						</h:table>
+					</h:td>
+				</h:tr>
+			</h:table>
+		<window id="PreviewWindId" title="Preview" border="normal" mode="overlapped" visible="false">
+			<caption>
+				<toolbarbutton label="Close" onClick="PreviewWindId.setVisible(false)"/>
+			</caption>
+			<div id="previewDivId" width="300px" height="120px" style="overflow:auto;padding:auto;"  />
+		</window>		
+</window>
+</zk>

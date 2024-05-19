@@ -1,0 +1,65 @@
+/* CSS Document */
+.innertab {
+	width: 818px;
+	margin: 5px;
+}
+
+.middletab {
+	width: 810px;
+	margin: 5px;
+}
+
+.middle1 {
+	width: 390px;
+}
+
+.blubullet {
+	background: url(../img/icons/bluebull.gif) no-repeat;
+	width: 14px;
+	height: 14px;
+}
+
+.boldtext {
+	font-family: Arial, Helvetica, sans-serif;
+	/*font-weight: bold;*/
+	font-size: 12px;
+	padding-left: 7px;
+}
+
+.headtext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.regulartext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-size: 12px;
+	padding-left: 5px;
+	text-align: justify;
+}
+
+.importtext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 5px;
+	padding-bottom: 10px;
+}
+
+.middle2 {
+	width: 390px;
+	margin-left: 18px;
+}
+
+.redbullet {
+	background: url(../img/icons/reddel.gif) no-repeat;
+	width: 14px;
+	height: 15px;
+}
+
+.line {
+	background: #b2b1b1;
+	height: 1px;
+}

@@ -1,0 +1,821 @@
+<?page title="EditUser" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style>
+.removeStyle{
+	text-decoration: none;
+    color: black;
+    pointer-events: none;
+}
+</style>
+<window id="editUserWinId" border="0" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native"
+				  apply="org.mq.marketer.campaign.controller.admin.EditUserController">
+				<h:table width="100%">
+					<h:tr>
+						<h:td>
+							<h:div id="errorDivId" width="90%" style="padding-left:15px;display:none;color:#EF2C2C;font-weight:bold;font-size:14px;font-family:verdena;margin-left:8px;">
+							</h:div>
+						</h:td>
+					</h:tr>
+					<h:tr>
+						<h:td width="50%" valign="top">
+						 <!--<zscript>
+							 <![CDATA[
+							  	import org.mq.marketer.campaign.beans.Users;
+							  	import org.mq.marketer.campaign.general.Redirect;
+							  	import java.util.Calendar;
+							  	import org.mq.marketer.campaign.custom.MyCalendar;
+							  	
+							    void reset(){
+							      newPass.setValue("");
+							      reNewPass.setValue("");
+							    } 
+							    
+							    Users user = (Users)sessionScope.get("editUserObj");
+							    //user = GetUser.getUserObj();
+							    if(user ==null) {
+							    	Redirect.goTo(PageListEnum.RM_HOME);
+							    }
+							    
+						    ]]>   
+					    </zscript>
+						    --><script>
+						    	var visible = false;
+						    	function viewPwd(btn) {
+						    		if(!visible) {
+						    			jq(btn.$f('pwdTdId')).hide().slideDown();
+						    			visible = true;
+						    		}
+						    		else {
+						    			jq(btn.$f('pwdTdId')).hide().slideUp();
+						    			visible = false;
+						    		}
+						    	}
+						    	
+						    	function hidePwd() {
+						    		document.getElementById("pwdTdId").style.display = 'none';
+						    	}
+						    </script>  
+							<groupbox closable="false"  sclass="gbStyle">
+						     	<caption label="User Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+		
+						   		 <h:table cellspacing="10px" cellpadding="0" align="left" width="100%">
+							        <h:tr>
+						     			<h:td width="200px"><label value="User Name" sclass="boldLbl" /></h:td>
+										<h:td ><label  id="userNameLblId" value="${editUserWinId$EditUserController.user.userName}" /></h:td>
+							     	</h:tr>
+							     	<h:tr>
+						     			<h:td valign="top" width="200px"><label value="First Name" sclass="boldLbl" /></h:td>
+										<h:td >
+											<label value="${editUserWinId$EditUserController.user.firstName}"  />
+										</h:td>
+							     	</h:tr>
+							     	<h:tr>
+						     			<h:td valign="top" width="200px"><label value="Last Name" sclass="boldLbl" /></h:td>
+										<h:td >
+											<label value="${editUserWinId$EditUserController.user.lastName}"  />
+										</h:td>
+							     	</h:tr>
+							     	<h:tr>
+						     			<h:td width="200px"><label value="Email"  sclass="boldLbl" /></h:td>
+										<h:td><label value="${editUserWinId$EditUserController.user.emailId}"  /> </h:td>
+							     	</h:tr>
+							     	<h:tr>
+						     			<h:td width="200px"><label value="Organization Name"  sclass="boldLbl" /></h:td>
+										<h:td><label value="${editUserWinId$EditUserController.user.userOrganization.organizationName}"  /> </h:td>
+							     	</h:tr>
+							     	<!-- <h:tr>
+						     			<h:td  valign="top"> <label value="Password" sclass="boldLbl" /></h:td>
+							     		<h:td>
+							     			<label value="********" sclass="boldLbl" id="pwdLblId"/>
+							     			<a label="Change Password" onClick="pwdTdId.setVisible(!pwdTdId.isVisible());" width="200px"/>
+							     		</h:td>
+							     	</h:tr> -->
+							     	</h:table>
+							     	<div id="enableBillingAdminDivId"  visible="false">
+							     	<h:table cellspacing="10px" cellpadding="0" align="left" width="100%"> 
+							     	<h:tr>
+						     			<h:td width="200px"><label value="Enable Billing Admin"  sclass="boldLbl" /></h:td>
+										<h:td><checkbox  id="enableBillingAdminChkBoxId" /> </h:td>
+							     	</h:tr>
+							     	
+							     	</h:table>
+							     	</div>
+							     	<h:table cellspacing="10px" cellpadding="0" align="left" width="100%">
+							     	<h:tr>
+							     		<h:td colspan="2">
+							     			<label  value="To login to this user account, " />
+							     			<a label="click here" id="logInToUserAnchId" width="200px"/>
+							     		</h:td>
+							     	</h:tr>
+							     	<h:tr>
+							     		<h:td colspan="2" align="right">
+								     		<div id="pwdTdId" visible="false" width="77%" style="border:1px solid #E1E1E1;">
+											    <h:table cellspacing="10px" cellpadding="0"  width="100%">
+											     	<h:tr>
+										     			<h:td colspan="2">
+										     				<label value="" id="responseLblId" style="color:#EF2C2C;font-weight:bold;font-size:14px;font-family:verdena;margin-left:8px;"/>
+										     			</h:td>
+											     	</h:tr>
+											     	<h:tr>
+										     			<h:td><label value="New Password" width="250px"  sclass="boldLbl" /></h:td>
+														<h:td><label value="*" sclass="astrick" /> <textbox id="newPass" type="password"  width="150px" /></h:td>
+											     	</h:tr>
+											     	<h:tr>
+										     			<h:td><label value="Retype Password" width="250px"  sclass="boldLbl" /></h:td>
+														<h:td><label value="*" sclass="astrick" /> <textbox id="reNewPass" type="password"  width="150px" /></h:td>
+											     	</h:tr>
+											     	<h:tr>
+										     			 <h:td align="center" colspan="2"> 
+										     			 	<button label="Update" sclass="idle140 greenbtn" id="updatePwdBtnId"/>
+										     			  	<button label="Reset" sclass="idle70" id="resetBtnId" /> 
+										     			  	<button label="Close" sclass="idle70" onClick="pwdTdId.setVisible(false);"/> 
+										     			 </h:td>
+											     	</h:tr>
+											    </h:table> 
+								     		</div>
+								     		
+							     		</h:td>
+							     	</h:tr>
+							     	</h:table> 	
+						     	</groupbox>	
+						     	</h:td>
+						     	
+						     	
+						     	<h:td width="50%" valign="top">
+						     	<groupbox closable="false"  sclass="gbStyle">
+						     	<caption label="Address" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+		
+						   		 	<h:table cellspacing="10px" cellpadding="0" align="left">
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="Address One" sclass="boldLbl" /></h:td>
+											<h:td >
+													<label value="${editUserWinId$EditUserController.user.addressOne}"  />
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="Address Two" sclass="boldLbl" /></h:td>
+											<h:td >
+													<label value="${editUserWinId$EditUserController.user.addressTwo}"  />
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="City" sclass="boldLbl" /></h:td>
+											<h:td >
+													<label value="${editUserWinId$EditUserController.user.city}"  />
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="State" sclass="boldLbl" /></h:td>
+											<h:td >
+													<label value="${editUserWinId$EditUserController.user.state}"  />
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="Country" sclass="boldLbl" /></h:td>
+											<h:td >
+													<label value="${editUserWinId$EditUserController.user.country}"  /> 
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="Zip Code" sclass="boldLbl" /></h:td>
+											<h:td >
+													<label value="${editUserWinId$EditUserController.user.pinCode}"  /> 
+											</h:td>
+								     	</h:tr>
+							     	</h:table> 	
+						     	</groupbox>	
+						     	</h:td>
+						     </h:tr>
+						     	
+						     <h:tr>
+						    <!--  <h:td  style="align-top" >
+						     	<groupbox closable="false"  sclass="gbStyle" class="align:top;" visible="false">
+							     	<caption label="SMS Settings" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							     	<h:table cellspacing="10px" cellpadding="0"  width="100%" align="left">
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Enable Transactional SMS:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<checkbox id="transationalSMSChkBxId"/>
+							     			</h:td>
+							     		</h:tr>
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Set Sender ID:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<textbox id="senderIdTxtBxId"/>
+							     			</h:td>
+							     		</h:tr>
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Approve Template:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<combobox id="approveTempCmbBoxId" readonly="true" />
+							     			</h:td>
+							     			<h:td>
+							     				<toolbarbutton id="tempContPreviewTbId" image="images/icon_preview_big.png" sclass="tbbLink"
+													label="Preview"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							     			</h:td>
+							     			<h:td>
+							     				<toolbarbutton id="approveTempTbId" image="/img/icons/approve_icn.png" sclass="tbbLink"
+													label="Approve Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							     			</h:td>
+							     			
+							     		</h:tr>
+							     		
+							     		<h:tr>
+							     			<h:td colspan="4" align="right">
+							     				<button label="Save" id="smsSettingsSaveBtnId" />
+							     			</h:td>
+							     		</h:tr>
+							     		
+							     		
+							     	</h:table>
+							     	
+							     </groupbox>
+						     
+						     
+						     </h:td> -->
+						     <h:td >
+						     	<groupbox closable="false"  sclass="gbStyle" >
+							     	<caption label="Subscription Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							     	<h:table cellspacing="10px" cellpadding="0"  width="75%" align="left">
+								     	<h:tr>
+							     			<h:td><label value="Enable user"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.enabled}" /></h:td>
+											
+								     	</h:tr>
+								     	<h:tr>
+											<h:td colspan="2">
+												<h:hr  width="300px" align="left"/>
+											</h:td>
+										</h:tr>
+										<h:tr>
+											<h:td><label value="Enable Cross Program Card Transfer" sclass="boldLbl" /></h:td>
+											<h:td><checkbox id="crossProgramCardTransferChkBxId"/></h:td>
+										</h:tr>
+								     	<h:tr>
+											<h:td><label value="Enable Suspended Program Transfer" sclass="boldLbl" /></h:td>
+											<h:td><checkbox id="suspendedProgramTransferChkBxId"/></h:td>
+										</h:tr>
+								     	<h:tr>
+											<h:td colspan="2">
+												<h:hr  width="300px" align="left"/>
+											</h:td>
+										</h:tr>
+								     	<!-- <h:tr>
+							     			<h:td><label value="Total Email Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.emailCount}"/></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Used Email Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.usedEmailCount}" /></h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Available Email Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.emailCount - editUserWinId$EditUserController.user.usedEmailCount}" /></h:td>
+								     	</h:tr>
+								     	<h:tr>
+											<h:td colspan="2">
+												<h:hr  width="300px" align="left"/>
+											</h:td>
+										</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Total SMS Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.smsCount}"/></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Used SMS Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.usedSmsCount}" /></h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Available SMS Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.smsCount - editUserWinId$EditUserController.user.usedSmsCount}" /></h:td>
+								     	</h:tr>
+								     	<h:tr>
+								     		<h:td><label value="SMS SenderIds:" sclass="boldLbl"/></h:td>
+								     		<h:td><label value="" id="smsSenderIdsLblId"/></h:td>
+								     	</h:tr>
+								     	<h:tr>
+											<h:td colspan="2">
+												<h:hr  width="300px" align="left"/>
+											</h:td>
+										</h:tr> -->
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Start Date"  sclass="boldLbl" /></h:td>
+											<h:td>
+											<label id="startLblId" />
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Expiry Date"  sclass="boldLbl" /></h:td>
+											<h:td>
+											<label id="expLblId" />
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<!-- <h:td><label value="VMTA"  sclass="boldLbl" /></h:td> -->
+							     			<h:td><label value="Email Route"  sclass="boldLbl" /></h:td>
+											<h:td width="75%"> 
+												<!-- <label value="${editUserWinId$EditUserController.user.vmta}"/> -->
+												<label value="${editUserWinId$EditUserController.user.vmta.vmtaName}"/>
+											</h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="SMS Gateway"  sclass="boldLbl" /></h:td>
+											<h:td width="75%"> 
+												<label id="smsGatewayId"  />
+											</h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="SMS Country Code"  sclass="boldLbl" /></h:td>
+											<h:td width="75%"> 
+												<label id ="smsCountryCodeLblId" />
+											</h:td>
+								     	</h:tr>
+								     	
+								     	
+								     	<h:tr>
+											<h:td colspan="2">
+												<h:hr  width="300px" align="left"/>
+											</h:td>
+										</h:tr>
+										
+								     	<h:tr>
+							     			<h:td><label value="Total Digital Receipts Sent"  sclass="boldLbl" /></h:td>
+											<h:td width="75%"> 
+												<label id ="totalDRSentId" />
+											</h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Last Account Activity Date"  sclass="boldLbl" /></h:td>
+											<h:td width="75%"> 
+												<label id ="lastAccountActivityDateLbId" />
+											</h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Total Number Of Unique Active Contacts"  sclass="boldLbl" /></h:td>
+											<h:td width="75%"> 
+												<label id ="totalNoOfUniqueActiveContactsLbId" />
+											</h:td>
+								     	</h:tr>
+								     	
+								       <!-- 	<h:tr>
+							     			<h:td><label value="Send Grid Account"  sclass="boldLbl" /></h:td>
+											<h:td width="75%"> 
+												<toolbarbutton id="clickHereTlbId" label="Create/Edit"/>
+											</h:td>
+								     	</h:tr>  -->
+								    </h:table> 					
+								</groupbox>
+								
+								<!--<zscript>
+								<![CDATA[
+										Calendar tempCal = user.getPackageExpiryDate();
+										tempCal.setTimeZone((TimeZone) sessionScope.get("clientTimeZone"));
+										expLblId.setValue(MyCalendar.calendarToString(tempCal,MyCalendar.FORMAT_STDATE));
+										
+										tempCal = user.getPackageStartDate();
+										tempCal.setTimeZone((TimeZone) sessionScope.get("clientTimeZone"));
+										startLblId.setValue(MyCalendar.calendarToString(tempCal,MyCalendar.FORMAT_STDATE));
+								
+								]]>
+								</zscript>
+						--></h:td>
+						<h:td valign="top" width="50%">
+						<h:table cellspacing="0" cellpadding="0"  width="100%" align="left">
+						<h:tr><h:td>
+						<groupbox closable="false"  sclass="gbStyle" >
+						
+							     	<caption label="Credit Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							     	<h:table cellspacing="10px" cellpadding="0"  width="75%" align="left">
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="Email Credits:"  sclass="boldLbl" /></h:td>
+											<h:td ><a id="totalEmailCreditId" class="removeStyle"><label id="totalEmailCreditLabelId" value="${editUserWinId$EditUserController.user.emailCount}"></label></a></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Used Email Credits:"  sclass="boldLbl" /></h:td>
+											<h:td ><a id="usedEmailCreditId" class="removeStyle"><label id="usedEmailCreditLabelId" value="${editUserWinId$EditUserController.user.usedEmailCount}"></label></a></h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Available Email Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><a id="availableEmailCreditId" class="removeStyle"><label id="availableEmailCreditLabelId" value="${editUserWinId$EditUserController.user.emailCount - editUserWinId$EditUserController.user.usedEmailCount}"></label></a></h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<button label="Add Email Credit" id="updateEmailCreditBtnId" />
+								     	</h:tr>
+								     	
+								     	
+								     	<h:tr>
+											<h:td colspan="2">
+												<h:hr  width="300px" align="left"/>
+											</h:td>
+										</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Total SMS Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.smsCount}"/></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Used SMS Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.usedSmsCount}" /></h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Available SMS Credits:"  sclass="boldLbl" /></h:td>
+											<h:td><label value="${editUserWinId$EditUserController.user.smsCount - editUserWinId$EditUserController.user.usedSmsCount}" /></h:td>
+								     	</h:tr>
+								     	<h:tr>
+								     		<h:td><label value="SMS SenderIds:" sclass="boldLbl"/></h:td>
+								     		<h:td><label value="" id="smsSenderIdsLblId"/></h:td>
+								     	</h:tr>
+								     	</h:table>
+										</groupbox>
+						</h:td></h:tr>
+						<h:tr ><h:td>
+						<groupbox closable="false"  sclass="gbStyle" style="margin-top:10px;">
+						
+						     <caption label="Contract Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							     	<h:table cellspacing="10px" cellpadding="0"  width="75%" align="left">
+								     	<h:tr>
+							     			<h:td valign="top" width="200px"><label value="Number Of Stores:"  sclass="boldLbl" /></h:td>
+											<h:td><label id="totalStoresLabelId" value="${editUserWinId$EditUserController.user.contractStores}"></label></h:td>
+								     	</h:tr>
+								     	<h:tr>
+							     			<h:td><label value="Number Of Contacts:"  sclass="boldLbl" /></h:td>
+											<h:td><label id="totalContactsLabelId" value="${editUserWinId$EditUserController.user.contractContacts}"></label></h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Number Of SMS added per month:"  sclass="boldLbl" /></h:td>
+											<h:td><label id="smsPerMonthLabelId" value="${editUserWinId$EditUserController.user.contractSMSAdded}"></label></h:td>
+								     	</h:tr>
+								     	
+								     	<h:tr>
+							     			<h:td><label value="Number of e-Receipts restricted per month:"  sclass="boldLbl" /></h:td>
+											<h:td><label id="eReceiptsLabelId" value="${editUserWinId$EditUserController.user.contractEReceiptsRestricted}"></label></h:td>
+								     	</h:tr>
+								     	
+						     </h:table>
+							     	
+						</groupbox>
+						</h:td></h:tr></h:table>
+						</h:td>
+					</h:tr>
+					<h:tr>
+					<h:td  style="align-top" >
+						     	<groupbox closable="false"  sclass="gbStyle" class="align:top;" visible="false">
+							     	<caption label="SMS Settings" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							     	<h:table cellspacing="10px" cellpadding="0"  width="100%" align="left">
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Enable Transactional SMS:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<checkbox id="transationalSMSChkBxId"/>
+							     			</h:td>
+							     		</h:tr>
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Set Sender ID:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<textbox id="senderIdTxtBxId"/>
+							     			</h:td>
+							     		</h:tr>
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Approve Template:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<combobox id="approveTempCmbBoxId" readonly="true" />
+							     			</h:td>
+							     			<h:td>
+							     				<toolbarbutton id="tempContPreviewTbId" image="images/icon_preview_big.png" sclass="tbbLink"
+													label="Preview"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							     			</h:td>
+							     			<h:td>
+							     				<toolbarbutton id="approveTempTbId" image="/img/icons/approve_icn.png" sclass="tbbLink"
+													label="Approve Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							     			</h:td>
+							     			
+							     		</h:tr>
+							     		
+							     		<h:tr>
+							     			<h:td colspan="4" align="right">
+							     				<button label="Save" id="smsSettingsSaveBtnId" />
+							     			</h:td>
+							     		</h:tr>
+							     		
+							     		
+							     	</h:table>
+							     	
+							     </groupbox>
+						     
+						     
+						     </h:td>
+						    <!-- <h:td valign="top" width="50%">
+						
+						</h:td> -->
+					</h:tr>
+					
+					<h:tr>
+					<h:td  style="align-top" >
+						     	<groupbox closable="false"  sclass="gbStyle" class="align:top;" visible="false">
+							     	<caption label="SMS Settings" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							     	<h:table cellspacing="10px" cellpadding="0"  width="100%" align="left">
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Enable Transactional SMS:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<checkbox id="uaeTransationalSMSChkBxId"/>
+							     			</h:td>
+							     		</h:tr>
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Set Sender ID:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<textbox id="uaeSenderIdTxtBxId"/>
+							     			</h:td>
+							     		</h:tr>
+							     		<h:tr>
+							     			<h:td valign="top" width="160px">
+							     				<label value="Approve Template:"  sclass="boldLbl" />
+							     			</h:td>
+							     			<h:td>
+							     				<combobox id="uaeApproveTempCmbBoxId" readonly="true" />
+							     			</h:td>
+							     			<h:td>
+							     				<toolbarbutton id="uaeTempContPreviewTbId" image="images/icon_preview_big.png" sclass="tbbLink"
+													label="Preview"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							     			</h:td>
+							     			<h:td>
+							     				<toolbarbutton id="uaeApproveTempTbId" image="/img/icons/approve_icn.png" sclass="tbbLink"
+													label="Approve Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							     			</h:td>
+							     			
+							     		</h:tr>
+							     		
+							     		<h:tr>
+							     			<h:td colspan="4" align="right">
+							     				<button label="Save" id="uaeSmsSettingsSaveBtnId" />
+							     			</h:td>
+							     		</h:tr>
+							     		
+							     		
+							     	</h:table>
+							     	
+							     </groupbox>
+						     
+						     
+						     </h:td>
+						    <!-- <h:td valign="top" width="50%">
+						
+						</h:td> -->
+					</h:tr>
+					
+					<h:tr>
+					<h:td>
+					</h:td>
+						<h:td colspan="2" halign="right">
+						<div align="right" style="margin:10px 60px 0 0;">
+							<!-- <button id="updateUserBtnId" label="Update" w:onClick="validate()"/>
+							<checkbox id="submitCbId" checked="false" visible="false"/> -->
+							<button id="disableUserBtnId" label="Disable User" sclass="idle140" />
+							<button id="deleteUserBtnId" label="Delete User" sclass="idle140" disabled="true"/>
+							<button id="editUserBtnId" label="Edit User" sclass="idle140 greenbtn"/>
+							</div>
+						</h:td>
+					</h:tr>
+				</h:table>
+				
+				<script type="text/javascript">
+				<![CDATA[
+				    var valid = true;
+					var errorContent = "";
+				    var tbNormalCss = "border:1px solid #B2B0B1; background:url('/subscriber/zkau/web/1d1ebab6/zul/img/misc/text-bg.gif') repeat-x scroll 0 0 #FFFFFF";
+				    var tbErrorCss = "border:1px solid #F37373; background:#FFCFCF";
+				    
+					function validate() {
+						errorContent = '';
+						valid = true;
+						var cbWidget = zk.Widget.$(jq('$enabledCbId'));
+						if(cbWidget.isChecked()) {
+							validateNum('totalLimitLbId');
+							var vmtaCb = zk.Widget.$(jq('$vmtaCbId'));
+							if(vmtaCb.getValue().indexOf("--") == 0) {
+								valid = false;
+								errorContent += '<br/> <li> Select a VMTA for enabled user';
+							}
+						}
+						
+						validateDates();
+						if(!valid) {
+							document.getElementById('errorDivId').innerHTML = errorContent;
+							document.getElementById('errorDivId').style.display = 'block';
+							return;
+						} else {
+							document.getElementById('errorDivId').style.display = 'none';
+						}
+						
+						var submitCb = zk.Widget.$(jq('$submitCbId'))
+						submitCb.setChecked(!submitCb.isChecked());
+						
+						submitCb.fire('onCheck',{value:submitCb.value},{toServer:true},0);
+					}
+						
+					
+					function validateNum(id) {
+						var tb = zk.Widget.$(jq('$' + id));
+						var val = tb.getValue();
+						if(val == undefined) {
+							valid = false;
+							tb.setStyle(tbErrorCss);
+						} else {
+							if(val <= 0) {
+								valid = false;
+								errorContent += '<br/> <li> Number must be greater than zero';
+								tb.setStyle(tbErrorCss);
+								return;
+							}
+							tb.setStyle(tbNormalCss);
+						}
+					}
+					
+					
+					function validateDates() {
+						var startDb = zk.Widget.$(jq('$startDbId'));
+				    	var expDb = zk.Widget.$(jq('$expDbId'));
+				    	var startVal = startDb.getValue();
+				    	var expVal = expDb.getValue()
+
+				    	var newStartDate = new Date(startVal.getYear()+1900, startVal.getMonth(), startVal.getDate());
+				    	var newExpDate = new Date(expVal.getYear()+1900, expVal.getMonth(), expVal.getDate());
+				    	
+				    	if((newStartDate > newExpDate )) {
+				    		errorContent += '<br/> <li> Start date must be less than expiry date ';
+				    		zk.Widget.$(jq('$startDbId_img')).setVisible(true);
+				    		zk.Widget.$(jq('$expDbId_img')).setVisible(true);
+				    	}else {
+				    		zk.Widget.$(jq('$startDbId_img')).setVisible(false);
+				    		zk.Widget.$(jq('$expDbId_img')).setVisible(false);
+				    	}
+					}
+					]]>
+				</script>
+				
+				
+				<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false);event.stopPropagation();" />
+					</caption>
+					<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+						<iframe id="iframeId" width="100%" height="100%"/>
+					</div>
+				</window>
+				
+				<window id="emailUpdateCredit" title="Add Email Credit" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="emailUpdateCredit.setVisible(false);" />
+					</caption>
+					<div id="emailcreditUpdateDiv1Id">
+						<h:table cellspacing="10px" cellpadding="0"  width="100%">
+							<h:tr>
+								<h:td><label value="Additional Credits" width="120px"  sclass="boldLbl" /></h:td>
+				     			<h:td><textbox id="updateEmailCreditText" type="text" >
+								<attribute w:name="doKeyDown_"><![CDATA[
+									function (evt) {
+										var keyCode = event.keyCode;
+										if( keyCode == 8 // back space
+											|| keyCode == 13 // enter
+											|| keyCode == 16 // enter
+											|| (keyCode >= 35 && keyCode <= 40) // home, end, arrows
+											|| keyCode == 46) { // Delete
+											this.$doKeyDown_(evt);
+										} else if ( !evt.shiftKey &&  // only do without shift key
+											(keyCode >= 48 && keyCode <= 57)
+											|| (keyCode >= 96 && keyCode <= 105)) {// number range
+											this.$doKeyDown_(evt);
+										} else {
+											evt.stop();
+											return;
+										}
+									}
+								]]></attribute>
+				     			</textbox></h:td>
+				     			<h:td><button label="Add" sclass="idle70" id="updateEmailCreditApprove" />
+								<button label="Cancel" sclass="idle70" onClick="emailUpdateCredit.setVisible(false);"/></h:td>
+					     	</h:tr>
+					    </h:table> 
+					</div>
+				</window>
+				<div id="promoStatusDivId" visible="true">
+				<groupbox>
+ 						<caption label="Promotion Status" style="font-weight:bold;font-size:12px;" ></caption>
+ 						<h:table cellspacing="2" cellpadding="2" width="100%">
+				  		  <h:tr height="2"/>
+				  		  
+				  		  <h:tr>
+		  	<label value=" Note: This action is only for Multiple and Random Discount Codes not for Single Discount Codes." sclass="theme-lbHeading" />
+		  </h:tr>
+				  			<h:tr>
+				  				<h:td width="200"><label  value="Promo Code : "/> </h:td>
+				  				<h:td><textbox  id="promoTxtBxId" width="300px"/>
+										</h:td>
+				  			</h:tr>
+				  			
+				  			<h:tr height="50">
+					<h:td valign="bottom" width="150">
+						<label value="Change Status To:"/>
+					</h:td>
+					<h:td valign="bottom" colspan="2">
+						<listbox  id="promoStatusLbId"  rows="1" mold="select" style="position:relative;" width="200px">
+						
+						<listitem label="Select" selected="true" ></listitem>
+						<listitem label="Used"  ></listitem>
+						<listitem label="Disabled"  ></listitem>
+						</listbox>
+						</h:td>
+						</h:tr>
+						
+						<h:tr height='20'></h:tr>
+
+						<h:tr>
+						<h:td></h:td>
+						
+						<h:td>
+								<button label="Update"  sclass="idle70 greenbtn" id="updatePromoBtnId" /> 
+							</h:td>
+						</h:tr>
+					
+					
+					
+				  			
+				  		</h:table>		
+			  		</groupbox>
+			  		</div>
+			  		
+			  		
+			  		
+			  		<div id="emailSuppressionDivId" visible="true">
+			 <groupbox>
+ 						<caption label="Remove Email from Suppression" style="font-weight:bold;font-size:12px;" ></caption>
+ 						<h:table cellspacing="2" cellpadding="2" width="100%">
+				  		  <h:tr height="2"/>
+				  			
+				  			<h:tr>
+				  				<h:td width="200"><label  value="Email Address : "/> </h:td>
+				  				<h:td><textbox  id="emailTxtBxId" width="300px"/>
+				  				
+										</h:td>
+										
+								<h:td width="200"><label  value="Phone Number : "/> </h:td>
+				  				<h:td><textbox  id="phnTxtBxId" width="300px"/>
+				  				
+										</h:td>
+											
+										
+										
+				  			</h:tr>
+						<h:tr height='20'></h:tr>
+
+						
+
+						<h:tr>
+						<h:td></h:td>
+						
+						<h:td>
+								<button label="Delete"  sclass="idle70 greenbtn" id="deleteEmailId" /> 
+							</h:td>
+							
+						<h:td>
+								<button label="Delete"  sclass="idle70 greenbtn" id="deletephnId" /> 
+							</h:td>
+						</h:tr>
+					
+					
+						
+					
+					
+				  			
+				  		</h:table>	
+			  		</groupbox>
+			  		</div>
+				
+
+</window>
+</zk>

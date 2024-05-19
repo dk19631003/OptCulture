@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	
+	<bean id="beanNameUrlMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+	<bean id="campaignReportManager" class="org.mq.marketer.campaign.controller.campaign.CampaignReportManager"/>
+	<bean name = "/myMailingListBox.mqrm" class= "org.mq.marketer.campaign.controller.contacts.AddSubscriptionFormContacts">                    
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		<property name="contactsDaoForDML" ref="contactsDaoForDML"/>
+		<property name="mailingListDao">
+			<ref bean="mailingListDao" />
+		</property>
+		<property name="customTemplatesDao">
+			<ref bean="customTemplatesDao" />
+		</property>
+		<property name="purgeList">
+			<ref bean="purgeList" />
+		</property>
+		<property name="mlCustomFieldsDao">
+			<ref bean="mlCustomFieldsDao" />
+		</property>
+		<property name="cfDataDao">
+			<ref bean="cfDataDao" />
+		</property>
+		
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+		<property name="contactParentalConsentDao">
+			<ref bean="contactParentalConsentDao" />
+		</property>
+		<property name="contactParentalConsentDaoForDML">
+			<ref bean="contactParentalConsentDaoForDML" />
+		</property>
+		
+    </bean>  
+    
+   <!-- <bean name="/JSBuilder.mqrm" class="org.mq.marketer.campaign.controller.contacts.FormMappingController">
+   
+   		<property name="formMappingDao">
+			<ref bean="formMappingDao" />
+		</property>
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		<property name="cfDataDao">
+			<ref bean="cfDataDao" />
+		</property>
+		<property name="contactParentalConsentDao">
+			<ref bean="contactParentalConsentDao" />
+		</property>
+		
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+		
+		<property name="customTemplatesDao">
+			<ref bean="customTemplatesDao" />
+		</property>
+		
+		<property name="contactsLoyaltyDao">
+			<ref bean="contactsLoyaltyDao" />
+		</property>
+		
+		<property name="sparkBaseLocationDetailsDao">
+			<ref bean="sparkBaseLocationDetailsDao" />
+		</property>
+		
+		<property name="organizationStoresDao">
+			<ref bean="organizationStoresDao" />
+		</property>
+		
+		<property name="sparkBaseCardDao">
+			<ref bean="sparkBaseCardDao" />
+		</property>
+		
+		<property name="purgeList">
+			<ref bean="purgeList" />
+		</property>
+		<property name="unsubscribesDao">
+			<ref bean="unsubscribesDao" />
+		</property>
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		<property name="smsSettingsDao">
+			<ref bean="smsSettingsDao" />
+		</property>
+		<property name="mailingListDao">
+			<ref bean="mailingListDao" />
+		</property>
+		<property name="captiwayToSMSApiGateway">
+		<ref bean="captiwayToSMSApiGateway" />
+		</property>
+		
+		<property name="posMappingDao">
+			<ref bean="posMappingDao" />
+		</property>
+		<property name="eventTriggerEventsObservable">
+			<ref bean="eventTriggerEventsObservable" />
+		</property>
+		<property name="eventTriggerEventsObserver">
+			<ref bean="eventTriggerEventsObserver" />
+		</property>
+		
+   </bean> -->
+   
+     <bean name="/JSBuilder.mqrm" class="org.mq.optculture.controller.ContactSubscriptionService"></bean>
+   
+   
+   <bean name="/LoyaltyEnrollment.mqrm" id="sparkBaseRestService"
+		class="org.mq.marketer.sparkbase.restservice.SparkBaseRestService">
+		
+		<property name="sparkBaseLocationDetailsDao">
+			<ref bean="sparkBaseLocationDetailsDao" />
+		</property>
+		
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		<property name="contactsDaoForDML" ref="contactsDaoForDML"/>
+		<property name="mailingListDao">
+			<ref bean="mailingListDao" />
+		</property>
+		<property name="mailingListDaoForDML">
+			<ref bean="mailingListDaoForDML" />
+		</property>
+		
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		
+		<property name="usersDaoForDML">
+			<ref bean="usersDaoForDML" />
+		</property>
+		
+		<property name="contactsLoyaltyDao">
+			<ref bean="contactsLoyaltyDao" />
+		</property>
+		
+		<property name="sparkBaseCardDao">
+			<ref bean="sparkBaseCardDao" />
+		</property>
+		
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+		
+		<property name="purgeList">
+			<ref bean="purgeList" />
+		</property>
+		
+		<property name="contactParentalConsentDao">
+			<ref bean="contactParentalConsentDao" />
+		</property>
+		
+		<property name="contactParentalConsentDaoForDML">
+			<ref bean="contactParentalConsentDaoForDML" />
+		</property>
+		
+		<property name="customTemplatesDao">
+			<ref bean="customTemplatesDao" />
+		</property>
+		<property name="smsSettingsDao">
+			<ref bean="smsSettingsDao" />
+		</property>
+		<property name="captiwayToSMSApiGateway">
+		<ref bean="captiwayToSMSApiGateway" />
+		</property>
+		<property name="posMappingDao">
+			<ref bean="posMappingDao" />
+		</property>
+		<property name="contactsLoyaltyStageDao">
+			<ref bean="contactsLoyaltyStageDao" />
+		</property>
+		<property name="contactsLoyaltyStageDaoForDML">
+			<ref bean="contactsLoyaltyStageDaoForDML" />
+		</property>
+		<property name="eventTriggerEventsObservable">
+			<ref bean="eventTriggerEventsObservable" />
+		</property>
+		<property name="eventTriggerEventsObserver">
+			<ref bean="eventTriggerEventsObserver" />
+		</property>
+	</bean>
+	 <!-- <bean name="/fetchLoyaltyDataService.mqrm" id="sparkBaseLoyaltyDataService"
+		class="org.mq.marketer.sparkbase.restservice.SparkBaseLoyaltyDataService">
+		
+		<property name="sparkBaseLocationDetailsDao">
+			<ref bean="sparkBaseLocationDetailsDao" />
+		</property>
+		
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		
+		<property name="mailingListDao">
+			<ref bean="mailingListDao" />
+		</property>
+		
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		
+		<property name="contactsLoyaltyDao">
+			<ref bean="contactsLoyaltyDao" />
+		</property>
+		
+		<property name="sparkBaseCardDao">
+			<ref bean="sparkBaseCardDao" />
+		</property>
+		
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+		
+	 </bean>	 -->
+	
+	
+	<bean name="/getToken.mqrm" id="sparkBaseGetTokenService"
+		class="org.mq.optculture.restservice.sparkbase.SparkBaseTokenRestService">
+		
+		<!-- <property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		<property name="usersDaoForDML">
+			<ref bean="usersDaoForDML" />
+		</property> -->
+	
+	</bean>
+	
+	<bean name="/CouponCodeEnquiryRequest.mqrm" id="coupCodereqJson"
+		class="org.mq.marketer.restservice.couponcode.CouponCodeEnqDataServices">
+	
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		
+		<property name="couponCodesDao">
+			<ref bean="couponCodesDao" />
+		</property>
+		
+		<property name="coupDiscGenDao">
+			<ref bean="coupDiscGenDao" />
+		</property>
+		
+		<property name="couponsDao">
+			<ref bean="couponsDao" />
+		</property>
+		
+		<property name="posMappingDao">
+			<ref bean="posMappingDao" />
+		</property>
+		
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		
+	</bean>	
+
+	<bean name="/PromoEnquiryRequest.mqrm" id="promoCodereqJson"
+		class="org.mq.optculture.restservice.magento.MagentoRestService">
+	
+	</bean>	
+	
+	<bean name="/GeneralMailSenderOPT.mqrm" id="generalMailSenderJson"
+		class="org.mq.optculture.restservice.generalMailSender.GeneralMailSenderRestService">
+	
+	</bean>	
+
+	<bean name="/CouponCodeRedeemRequest.mqrm" id="couponCodesRedeemedDataService"
+ 	class="org.mq.marketer.restservice.couponcode.CouponCodesRedeemedDataService">
+
+		<property name="couponsDao">
+			<ref bean="couponsDao" />
+		</property>
+		
+		<property name="couponsDaoForDML">
+			<ref bean="couponsDaoForDML" />
+		</property>
+		
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		
+		<property name="couponCodesDao">
+			<ref bean="couponCodesDao" />
+		</property>
+		
+		<property name="couponCodesDaoForDML">
+			<ref bean="couponCodesDaoForDML" />
+		</property>
+		
+		
+		<property name="mailingListDao">
+			<ref bean="mailingListDao" />
+		</property>
+		<property name="smsSettingsDao">
+			<ref bean="smsSettingsDao" />
+		</property>
+		<property name="purgeList">
+			<ref bean="purgeList" />
+		</property>
+		<property name="posMappingDao">
+			<ref bean="posMappingDao" />
+		</property>
+		<property name="captiwayToSMSApiGateway">
+		<ref bean="captiwayToSMSApiGateway" />
+		</property>
+		
+		<!-- <property name="eventTriggerEventsObservable">
+		<ref bean="eventTriggerEventsObservable" />
+		</property>
+		<property name="eventTriggerEventsObserver">
+			<ref bean="eventTriggerEventsObserver" />
+		</property> -->
+		
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+		
+		<property name="customTemplatesDao">
+			<ref bean="customTemplatesDao" />
+		</property>
+		
+		
+		
+	</bean>	
+	
+	<!-- ADDED FOR DIGIRECEIPTS URL CHANGES  -->
+	
+	<bean name="/sendDigitalReceiptOPT.mqrm" id="digitalReceiptsControllerOPT"
+ 	class="org.mq.optculture.restservice.digitalReceipt.DigitalReceiptsRestServiceOPT">
+	</bean>
+	<bean name="/purchaseHistory.mqrm" id="purchaseHistory"
+ 	class="org.mq.optculture.business.mobileapp.PurchaseHistoryRestService">
+	</bean>
+	<bean name="/loyaltyTransactionHistory.mqrm" id="ltyTrxHistory"
+ 	class="org.mq.optculture.business.mobileapp.LoyaltyTransactionHistoryRestService">
+	</bean>
+	<bean name="/couponsHistory.mqrm" id="couponsHistory"
+ 	class="org.mq.optculture.business.mobileapp.CouponsHistoryRestService">
+	</bean>
+	<bean name="/storeInquiry.mqrm" id="storeInquiry"
+ 	class="org.mq.optculture.business.mobileapp.StoreInquiryRestService">
+	</bean>
+	<bean name="/webPortalBranding.mqrm" id="webPortalBranding"
+ 	class="org.mq.optculture.business.mobileapp.WebPortalBrandingRestService">
+	</bean>
+	<bean  name="/loyaltyMemberLogin.mqrm" id="loyaltyMemberLoginController"
+		class="org.mq.optculture.business.mobileapp.OCLoyaltyMemberLoginRestService">
+	</bean>
+	<bean  name="/userLogin.mqrm" id="userLoginController"
+		class="org.mq.optculture.business.account.OCUserLoginRestService">
+	</bean>
+	<bean  name="/loyaltyMemberLogout.mqrm" id="loyaltyMemberLogout"
+		class="org.mq.optculture.business.mobileapp.OCLoyaltyMemberLogoutRestService">
+	</bean>
+	
+	<bean  name="/GetPageURL.mqrm" id="GetPageURLService"
+		class=" org.mq.optculture.business.genesys.GetPageURLController">
+	</bean>
+	<bean name="/sendDigitalReceipt.mqrm" id="digitalReceiptsController"
+ 	class="org.mq.marketer.campaign.restservice.DigitalReceiptsRestService">
+
+		<property name="usersDao" ref="usersDao" />  
+		<property name="emailQueueDao" ref="emailQueueDao" />
+		<property name="digitalReceiptMyTemplatesDao" ref="digitalReceiptMyTemplatesDao" /> 
+		<property name="digitalReceiptUserSettingsDao" ref="digitalReceiptUserSettingsDao" />
+		<property name="contactsDao" ref="contactsDao" />
+		<property name="mailingListDao" ref="mailingListDao" />
+		<property name="messagesDao" ref="messagesDao" />
+        <property name="drSentDao" ref="drSentDao" />
+		<property name="digitalReceiptsJSONDao" ref="digitalReceiptsJSONDao"></property>
+		<property name="posMappingDao" ref="posMappingDao" />
+		<property name="contactsLoyaltyDao" ref="contactsLoyaltyDao" />
+		<property name="organizationStoresDao" ref="organizationStoresDao" />
+		<property name="retailProSalesDao" ref="retailProSalesDao" />
+	</bean>
+	
+	<!-- Added for Magento DR requests -->
+	<!-- <bean name="/sendPosDigitalReceipt.mqrm" id="PosDigitalReceiptsController"
+ 	class="org.mq.marketer.campaign.restservice.PosDigitalReceiptsRestService">
+		<property name="usersDao" ref="usersDao" />  
+	</bean>	 -->
+	
+	<!-- <bean  name="/updateReport.mqrm" id="campaignReportController"
+		class="org.mq.marketer.campaign.controller.CampaignReportController">
+		<property name="campaignReportDao">
+			<ref bean="campaignReportDao" />
+		</property>
+		<property name="campaignSentDao">
+			<ref bean="campaignSentDao" />
+		</property>
+		<property name="opensDao">
+			<ref bean="opensDao" />
+		</property>
+		<property name="emailClientDao">
+			<ref bean="emailClientDao" />
+		</property>
+		<property name="clicksDao">
+			<ref bean="clicksDao" />
+		</property>
+		<property name="unsubscribesDao" >
+			<ref bean ="unsubscribesDao" />
+		</property>
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		<property name="campaignReportManager">
+			<ref bean="campaignReportManager" />
+		</property>
+		<property name="emailOpenedQueue">
+			<ref bean="emailOpenedQueue" />
+		</property>
+		<property name="emailClickedQueue">
+			<ref bean="emailClickedQueue" />
+		</property>
+		<property name="updateEmailReports">
+			<ref bean="updateEmailReports" />
+		</property>
+		
+		<property name="campaignsDao">
+			<ref bean="campaignsDao" />
+		</property>
+		<property name="shareSocialNetworkLinksDao">
+			<ref bean="shareSocialNetworkLinksDao" />
+		</property>
+	</bean> -->
+	<!-- <bean  name="/updateDigitalReport.mqrm" id="digitalReportController"
+		class="org.mq.marketer.campaign.controller.DigiReceiptsReportsController">
+		
+		<property name="drSentDao" ref="drSentDao" />
+		<property name="drSentDao">
+			<ref bean="drSentDao" />
+		</property>
+		<property name="drSentDaoForDML"/>
+		<property name="drSentDaoForDML">
+			<ref bean="drSentDaoForDML" />
+		</property>
+		</bean> -->
+	
+	
+	<!-- Loyalty and Gift Inquiry, Issuance and Redemption -->
+	<!-- to be uncommented part -->
+	<!--<bean name="/LoyaltyEnrollmentOPT.mqrm" id="loyaltyEnrolmentService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyEnrollRestservice">
+	</bean>
+	<bean name="/LoyaltyIssuanceOPT.mqrm" id="loyaltyIssuanceService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyIssuanceRestService">
+	</bean>
+	<bean name="/LoyaltyInquiryOPT.mqrm" id="loyaltyInquiryService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyInquiryRestService">
+	</bean>
+	<bean name="/LoyaltyIssuance.mqrm" id="loyaltyIssuance" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyIssuanceRestService">
+	</bean>
+ <bean name="/LoyaltyInquiry.mqrm" id="loyaltyInquiry" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyInquiryRestService">
+	</bean>
+
+ -->
+	 <bean name="/LoyaltyEnrollmentOPT.mqrm" id="AsynLoyaltyEnrolmentService" 
+  class="org.mq.optculture.restservice.loyalty.AsyncLoyaltyEnrollRestservice"></bean>
+  
+	<bean name="/LoyaltyIssuance.mqrm" id="AsyncloyaltyIssuance" 
+  class="org.mq.optculture.restservice.loyalty.AsyncLoyaltyIssuanceRestService">
+ </bean>
+<bean name="/LoyaltyInquiry.mqrm" id="asyncLoyaltyInquiry" 
+  class="org.mq.optculture.restservice.loyalty.AsyncLoyaltyInquiryRestService">
+ </bean>
+<bean name="/LoyaltyIssuanceOPT.mqrm" id="AsyncloyaltyIssuanceService" 
+  class="org.mq.optculture.restservice.loyalty.AsyncLoyaltyIssuanceRestService">
+ </bean>
+<bean name="/LoyaltyInquiryOPT.mqrm" id="asyncLoyaltyInquiryService" 
+  class="org.mq.optculture.restservice.loyalty.AsyncLoyaltyInquiryRestService">
+ </bean>
+	
+<!--  end -->
+
+	<bean name="/LoyaltyRedemptionOPT.mqrm" id="loyaltyRedemptionService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyRedemptionRestService">
+	</bean>
+	<!-- <bean name="/fetchLoyaltyDataService.mqrm" id="loyaltyfetchdataService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyFetchDataRestService">
+	</bean>
+	<bean name="/LoyaltyEnrollmentOPT.mqrm" id="loyaltyEnrolmentService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyEnrollRestservice">
+	</bean> -->
+	 
+	<bean name="/OCLoyaltyEnrollment.mqrm" id="loyaltyEnrolmentServiceOC" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyEnrollOCRestservice">
+	</bean>
+	
+
+	<bean name="/OCLoyaltyInquiry.mqrm" id="loyaltyInquiryOC" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyInquiryOCRestService">
+	</bean>
+	
+	<bean name="/OCLoyaltyIssuance.mqrm" id="loyaltyIssuanceOC" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyIssuanceOCRestService">
+	</bean>
+	<bean name="/LoyaltyRedemption.mqrm" id="loyaltyRedemption" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyRedemptionRestService">
+	</bean>
+	<bean name="/OCLoyaltyRedemption.mqrm" id="loyaltyRedemptionOC" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyRedemptionOCRestService">
+	</bean>
+	<bean name="/OCOTPService.mqrm" id="loyaltyOTPOCRestservice" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyOTPOCRestservice">
+	</bean>
+	<bean name="/OCLoyaltyReturn.mqrm" id="loyaltyReturnTransactionOCRestService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyReturnTransactionOCRestService">
+	</bean>
+	<bean name="/OCLoyaltyTransfer.mqrm" id="loyaltyTransferMembershipRestService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyTransferMembershipRestService">
+	</bean>
+	<!-- <bean name="/fetchLoyaltyDataService.mqrm" id="loyaltyfetchdataService" 
+		class="org.mq.optculture.restservice.loyalty.LoyaltyFetchDataRestService">
+	</bean> -->
+	
+	<bean  name="/equenceDLR.mqrm" id="updateEquenceHTTPDLR" class="org.mq.optculture.controller.EquenceHTTPDLRService">
+	</bean>	
+	<bean  name="/synapseDLR.mqrm" id="updateSynapseHTTPDLR" class="org.mq.optculture.controller.SynapseHTTPDLRService">
+	</bean>	
+	<bean  name="/drToLtyExtraction.mqrm" id="drToLtyExtraction" class="org.mq.optculture.restservice.digitalReceipt.DRToLtyExtractionRestService">
+	</bean>	
+	
+<!-- 	<bean name="/LoyaltyInquiry.mqrm" id="loyaltyInquiryService" 
+		class="org.mq.marketer.sparkbase.restservice.LoyaltyInquiryService">
+		
+		<property name="sparkBaseLocationDetailsDao">
+			<ref bean="sparkBaseLocationDetailsDao" />
+		</property>
+		
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		
+		<property name="contactsLoyaltyDao">
+			<ref bean="contactsLoyaltyDao" />
+		</property>
+		
+		<property name="sparkBaseCardDao">
+			<ref bean="sparkBaseCardDao" />
+		</property>
+				
+	</bean>
+	
+	
+	
+	<bean name="/LoyaltyIssuance.mqrm" id="loyaltyIssuanceService" 
+		class="org.mq.marketer.sparkbase.restservice.LoyaltyIssuanceService">
+		
+		<property name="sparkBaseLocationDetailsDao">
+			<ref bean="sparkBaseLocationDetailsDao" />
+		</property>
+		
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		
+		<property name="contactsLoyaltyDao">
+			<ref bean="contactsLoyaltyDao" />
+		</property>
+		
+		<property name="sparkBaseCardDao">
+			<ref bean="sparkBaseCardDao" />
+		</property>
+				
+	</bean>
+	
+	<bean name="/LoyaltyRedemption.mqrm" id="loyaltyRedemptionService" 
+		class="org.mq.marketer.sparkbase.restservice.LoyaltyRedemptionService">
+		
+		<property name="sparkBaseLocationDetailsDao">
+			<ref bean="sparkBaseLocationDetailsDao" />
+		</property>
+		
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property>
+		
+		<property name="contactsLoyaltyDao">
+			<ref bean="contactsLoyaltyDao" />
+		</property>
+		
+		<property name="sparkBaseCardDao">
+			<ref bean="sparkBaseCardDao" />
+		</property>
+				
+	</bean>   -->
+	
+		<!-- <bean  name="/resetPassword.mqrm" id="resetPasswordController"
+		class="org.mq.marketer.campaign.controller.ResetPasswordController">
+		
+		<property name="resetPasswordTokenDao">
+			<ref bean="resetPasswordTokenDao" />
+		</property>
+		
+		<property name="usersDao">
+			<ref bean="usersDao" />
+		</property> 
+	</bean>		-->
+	
+		<bean  name="/updateContactsOPT.mqrm" id="updateContactsService"
+		class=" org.mq.optculture.restservice.updatecontacts.UpdateContactsService">
+	</bean>
+	<bean  name="/IssueCoupon.mqrm" id="IssueCouponRestService"
+		class="org.mq.optculture.restservice.couponcodes.IssueCouponRestService">
+</bean>
+	<bean name="/updateSkuOPT.mqrm" id="updateSkuService"
+		class="org.mq.optculture.restservice.updatesku.UpdateSkuRestService">
+	</bean>
+	
+	<!-- 	<bean name="/getToken.mqrm" id="sparkBaseGetTokenService"
+		class=" org.mq.optculture.restservice.sparkbase.SparkBaseTokenRestService">
+	</bean> -->
+
+	<bean name="/CouponCodeEnquiryRequestOPT.mqrm" id="promosReqJson"
+		class="org.mq.optculture.restservice.couponcodes.CouponCodeEnqDataService">
+	</bean>
+	
+	<bean name="/ReferralCodeEnquiryRequestOPT.mqrm" id="referralReqJson"
+		class="org.mq.optculture.restservice.couponcodes.ReferralCodeEnqDataService">
+	</bean>
+
+	<bean name="/CouponCodeRedeemRequestOPT.mqrm" id="promosRedeemedDataService"
+		class="org.mq.optculture.restservice.couponcodes.CouponCodeRedeemedDataService">
+	</bean>
+
+	<bean  name="/resetPassword.mqrm" id="resetPasswordController"
+		class="org.mq.optculture.restservice.resetPassword.ResetPasswordTokenRestService">
+	</bean>
+	
+	<bean name="/fetchLoyaltyDataService.mqrm" id="sparkBaseLoyaltyData"
+		 class="org.mq.optculture.restservice.loyalty.LoyaltyDataRestService">
+	</bean>		 
+	<!-- changes 2.5.3.0 start -->
+	
+	<bean  name="/importContact.mqrm" id="importContactsService"
+		class=" org.mq.optculture.restservice.importcontacts.ImportContactsService">
+	</bean>
+	
+	<!-- changes 2.5.3.0 end -->
+	<bean  name="/faqAndTerms.mqrm" id="faqService"
+		class=" org.mq.optculture.restservice.faq.FaqService">
+	</bean>
+	<!-- APP-4908 -->
+	<bean  name="/nexonMonthlyStoreEnquiry.mqrm" id="nexonStoreEnquiryRestService"
+		class=" org.mq.optculture.restservice.loyalty.NexonStoreEnquiryRestService">
+	</bean>
+	<bean  name="/reIssuePerks.mqrm" id="reIssuePerksService"
+		class=" org.mq.optculture.restservice.loyalty.ReIssuePerksService">
+	</bean>
+	<!--<bean  name="/termsAndConditions.mqrm" id="termsService"
+		class=" org.mq.optculture.restservice.terms.TermsService">
+	</bean>-->
+	<bean  name="/events.mqrm" id="eventsService"
+		class=" org.mq.optculture.restservice.events.EventsService">
+	</bean>
+	<bean name="/loyaltyEnrollmentHistoryService.mqrm" id="loyaltyenrollmentHistory"
+		 class="org.mq.optculture.restservice.loyalty.LoyaltyEnrollmentHistoryRestService">
+	</bean>
+	
+	<bean name="/fetchLoyaltyDataServiceOPT.mqrm" id="sparkBaseLoyaltyDataService"
+		 class="org.mq.optculture.restservice.loyalty.LoyaltyDataRestService">
+	</bean>	
+	
+	<bean name="/OCfetchLoyaltyDataService.mqrm" id="ocFetchLoyaltyDataService"
+		 class="org.mq.optculture.restservice.loyalty.LoyaltyDataOCRestService">
+	</bean>	
+	
+	<bean  name="/updateDigitalReport.mqrm" id="digitalReportController"
+		class="org.mq.optculture.restservice.digitalReceipt.DRReportsRestService">
+	</bean>
+	
+	<bean name="/sendPosDigitalReceipt.mqrm" id="PosDigitalReceiptsController"
+ 		class="org.mq.optculture.restservice.digitalReceipt.PosDigitalReceiptsRestService">
+ 	</bean>
+ 	<bean  name="/updateReport.mqrm" id="campaignReportController"
+			class = "org.mq.optculture.controller.CampaignReportService">
+	</bean>
+	
+	<bean name="/processReceipt.mqrm" id="processReceiptController"
+ 		class="org.mq.optculture.restservice.digitalReceipt.ProcessDigitalReceiptsRestService">
+ 	</bean>
+
+
+	
+	 <bean  name="/updateAutoEmailReport.mqrm" id="autoEmailReportController"
+			class = "org.mq.optculture.controller.autoEmail.AutoEmailService">
+	</bean>
+	<bean name="/contactSubscriptionRequest.mqrm" id="contactEnroll" class="org.mq.optculture.controller.ContactSubscriptionService">
+	</bean>	
+	
+	<bean  name="/updateOptSyncDataOPT.mqrm" id="updateOptSyncDataController"
+			class = "org.mq.optculture.controller.UpdateOptSyncDataService">
+	</bean>
+	
+	<bean  name="/savedRows.mqrm" id="savedRowsController"
+		class="org.mq.optculture.restservice.beefileapiservice.SavedRowsRestService">
+	</bean>
+	
+	<bean  name="/userDesignedSavedRows.mqrm" id="UserDesignedSavedRowsController"
+		class="org.mq.optculture.restservice.beefileapiservice.UserDesignedSavedRowsRestService">
+	</bean>
+	
+	<bean  name="/promotionBarCode.mqrm" id="promotionBarCodeController"
+		class="org.mq.optculture.restservice.beefileapiservice.PromotionBarCodesRestService">
+	</bean>
+	
+	<bean name="/processLanguage.mqrm" id="processLanguageController"
+ 		class="org.mq.optculture.restservice.language.ProcessLanguageRestService">
+ 	</bean>
+ 	<bean  name="/pushNotification.mqrm" id="pushNotificationController"
+		class="org.mq.optculture.restservice.pushNotification.PushNotificationRestService">
+	</bean>
+	
+	<bean name="/optSyncUpdate.mqrm" id="optSyncUpdateController"
+ 		class="org.mq.optculture.restservice.optsync.OptSyncUpdateRestService">
+ 	</bean>
+	
+</beans>

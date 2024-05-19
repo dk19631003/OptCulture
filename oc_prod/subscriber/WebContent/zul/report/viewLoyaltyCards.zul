@@ -1,0 +1,331 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style>
+ .custCheck {
+  width:140px;
+ }
+ 
+ 
+</style>
+<window border="0" id="viewLoyaltyCardsWinId" apply="org.mq.marketer.campaign.controller.report.ViewLoyaltyCardsController" 
+		xmlns:h="native"  xmlns:w="client" width="100%" >
+	<style>
+	.myTab .z-tab-accordion-img {
+		float:right;
+		margin-right: 10px;
+		margin-top: 3px;
+	}
+	
+	.hoverlistheaders > div.z-listheader-cnt{ 
+         cursor: pointer;
+     }
+		
+		
+	</style>
+	
+		<!-- <north id="northId" flex="true" height="50px" border="none" > -->
+			<h:table cellspacing="0" cellpadding="4" width="100%" border="0"
+				bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;">
+				<h:tr >
+					<h:td>
+						<label value="Search by : " sclass="theme-lbHeading" />
+							<listbox id="searchbyLbId" mold="select">
+							<listitem label="Card Number is" value="Card" selected="true" />
+							<listitem label="First Name contains" value="first_name" />
+							<listitem label="Last Name contains" value="last_name" />
+							<listitem label="Email Address contains" value="email_id" />
+							<listitem label="Mobile Phone is" value="mobile_phone" />
+						</listbox>
+						<textbox id="searchByTbId" width="95px" />
+					</h:td>
+					<h:td>
+						<label value="Opt-in Source : " sclass="theme-lbHeading" />
+							<listbox id="optInSourceLbId" mold="select">
+							<listitem label="All" value="All" selected="true" />
+							<listitem label="Store" value="POS" />
+							<listitem label="Web form" value="WebForm" />
+						</listbox>
+					</h:td>
+					<h:td>
+						<label value="Opt-in Date" sclass="theme-lbHeading" />
+						<space />
+						<label value="From: " />
+						<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							 constraint="no future" />
+						<space />
+						<label value="To: " />
+						<datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							 constraint="no future" />
+					</h:td>
+					<h:td>
+						<button label="Filter" sclass="idle" width="100px" id="filterBtnId" />
+						<a label="Reset" id="resetAnchId" style="margin-left:20px;" />
+					</h:td>
+				</h:tr>
+			</h:table>
+			
+		<!-- </north> -->
+	<borderlayout height="630px"  width="1300px">
+		<east size="35%"  splittable="false" collapsible="false" maxsize="600" autoscroll="true" border="none">
+			<div style="margin-left:10px;margin-top:5px;">
+				<div style="background-color: #E5F4FB; color: #125F7B; padding: 15px 10px;" >
+					<label value="Name : " style="font-size: 13px;" />
+					<label id="nameLblId" value="" style="font-size: 13px;font-weight:bold;" />
+				</div>
+				
+				<tabbox mold="accordion" height="260px" style="box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.3);">
+					<tabs>
+						<tab label="Loyalty Overview"  image="/img/icons/bullet_arrow_down.png" sclass="myTab"/> 
+						<tab label="Last Purchase Details" image="/img/icons/bullet_arrow_down.png" sclass="myTab"/>
+					</tabs>
+					<tabpanels>
+					<!-- Loyalty Overview -->
+						<tabpanel style="overflow:auto;">
+							<div>
+								<h:table >
+									<h:tr height="25px">
+										<h:td><label value="Card Number" /></h:td> 
+										<h:td width="10px" ><label value=":"  /></h:td> 
+										<h:td><label id="cardNumberLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Card Type" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="cardTypeLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Opt In Date" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="optInDateLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Opt In Source" /></h:td> 
+										<h:td ><label value=":"  /></h:td>
+										<h:td><label id="optInSourceLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Total Reward Redeemed" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="totalRewardsRedeemedLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Balance Reward" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="balanceRewardsLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Balance Points" /></h:td> 
+										<h:td ><label value=":"  /></h:td> 
+										<h:td width="150px"><label id="balancePointsLblId" /></h:td>
+										<h:td><a style="margin-left:15px;" id="refreshLoyaltyAnchId" label="Refresh"/></h:td>
+									</h:tr>
+								</h:table>
+							</div>
+						</tabpanel>
+					<!--Last Purchase Details -->
+						<tabpanel style="overflow:auto;">
+							<div>
+								<h:table >
+									<h:tr height="25px">
+										<h:td><label value="Last Purchase Date" /></h:td> 
+										<h:td width="10px"><label value=":"  /></h:td> 
+										<h:td><label id="lastPurchaseDateLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Last Purchase Amount" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="lastPurchaseAmountLblId" /></h:td>
+									</h:tr>
+									<h:tr>
+										<h:td><a  label="View Last Purchase Details" id="viewLastPurchaseDetailsAnchId"/></h:td>
+									</h:tr>
+									<!-- <h:tr height="25px">
+										<h:td><label value="Points Earned in Transaction" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="lastPurchasePointsEarnedLblId" /></h:td>
+									</h:tr>
+									<h:tr height="25px">
+										<h:td><label value="Points Redeemed in Transaction" /></h:td>	
+										<h:td ><label value=":"  /></h:td> 
+										<h:td><label id="lastPurchasePointsRedeemedLblId" /></h:td>
+									</h:tr> -->
+								</h:table>
+							</div>
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+				
+				<separator height="15px"/>
+			
+				<groupbox  closable="false" style="margin:2px;">
+					<caption label="Actions"/> 
+					<div>
+						<h:table width="100%" cellpadding="0" >
+							<h:tr height="25px">
+								<h:td><label value="Add" /></h:td>
+								<h:td>
+									<listbox id="addLbId" mold="select">
+										<listitem label="Points" value="Points" selected="true" />
+										<listitem label="USD" value="USD" />
+									</listbox>
+								</h:td>
+								<h:td width="100px"><textbox width="50px" id="addTbId" style="margin-left:10px;" /></h:td>
+								<h:td><button id="addBtnId" label="OK" sclass="idle70 greenbtn" /></h:td>
+							</h:tr>
+							<h:tr height="5px" />
+							<h:tr height="25px">
+								<h:td><label value="Subtract" id="redeemPointsTbId" /></h:td>
+								<h:td>
+									<listbox id="subLbId" mold="select">
+										<listitem label="Points" value="Points" selected="true" />
+										<listitem label="USD" value="USD" />
+									</listbox>
+								</h:td>
+								<h:td><textbox width="50px" id="subTbId" style="margin-left:10px;" /></h:td>
+								<h:td><button id="subtractBtnId" label="OK" sclass="idle70 greenbtn" /></h:td>
+							</h:tr>
+							<h:tr height="25px" />
+							<h:tr height="25px">
+								<h:td><label value="Resend Card Details" /></h:td>
+								<h:td></h:td>
+								<h:td></h:td>
+								<h:td><button id="resendBtnId" label="Send" sclass="idle70 greenbtn" /></h:td>
+							</h:tr>
+							<h:tr height="20px" />
+						</h:table>
+					</div>
+					<div >
+						<h:table>
+							
+							<h:tr height="25px">
+								<h:td width="130px"><label value="Balance Reward" style="font-size: 15px;font-weight:bold;" /></h:td>
+								<h:td width="20px" ><label value=":" style="font-size: 15px;font-weight:bold;" /></h:td> 
+								<h:td><label  style="font-size: 15px;font-weight:bold;" id="finalBalanceRewardsLblId" /></h:td>
+							</h:tr>					
+						</h:table>
+					</div>
+					<div >
+						<h:table>
+							<!-- <h:tr height="5px" /> -->
+							<h:tr height="25px">
+								<h:td width="130px"><label value="Balance Points" style="font-size: 15px;font-weight:bold;" /></h:td>
+								<h:td width="20px" ><label value=":" style="font-size: 15px;font-weight:bold;" /></h:td> 
+								<h:td><label  style="font-size: 15px;font-weight:bold;" id="finalBalancePointsLblId" /></h:td>
+							</h:tr>					
+						</h:table>
+					</div>
+				</groupbox>
+			</div>
+		</east>
+			
+		<center   autoscroll="true" border="none">
+			<div style="margin-top:5px;">
+				<listbox id="viewCardsReportLbId" emptyMessage="No loyalty cards found..." sclass="contactsView" >
+					<listhead>
+						<listheader label="Card Number" id="sortbyCardNumber"  sclass="hoverlistheaders" width="120px" />
+						<listheader label="First Name" id="sortbyFirstName"  sclass="hoverlistheaders" width="100px" />
+						<listheader label="Last Name" id="sortbyLastName"  sclass="hoverlistheaders" width="100px" />
+						<listheader label="Email Address" id="sortbyEmailAddress"  sclass="hoverlistheaders" width="200px" />
+						<listheader label="Opt-in Source" width="100px" />
+						<listheader label="Phone Number" id="sortbyPhoneNumber"  sclass="hoverlistheaders" width="120px" />
+						<listheader label="Address" id="sortbyAddress"  sclass="hoverlistheaders" />
+					</listhead>
+				</listbox>
+				<separator/>
+				
+					<h:table cellspacing="0" cellpadding="0" width="100%">
+						<h:tr bgcolor="#F9F9F9">
+						
+						<h:td></h:td>
+						
+						<h:td align="right" width="100">
+							<label value="Items per page:" style="font-size:11px;" />
+						</h:td>
+								
+						<h:td  width="70">
+							<listbox rows="1" mold="select" id="pageSizeLbId"	>
+								<listitem label="5" />
+								<listitem label="10" selected="true"  />
+								<listitem label="15" />
+							</listbox>
+								
+						</h:td>
+						<h:td width="300">
+							<paging id="loyaltyListBottomPagingId" width="300px"
+									detailed="true" pageSize="10" class="contactsViewPaging" style="border:none;" />
+						</h:td>
+						</h:tr>
+					</h:table>
+				
+				<separator/>
+				
+				<div id="exportDivId" >
+					<label value="Export  " />
+					<listbox id="exportFilterLbId" mold="select">
+			 	   		<listitem label="All Active Cards" selected="true"/>    
+			 	   		<listitem label="All Inventory Cards" />    
+			 	   		<listitem label="All Registered Cards" /> 
+			 	   		<listitem label="With Selected Filters" />    
+					</listbox>
+					<label value=" as a " style="font-size:12px;"/> 
+				<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+			 	   			<comboitem label=".csv " value="csv" />    
+				</combobox> 
+				<zscript>
+					<![CDATA[
+						exportCbId.setSelectedIndex(0);
+					]]>
+				</zscript>
+				<label value=" file" style="font-size:12px;"/> 
+			
+				<button  label="Export" sclass="idle140 greenbtn" id="exportBtnId" />
+					<!-- <button  label="Export as CSV" sclass="idle140 greenbtn" id="exportBtnId" /> -->
+				</div>
+					
+			</div>
+		</center>
+	</borderlayout>	
+
+	<window id="lastPurchaseDetailsWinId" title="" closable="false" 
+				visible="false" border="normal" width="800px" height="300px" position="center" >
+		<caption>
+			<!-- <label value="Last Purchase SKU Details"  /> -->
+			<toolbarbutton label="Close" onClick="lastPurchaseDetailsWinId.setVisible(false)"/>
+		</caption>
+		<grid emptyMessage="No Data available" height="250px">
+			<columns>
+				<column label="SKU"/>
+				<column label="Price (in USD)"/>
+				<column label="Quantity"/>
+				<column label="Amount (in USD)"/>
+			</columns>
+			<rows id="viewAllSKURowsId"/>
+		</grid>
+	</window>
+	<window id="custExport" title="Select Fields to Export" border="normal"  width="400px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="400px" style="margin:15px 0px 0px 70px;" />
+					<!-- <checkbox label="Email Name" sclass="custCheck"/> 
+				</div>  -->
+								
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td ><a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />   <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+</window>
+</window>				
+</zk>
+
+
+
+

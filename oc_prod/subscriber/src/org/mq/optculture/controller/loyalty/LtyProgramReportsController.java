@@ -1,0 +1,662 @@
+package org.mq.optculture.controller.loyalty;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.LoyaltyProgram;
+import org.mq.marketer.campaign.beans.UserActivities;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.UserActivitiesDaoForDML;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageListEnum;
+import org.mq.marketer.campaign.general.PageUtil;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.Redirect;
+import org.mq.optculture.business.loyalty.LoyaltyProgramService;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkplus.spring.SpringUtil;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Filedownload;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Paging;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
+import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
+import org.zkoss.zul.event.PagingEvent;
+
+public class LtyProgramReportsController extends GenericForwardComposer {
+	
+	TimeZone clientTimeZone ;
+	private LoyaltyProgramService ltyPrgmSevice;
+	private Long userId;
+	private Paging prgmRepListTopPagingId,prgmRepListBottomPagingId;
+	private Textbox prgmSearchBoxId;
+	private Combobox exportCbId;
+	private Listbox pageSizeLbId;
+	private Rows prgmRowsId;
+	private Window custExport;
+	private Div custExport$chkDivId;
+	private UserActivitiesDaoForDML userActivitiesDaoForDML = null;
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+
+	public LtyProgramReportsController() {
+		ltyPrgmSevice = new LoyaltyProgramService();
+		userId = GetUser.getUserObj().getUserId();
+		session = Sessions.getCurrent();
+		userActivitiesDaoForDML = (UserActivitiesDaoForDML)SpringUtil.getBean("userActivitiesDaoForDML");
+	} 
+	
+	public void doAfterCompose(Component comp) throws Exception {
+
+		super.doAfterCompose(comp);
+		if(userActivitiesDaoForDML!=null) {
+		UserActivities userActivity = new UserActivities("Visited loyalty program report page", "Visited pages", Calendar.getInstance(),userId );
+		userActivitiesDaoForDML.saveOrUpdate(userActivity);
+		}
+		exportCbId.setSelectedIndex(0);
+		 String style = "font-weight:bold;font-size:15px;color:#313031;" +
+			"font-family:Arial,Helvetica,sans-serif;align:left";
+		PageUtil.setHeader("Loyalty Program Reports","",style,true);
+		clientTimeZone =(TimeZone)Sessions.getCurrent().getAttribute("clientTimeZone");
+
+		int totalSize = ltyPrgmSevice.getProgramsCount(userId,null);
+
+		
+		int pageSize = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+		prgmRepListTopPagingId.setTotalSize(totalSize);
+		prgmRepListTopPagingId.setPageSize(pageSize);
+		prgmRepListTopPagingId.setActivePage(0);
+		prgmRepListTopPagingId.addEventListener("onPaging", this);
+		
+		prgmRepListBottomPagingId.setTotalSize(totalSize);
+		prgmRepListBottomPagingId.setPageSize(pageSize);
+		prgmRepListBottomPagingId.setActivePage(0);
+		prgmRepListBottomPagingId.addEventListener("onPaging", this);
+		
+		List<LoyaltyProgram> prgmList = ltyPrgmSevice.getProgList(userId,prgmRepListBottomPagingId.getActivePage()*prgmRepListBottomPagingId.getPageSize(), 
+																	prgmRepListBottomPagingId.getPageSize(),null);
+		renderingProgramList(prgmList);
+	}
+
+	private void renderingProgramList(List<LoyaltyProgram> prgmList) {
+		Components.removeAllChildren(prgmRowsId);
+		if(prgmList == null) {
+			logger.debug(" No Programs exists ...");
+			return;
+		}
+		Label tempLabel = null;
+		
+		for (LoyaltyProgram loyaltyProgram : prgmList) {
+			
+			Row row = new Row();
+			row.setParent(prgmRowsId);
+			
+			//Program Name
+			tempLabel= new Label(loyaltyProgram.getProgramName());
+			tempLabel.setStyle("cursor:pointer;color:blue;text-decoration: underline;");
+			tempLabel.addEventListener("onClick", this);
+			row.appendChild(tempLabel);
+			//No of Cards Activated
+			Object[] obj = ltyPrgmSevice.getLiabilityData(userId,loyaltyProgram.getProgramId(),null,null,null);
+//			long noOfCards = ltyPrgmSevice.getActiveCardsCount(loyaltyProgram.getProgramId());
+			row.appendChild(new Label(obj[0]==null?0+"":obj[0]+""));
+			
+			Object[] obj1 = ltyPrgmSevice.getHighLevelMetrics(userId,loyaltyProgram.getProgramId());
+			//Enrollment
+			row.appendChild(new Label(obj1 == null || obj1[0]==null? 0 +"" : obj1[0]+""));
+			
+			//int enrollCount = ltyPrgmSevice.getEnrollmentsCount(loyaltyProgram.getProgramId());
+			//issuance
+			//int issuanceCount = ltyPrgmSevice.getIssuanceCount(loyaltyProgram.getProgramId());
+			row.appendChild(new Label(obj1 == null || obj1[1]==null? 0 +"" : obj1[1]+""));
+			//redemption
+			//int redemptionCount = ltyPrgmSevice.getRedemptionCount(loyaltyProgram.getProgramId());
+			row.appendChild(new Label(obj1 == null || obj1[2]==null? 0 +"" : obj1[2]+""));
+			//return-reversal
+			//int returnCount = ltyPrgmSevice.getReversalCount(loyaltyProgram.getProgramId());
+			row.appendChild(new Label(obj1 == null || obj1[3]==null? 0 +"" : obj1[3]+""));
+			//return-store credit
+			//int storeCreditCount = ltyPrgmSevice.getStoreCreditCount(loyaltyProgram.getProgramId());
+			row.appendChild(new Label(0+""));
+			//Liability Amount
+			row.appendChild(new Label(obj[1]==null?"":obj[1]+""));
+			//Liability Points
+			row.appendChild(new Label(obj[2]==null?"":obj[2]+""));
+			
+			row.setValue(loyaltyProgram);
+			
+			row.setParent(prgmRowsId);
+
+		} // for
+	}
+	
+	public void onSelect$pageSizeLbId() {
+		
+		try {
+			String key = prgmSearchBoxId.getValue();
+			int pageSize = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+			prgmRepListTopPagingId.setPageSize(pageSize);
+			prgmRepListBottomPagingId.setPageSize(pageSize);
+			
+			if(key.trim().length() != 0) {
+				int totalSize = ltyPrgmSevice.getProgramsCount(userId,key);
+				prgmRepListTopPagingId.setTotalSize(totalSize);
+				prgmRepListTopPagingId.setActivePage(0);
+				prgmRepListBottomPagingId.setTotalSize(totalSize);
+				prgmRepListBottomPagingId.setActivePage(0);
+				List<LoyaltyProgram> prgmList = ltyPrgmSevice.getProgList(userId,prgmRepListBottomPagingId.getActivePage()*prgmRepListBottomPagingId.getPageSize(),
+																			prgmRepListBottomPagingId.getPageSize(),key);
+				renderingProgramList(prgmList);
+			}else {
+				int totalSize = ltyPrgmSevice.getProgramsCount(userId,null);
+				prgmRepListTopPagingId.setTotalSize(totalSize);
+				prgmRepListTopPagingId.setActivePage(0);
+				prgmRepListBottomPagingId.setTotalSize(totalSize);
+				prgmRepListBottomPagingId.setActivePage(0);
+				List<LoyaltyProgram> prgmList = ltyPrgmSevice.getProgList(userId,prgmRepListBottomPagingId.getActivePage()*prgmRepListBottomPagingId.getPageSize(), 
+																			prgmRepListBottomPagingId.getPageSize(),null);
+				renderingProgramList(prgmList);
+			}
+			
+		} catch (WrongValueException e) {
+			logger.error("Exception ::" , e);
+		} catch (NumberFormatException e) {
+			logger.error("Exception ::" , e);
+		}
+		
+	}//onSelect$pageSizeLbId() 
+
+	public void onClick$resetAnchId() {
+
+     	 prgmSearchBoxId.setValue("");
+		 int totalSize = ltyPrgmSevice.getProgramsCount(userId, null);
+		 int pageSize = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+		 prgmRepListBottomPagingId.setTotalSize(totalSize);
+		 prgmRepListBottomPagingId.setPageSize(pageSize);
+		 prgmRepListBottomPagingId.setActivePage(0);
+		 prgmRepListTopPagingId.setTotalSize(totalSize);
+		 prgmRepListTopPagingId.setPageSize(pageSize);
+		 prgmRepListTopPagingId.setActivePage(0);
+		 List<LoyaltyProgram> programList = null;
+		 programList = ltyPrgmSevice.getProgList(userId,prgmRepListBottomPagingId.getActivePage()*prgmRepListBottomPagingId.getPageSize(), 
+					prgmRepListBottomPagingId.getPageSize(),null);
+		 renderingProgramList(programList);
+		 
+	}//onclick$resetAnchId()
+	
+	public void onClick$getReportsBtnId() {
+		try {
+			
+			if(prgmSearchBoxId.getValue().trim().isEmpty()) {
+				MessageUtil.setMessage("Program name cannot be left empty","color:red", "TOP");
+			}
+			Components.removeAllChildren(prgmRowsId);
+			int pageSize = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+			prgmRepListTopPagingId.setPageSize(pageSize);
+			prgmRepListBottomPagingId.setPageSize(pageSize);
+			String key = prgmSearchBoxId.getValue();
+			
+			if(key.trim().length() != 0) {
+				int totalSize = ltyPrgmSevice.getProgramsCount(userId,key);
+				prgmRepListTopPagingId.setTotalSize(totalSize);
+				prgmRepListTopPagingId.setActivePage(0);
+				prgmRepListBottomPagingId.setTotalSize(totalSize);
+				prgmRepListBottomPagingId.setActivePage(0);
+				List<LoyaltyProgram> prgmList = ltyPrgmSevice.getProgList(userId,prgmRepListBottomPagingId.getActivePage()*prgmRepListBottomPagingId.getPageSize(),
+																			prgmRepListBottomPagingId.getPageSize(),key);
+				renderingProgramList(prgmList);
+			}else {
+				int totalSize = ltyPrgmSevice.getProgramsCount(userId,null);
+				prgmRepListTopPagingId.setTotalSize(totalSize);
+				prgmRepListTopPagingId.setActivePage(0);
+				prgmRepListBottomPagingId.setTotalSize(totalSize);
+				prgmRepListBottomPagingId.setActivePage(0);
+				List<LoyaltyProgram> prgmList = ltyPrgmSevice.getProgList(userId,prgmRepListBottomPagingId.getActivePage()*prgmRepListBottomPagingId.getPageSize(), 
+																			prgmRepListBottomPagingId.getPageSize(),null);
+				renderingProgramList(prgmList);
+			}
+			
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+		}
+	}//onClick$getReportsBtnId()
+	
+	
+	
+	 public void onClick$exportBtnId() {
+			/*	try {
+			fileDownload(exportCbId);
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+		}*/
+	 	createWindow();
+		//anchorEvent(false);
+		
+		custExport.setVisible(true);
+		custExport.doHighlighted();
+	
+	} //onClick$exportLblId
+
+/*	 public void export(Combobox fileType) throws Exception{
+		 	logger.debug("-- just entered --");
+			String type = exportCbId.getSelectedItem().getLabel();
+			StringBuffer sb = null;
+			String userName = GetUser.getUserName();
+			String usersParentDirectory = (String)PropertyUtil.getPropertyValue("usersParentDirectory");
+			String exportDir = usersParentDirectory + "/" + userName + "/Export/" ;
+			File downloadDir = new File(exportDir);
+			if(downloadDir.exists()){
+				try {
+					FileUtils.deleteDirectory(downloadDir);
+					logger.debug(downloadDir.getName() + " is deleted");
+				} catch (Exception e) {
+					logger.error("Exception ::" , e);
+					
+					logger.debug(downloadDir.getName() + " is not deleted");
+				}
+			}
+			if(!downloadDir.exists()){
+				downloadDir.mkdirs();
+			}
+			
+			if(type.contains("csv")){
+				
+				String key = prgmSearchBoxId.getValue() != null && !prgmSearchBoxId.getValue().isEmpty() ? prgmSearchBoxId.getValue() : null;
+				
+				String filePath = exportDir +  "Loyalty_Reports_" +
+					MyCalendar.calendarToString(Calendar.getInstance(), MyCalendar.FORMAT_YEARTOSEC, clientTimeZone);
+					try {
+							filePath = filePath + "_ProgramReports.csv";
+							logger.debug("Download File path : " + filePath);
+							File file = new File(filePath);
+							BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+							int count = ltyPrgmSevice.getProgramsCount(userId, key);
+							bw.write("\"Program Name\",\"No.of Cards Activated\",\"Issuance\",\"Redemption\",\"Liability Amount\",\"Liability Points\"\r\n");
+							int size = 1000;
+							List<LoyaltyProgram> prgmList = null;
+							for (int i = 0; i < count; i+=size) {
+								sb = new StringBuffer();
+								prgmList = ltyPrgmSevice.getProgList(userId, i, size, key);
+								
+								if(prgmList != null) {
+								if(prgmList.size()>0){
+									for (LoyaltyProgram loyaltyProgram : prgmList) {
+										sb.append("\"");sb.append(loyaltyProgram.getProgramName()); sb.append("\",");
+										int noOfCards = ltyPrgmSevice.getActiveCardsCount(loyaltyProgram.getProgramId(),null);
+										sb.append("\"");sb.append(noOfCards); sb.append("\",");
+										int issuanceCount = ltyPrgmSevice.getIssuanceCount(loyaltyProgram.getProgramId());
+										sb.append("\"");sb.append(issuanceCount); sb.append("\",");
+										int redemptionCount = ltyPrgmSevice.getRedemptionCount(loyaltyProgram.getProgramId());
+										sb.append("\"");sb.append(redemptionCount); sb.append("\",");
+										Object[] obj = ltyPrgmSevice.getLiabilityData(loyaltyProgram.getProgramId(),null);
+										sb.append("\"");sb.append(obj[0]==null ? "":obj[0]); sb.append("\",");
+										sb.append(obj[1]==null?"":obj[1]); sb.append("\r\n");
+									}//TODO
+									
+								}
+								}
+								bw.write(sb.toString());
+								prgmList = null;
+								sb = null;
+								System.gc();
+							}
+							bw.flush();
+							bw.close();
+							Filedownload.save(file, "text/plain");
+						} catch (IOException e) {
+							logger.error("Exception ::",e);
+							
+						}
+						logger.debug("-- exit --");
+			}
+		
+		} // fileDownload
+	*/
+	
+	public void onEvent(Event event) throws Exception {
+
+		super.onEvent(event);
+		if(event.getTarget() instanceof Label ) {
+
+			Label tempLable = (Label)event.getTarget();
+			Row tempRow = (Row)tempLable.getParent();
+			LoyaltyProgram progmObj = (LoyaltyProgram)tempRow.getValue();
+
+			logger.debug("progmObj is  :: "+progmObj);
+			if(progmObj != null){
+				if(userActivitiesDaoForDML!=null) {
+				UserActivities userActivity = new UserActivities("Visited detailed loyalty program report page", "Visited pages", Calendar.getInstance(),userId );
+				userActivitiesDaoForDML.saveOrUpdate(userActivity);
+				}
+				session.setAttribute("PROGRAM_REPORT_DETAILS", progmObj.getProgramId());
+				Redirect.goTo(PageListEnum.LOYALTY_PROGRAM_DETAILED_REPORT);
+			}
+		} else if(event.getTarget() instanceof Paging) {
+
+			String key= prgmSearchBoxId.getValue();
+			Paging paging = (Paging)event.getTarget();
+			int desiredPage = paging.getActivePage();
+			PagingEvent pagingEvent = (PagingEvent) event;
+			int pSize = pagingEvent.getPageable().getPageSize();
+			int ofs = desiredPage * pSize;
+			this.prgmRepListTopPagingId.setActivePage(desiredPage);
+			this.prgmRepListBottomPagingId.setActivePage(desiredPage);
+
+			if(key.trim().length() != 0) {
+				List<LoyaltyProgram> prgmList = ltyPrgmSevice.getProgList(userId,ofs,pSize,key);
+				renderingProgramList(prgmList);
+			}else {
+				List<LoyaltyProgram> prgmList = ltyPrgmSevice.getProgList(userId,ofs,pSize,null);
+				renderingProgramList(prgmList);
+			}
+
+		}
+
+	}
+	
+	 public void onClick$selectAllAnchr$custExport() {
+		 anchorEvent(true);
+	 }
+
+	 public void onClick$clearAllAnchr$custExport() {
+		 anchorEvent(false);
+	 }
+
+	 public void anchorEvent(boolean flag) {
+		 List<Component> chkList = custExport$chkDivId.getChildren();
+		 Checkbox tempChk = null;
+		 for (int i = 0; i < chkList.size(); i++) {
+			 if(!(chkList.get(i) instanceof Checkbox)) continue;
+
+			 tempChk = (Checkbox)chkList.get(i);
+			 tempChk.setChecked(flag);
+
+		 } // for
+	 }
+
+	 public void onClick$selectFieldBtnId$custExport() {
+
+		 custExport.setVisible(false);
+		 List<Component> chkList = custExport$chkDivId.getChildren();
+
+		 int indexes[]=new int[chkList.size()];
+		 
+		 boolean checked=false;
+
+		 for(int i=0;i<chkList.size();i++) {
+			 indexes[i]=-1;
+		 } // for
+
+		 Checkbox tempChk = null;
+
+		 for (int i = 0; i < chkList.size(); i++) {
+			 if(!(chkList.get(i) instanceof Checkbox)) continue;
+
+			 tempChk = (Checkbox)chkList.get(i);
+
+			 if(tempChk.isChecked()) {
+				 indexes[i]=0;
+				 checked=true;
+			 }else{
+					indexes[i]=-1;
+				}
+
+		 } // for
+
+
+		 if( ((Checkbox)custExport$chkDivId.getLastChild()).isChecked()) {
+
+			 checked=true;
+		 }
+
+		 if(checked) {
+
+			 int confirm=Messagebox.show("Do you want to export with selected fields ?", "Confirm",Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION);
+			 if(confirm==1){
+				 try{
+
+					 exportCSV((String)exportCbId.getSelectedItem().getValue(),indexes);
+
+				 }catch(Exception e){
+					 logger.error("Exception caught :: ",e);
+				 }
+			 }
+			 else{
+				 custExport.setVisible(true);
+			 }
+
+		 }
+		 else {
+
+			 MessageUtil.setMessage("Please select atleast one field", "red");
+			 custExport.setVisible(false);
+		 }
+
+	 }
+
+	 private void exportCSV(String value, int[] indexes) {
+		 	logger.debug("-- just entered --");
+			String type = exportCbId.getSelectedItem().getLabel();
+			StringBuffer sb = null;
+			String userName = GetUser.getUserName();
+			String usersParentDirectory = (String)PropertyUtil.getPropertyValue("usersParentDirectory");
+			String exportDir = usersParentDirectory + "/" + userName + "/Export/" ;
+			File downloadDir = new File(exportDir);
+			if(downloadDir.exists()){
+				try {
+					FileUtils.deleteDirectory(downloadDir);
+					logger.debug(downloadDir.getName() + " is deleted");
+				} catch (Exception e) {
+					logger.error("Exception ::" , e);
+					
+					logger.debug(downloadDir.getName() + " is not deleted");
+				}
+			}
+			if(!downloadDir.exists()){
+				downloadDir.mkdirs();
+			}
+			
+			if(type.contains("csv")){
+				
+				String key = prgmSearchBoxId.getValue() != null && !prgmSearchBoxId.getValue().isEmpty() ? prgmSearchBoxId.getValue() : null;
+				
+				String filePath = exportDir +  "Loyalty_Reports_" +
+					MyCalendar.calendarToString(Calendar.getInstance(), MyCalendar.FORMAT_YEARTOSEC, clientTimeZone);
+					try {
+							filePath = filePath + "_ProgramReports.csv";
+							logger.debug("Download File path : " + filePath);
+							File file = new File(filePath);
+							BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+							int count = ltyPrgmSevice.getProgramsCount(userId, key);
+							
+							if(count == 0) {
+								Messagebox.show("No program reports found.","Info", Messagebox.OK,Messagebox.INFORMATION);
+								return;
+							}
+							//bw.write("\"Program Name\",\"No.of Cards Activated\",\"Issuance\",\"Redemption\",\"Liability Amount\",\"Liability Points\"\r\n");
+							 String udfFldsLabel= "";
+
+							 if(indexes[0]==0) {
+								 udfFldsLabel = "\""+"Program Name"+"\""+",";
+							 }
+							 if(indexes[1]==0) {
+								 udfFldsLabel += "\""+"No.of Cards Activated"+"\""+",";
+							 }
+							 if(indexes[2]==0) {
+								 udfFldsLabel += "\""+"Enrollments"+"\""+",";
+							 }	
+							 if(indexes[3]==0) {
+								 udfFldsLabel += "\""+"Issuance"+"\""+",";
+							 }	
+							 if(indexes[4]==0) {
+
+								 udfFldsLabel += "\""+"Redemption"+"\""+",";
+							 }
+							 if(indexes[5]==0) {
+
+								 udfFldsLabel += "\""+"Returns"+"\""+",";
+							 }
+							 if(indexes[6]==0) {
+
+								 udfFldsLabel += "\""+"Store Credit"+"\""+",";
+							 }
+							 if(indexes[7]==0) {
+
+								 udfFldsLabel += "\""+"Liability Currency"+"\""+",";
+							 }
+							 if(indexes[8]==0) {
+
+								 udfFldsLabel += "\""+"Liability Points"+"\""+",";
+							 }
+							 sb = new StringBuffer();
+							 sb.append(udfFldsLabel);
+							 sb.append("\r\n");
+
+							 bw.write(sb.toString());
+							 //System.gc();
+							
+							int size = 1000;
+							List<LoyaltyProgram> prgmList = null;
+							for (int i = 0; i < count; i+=size) {
+								sb = new StringBuffer();
+								prgmList = ltyPrgmSevice.getProgList(userId, i, size, key);
+								
+								if(prgmList != null) {
+								if(prgmList.size()>0){
+									for (LoyaltyProgram loyaltyProgram : prgmList) {
+										Object[] obj = ltyPrgmSevice.getLiabilityData(userId, loyaltyProgram.getProgramId(),null,null,null);
+										if(indexes[0]==0) {
+											sb.append("\"");sb.append(loyaltyProgram.getProgramName()); sb.append("\",");
+										}
+										if(indexes[1]==0) {
+											sb.append("\"");sb.append(obj[0]==null ? "":obj[0]); sb.append("\",");
+										}
+										if(indexes[2]==0) {
+											int enrollCount = ltyPrgmSevice.getEnrollmentsCount(loyaltyProgram.getProgramId(),loyaltyProgram.getUserId());
+											sb.append("\"");sb.append(enrollCount); sb.append("\",");
+										}
+										if(indexes[3]==0) {
+											int issuanceCount = ltyPrgmSevice.getIssuanceCount(loyaltyProgram.getProgramId(),loyaltyProgram.getUserId());
+											sb.append("\"");sb.append(issuanceCount); sb.append("\",");
+										}
+										if(indexes[4]==0) {
+											int redemptionCount = ltyPrgmSevice.getRedemptionCount(loyaltyProgram.getProgramId(),loyaltyProgram.getUserId());
+											sb.append("\"");sb.append(redemptionCount); sb.append("\",");
+										}
+										if(indexes[5]==0) {
+											int reversalCount = ltyPrgmSevice.getReversalCount(loyaltyProgram.getProgramId(),loyaltyProgram.getUserId());
+											sb.append("\"");sb.append(reversalCount); sb.append("\",");
+										}
+										if(indexes[6]==0) {
+											int storeCreditCount = ltyPrgmSevice.getStoreCreditCount(loyaltyProgram.getProgramId(),loyaltyProgram.getUserId());
+											sb.append("\"");sb.append(storeCreditCount); sb.append("\",");
+										}
+										if(indexes[7]==0) {
+											sb.append("\"");sb.append(obj[1]==null ? "":obj[1]); sb.append("\",");
+										}
+										if(indexes[8]==0) {
+											sb.append("\"");sb.append(obj[2]==null?"":obj[2]); sb.append("\"");
+										}
+										sb.append("\r\n");
+									}
+									
+								}
+								}
+								bw.write(sb.toString());
+								prgmList = null;
+								sb = null;
+								//System.gc();
+							}
+							bw.flush();
+							bw.close();
+							Filedownload.save(file, "text/plain");
+						} catch (IOException e) {
+							logger.error("Exception ::",e);
+							
+						}
+						logger.debug("-- exit --");
+			}
+		
+		}
+	
+	public void createWindow()	{
+
+		try {
+
+			Components.removeAllChildren(custExport$chkDivId);
+
+			Checkbox tempChk2 = new Checkbox("Program Name");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+
+
+			tempChk2 = new Checkbox("No.of Cards Activated");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+
+			tempChk2 = new Checkbox("Enrollments");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+
+			tempChk2 = new Checkbox("Issuance");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+
+			tempChk2 = new Checkbox("Redemption");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+			
+			tempChk2 = new Checkbox("Returns");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+			
+			tempChk2 = new Checkbox("Store Credit");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+
+			tempChk2 = new Checkbox("Liability Currency");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+
+			tempChk2 = new Checkbox("Liability Points");
+			tempChk2.setSclass("custCheck");
+			tempChk2.setParent(custExport$chkDivId);
+			tempChk2.setChecked(true);
+
+		} catch (Exception e) {
+			logger.error("Exception ::", e);
+		}
+	}
+}

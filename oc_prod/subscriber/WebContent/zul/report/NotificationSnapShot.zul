@@ -1,0 +1,124 @@
+<zk>
+	<window width="100%" id="notificationSnapshotWinId" apply="org.mq.marketer.campaign.controller.report.NotificationSnapshotController" xmlns:h="http://www.zkoss.org/2005/zk/native">
+	
+	
+	<groupbox sclass="gbStyle" closable="false" >
+				<caption label="Snapshot"  />
+				
+	<div style="padding-top:20px;" visible="false">
+	<label value="Consolidated Views" style="font-weight:bold;" />
+	</div>
+	
+	<div visible="false">
+         <chart id="plot1"  width="650px" showTooltiptext="true" 
+        		showLegend="true"  orient="vertical" paneColor="#FFFFFF" type="line" 
+        		fgAlpha="250" xAxis="Hours" yAxis="No. of Opens, Clicks" />
+	
+	</div>	
+				
+			<label value="Consolidated Metrics" style="font-weight:bold;padding-top:20px;" />
+		
+		
+			<h:table width="100%">
+				<h:tr>
+					<h:td bgcolor="#F2F6F9" width="620px">
+					
+					
+					<h:table width="100%" style="border:0px;" >
+
+				  		 	<h:tr>
+				  		 	
+				  		 		<h:td>
+				  		 			<label id="configLblId" value="Configured: " style="font-weight:bold;"/><label value="0" id="configuredCountId"/>
+				  		 		</h:td>
+				  		 		<h:td>
+				  		 			<label id="statusLblId1"  style="font-weight:bold;"/><label id="statusLblValueId1"  />
+				  		 		</h:td>
+				  		 		<h:td>
+				  		 			<label id="undeliveredLblId1"  style="font-weight:bold;"/><label id="undeliveredLblValueId1"   />
+				  		 		</h:td>			 		
+				  		 		
+				  		 		
+				  		 	</h:tr>
+				  		 	<h:tr height="10"/>
+				  		 	 <h:td>
+				  		 			<label value="Non-subscription Count: " style="font-weight:bold;cursor:pointer;" 
+				  		 				tooltiptext="Number of subscribers who did not receive this campaign because of their subscription preference setting." 
+				  		 				visible="false" id="prefCount"/>
+				  		 				<label value="" id="preferenceCountId" />
+				  		 		</h:td>
+				  		 	<h:tr height="10"/>		
+				  		 	<h:tr>
+				  		 		
+				  		 				  		 		
+				  		 		<h:td>
+				  		 			<label value="Suppressed: " tooltiptext="Total contact's blocked from being sent notification campaign to, &#x0a;based upon bounced contacts data from previous campaign reports or manual suppression by user.&#x0a; It is an approximate count on the configured list" style="font-weight:bold;"/><label value="0" id="suppressCountId"/>
+				  		 		</h:td>
+				  		 		<h:td />
+				  		 		<h:td />
+				  		 		
+				  		 		
+				  		 </h:tr>
+				  		 	<h:tr height="10"/>	
+				  		 	<h:tr>
+				  		 		
+				  		 				  		 		
+				  		 		<h:td>
+				  		 			<label value="Sent: " tooltiptext="Specifies actual sent count." style="font-weight:bold;"/><label value="0" id="sentCountId"/>
+				  		 		</h:td>
+				  		 		<h:td>
+				  		 			<label id="statusLblId2"  style="font-weight:bold;"/><label id="statusLblValueId2"   />
+				  		 		</h:td>
+				  		 		<h:td>
+				  		 			<label id="undeliveredLblId2"  style="font-weight:bold;"/><label id="undeliveredLblValueId2"   />
+				  		 		</h:td>
+				  		 		
+				  		 		
+				  		 </h:tr>
+				  		 <h:tr height="10"/>
+				  		 <h:tr>
+				  		 		<h:td>
+				  		 			<label value="Delivered: " tooltiptext="Received by the recipient." style="font-weight:bold;"/><label id="deliveredId"  value="0" />
+				  		 		</h:td>	
+				  		 		<h:td>
+				  		 			<label id="statusLblId3"  style="font-weight:bold;"/><label id="statusLblValueId3"   />
+				  		 		</h:td>
+				  		 		<h:td>
+				  		 			<label id="undeliveredLblId3"  style="font-weight:bold;"/><label id="undeliveredLblValueId3"   />
+				  		 		</h:td>
+				  		 		
+				  		 		
+				  		 </h:tr>	
+				  		 <h:tr height="10"/>
+				  		 <h:tr>
+				  		 		<h:td>
+				  		 			<label value="Unique Clicks: "  style="font-weight:bold;"/><label id="clickRate"  value="0" />
+				  		 		</h:td>	
+				  		 		<h:td>
+				  		 			<label id="statusOthersLblId"  style="font-weight:bold;"/><label id="statusOthersLblValueId"   />
+				  		 		</h:td>
+				  		 		<h:td>
+				  		 			<label id="undeliveredOthersLblId"  style="font-weight:bold;"/><label id="undeliveredOthersLblValueId"   />
+				  		 		</h:td>
+				  		 		
+				  		 		
+				  		 </h:tr>	
+				  	</h:table>
+				  		 	
+				  		 	</h:td>
+					<h:td style="padding-left:20px;"   >
+					
+					
+					<flashchart  height="200" width="300px" id="mychart" type="pie" style="cursor:normal; float:left;" />
+					</h:td>
+					 </h:tr>
+			
+			
+			</h:table>	
+			</groupbox>
+			
+	
+	</window>
+	</zk>
+	
+		

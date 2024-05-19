@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.Coupons"
+		table="coupons">
+		<id name="couponId" type="java.lang.Long" column="coupon_id">
+			<generator class="native" />
+		</id>
+		
+		<property name="couponName" type="string">
+			<column name="coupon_name" not-null="true"/>
+		</property>
+		<property name="couponDescription" type="string">
+			<column name="coupon_description" />
+		</property>
+		<property name="couponCode" type="string">
+			<column name="coupon_code"  />
+		</property>
+		<property name="status" type="string">
+			<column name="coupon_status" />
+		</property>
+		<property name="useasReferralCode" type="boolean">
+			<column name="use_as_referral_code" default="false" />
+		</property>
+		
+
+
+		<property name="couponGeneratedType" type="string">
+			<column name="coupon_gen_type" />
+		</property>
+		
+		
+		<property name="discountType" type="string">
+			<column name="discount_type" />
+		</property>
+		
+		<property name="discountCriteria" type="string">
+			<column name="discount_criteria" />
+		</property>
+		
+		
+		<property name="totalQty" type="long">
+			<column name="total_qty" />
+		</property>
+		<property name="generatedQty" type="long">
+			<column name="generated_qty" />
+		</property>
+		<property name="orgId" type="long">
+			<column name="org_id" />
+		</property>
+		<!-- <property name="createUser" type="string">
+			<column name="create_user" />
+		</property> -->
+		
+		<property name="userCreatedDate" type="calendar">
+			<column name="user_created_coupon_date" />
+		</property>
+		
+		<property name="lastModifiedUser" type="string">
+			<column name="last_modified_user" />
+		</property>
+		
+		<property name="userLastModifiedDate" type="calendar">
+			<column name="user_last_modified_date" />
+		</property>
+		
+		<property name="couponCreatedDate" type="calendar">
+			<column name="coupon_created_date" />
+		</property>
+		<property name="couponExpiryDate" type="calendar">
+			<column name="coupon_expiry_date" />
+		</property>
+		
+		<property name="autoIncrCheck" type="boolean">
+			<column name="auto_increment_check" default="false" />
+		</property>
+		<property name="issued" type="long">
+			<column name="issued" />
+		</property>
+		
+		<property name="redeemed" type="long">
+			<column name="redeemed" />
+		</property>
+		
+		<property name="available" type="long">
+			<column name="available" />
+		</property>
+		<property name="totDiscount" type="double">
+			<column name="tot_discount" />
+		</property>
+		<property name="totRevenue" type="double">
+			<column name="tot_revenue" />
+		</property>
+		<property name="userId" type="long">
+			<column name="user_id" />
+		</property>
+		<property name="requiredLoyltyPoits" type="int">
+			<column name="required_loylty_points" />
+		</property>
+		
+		
+		<property name="usedLoyaltyPoints" type="double">
+			<column name="used_loyalty_points" />
+		</property>
+		<!--Bar code types -->
+		<property name="enableBarcode" type="boolean">
+			<column name="enable_barcode" default="false" />
+		</property>
+		<property name="barcodeType" type="string">
+			<column name="barcode_type" />
+		</property>
+		<property name="barcodeWidth" type="long">
+			<column name="barcode_width" />
+		</property>
+		<property name="barcodeHeight" type="long">
+			<column name="barcode_height" />
+		</property>
+		
+		<property name="singPromoContUnlimitedRedmptChk" type="boolean">
+			<column name="single_promo_cont_limit_redem_chk" default="false" />
+		</property>
+		<property name="singPromoContRedmptLimit" type="long">
+			<column name="single_promo_cont_redeem_limit" />
+		</property>
+		
+		
+		<property name="allStoreChk" type="boolean">
+			<column name="all_store_chk" default="false" />
+		</property>
+		<property name="selectedStores" type="string">
+			<column name="selected_stores" />
+		</property>
+		
+		<property name="expiryType" type="string">
+			<column name="expiry_type" />
+		</property>
+		
+		<property name="expiryDetails" type="string">
+			<column name="expiry_details" />
+		</property>
+		<property name="coupCodeGenType" type="string">
+			<column name="coupcode_gen_type" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

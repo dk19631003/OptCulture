@@ -1,0 +1,92 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="autoProgramElapseTimerEvantWinId" apply="org.mq.marketer.campaign.controller.program.AutoProgramElapseTimerEventController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native" width="520px" height="300px" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+		<div id="centerDivId" height="300px"> 
+			<h:table width="100%" height="100%" >
+			<h:tbody>
+				
+			<h:tr>
+				<h:td style="padding:20px; background-color: #F4F8FC;">
+					<label width="150px" style="font-family:arial;font-size:12px;" multiline="true">
+						->This component acts as a wait Timer where the contact asked to be wait till 
+						the completion of the configured period.
+						
+						->The Drop Down consists of the numbers specifying the number of Days or Hours.
+						
+						->The one more Drop Down consists of the two options among You need to select one. 
+					</label>
+				</h:td>				
+			</h:tr>
+			<h:tr >
+				<h:td valign="top">
+					
+					
+					<label value="Wait For:" style="font-weight:bold;"/>
+					
+					
+					
+					
+					
+					
+					
+					<!--<listbox id="elapseDaysLbId" mold="select"  
+					  sclass="contactsView" width="100px" >
+					  
+					  <listitem  forEach="${autoProgramElapseTimerEvantWinId$AutoProgramElapseTimerEventController.elapseDays}" 
+					  	label="${each.}" value="${each}" style="line-height:22px;">
+					  	
+						</listitem>
+					  
+					  
+					  
+					  </listbox>
+					  
+					  --><listbox id="elapseDaysLbId" mold="select" >
+						<listitem  label="0(Immediately)" value="0" selected="true"></listitem>
+						<listitem label="1" value="1"></listitem>
+						<listitem label="2" value="2"></listitem>
+						<listitem label="3" value="3"></listitem>
+						<listitem label="4" value="4"></listitem>
+						<listitem label="5" value="5"></listitem>
+						<listitem label="6" value="6"></listitem>
+						<listitem label="7" value="7"></listitem>
+						<listitem label="8" value="8"></listitem>
+						<listitem label="9" value="9"></listitem>
+						<listitem label="10" value="10"></listitem>
+						<listitem label="11" value="11"></listitem>
+						<listitem label="12" value="12"></listitem>
+						<listitem label="13" value="13"></listitem>
+						<listitem label="14" value="14"></listitem>
+						<listitem label="15" value="15"></listitem>
+						<listitem label="16" value="16"></listitem>
+						<listitem label="17" value="17"></listitem>
+						<listitem label="18" value="18"></listitem>
+						<listitem label="19" value="19"></listitem>
+						<listitem label="20" value="20"></listitem>
+					</listbox>
+					 <listbox id="hoursDaysLbId" width="100px" mold="select">
+						<listitem label="hour(s)" value="60" selected="true"></listitem>
+						<listitem label="day(s)" value="1440" ></listitem>
+					</listbox>	
+					  <!--<label value="Days" style="font-weight:bold;"/>
+				--></h:td>
+			</h:tr>
+			
+			</h:tbody>
+			</h:table>
+		</div>
+		
+		
+		<!-- <h:hr/>
+		<div id="bottomDivId" align="right" height="60px" >
+			<button label="Cancel" width="80px" onClick="propertiesWinId.setVisible(false);" />
+			<button label="Save" width="80px" />
+		</div> -->
+		
+		
+		
+		
+	</window>
+</zk>

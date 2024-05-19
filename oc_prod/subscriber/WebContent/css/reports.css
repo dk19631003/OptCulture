@@ -1,0 +1,69 @@
+
+.pagehead {
+   align:left;
+   padding-left:10px;
+   font-size: small;
+   font-family: Verdana, Geneva, sans-serif;
+   text-align: justify;
+   font-style: bold;
+   font-variant: small-caps;
+}
+
+.subpagehead{
+  font-family: Helvetica, Arial,"Luxi Sans", sans-serif;
+  font-size: 14px; 
+}
+
+.bluetext {
+    font-family:verdena,Arial,sans-serif;
+	color:#2B7399;
+	font-size:12px;
+}
+
+.num {
+    font-family:verdena,Arial,sans-serif;
+	color:#5D5D5D;
+	font-size:12px;  
+}
+
+.leftlinks {
+	font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif;
+	font-size:12px;
+	font-weight:bold;
+	color: #222;
+	text-decoration:none;
+	margin-bottom:3px;
+}	
+.lefttext {
+	color:#444444;
+	font-size:11px;
+	position:relative;
+	top:3px;
+}
+
+.tabmenusel {
+	background-color:#EEEEEE;	
+}
+
+.tabmenu a{
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:13px;
+	font-weight:bold;
+	color: #7F7F7F;
+	text-decoration: none;
+	padding:5px;
+}
+.tabmenusel a{
+	color:#276F97;
+}
+
+.ulstyle li {
+    //border-bottom : 1px #7F7F7F solid;
+    padding: 4px 0px;
+}
+
+.reportHeader{
+	color:#276F97;
+	font-size:13px;
+	font-weight:bold;
+}

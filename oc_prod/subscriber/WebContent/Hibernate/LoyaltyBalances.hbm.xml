@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyBalance"
+		table="loyalty_balance">
+	
+
+		<id name="lbId" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<property name="orgId" type="java.lang.Long">
+			<column name="org_id"  />
+		</property>
+		
+		<property name="userId" type="long">
+			<column name="user_id"  />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date"  />
+		</property>
+		
+		<property name="valueCode" type="string">
+			<column name="value_code"  />
+		</property>
+		
+		<property name="balance" type="long">
+			<column name="balance"  />
+		</property>
+		
+		<property name="loyaltyId" type="long">
+			<column name="loyalty_id"  />
+		</property>
+		
+		<property name="memberShipNumber" type="string">
+			<column name="membership_number"  />
+		</property>
+	
+		<property name="totalEarnedBalance" type="double">
+			<column name="total_earn_balance"  />
+		</property>
+
+		<property name="totalRedeemedBalance" type="double">
+			<column name="total_redeemed_balance"  />
+		</property>
+	
+		<property name="totalExpiredBalance" type="double">
+			<column name="total_expired_balance"  />
+		</property>
+	
+		<property name="programId" type="long">
+			<column name="program_id"  />
+		</property>
+	
+	
+					
+	 
+	</class>
+	
+	
+	
+</hibernate-mapping>

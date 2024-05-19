@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:53:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UsersAdditionalContactDetails"
+		table="users_additional_contact_details">
+		<id name="additionalContactId" type="java.lang.Long" column="additional_contact_id">
+			<generator class="native" />
+		</id>
+		<property name="name" type="string" column="name"/>
+		<property name="number" type="string" column="number"/>
+		<property name="email" type="string" column="email"/>
+		<property name="position" type="string" column="position"/>
+		<property name="priorityLevel" type="java.lang.Integer" column="priority_level"/>
+		<property name="userId" type="java.lang.Long" column="user_id" />
+	</class>
+</hibernate-mapping>
+

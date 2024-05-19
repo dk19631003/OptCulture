@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.MQSRequest" table="mqs_request">
+    <id name="id" type="java.lang.Long">
+      <column name="id"/>
+      <generator class="native"/>
+    </id>
+    <property name="refNumber" type="text">
+      <column name="ref_number" not-null="true"/>
+    </property>
+    <property name="service" type="string">
+      <column name="service" not-null="true"/>
+    </property>
+	<property name="status" type="string">
+      <column name="status"  length="50"/>
+    </property>
+    <property name="date" type="timestamp">
+      <column name="date" />
+    </property>
+    <property name="reqestXML" type="string">
+      <column name="reqestXML"  length="100"/>
+    </property>
+    <property name="responseXML" type="text">
+      <column name="responseXML"  />
+    </property>
+  </class>
+</hibernate-mapping>

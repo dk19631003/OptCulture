@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DigitalReceipt_Requests">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="DigitalReceipts">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Items" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Item">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="DCS" type="xs:string" />
+                          <xs:element name="VendorCode" type="xs:string" />
+                          <xs:element name="Desc1" type="xs:string" />
+                          <xs:element name="Desc2" type="xs:string" />
+                          <xs:element name="Attr" type="xs:string" />
+                          <xs:element name="Size" type="xs:string" />
+                          <xs:element name="UPC" type="xs:string" />
+                          <xs:element name="ALU" type="xs:string" />
+                          <xs:element name="UDF0" type="xs:string" />
+                          <xs:element name="UDF1" type="xs:string" />
+                          <xs:element name="UDF2" type="xs:string" />
+                          <xs:element name="UDF3" type="xs:string" />
+                          <xs:element name="TaxCd" type="xs:string" />
+                          <xs:element name="TaxPrc" type="xs:string" />
+                          <xs:element name="Tax" type="xs:string" />
+                          <xs:element name="Qty" type="xs:string" />
+                          <xs:element name="InvcItemPrc" type="xs:string" />
+                          <xs:element name="DocItemDisc" type="xs:string" />
+                          <xs:element name="DCSName" type="xs:string" />
+                          <xs:element name="ExtPrc" type="xs:string" />
+                          <xs:element name="DocItemDiscLvl" type="xs:string" />
+                          <xs:element name="DocItemOrigPrc" type="xs:string" />
+                          <xs:element name="DocItemOrigTax" type="xs:string" />
+                          <xs:element name="Clerk" type="xs:string" />
+                          <xs:element name="ItemLookup" type="xs:string" />
+                          <xs:element name="PrcLvl" type="xs:string" />
+                          <xs:element name="ItemSID" type="xs:string" />
+                          <xs:element name="DocItemDiscAmt" type="xs:string" />
+                          <xs:element name="FC1Prc" type="xs:string" />
+                          <xs:element name="StyleSID" type="xs:string" />
+                          <xs:element name="Desc3" type="xs:string" />
+                          <xs:element name="Desc4" type="xs:string" />
+                          <xs:element name="InvnAUX0" type="xs:string" />
+                          <xs:element name="InvnAUX1" type="xs:string" />
+                          <xs:element name="InvnAUX2" type="xs:string" />
+                          <xs:element name="InvnAUX3" type="xs:string" />
+                          <xs:element name="InvnAUX4" type="xs:string" />
+                          <xs:element name="InvnAUX5" type="xs:string" />
+                          <xs:element name="InvnAUX6" type="xs:string" />
+                          <xs:element name="InvnAUX7" type="xs:string" />
+                          <xs:element name="InvnUDFStr" type="xs:string" />
+                          <xs:element name="InvnUDFDate" type="xs:string" />
+                          <xs:element name="DocItemRndDisc" type="xs:string" />
+                          <xs:element name="ExtOrigPrc" type="xs:string" />
+                          <xs:element name="TotalTax" type="xs:string" />
+                          <xs:element name="Tax2Prc" type="xs:string" />
+                          <xs:element name="Tax2" type="xs:string" />
+                          <xs:element name="Tax2Cd" type="xs:string" />
+                          <xs:element name="Tax1Cd" type="xs:string" />
+                          <xs:element name="TaxArea2" type="xs:string" />
+                          <xs:element name="SeqNum" type="xs:string" />
+                          <xs:element name="ExtTax" type="xs:string" />
+                          <xs:element name="ExtTax2" type="xs:string" />
+                          <xs:element name="ExtTotalTax" type="xs:string" />
+                          <xs:element name="DiscountPercentWithTax" type="xs:string" />
+                          <xs:element name="DiscountAmountWithTax" type="xs:string" />
+                          <xs:element name="FCOriginalPrice" type="xs:string" />
+                          <xs:element name="FCOriginalPriceWithTax" type="xs:string" />
+                          <xs:element name="FCOriginalExtendedPrice" type="xs:string" />
+                          <xs:element name="FCOriginalExtendedPriceWithTax" type="xs:string" />
+                          <xs:element name="FCPrice" type="xs:string" />
+                          <xs:element name="FCPriceWithTax" type="xs:string" />
+                          <xs:element name="FCExtendedPrice" type="xs:string" />
+                          <xs:element name="FCExtendedPriceWithTax" type="xs:string" />
+                          <xs:element name="SerialNum" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="CreditCard" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="CreditCards" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Amount" type="xs:string" />
+                          <xs:element name="Number" type="xs:string" />
+                          <xs:element name="ExpMonth" type="xs:string" />
+                          <xs:element name="ExpYear" type="xs:string" />
+                          <xs:element name="Type" type="xs:string" />
+                          <xs:element name="Authorization" type="xs:string" />
+                          <xs:element name="ReferenceNumber" type="xs:string" />
+                          <xs:element name="ControlNum" type="xs:string" />
+                          <xs:element name="CardPresent" type="xs:string" />
+                          <xs:element name="AVSCode" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Cash" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="COD" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Deposit" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="FC" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                    <xs:element name="FCName" type="xs:string" />
+                    <xs:element name="Take" type="xs:string" />
+                    <xs:element name="Give" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Check" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                    <xs:element name="Number" type="xs:string" />
+                    <xs:element name="FirstName" type="xs:string" />
+                    <xs:element name="LastName" type="xs:string" />
+                    <xs:element name="WorkPhone" type="xs:string" />
+                    <xs:element name="HomePhone" type="xs:string" />
+                    <xs:element name="StateCode" type="xs:string" />
+                    <xs:element name="Company" type="xs:string" />
+                    <xs:element name="DriverLicense" type="xs:string" />
+                    <xs:element name="DriverLicenseExp" type="xs:string" />
+                    <xs:element name="DateOfBirth" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Gift" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="clsGiftCertificate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Amount" type="xs:string" />
+                          <xs:element name="GiftNum" type="xs:string" />
+                          <xs:element name="GiftPurchase" type="xs:string" />
+                          <xs:element name="GiftPayment" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="GiftCard" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="clsGiftCard" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Amount" type="xs:string" />
+                          <xs:element name="Number" type="xs:string" />
+                          <xs:element name="ExpMonth" type="xs:string" />
+                          <xs:element name="ExpYear" type="xs:string" />
+                          <xs:element name="Authorization" type="xs:string" />
+                          <xs:element name="Balance" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="DebitCard" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="clsDebitcard" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Amount" type="xs:string" />
+                          <xs:element name="Number" type="xs:string" />
+                          <xs:element name="ExpMonth" type="xs:string" />
+                          <xs:element name="ExpYear" type="xs:string" />
+                          <xs:element name="Authorization" type="xs:string" />
+                          <xs:element name="ReferenceNumber" type="xs:string" />
+                          <xs:element name="Tracenum" type="xs:string" />
+                          <xs:element name="Fee" type="xs:string"/>
+                          <xs:element name="AmtPlusFee" type="xs:string" />
+                          <xs:element name="CashBackAmount" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="StoreCredit" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="clsStoreCredit" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Amount" type="xs:string" />
+                          <xs:element name="NewStoreCredit" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Charge" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                    <xs:element name="NetDays" type="xs:string" />
+                    <xs:element name="DiscDays" type="xs:string" />
+                    <xs:element name="DiscPercent" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Payments" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="clsPayments" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Amount" type="xs:string" />
+                          <xs:element name="PaymentDate" type="xs:string" />
+                          <xs:element name="Remark" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="TravelerCheck" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                    <xs:element name="Number" type="xs:string" />
+                    <xs:element name="FirstName" type="xs:string" />
+                    <xs:element name="LastName" type="xs:string" />
+                    <xs:element name="WorkPhone" type="xs:string" />
+                    <xs:element name="HomePhone" type="xs:string" />
+                    <xs:element name="StateCode" type="xs:string" />
+                    <xs:element name="Company" type="xs:string" />
+                    <xs:element name="DriverLicense" type="xs:string" />
+                    <xs:element name="DriverLicenseExp" type="xs:string" />
+                    <xs:element name="DateOfBirth" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="FCCheck" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Amount" type="xs:string" />
+                    <xs:element name="Number" type="xs:string" />
+                    <xs:element name="FirstName" type="xs:string" />
+                    <xs:element name="LastName" type="xs:string" />
+                    <xs:element name="WorkPhone" type="xs:string" />
+                    <xs:element name="HomePhone" type="xs:string" />
+                    <xs:element name="StateCode" type="xs:string" />
+                    <xs:element name="Company" type="xs:string" />
+                    <xs:element name="DriverLicense" type="xs:string" />
+                    <xs:element name="DriverLicenseExp" type="xs:string" />
+                    <xs:element name="DateOfBirth" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Receipt">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="InvcHdrNotes" type="xs:string" />
+                    <xs:element name="Tax" type="xs:string" />
+                    <xs:element name="TaxPrc" type="xs:string" />
+                    <xs:element name="DiscPrc" type="xs:string" />
+                    <xs:element name="Discount" type="xs:string" />
+                    <xs:element name="InvcComment1" type="xs:string" />
+                    <xs:element name="InvcComment2" type="xs:string" />
+                    <xs:element name="TaxArea" type="xs:string" />
+                    <xs:element name="TaxRebatePrc" type="xs:string" />
+                    <xs:element name="TaxRebate" type="xs:string" />
+                    <xs:element name="ItemsCount" type="xs:string" />
+                    <xs:element name="Shipping" type="xs:string" />
+                    <xs:element name="Fee" type="xs:string" />
+                    <xs:element name="ShippingPrc" type="xs:string" />
+                    <xs:element name="FeeType" type="xs:string" />
+                    <xs:element name="FeeTaxPrc" type="xs:string" />
+                    <xs:element name="TaxOnFeeShip" type="xs:string" />
+                    <xs:element name="InvcRoundAmt" type="xs:string" />
+                    <xs:element name="InvcTotalRoundAmt" type="xs:string" />
+                    <xs:element name="InvcTotalOfLineDisc" type="xs:string" />
+                    <xs:element name="Subtotal" type="xs:string" />
+                    <xs:element name="Total" type="xs:string" />
+                    <xs:element name="SerialNo" type="xs:string" />
+                    <xs:element name="InvcHdrRcptStatus" type="xs:string" />
+                    <xs:element name="InvcHdrRcptType" type="xs:string" />
+                    <xs:element name="Cashier" type="xs:string" />
+                    <xs:element name="DocDate" type="xs:string" />
+                    <xs:element name="InvcNum" type="xs:string" />
+                    <xs:element name="Clerk" type="xs:string" />
+                    <xs:element name="BillToCustNumber" type="xs:string" />
+                    <xs:element name="BillToCustCompany" type="xs:string" />
+                    <xs:element name="BillToFName" type="xs:string" />
+                    <xs:element name="BillToLName" type="xs:string" />
+                    <xs:element name="BillToTitle" type="xs:string" />
+                    <xs:element name="BillToAddr1" type="xs:string" />
+                    <xs:element name="BillToAddr2" type="xs:string" />
+                    <xs:element name="BillToAddr3" type="xs:string" />
+                    <xs:element name="BillToZip" type="xs:string" />
+                    <xs:element name="BillToInfo1" type="xs:string" />
+                    <xs:element name="BillToInfo2" type="xs:string" />
+                    <xs:element name="ShipToCustNumber" type="xs:string" />
+                    <xs:element name="ShipToCustCompany" type="xs:string" />
+                    <xs:element name="ShipToFName" type="xs:string" />
+                    <xs:element name="ShipToLName" type="xs:string" />
+                    <xs:element name="ShipToTitle" type="xs:string" />
+                    <xs:element name="ShipToAddr1" type="xs:string" />
+                    <xs:element name="ShipToAddr2" type="xs:string" />
+                    <xs:element name="ShipToAddr3" type="xs:string" />
+                    <xs:element name="ShipToZip" type="xs:string" />
+                    <xs:element name="ShipToInfo1" type="xs:string" />
+                    <xs:element name="ShipToInfo2" type="xs:string" />
+                    <xs:element name="BillToCustSID" type="xs:string" />
+                    <xs:element name="ShipToCustSID" type="xs:string" />
+                    <xs:element name="BillToFullName" type="xs:string" />
+                    <xs:element name="ShipToFullName" type="xs:string" />
+                    <xs:element name="Workstation" type="xs:string" />
+                    <xs:element name="DocTime" type="xs:string" />
+                    <xs:element name="SONumber" type="xs:string" />
+                    <xs:element name="SOType" type="xs:string" />
+                    <xs:element name="Flag1" type="xs:string" />
+                    <xs:element name="Flag2" type="xs:string" />
+                    <xs:element name="Flag3" type="xs:string" />
+                    <xs:element name="BillToPhone1" type="xs:string" />
+                    <xs:element name="BillToPhone2" type="xs:string" />
+                    <xs:element name="ShipToPhone1" type="xs:string" />
+                    <xs:element name="ShipToPhone2" type="xs:string" />
+                    <xs:element name="SOCustPONumber" type="xs:string" />
+                    <xs:element name="StoreHeading1" type="xs:string" />
+                    <xs:element name="StoreHeading2" type="xs:string" />
+                    <xs:element name="StoreHeading3" type="xs:string" />
+                    <xs:element name="Tender" type="xs:string" />
+                    <xs:element name="Store" type="xs:string" />
+                    <xs:element name="TrackingNum" type="xs:string" />
+                    <xs:element name="CredLim" type="xs:string" />
+                    <xs:element name="InvcTotalQty" type="xs:string" />
+                    <xs:element name="TotalFC1" type="xs:string" />
+                    <xs:element name="StoreHeading4" type="xs:string" />
+                    <xs:element name="StoreHeading5" type="xs:string" />
+                    <xs:element name="StoreHeading6" type="xs:string" />
+                    <xs:element name="PrcLvl" type="xs:string" />
+                    <xs:element name="ExtOrigPrc" type="xs:string" />
+                    <xs:element name="TaxArea2" type="xs:string" />
+                    <xs:element name="TotalTax" type="xs:string" />
+                    <xs:element name="Tax2" type="xs:string" />
+                    <xs:element name="Tax2Prc" type="xs:string" />
+                    <xs:element name="ChargeDueDate" type="xs:string" />
+                    <xs:element name="ShipToAux12" type="xs:string" />
+                    <xs:element name="ShipToAux11" type="xs:string" />
+                    <xs:element name="ShipToAux10" type="xs:string" />
+                    <xs:element name="ShipToAux9" type="xs:string" />
+                    <xs:element name="ShipToAux8" type="xs:string" />
+                    <xs:element name="ShipToAux7" type="xs:string" />
+                    <xs:element name="ShipToAux6" type="xs:string" />
+                    <xs:element name="ShipToAux5" type="xs:string" />
+                    <xs:element name="ShipToAux4" type="xs:string" />
+                    <xs:element name="ShipToAux3" type="xs:string" />
+                    <xs:element name="ShipToAux2" type="xs:string" />
+                    <xs:element name="ShipToAux1" type="xs:string" />
+                    <xs:element name="BillToAux12" type="xs:string" />
+                    <xs:element name="BillToAux11" type="xs:string" />
+                    <xs:element name="BillToAux10" type="xs:string" />
+                    <xs:element name="BillToAux9" type="xs:string" />
+                    <xs:element name="BillToAux8" type="xs:string" />
+                    <xs:element name="BillToAux7" type="xs:string" />
+                    <xs:element name="BillToAux6" type="xs:string" />
+                    <xs:element name="BillToAux5" type="xs:string" />
+                    <xs:element name="BillToAux4" type="xs:string" />
+                    <xs:element name="BillToAux3" type="xs:string" />
+                    <xs:element name="BillToAux2" type="xs:string" />
+                    <xs:element name="BillToAux1" type="xs:string" />
+                    <xs:element name="BillToUDF8" type="xs:string" />
+                    <xs:element name="BillToUDF7" type="xs:string" />
+                    <xs:element name="BillToUDF6" type="xs:string" />
+                    <xs:element name="BillToUDF5" type="xs:string" />
+                    <xs:element name="BillToUDF4" type="xs:string" />
+                    <xs:element name="BillToUDF3" type="xs:string" />
+                    <xs:element name="BillToUDF2" type="xs:string" />
+                    <xs:element name="ShipToUDF8" type="xs:string" />
+                    <xs:element name="ShipToUDF7" type="xs:string" />
+                    <xs:element name="ShipToUDF6" type="xs:string" />
+                    <xs:element name="ShipToUDF5" type="xs:string" />
+                    <xs:element name="ShipToUDF4" type="xs:string" />
+                    <xs:element name="ShipToUDF3" type="xs:string" />
+                    <xs:element name="ShipToUDF2" type="xs:string" />
+                    <xs:element name="BillToUDF1" type="xs:string" />
+                    <xs:element name="ShipToUDF1" type="xs:string" />
+                    <xs:element name="BillToEMail" type="xs:string" />
+                    <xs:element name="ShipToEMail" type="xs:string" />
+                    <xs:element name="RefDocSID" type="xs:string" />
+                    <xs:element name="DocSID" type="xs:string" />
+                    <xs:element name="ShippingName" type="xs:string" />
+                    <xs:element name="Tendered" type="xs:string" />
+                    <xs:element name="Change" type="xs:string" />
+                    <xs:element name="TotalSavings" type="xs:string" />
+                    <xs:element name="GiftCardTotal" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="UserDetails">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="UserName" type="xs:string" />
+                    <xs:element name="Organisation" type="xs:string" />
+                    <xs:element name="Token" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.LoyaltyProgramExclusion"
+		table="loyalty_program_exclusion">
+	
+		<id name="exclusionId" type="java.lang.Long">
+			<column name="exclusion_id" />
+			<generator class="native" />
+		</id>
+		<property name="programId" type="java.lang.Long">
+			<column name="program_id" not-null="true"/>
+		</property>
+		
+		<property name="issuanceWithPromoFlag" type="char">
+			<column name="issuance_with_promo_flag" />
+		</property>
+		
+		<property name="issuancePromoIdStr" type="string">
+			<column name="issuance_promo_id_str" />
+		</property>
+		
+		<property name="redemptionWithPromoFlag" type="char">
+			<column name="redemption_with_promo_flag" />
+		</property>
+		
+		<property name="redemptionPromoIdStr" type="string">
+			<column name="redemption_promo_id_str"/>
+		</property>
+		<property name="storeNumberStr" type="string">
+			<column name="store_number_str"/>
+		</property>
+		<property name="itemCatStr" type="string">
+			<column name="item_cat_str"/>
+		</property>
+		<property name="deptCodeStr" type="string">
+			<column name="dept_code_str"/>
+		</property>
+		<property name="classStr" type="string">
+			<column name="class_str"/>
+		</property>
+		<property name="subClassStr" type="string">
+			<column name="sub_class_str"/>
+		</property>
+		<property name="dcsStr" type="string">
+			<column name="dcs_str"/>
+		</property>
+		<property name="vendorStr" type="string">
+			<column name="vendor_str"/>
+		</property>
+		<property name="skuNumStr" type="string">
+			<column name="sku_num_str"/>
+		</property>
+		<property name="dateStr" type="string">
+			<column name="date_str"/>
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" not-null="true"/>
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" not-null="true"/>
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date"/>
+		</property>
+		<property name="modifiedBy" type="string">
+			<column name="modified_by"/>
+		</property>
+		
+	</class>
+</hibernate-mapping>

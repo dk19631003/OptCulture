@@ -1,0 +1,85 @@
+.background
+{
+    --ion-background-color: transparent !important;
+}
+
+
+
+.Request-Ride {
+ 
+
+  font-size: 20px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.35;
+  letter-spacing: 0px;
+  text-align: left;
+  color: #16161d;
+}
+  .FORGOT-YOUR-PASSWORD {
+    
+    font-size: 10px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.36;
+    letter-spacing: normal;
+    text-align: left;
+    color: #444444;
+  }
+
+  .LOGIN-USING-OTP
+  {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+   
+    font-size: 15px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.36;
+    letter-spacing: normal;
+    text-align: left;
+    color: #444444;
+  }
+  
+  body.keyboard-is-open .hide-on-keyboard-open {
+    display: none;
+  }
+  
+  body.keyboard-is-open .scroll-content {
+    margin-bottom: 0 !important;
+  }
+  
+  .bottomSpace{
+    margin-bottom: 10px;
+  }
+
+ 
+.remember-icon{
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+
+.brandname{
+  color: white;
+  font-size: xx-large;
+  font-weight: bold;
+  margin-top: 24%;
+  
+  font-style: italic;
+}
+
+.transparent-backgroound{
+  --ion-background-color: transparent;
+}
+
+
+.pdtop0{
+  padding-top: 0px;
+}
+ 
+  

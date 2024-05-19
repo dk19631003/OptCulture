@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.DRSent"
+		table="dr_sent">
+		<id name="id" type="java.lang.Long">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" not-null="true" />
+		</property>
+		
+		
+		<property name="contactId" type="java.lang.Long">
+		<column name="contact_id" />
+		</property>
+		
+		<property name="emailId" type="string">
+			<column name="email_id"  length="60" />
+		</property>
+		
+		<property name="status" type="string">
+			<column name="status" length="30"  />
+		</property>
+		
+		<property name="sentDate" type="calendar">
+	        <column name="sent_date"/>
+	    </property>
+		
+		<property name="opens" type="int">
+			<column name="opens" />
+		</property>
+		
+		<property name="clicks" type="int">
+			<column name="clicks" />
+		</property>
+	 
+    <property name="phValStr" type="text">
+      <column name="phValStr"/>
+    </property>
+    
+    <property name="subject" type="string">
+			<column name="subject"  length="200" />
+		</property>
+		
+		<property name="message" type="text">
+			<column name="message"  length="60" />
+		</property>
+		
+		<property name="bounced" type="int">
+			<column name="bounced" />
+		</property>
+		
+		<property name="spam" type="int">
+			<column name="spam" />
+		</property>
+		
+		<property name="drJsonObjId" type="java.lang.Long">
+			<column name="drjson_obj_Id"  />
+		</property>
+		
+		<property name="templateName" type="string">
+			<column name="template_name"  length="60" />
+		</property>
+		
+		<!-- Added after resend Dr -->
+
+		<property name="htmlStr" type="text" >
+			<column name="html_content" />
+		</property>
+		
+		<property name="docSid" type="string">
+			<column name="doc_sid"  length="60" />
+		</property>
+		
+		
+		<property name="sentCount" type="int">
+			<column name="sent_count" />
+		</property>
+		
+    
+	</class>
+</hibernate-mapping>

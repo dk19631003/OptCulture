@@ -1,0 +1,18 @@
+{
+    "android": {
+        "debug": {
+            "keystore": "./optculture.keystore",
+            "storePassword": "Shoppers@OC",
+            "alias": "mobile_app",
+            "password" : "Shoppers@OC",
+            "keystoreType": ""
+        },
+        "release": {
+            "keystore": "./optculture.keystore",
+            "storePassword": "Shoppers@OC",
+            "alias": "mobile_app",
+            "password" : "Shoppers@OC",
+            "keystoreType": ""
+        }
+    }
+}

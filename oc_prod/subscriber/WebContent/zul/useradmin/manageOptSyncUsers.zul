@@ -1,0 +1,1090 @@
+
+
+<?page title="createOptSyncUser" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style>
+		.oddrow { background-color:#F5F8FB; } .evenrow {
+		background-color:#FFF; } .tablefooter {
+		background-color:#EFEFEF; line-height:15px; }
+	</style>
+	<style src="/css/campaign.css" />
+	<window border="0" id="createWinId"
+		apply="org.mq.marketer.campaign.controller.useradmin.ManageOptSyncUsersController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+ 
+	
+		<h:table>
+				<!-- <h:tr>
+					<h:td width="200">
+									<label value="Select Account: " visible="false"/><label value=" * " style="color:red;" visible="false" />
+								</h:td>
+								<h:td>
+							
+						<listbox id="userOrgLbId" width="150px" mold="select"  visible="false"/> 
+						
+							</h:td>
+				</h:tr> -->
+				
+				<h:tr height="10"/>
+							<h:tr>
+								<h:td>
+								<label value="OptSync Authentication Key: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="optSynAuthKeyTbId" value="" cols="30" maxlength="225" />
+								</h:td>
+								<h:td width="150px">
+						
+						<a label="Generate Key" id="generateKeyAnchId" style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+					</h:td>
+					
+							</h:tr>
+				
+				
+				</h:table>
+						
+			 <h:table>
+			<h:tr>
+			
+			<h:td>
+ 		<checkbox  label="Show Filters" onCheck="opySynchListFilterAhId.setVisible(self.isChecked()); " />
+ 	</h:td>
+ 	<h:td width="1020px"></h:td>
+			<h:td>
+			<toolbarbutton id="addOptSyncPluginTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add OptSync Plug-in"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+			
+			</h:td>
+			
+			</h:tr>
+			
+			</h:table>	 	
+
+	<!-- <div  align="right">
+	
+	
+			 	<toolbarbutton id="addOptSyncPluginTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add OptSync Plug-in"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+		</div> -->
+
+
+<div>
+<!-- 		<listbox id="optSyncLBId" width="100%" emptyMessage="No Mailing Lists Found..." style="align:center"   sclass="contactsView" 
+				mold="paging" paginal="${optSyncPagingId}" > -->
+			<listbox id="optSyncLBId" width="100%" emptyMessage="No OptSync Plug-ins Settings Found..." style="align:center"   sclass="contactsView">
+				
+				<listhead sizable="true" style="background-color:#488eb0;height:20px;" menupopup="contactsListMpId">
+					<listheader label="OptSync Plug-in Name" />
+					<listheader label="Plug-in ID" />
+					<listheader label="Email-Address To Send Alerts"  />
+					<listheader label="Plug-in Status"  />
+					<listheader label="Downtime"    />
+					<listheader label="Actions" width="160px"  />
+				</listhead>
+				<auxhead id="opySynchListFilterAhId" visible="false">
+              		<auxheader align="center">
+             			<menupopup id="pluginNameMPId" sclass="myfilter" />
+             			<toolbarbutton context="pluginNameMPId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox sclass="filterSearchVal" />
+             		</auxheader> 
+             		<auxheader>
+             			<menupopup id="plugInMpId" sclass="myfilter" />
+             			<toolbarbutton context="plugInMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox sclass="filterSearchVal" />
+             		</auxheader> 
+
+             		<!-- <auxheader>
+             			<menupopup id="emailAddrMPId" sclass="myfilter" />
+             			<toolbarbutton context="emailAddrMPId" tooltiptext="filters|eq|ne|-|lt|gt|ge|le"/>
+             			<intbox  sclass="filterSearchVal" />
+             		</auxheader> -->
+             		<auxheader>
+		             			<menupopup id="emailMpId" sclass="myfilter" />
+             					<toolbarbutton context="emailMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+
+             		<!-- <auxheader>
+	             		<menupopup id="plugInStatusMPId" sclass="myfilter" />
+	             		<toolbarbutton context="plugInStatusMPId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox sclass="filterSearchVal" />
+             		</auxheader> --> 
+             		<!-- <auxheader>
+             			<toolbarbutton tooltiptext="filters|cl" />
+             		<auxheader/>  -->
+             	</auxhead>
+			</listbox>
+		
+		
+		
+		
+	<!-- 	<grid id="optSyncGridId"  emptyMessage="No records found.">
+		 	<columns menupopup="auto">
+			   <column label="OtpSync Plug-in Name"  />	
+			   <column label="Plug-in ID"/>
+		       <column label="Email-Address To Send Alert" />
+		       <column label="Plug-in Status"    />
+		       <column label="Downtime"   />
+		    <column label="Actions" width="80px"/> 
+		     </columns>
+		
+		     <rows id="optSyncRowsId" />
+					    
+					</grid> -->
+						</div>	
+		
+		<separator/>
+ <h:table width="100%">
+ 
+ 
+		    <h:tr>
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="itemsPerPageLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<!-- <paging id="optSyncPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  /> -->
+				<paging id="optSyncPagingId" detailed="true" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		   </h:tr>
+	   </h:table>
+						
+					
+					<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"><image src="/img/theme/preview_icon.png " /></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- View" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/play_icn.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Activate Alerts" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/pause_icn.png"/></h:td>
+						<h:td  align="left" style="padding-right:30px;"><label value="- Pause Alerts" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Delete" style="font-size:11px;" /> </h:td>
+					</h:tr>
+			</h:table>	
+	   
+	   	
+
+	
+ <groupbox id="newOptSyncPluginGbId" visible="false" closable="false" style="padding:80px 4px;"
+			sclass="gbStyle">
+			<caption label="Add OptSync Plug-in" id="gbCaptionId " visible="true"
+				style="font-weight:bold;padding:0px 4px;font-size:12px;">
+			</caption> 
+
+			<h:table cellspacing="0" cellpadding="10" width="90%">
+				<h:tr class="evenrow">
+					<h:td width="170">
+						<label value="OptSync Plug-in Name : " />
+						<label value="*" style="color:red;" id="pluginNameStar"/>
+					</h:td>
+					<h:td></h:td>
+					<h:td >
+						<textbox value="" maxlength="40"
+							id="optSyncPluginTbId" cols="40" />
+						
+					</h:td>
+					
+				</h:tr>
+
+				<h:tr class="evenrow">
+					<h:td>
+						<label value="Plug-in ID : " />
+						<label value="*" style="color:red;" id="pluginIdStar"/>
+					</h:td>
+					<h:td></h:td>
+					<h:td >
+						<textbox id="pluginTbId" value="" cols="40"
+							maxlength="50" />
+					</h:td>
+					<h:td width="120px">
+						
+						<a label="Generate ID" id="generateAnchId" style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+					</h:td>
+					
+					</h:tr>
+
+
+				<h:tr class="evenrow">
+					<h:td>
+						<label value="Email Address : " id="emailAddressLabel1" />
+						<label value="*" style="color:red;" id="emailId1Star" />
+					</h:td>
+					
+					
+					<h:td>
+					<image src="/img/icons/icon_q.png" tooltip="help2"  id="helpImgId" />
+						<popup id="help2"   width="225px" style="bgcolor:#CCCCCC" >
+								
+									<h:tr>
+										<h:td>
+											<label  value="Email-Address To Send Alerts." sclass="labelPos" />
+										</h:td>
+									</h:tr>
+							
+							</popup>
+					
+					</h:td>
+					<h:td >
+						<textbox cols="40" value="" id="emailIdTbId" 
+							maxlength="50" />
+					</h:td>
+					<h:td width="540px">
+					
+			 	<toolbarbutton id="addOneMoreEmailTBId1" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				<toolbarbutton id="deleteEmailTBId1" image="/images/action_delete.gif" sclass="tbbLink" visible="true"
+							label="Delete Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				
+			</h:td>
+					
+				</h:tr>
+				
+				
+				<!--Second Email -->
+			
+			<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 2: "  id="emailAddress2Label" visible="false" />
+						<label value="*" style="color:red;"  id="emailAddress2star" visible="false"/>
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress2TbId" visible="false"
+							maxlength="50" />
+					</h:td>
+					<h:td width="540px">
+					
+			 	<toolbarbutton id="addOneMoreEmailTBId2" image="/images/action_add.gif" sclass="tbbLink" visible="false"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	
+				<toolbarbutton id="deleteEmailTBId2" image="/images/action_delete.gif" sclass="tbbLink" visible="false"
+							label="Delete Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				
+			</h:td>
+					
+				
+				</h:tr>
+				
+				<!--Third Email -->
+			
+			<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 3: "  id="emailAddress3Label" visible="false" />
+						<label value="*" style="color:red;"  id="emailAddress3star" visible="false"/>
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress3TbId" visible="false"
+							maxlength="50" />
+					</h:td>
+					<h:td width="540px">
+					
+			 	<toolbarbutton id="addOneMoreEmailTBId3" image="/images/action_add.gif" sclass="tbbLink" visible="false"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	
+				<toolbarbutton id="deleteEmailTBId3" image="/images/action_delete.gif" sclass="tbbLink" visible="false"
+							label="Delete Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				
+			</h:td>
+					
+				
+				</h:tr>
+				
+				
+				<!--fourth Email -->
+				<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 4: "  id="emailAddress4Label" visible="false" />
+						<label value="*" style="color:red;"  id="emailAddress4star" visible="false"/>
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress4TbId" visible="false"
+							maxlength="50" />
+					</h:td>
+					<h:td width="540px">
+					
+			 	<toolbarbutton id="addOneMoreEmailTBId4" image="/images/action_add.gif" sclass="tbbLink" visible="false"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				
+				<toolbarbutton id="deleteEmailTBId4" image="/images/action_delete.gif" sclass="tbbLink" visible="false"
+							label="Delete Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				
+			</h:td>
+					
+				
+				</h:tr>
+				<!--Fifth Email -->
+				<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 5: "  id="emailAddress5Label" visible="false" />
+						<label value="*" style="color:red;"  id="emailAddress5star" visible="false"/>
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress5TbId" visible="false"
+							maxlength="50" />
+					</h:td>
+					<h:td width="540px">
+					
+			 	<!-- <toolbarbutton id="addOneMoreEmailTBId5" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	 -->
+	 		<toolbarbutton id="deleteEmailTBId5" image="/images/action_delete.gif" sclass="tbbLink" visible="false"
+							label="Delete Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+				
+				
+			</h:td> 
+				
+				</h:tr>
+				
+				
+
+
+			</h:table>
+			
+		
+	
+			<div>
+			<label id="errorDivId" width="90%" multiline="true" style="padding-left:15px;color:#EF2C2C;font-weight:bold;font-size:14px;font-family:verdena;margin-left:8px;">
+				
+			</label>
+		</div>
+		
+
+		<div>
+			<button id="saveBtnId" label="Add"
+				sclass="idle140 greenbtn" />
+			<space />
+			<checkbox id="submitCbId" checked="false" visible="false" />
+			<button label="Reset" id="resetBtnId" sclass="idle70" /> 
+			<button id="cancelBtnId"  label="Cancel" sclass="idle70" 
+			onClick="newOptSyncPluginGbIdView.setVisible(false);newOptSyncPluginGbId.setVisible(false);addOptSyncPluginTBId.setVisible(true)"/>
+			
+		</div>
+		</groupbox>
+		
+	
+	<!-- Dispaly OptSync Plugin Display  -->
+		 <groupbox id="newOptSyncPluginGbIdView" visible="false" closable="false" style="padding:80px 4px;"
+			sclass="gbStyle">
+			<caption label="OptSync Plug-in" id="gbCaptionIdView " visible="true"
+				style="font-weight:bold;padding:0px 4px;font-size:12px;">
+			</caption> 
+
+			<h:table cellspacing="0" cellpadding="10" width="90%">
+				<h:tr class="evenrow">
+					<h:td width="170">
+						<label value="OtpSync Plug-in Name : " />
+					<!-- 	<label value="*" style="color:red;" id="pluginNameStarView"/> -->
+					</h:td>
+					<h:td></h:td>
+					<h:td >
+						<textbox value="" maxlength="40"
+							id="optSyncPluginTbIdView" cols="40"  />
+						
+					</h:td>
+					
+				</h:tr>
+
+				<h:tr class="evenrow">
+					<h:td>
+						<label value="Plug-in ID : " />
+						<!-- <label value="*" style="color:red;" id="pluginIdStarView"/> -->
+					</h:td>
+					<h:td></h:td>
+					<h:td >
+						<textbox id="pluginTbIdView" value="" cols="40"
+							maxlength="50" />
+					</h:td>
+					<!-- <h:td width="120px">
+						
+						<a label="Generate ID" id="generateAnchIdView" style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+					</h:td> -->
+					
+					</h:tr>
+
+
+				<h:tr class="evenrow">
+					<h:td>
+						<label value="Email Address : " />
+					<!-- 	<label value="*" style="color:red;" id="emailId1StarView" /> -->
+					</h:td>
+					
+					
+					<h:td>
+					<!-- <image src="/img/icons/icon_q.png" tooltip="help2"  id="helpImgIdView" />
+						<popup id="help2View"   width="225px" style="bgcolor:#CCCCCC" >
+								
+									<h:tr>
+										<h:td>
+											<label  value="Email-Address To Send Alerts." sclass="labelPos" />
+										</h:td>
+									</h:tr>
+							
+							</popup>
+					 -->
+					</h:td>
+					<h:td >
+						<textbox cols="40" value="" id="emailIdTbIdView" 
+							maxlength="50"  />
+					</h:td>
+					<h:td width="540px">
+				<!-- 	
+			 	<toolbarbutton id="addOneMoreEmailTBId1View" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	 -->
+			</h:td>
+					
+				</h:tr>
+				
+				
+				<!--Second Email -->
+			
+			<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 2: "  id="emailAddress2LabelView" />
+						<!-- <label value="*" style="color:red;"  id="emailAddress2starView" visible="false"/> -->
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress2TbIdView" 
+							maxlength="50"  />
+					</h:td>
+					<h:td width="540px">
+					<!-- 
+			 	<toolbarbutton id="addOneMoreEmailTBId2View" image="/images/action_add.gif" sclass="tbbLink" visible="false"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	 -->
+			</h:td>
+					
+				
+				</h:tr>
+				
+				<!--Third Email -->
+			
+			<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 3: "  id="emailAddress3LabelView"  />
+						<!-- <label value="*" style="color:red;"  id="emailAddress3starView" visible="false"/> -->
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress3TbIdView" 
+							maxlength="50"   />
+					</h:td>
+					<h:td width="540px">
+					<!-- 
+			 	<toolbarbutton id="addOneMoreEmailTBId3View" image="/images/action_add.gif" sclass="tbbLink" visible="false"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	 -->
+			</h:td>
+					
+				
+				</h:tr>
+				
+				
+				<!--fourth Email -->
+				<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 4: "  id="emailAddress4LabelView"  />
+						<!-- <label value="*" style="color:red;"  id="emailAddress4starView" visible="false"/> -->
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress4TbIdView" 
+							maxlength="50"   />
+					</h:td>
+					<h:td width="540px">
+					<!-- 
+			 	<toolbarbutton id="addOneMoreEmailTBId4View" image="/images/action_add.gif" sclass="tbbLink" visible="false"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	 -->
+			</h:td>
+					
+				
+				</h:tr>
+				<!--Fifth Email -->
+				<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 5: "  id="emailAddress5LabelView"  />
+					<!-- 	<label value="*" style="color:red;"  id="emailAddress5starView" visible="false"/> -->
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress5TbIdView" 
+							maxlength="50"  />
+					</h:td>
+					<!-- <h:td width="540px">
+					
+			 	<toolbarbutton id="addOneMoreEmailTBId5" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	
+			</h:td> -->
+					
+				
+				</h:tr>
+				
+				
+
+
+			</h:table>
+			
+		
+	
+		
+		</groupbox>
+		
+		<window id="opySyncAlertsWinId" visible="false" closable="true" title="Pause Alerts" 
+						height="200px" width="400px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+							<radiogroup id="alertsTypeRgId" />
+						<h:table width="100%" cellspacing="0" cellpadding="0">
+							<h:tr>
+								<h:td colspan="2"><label id="msgLblId" value="Alerts will be paused. Choose how alerts should be activated again:"/></h:td>
+							</h:tr>
+							<h:tr>
+							
+							<h:td align="center">
+							<radio id="automaticRgId" radiogroup="alertsTypeRgId" label="Automatically when up" checked="true" />
+							</h:td>
+							
+							
+							<h:td >
+							<radio id="manualRgId" radiogroup="alertsTypeRgId" label="Manually by me"  />
+							</h:td>
+							
+							</h:tr>
+							
+							<h:tr  height="10px"/>
+							<h:tr>
+							
+								<h:td  colspan="2" align="center">
+									<button label="OK" id="submitBtnId" sclass="idle70 greenbtn" />
+									<button label="Cancel" id="cancelBtnId" sclass="idle70" />
+								</h:td>
+							</h:tr>
+						</h:table>
+					</window>
+		
+
+
+
+
+		
+		<script type="text/javascript">
+	<![CDATA[
+	         
+	         var valid = true;
+	 	    var defErrorContent = '<li> Correct the fields which are marked in red.';
+	 		var errorContent = "";
+	 	    var tbNormalCss = "border:1px solid #B2B0B1; background:url('/subscriber/zkau/web/1d1ebab6/zul/img/misc/text-bg.gif') repeat-x scroll 0 0 #FFFFFF";
+	 	    var tbErrorCss = "border:1px solid #F37373; background:#FFCFCF";
+	 	    
+	 		function validateUser() {
+	 			
+	 			errorContent = "";
+	 			
+	 			valid = true;
+	 			var image;
+	 			validateStr('userNameTbId');
+	 			
+	 			var nameStatusLbl = zk.Widget.$(jq('$nameStatusLblId'));
+	 			if(nameStatusLbl.getStyle().indexOf('red') >0 ) {
+	 				valid = false;
+	 				errorContent += '<br/> <li> Provide valid User Name or User Name already exist';
+	 				zk.Widget.$(jq('$userNameTbId')).setStyle(tbErrorCss);
+	 			}
+	 			
+	 			validatePwd();
+	 			
+	 			
+	 			validateStr('optcultureTbId');
+	 			validateStr('optSyncNameTbId');
+	 			validateEmailStr('emailIdTbId');
+	 			validateNum('pinTbId')
+	 			
+	 			
+	 			
+	 			
+	 			if(!valid) {
+	 				document.getElementById('errorDivId').innerHTML = defErrorContent + errorContent;
+	 				document.getElementById('errorDivId').style.display = 'block';
+	 				return;
+	 			} else {
+	 				document.getElementById('errorDivId').style.display = 'none';
+	 			}
+	 			
+	 			
+	 			//alert('Validation done');
+	 			var submitCb = zk.Widget.$(jq('$submitCbId'))
+	 			submitCb.setChecked(!submitCb.isChecked());
+	 			
+	 			submitCb.fire('onCheck',{value:submitCb.value},{toServer:true},0);
+	 		}
+	         
+	   
+		function validateEmailStr(id) {
+			var emailtb = zk.Widget.$(jq('$' + id));
+			var email = emailtb.getValue();
+			if(trim(email).length == 0 || !validateEmail(email) ) {
+				valid = false;
+				errorContent += '<br/> <li> Provide valid Email-id';
+				emailtb.setStyle(tbErrorCss);
+			} else {
+				emailtb.setStyle(tbNormalCss);
+			}
+		}
+		
+	
+		function reset() {
+			
+			resetWidget('optcultureTbId');
+			resetWidget('optSyncNameTbId');
+			resetWidget('emailIdTbId');
+			
+		}
+		
+		
+		
+	]]>
+	</script>
+
+
+	</window>
+</zk>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+<?page title="createOptSyncUser" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style>
+		.oddrow { background-color:#F5F8FB; } .evenrow {
+		background-color:#FFF; } .tablefooter {
+		background-color:#EFEFEF; line-height:15px; }
+	</style>
+	<style src="/css/campaign.css" />
+	<window border="0" id="createWinId"
+		apply="org.mq.marketer.campaign.controller.useradmin.ManageOptSyncUsersController"
+		xmlns:h="http://www.zkoss.org/2005/zk/native"
+		xmlns:w="http://www.zkoss.org/2005/zk/client">
+ 
+	
+		<h:table>
+				<h:tr>
+					<h:td width="200">
+									<label value="Select Account: " visible="false"/><label value=" * " style="color:red;" visible="false" />
+								</h:td>
+								<h:td>
+							
+						<listbox id="userOrgLbId" width="150px" mold="select"  visible="false"/> 
+						
+							</h:td>
+				</h:tr>
+				
+				<h:tr height="10"/>
+							<h:tr>
+								<h:td>
+								<label value="OptSync Authentication Key: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="optSynAuthKeyTbId" value="" cols="30" maxlength="225" />
+								</h:td>
+								<h:td width="150px">
+						
+						<a label="Generate Key" id="generateKeyAnchId" style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+					</h:td>
+					
+							</h:tr>
+				
+				
+				</h:table>
+						
+			 <h:table>
+			<h:tr>
+			
+			<h:td>
+ 		<checkbox  label="Show Filters" onCheck="opySynchListFilterAhId.setVisible(self.isChecked()); " />
+ 	</h:td>
+ 	<h:td width="875px"></h:td>
+			<h:td>
+			<toolbarbutton id="addOptSyncPluginTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add OptSync Plug-in"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+			
+			</h:td>
+			
+			</h:tr>
+			
+			</h:table>	 	
+
+	<div  align="right">
+	
+	
+			 	<toolbarbutton id="addOptSyncPluginTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add OptSync Plug-in"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+		</div>
+
+
+<div>
+		<listbox id="optSyncLBId" width="100%" emptyMessage="No Mailing Lists Found..." style="align:center"   sclass="contactsView" 
+				mold="paging" paginal="${optSyncPagingId}" >
+			<listbox id="optSyncLBId" width="100%" emptyMessage="No Mailing Lists Found..." style="align:center"   sclass="contactsView" >
+				
+				<listhead sizable="false" style="background-color:#488eb0;height:20px;" menupopup="contactsListMpId">
+					<listheader label="OtpSync Plug-in Name" />
+					<listheader label="Plug-in ID" />
+					<listheader label="Email-Address To Send Alert"  />
+					<listheader label="Plug-in Status"  />
+					<listheader label="Downtime"    />
+					<listheader label="Actions" width="150px"  align="center"/>
+				</listhead>
+				<auxhead id="opySynchListFilterAhId" visible="false">
+              		<auxheader align="center">
+             			<menupopup id="pluginNameMPId" sclass="myfilter" />
+             			<toolbarbutton context="pluginNameMPId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox sclass="filterSearchVal" />
+             		</auxheader> 
+             		<auxheader>
+             			<menupopup id="plugInMpId" sclass="myfilter" />
+             			<toolbarbutton context="plugInMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox sclass="filterSearchVal" />
+             		</auxheader> 
+
+             		<auxheader>
+             			<menupopup id="emailAddrMPId" sclass="myfilter" />
+             			<toolbarbutton context="emailAddrMPId" tooltiptext="filters|eq|ne|-|lt|gt|ge|le"/>
+             			<intbox  sclass="filterSearchVal" />
+             		</auxheader>
+             		<auxheader>
+		             			<menupopup id="emailMpId" sclass="myfilter" />
+             					<toolbarbutton context="emailMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+
+             		<auxheader>
+	             		<menupopup id="plugInStatusMPId" sclass="myfilter" />
+	             		<toolbarbutton context="plugInStatusMPId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox sclass="filterSearchVal" />
+             		</auxheader> 
+             		<auxheader>
+             			<toolbarbutton tooltiptext="filters|cl" />
+             		<auxheader/> 
+             	</auxhead>
+			</listbox>
+		
+		
+		
+		
+		<grid id="optSyncGridId"  emptyMessage="No records found.">
+		 	<columns menupopup="auto">
+			   <column label="OtpSync Plug-in Name"  />	
+			   <column label="Plug-in ID"/>
+		       <column label="Email-Address To Send Alert" />
+		       <column label="Plug-in Status"    />
+		       <column label="Downtime"   />
+		    <column label="Actions" width="80px"/> 
+		     </columns>
+		
+		     <rows id="optSyncRowsId" />
+					    
+					</grid>
+						</div>	
+		
+		<separator/>
+ <h:table width="100%">
+ 
+ 
+		    <h:tr>
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="itemsPerPageLBId" style="margin-right:30px;">
+						<listitem label="5" selected="true" />
+						<listitem label="10"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="optSyncPagingId" detailed="true" pageSize="5" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				<paging id="optSyncPagingId" detailed="true" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		   </h:tr>
+	   </h:table>
+						
+					
+					<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Delete" style="font-size:11px;" /> </h:td>
+					</h:tr>
+			</h:table>	
+	   
+	   	
+
+		 <groupbox id="newOptSyncPluginGbId" visible="false" closable="false" style="padding:80px 4px;"
+			sclass="gbStyle">
+			<caption label="Add OptSync Plug-in"
+				style="font-weight:bold;padding:0px 4px;font-size:12px;">
+			</caption> 
+
+			<h:table cellspacing="0" cellpadding="10" width="90%">
+				<h:tr class="evenrow">
+					<h:td width="170">
+						<label value="OtpSync Plug-in Name : " />
+						<label value="*" style="color:red;" />
+					</h:td>
+					<h:td></h:td>
+					<h:td >
+						<textbox value="" maxlength="40"
+							id="optSyncPluginTbId" cols="40" />
+						
+					</h:td>
+					
+				</h:tr>
+
+				<h:tr class="evenrow">
+					<h:td>
+						<label value="Plug-in ID : " />
+						<label value="*" style="color:red;" />
+					</h:td>
+					<h:td></h:td>
+					<h:td >
+						<textbox id="pluginTbId" value="" cols="40"
+							maxlength="50" />
+					</h:td>
+					<h:td width="120px">
+						
+						<a label="Generate ID" id="generateAnchId" style="color:#2886B9;font-weight:bold;text-decoration: underline;" />
+					</h:td>
+					
+					</h:tr>
+
+
+				<h:tr class="evenrow">
+					<h:td>
+						<label value="Email Address : " />
+						<label value="*" style="color:red;" />
+					</h:td>
+					
+					
+					<h:td>
+					<image src="/img/icons/icon_q.png" tooltip="help2"  id="helpImgId" />
+						<popup id="help2"   width="225px" style="bgcolor:#CCCCCC" >
+								
+									<h:tr>
+										<h:td>
+											<label  value="Email will be sent when OptSync is down." sclass="labelPos" />
+										</h:td>
+									</h:tr>
+							
+							</popup>
+					
+					</h:td>
+					<h:td >
+						<textbox cols="40" value="" id="emailIdTbId" 
+							maxlength="60" />
+					</h:td>
+					<h:td width="540px">
+					
+			 	<toolbarbutton id="addOneMoreEmailTBId" image="/images/action_add.gif" sclass="tbbLink"
+							label="Add 1 More Email Address"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+	
+			</h:td>
+					
+				</h:tr>
+				
+				
+				
+			
+			<h:tr class="evenrow" height ="10px" >
+				
+				
+				
+					<h:td width="196px">
+						<label value="Email Address 2: "  id="emailAddress2Label" visible="false" />
+						<label value="*" style="color:red;"  id="emailAddress2star" visible="false"/>
+					</h:td>
+					
+					<h:td></h:td>
+					
+					<h:td >
+						<textbox cols="40" value="" id="emailAddress2TbId" visible="false"
+							maxlength="60" />
+					</h:td>
+					
+				
+				</h:tr>
+			
+				
+				
+
+
+			</h:table>
+			
+		
+	
+			<div>
+			<label id="errorDivId" width="90%" multiline="true" style="padding-left:15px;color:#EF2C2C;font-weight:bold;font-size:14px;font-family:verdena;margin-left:8px;">
+				
+			</label>
+		</div>
+		
+
+		<div>
+			<button id="saveBtnId" label="Add"
+				sclass="idle140 greenbtn" />
+			<space />
+			<checkbox id="submitCbId" checked="false" visible="false" />
+			<button label="Reset" id="resetBtnId" sclass="idle70" /> 
+			
+		</div>
+		</groupbox>
+		
+		
+		<script type="text/javascript">
+	<![CDATA[
+	         
+	         var valid = true;
+	 	    var defErrorContent = '<li> Correct the fields which are marked in red.';
+	 		var errorContent = "";
+	 	    var tbNormalCss = "border:1px solid #B2B0B1; background:url('/subscriber/zkau/web/1d1ebab6/zul/img/misc/text-bg.gif') repeat-x scroll 0 0 #FFFFFF";
+	 	    var tbErrorCss = "border:1px solid #F37373; background:#FFCFCF";
+	 	    
+	 		function validateUser() {
+	 			
+	 			errorContent = "";
+	 			
+	 			valid = true;
+	 			var image;
+	 			validateStr('userNameTbId');
+	 			
+	 			var nameStatusLbl = zk.Widget.$(jq('$nameStatusLblId'));
+	 			if(nameStatusLbl.getStyle().indexOf('red') >0 ) {
+	 				valid = false;
+	 				errorContent += '<br/> <li> Provide valid User Name or User Name already exist';
+	 				zk.Widget.$(jq('$userNameTbId')).setStyle(tbErrorCss);
+	 			}
+	 			
+	 			validatePwd();
+	 			
+	 			
+	 			validateStr('optcultureTbId');
+	 			validateStr('optSyncNameTbId');
+	 			validateEmailStr('emailIdTbId');
+	 			validateNum('pinTbId')
+	 			
+	 			
+	 			
+	 			
+	 			if(!valid) {
+	 				document.getElementById('errorDivId').innerHTML = defErrorContent + errorContent;
+	 				document.getElementById('errorDivId').style.display = 'block';
+	 				return;
+	 			} else {
+	 				document.getElementById('errorDivId').style.display = 'none';
+	 			}
+	 			
+	 			
+	 			//alert('Validation done');
+	 			var submitCb = zk.Widget.$(jq('$submitCbId'))
+	 			submitCb.setChecked(!submitCb.isChecked());
+	 			
+	 			submitCb.fire('onCheck',{value:submitCb.value},{toServer:true},0);
+	 		}
+	         
+	   
+		function validateEmailStr(id) {
+			var emailtb = zk.Widget.$(jq('$' + id));
+			var email = emailtb.getValue();
+			if(trim(email).length == 0 || !validateEmail(email) ) {
+				valid = false;
+				errorContent += '<br/> <li> Provide valid Email-id';
+				emailtb.setStyle(tbErrorCss);
+			} else {
+				emailtb.setStyle(tbNormalCss);
+			}
+		}
+		
+	
+		function reset() {
+			
+			resetWidget('optcultureTbId');
+			resetWidget('optSyncNameTbId');
+			resetWidget('emailIdTbId');
+			
+		}
+		
+		
+		
+	]]>
+	</script>
+
+
+	</window>
+</zk>
+
+ -->

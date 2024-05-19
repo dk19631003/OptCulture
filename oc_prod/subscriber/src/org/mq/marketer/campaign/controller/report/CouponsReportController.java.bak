@@ -1,0 +1,891 @@
+package org.mq.marketer.campaign.controller.report;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.sql.ResultSet;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.CouponDiscountGeneration;
+import org.mq.marketer.campaign.beans.Coupons;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.GetUser;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.custom.MyDatebox;
+import org.mq.marketer.campaign.dao.CouponCodesDao;
+import org.mq.marketer.campaign.dao.CouponDiscountGenerateDao;
+import org.mq.marketer.campaign.dao.CouponsDao;
+import org.mq.marketer.campaign.dao.OrganizationStoresDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.MessageUtil;
+import org.mq.marketer.campaign.general.PageListEnum;
+import org.mq.marketer.campaign.general.PageUtil;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.Redirect;
+import org.mq.optculture.data.dao.JdbcResultsetHandler;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkplus.spring.SpringUtil;
+import org.zkoss.zul.Filedownload;
+import org.zkoss.zul.Grid;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Paging;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
+import org.zkoss.zul.event.PagingEvent;
+
+public class CouponsReportController extends GenericForwardComposer implements EventListener{
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	private MyDatebox toDateboxId, fromDateboxId, storeFromDateboxId, storeToDateboxId;
+	private Listbox statusLbId, pageSizeLbId,memberPerPageStoreLBId;
+	private Grid couponReportGridId;
+	private CouponsDao couponsDao;
+	private TimeZone clientTimeZone;
+	//private Users currentUser;
+	private Rows couponRowsId,storeRedmRowsId;
+	private Users users;
+	private CouponDiscountGeneration couponDiscountGeneration;
+	private CouponDiscountGenerateDao couponDiscountGenerateDao;
+	//private RetailProSalesDao retailProsalesDao;
+	private CouponCodesDao couponCodesDao;
+	private String fromDate, endDate;
+	private OrganizationStoresDao organizationStoresDao;
+	private List<Map<String, Object>> storeNumberNameMapList;
+	private String storeFromDateStr,storeToDateStr;
+
+	public CouponsReportController() {
+		session = Sessions.getCurrent();
+		String style = "font-weight:bold;font-size:15px;color:#313031;"
+				+ "font-family:Arial,Helvetica,sans-serif;align:left";
+		PageUtil.setHeader("Promotion Reports", "", style, true);
+		users = GetUser.getUserObj();
+		this.couponsDao = (CouponsDao) SpringUtil.getBean("couponsDao");
+		this.couponDiscountGenerateDao = (CouponDiscountGenerateDao) SpringUtil
+				.getBean("couponDiscountGenerateDao");
+		couponCodesDao = (CouponCodesDao) SpringUtil.getBean("couponCodesDao");
+		//retailProsalesDao = (RetailProSalesDao)SpringUtil.getBean("retailProSalesDao");
+		clientTimeZone = (TimeZone) session.getAttribute("clientTimeZone");
+		organizationStoresDao =	(OrganizationStoresDao)SpringUtil.getBean("organizationStoresDao");
+	}
+	private int pageSize = 0;
+
+	public void doAfterCompose(Component comp) throws Exception {
+		// TODO Auto-generated method stub
+		super.doAfterCompose(comp);
+		
+		//Default DateSettings
+		//setDateValues();
+		
+		//DefaultSetting Based on Dates
+		
+		//String fromDate = MyCalendar.calendarToString(getStartDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+		//String endDate = MyCalendar.calendarToString(getEndDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+//		String statusStr = statusLbId.getSelectedItem().getLabel();
+		int tempCount = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+		List<Coupons> couponsList = couponsDao.findDefaultCoupons(users.getUserOrganization().getUserOrgId(),0,tempCount);
+		int count = couponsDao.findTotCountCouponsofOrg(users.getUserOrganization().getUserOrgId());
+		if(couponsList!= null ) {
+		 totalSize  = couponsList.size();
+		}
+//				couponsDao.findCoupBasedOnDates(currentUser.getUserId(),statusStr,fromDate, endDate);
+				
+		logger.debug(">>>>>>>>totalSize ::"+totalSize);
+		Calendar cal = MyCalendar.getNewCalendar();
+		storeToDateboxId.setValue(cal);
+		logger.debug("ToDate (server) :" + cal);
+		//cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 3);
+		cal.set(Calendar.DATE, cal.get(Calendar.DATE) + 1);
+		logger.debug("FromDate (server) :" + cal);
+		storeFromDateboxId.setValue(cal);
+		
+		storeFromDateStr = MyCalendar.calendarToString(getStartDate(storeFromDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+		storeToDateStr = MyCalendar.calendarToString(getEndDate(storeToDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+		
+		int storeListSize = couponCodesDao.findTotalStoreCount(users.getUserOrganization().getUserOrgId(),storeFromDateStr,storeToDateStr);
+		couponRepListBottomPagingId.setTotalSize(count);
+		couponRepListBottomPagingId.setPageSize(tempCount);
+		couponRepListBottomPagingId.setActivePage(0);
+		couponRepListBottomPagingId.addEventListener("onPaging", this);
+		couponRepListBottomPagingId.setAttribute("onPaging", "coupon");
+		
+		storePagingId.setTotalSize(storeListSize);
+		storePagingId.setPageSize(Integer.parseInt(memberPerPageStoreLBId.getSelectedItem().getLabel()));
+		storePagingId.setActivePage(0);
+		storePagingId.addEventListener("onPaging",this);
+		storePagingId.setAttribute("onPaging", "store");
+		storeNumberNameMapList  = organizationStoresDao.findStoreNumberNameMapList(GetUser.getUserObj().getUserOrganization().getUserOrgId());
+		
+		
+		String statusStr = statusLbId.getSelectedItem().getLabel();
+		
+		//getCouponReports(0, tempCount);
+		renderingPromoList(couponsList);
+		fillStoreRedemption(0,Integer.parseInt(memberPerPageStoreLBId.getSelectedItem().getLabel()));
+		defaultSettingForDateByStatus(statusStr);
+		
+		
+		
+		
+	} // doAfterCompose
+
+
+	public Calendar getStartDate(MyDatebox fromDateboxId){
+		
+		try {
+			Calendar serverFromDateCal = fromDateboxId.getServerValue();
+			Calendar tempClientFromCal = fromDateboxId.getClientValue();
+			serverFromDateCal.set(Calendar.HOUR_OF_DAY, 
+					serverFromDateCal.get(Calendar.HOUR_OF_DAY)-tempClientFromCal.get(Calendar.HOUR_OF_DAY));
+			serverFromDateCal.set(Calendar.MINUTE, 
+					serverFromDateCal.get(Calendar.MINUTE)-tempClientFromCal.get(Calendar.MINUTE));
+			serverFromDateCal.set(Calendar.SECOND, 0);
+			return serverFromDateCal;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception ::::",e);
+			return null;
+		}
+		
+	}
+	
+	
+	
+	
+	public Calendar getEndDate(MyDatebox toDateboxId) {
+		
+		
+		Calendar serverToDateCal = toDateboxId.getServerValue();
+		
+		Calendar tempClientToCal = toDateboxId.getClientValue();
+		
+		
+		//change the time for startDate and endDate in order to consider right from the 
+		// starting time of startDate to ending time of endDate
+		
+		serverToDateCal.set(Calendar.HOUR_OF_DAY, 
+				23+serverToDateCal.get(Calendar.HOUR_OF_DAY)-tempClientToCal.get(Calendar.HOUR_OF_DAY));
+		serverToDateCal.set(Calendar.MINUTE, 
+				59+serverToDateCal.get(Calendar.MINUTE)-tempClientToCal.get(Calendar.MINUTE));
+		serverToDateCal.set(Calendar.SECOND, 59);		
+		
+		return serverToDateCal;
+		
+		
+		
+	}
+	
+	
+
+
+	private Paging couponRepListBottomPagingId,storePagingId;
+	
+	private String fetchStoreName(String store_number){
+		 
+		 for (Map<String, Object> eachMap: storeNumberNameMapList) {
+
+			 if(eachMap.get("home_store_id").toString().equals(store_number)){
+				 if(eachMap.get("store_name") != null){
+					 return eachMap.get("store_name").toString();
+				 }else{
+					 return "Store ID "+store_number;
+				 }
+			 }
+		 }
+		 
+		 return "Store ID "+store_number;
+	}
+	
+	private int fillStoreRedemption(int fromInt, int lbxLenght) {
+
+		try {
+			int size;
+			Components.removeAllChildren(storeRedmRowsId);
+			
+			/*int count =  promoCodeRowsId.getItemCount();
+			
+			for(; count>0; count--) {
+				promoCodeRowsId.removeAt(count-1);
+			}*/
+			
+			List<Map<String, Object>> promoObjArrList  = couponCodesDao.findAllStoresRedemptionList(users.getUserOrganization().getUserOrgId(), fromInt, lbxLenght,"",storeFromDateStr,storeToDateStr); //-- sm change
+			
+			if(promoObjArrList == null || promoObjArrList.size() == 0 ) {
+				 logger.info(" *** No promo code data exists for this user");
+				 return 0;
+			 }
+			
+			 logger.info(">>> PromoObjArrList size is :"+promoObjArrList.size());
+			 size = promoObjArrList.size();
+			 Row tempRow = null;
+			 String storeName;
+			 DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+			 for (Map<String, Object> eachMap: promoObjArrList) {
+				 
+				 tempRow  = new Row();
+				 //SELECT promo_code, ROUND(SUM((quantity*sales_price)+tax),2) AS REVENUE , COUNT(customer_id) AS COUNT
+				 //PromoCode
+				 Label PromoCodeLbl = new Label();
+				 if(eachMap.containsKey("store_number") && eachMap.get("store_number") != null) {
+					 storeName = fetchStoreName(eachMap.get("store_number").toString());
+					 //PromoCodeLbl.setValue(eachMap.get("store_number").toString());
+					 PromoCodeLbl.setValue(storeName);
+					 PromoCodeLbl.setStyle("cursor:pointer;color:blue;text-decoration: underline;");
+					 PromoCodeLbl.addEventListener("onClick", this);
+					 PromoCodeLbl.setAttribute("original value", eachMap.get("store_number").toString());
+				 }
+				 PromoCodeLbl.setParent(tempRow);
+				
+				 //Revenue
+				 Label revenueLbl = new Label();
+				 if(eachMap.containsKey("REVENUE") && eachMap.get("REVENUE") != null) {
+					 revenueLbl.setValue(decimalFormat.format(eachMap.get("REVENUE")));
+				 }
+				 revenueLbl.setParent(tempRow);
+				 
+				 //No. of customer
+				 Label totalCustmerLbl = new Label();
+				 if(eachMap.containsKey("COUNT") && eachMap.get("COUNT") != null) {
+					 
+					 totalCustmerLbl.setValue(eachMap.get("COUNT").toString());
+				 }
+				 totalCustmerLbl.setParent(tempRow);
+				 
+				 if(eachMap.containsKey("sales_date") && eachMap.get("sales_date") != null) {
+					 (new Label(eachMap.get("sales_date").toString())).setParent(tempRow);
+				 }
+				// tempRow.setValue("store_number");
+				 tempRow.setParent(storeRedmRowsId);
+			}
+			 return size;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception ::" , e);
+			return 0;
+		}
+	} // fillStoreRedemption
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//sorting hard coded
+	
+	
+	public void fromDate_EndDate(){
+			if(fromDateboxId.getClientValue() == null || toDateboxId.getClientValue() == null) {
+				MessageUtil.setMessage("Please specify the dates", "red");
+				return;
+			}
+	
+			Calendar  start = fromDateboxId.getClientValue();
+			Calendar end = toDateboxId.getClientValue();
+	
+			if(end.before(start)) {
+				MessageUtil.setMessage("'From' date cannot be later than 'To' date.", "red");
+				return;
+			}
+	
+			fromDate = MyCalendar.calendarToString(getStartDate(fromDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+			endDate = MyCalendar.calendarToString(getEndDate(toDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+	}	
+	
+	
+	public String orderby_colName="userCreatedDate",desc_Asc="desc"; 
+	    
+	    public void desc2ascasc2desc()
+	    {
+	    	if(desc_Asc=="desc")
+				desc_Asc="asc";
+			else
+				desc_Asc="desc";
+		
+	    }
+		 
+		
+		public void onClick$sortbyPromotionName() {
+			orderby_colName = "couponName";
+			desc2ascasc2desc();	
+			fromDate_EndDate();
+			getCouponReports(0,Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel()));
+			
+		 }
+		 
+		 public void onClick$sortbyStatus() {
+				orderby_colName = "status";
+				desc2ascasc2desc();	
+				fromDate_EndDate();
+				getCouponReports(0,Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel()));
+				
+			 }
+		 
+		
+		 public void onClick$sortbyissued() {
+				orderby_colName = "issued";
+				desc2ascasc2desc();	
+				fromDate_EndDate();
+				getCouponReports(0,Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel()));
+					
+			 }
+		 public void onClick$sortbyredeemed() {
+				orderby_colName = "redeemed";
+				desc2ascasc2desc();	
+				fromDate_EndDate();
+				getCouponReports(0,Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel()));
+			 }
+			 
+		 public void onClick$sortbytotRevenue() {
+				orderby_colName = "totRevenue";
+				desc2ascasc2desc();	
+				fromDate_EndDate();
+				getCouponReports(0,Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel()));
+			 }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 public void onClick$storeResetAnchId() {
+			// onClick$backBtnId();
+			 Calendar cal = MyCalendar.getNewCalendar();
+			 storeToDateboxId.setValue(cal);
+			 logger.debug("ToDate (server) :" + cal);
+			 //cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+			 cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 3);
+			 cal.set(Calendar.DATE, cal.get(Calendar.DATE) + 1);
+			 logger.debug("FromDate (server) :" + cal);
+			 storeFromDateboxId.setValue(cal);
+			 
+			 onClick$getStoreBetweenDatesBtnId();
+			 
+
+		 }
+
+	public void onSelect$pageSizeLbId() {
+		
+		try {
+			/*String fromDate = MyCalendar.calendarToString(getStartDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+			String endDate = MyCalendar.calendarToString(getEndDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+			String status = statusLbId.getSelectedItem().getLabel();*/
+			
+			int tempCount = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+			couponRepListBottomPagingId.setPageSize(tempCount);
+			couponRepListBottomPagingId.setActivePage(0);
+		
+			getCouponReports(couponRepListBottomPagingId.getActivePage()*couponRepListBottomPagingId.getPageSize(),tempCount);
+			
+			
+		} catch (WrongValueException e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception ::" , e);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception ::" , e);
+		}
+		
+	
+		
+	}//onSelect$pageSizeLbId() 
+
+	
+	
+	int totalSize = 0;
+	
+	
+	
+	public void getCouponReports(int startIndex, int count) {
+		logger.debug("-- just entered --");
+		MessageUtil.clearMessage();
+		
+		
+		List<Coupons> couponsList =  null;
+		if(fromDateboxId.getValue()== null && toDateboxId.getValue()== null){
+			//int tempCount = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+			//couponsList = couponsDao.findDefaultCoupons(currentUser.getUserId(),startIndex,count);
+			MessageUtil.setMessage("Please specify the dates", "red");
+			return;
+			/*if(couponsList!= null ) {
+			 totalSize  = couponsList.size();
+			}*/	
+		}else{
+			/*Calendar calObj =  getStartDate(fromDateboxId);
+			
+			fromDate = MyCalendar.calendarToString(calObj, MyCalendar.FORMAT_DATETIME_STYEAR);
+			endDate = MyCalendar.calendarToString(getEndDate(toDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);*/
+			String status = statusLbId.getSelectedItem().getLabel();
+			
+			//pageSize = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+			couponsList = couponsDao.findCouponsByOrgId(users.getUserOrganization().getUserOrgId(),startIndex,count, status, fromDate,endDate,orderby_colName,desc_Asc);
+			
+		}
+		
+		renderingPromoList(couponsList);
+
+	}//getCouponReports()
+	
+	
+	private void renderingPromoList(List<Coupons> coupList){
+		Components.removeAllChildren(couponRowsId);
+		if(coupList == null) {
+			//TODO
+			logger.debug(" No Promo-codes exists ");
+			return;
+		}
+		Label tempLabel = null;
+		
+		//List<CouponDiscountGeneration> dis
+		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+		for (Coupons coupObj : coupList) {
+			String validity = null;
+			if(coupObj.getExpiryType().equals(Constants.COUP_VALIDITY_PERIOD_STATIC)){
+				
+				validity =MyCalendar.calendarToString(coupObj.getCouponCreatedDate(), MyCalendar.FORMAT_DATEONLY_GENERAL, clientTimeZone)+" - "+MyCalendar.calendarToString(coupObj.getCouponExpiryDate(),MyCalendar.FORMAT_DATEONLY_GENERAL ,clientTimeZone);
+			}
+			else if(coupObj.getExpiryType().equals(Constants.COUP_VALIDITY_PERIOD_DYNAMIC)){
+				validity = "Dynamic";
+			}
+
+			String discount =  "";
+			if(coupObj.getDiscountType().equals("Percentage")) {
+				discount = "% on ";
+			}else {
+				discount = " $ on ";
+			}
+			//discount= discount+" "+coupObj.getDiscountCriteria();
+			if(coupObj.getDiscountCriteria().trim().contains("SKU")) {
+				discount += " Product";
+			}else {
+				discount += " Receipt";
+			}
+					//couponDiscountGeneration.getDiscount() !=null?""+couponDiscountGeneration.getDiscount() : "";
+
+			//String totRevenue = couponDiscountGeneration.getTotPurchaseAmount() !=null?""+couponDiscountGeneration.getTotPurchaseAmount() : "";
+
+			Row row = new Row();
+			row.setParent(couponRowsId);
+			//Coup Name
+			tempLabel= new Label(coupObj.getCouponName().trim());
+			tempLabel.setStyle("cursor:pointer;color:blue;text-decoration: underline;");
+			tempLabel.addEventListener("onClick", this);
+			row.appendChild(tempLabel);
+			
+			//Status
+			row.appendChild(new Label(coupObj.getStatus()));
+			
+			//Validity
+			row.appendChild(new Label(validity));
+			//Discount
+			row.appendChild(new Label(discount));
+			
+			
+			String totStr=""; 
+			String availableStr="";
+			if(coupObj.getAutoIncrCheck()){
+				totStr="Unlimited";
+				availableStr="Unlimited";
+			}else{
+				totStr=""+coupObj.getTotalQty();
+				availableStr=""+(coupObj.getAvailable()!= null ? coupObj.getAvailable():"");
+			}
+			//Codes generated
+			row.appendChild(new Label(totStr));
+				
+			
+			//issued
+			row.appendChild(new Label(coupObj.getIssued() != null? ""+coupObj.getIssued():"" ));
+			
+			//Redeemed
+			row.appendChild(new Label(coupObj.getRedeemed() != null?  ""+coupObj.getRedeemed():"" ));
+			//Available
+			row.appendChild(new Label(availableStr));
+			//Revenue
+			row.appendChild(new Label(coupObj.getTotRevenue() != null? ""+decimalFormat.format(coupObj.getTotRevenue()):"" ));
+			
+			row.setValue(coupObj);
+			
+			row.setParent(couponRowsId);
+
+		} // for
+	} //renderingPromoList
+	
+	
+
+	public void onClick$resetAnchId() {
+
+		statusLbId.setSelectedIndex(0);
+		orderby_colName="couponId";
+		desc_Asc="desc";
+
+		/*setDateValues();
+		String fromDate = MyCalendar.calendarToString(getStartDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+		String endDate = MyCalendar.calendarToString(getEndDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+		String statusStr = statusLbId.getSelectedItem().getLabel();
+		
+		totalSize  = couponsDao.findCoupBasedOnDates(currentUser.getUserId(),statusStr,fromDate, endDate);
+		
+		int tempCount = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+		logger.debug(">>>>>>>>totalSize ::"+totalSize);
+		
+		couponRepListBottomPagingId.setTotalSize(totalSize);
+		
+     	getCouponReports(0, tempCount);*/
+     	
+		String status = statusLbId.getSelectedItem().getLabel();
+		Calendar couponDate = null;
+		Calendar cal = Calendar.getInstance();
+		couponDate = couponsDao.getCouponsDateByStatus(users.getUserOrganization().getUserOrgId(),status);
+     	
+		if(couponDate != null) {
+			fromDateboxId.setValue(couponDate);
+		}else {
+			fromDateboxId.setValue(cal);
+		}
+     	toDateboxId.setValue(cal);
+     	
+     	fromDate = MyCalendar.calendarToString(getStartDate(fromDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+		endDate = MyCalendar.calendarToString(getEndDate(toDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+     	
+     	int count = couponsDao.findTotCountCouponsofOrg(users.getUserOrganization().getUserOrgId());
+     	couponRepListBottomPagingId.setTotalSize(count);
+     	pageSizeLbId.setSelectedIndex(0);
+     	int pageSize = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+     	couponRepListBottomPagingId.setPageSize(pageSize);
+     	couponRepListBottomPagingId.setActivePage(0);
+	 
+		List<Coupons> couponsList = couponsDao.findDefaultCoupons(users.getUserOrganization().getUserOrgId(),
+														couponRepListBottomPagingId.getActivePage()*couponRepListBottomPagingId.getPageSize(),couponRepListBottomPagingId.getPageSize());
+		if(couponsList!= null ) {
+		 totalSize  = couponsList.size();
+		}
+//				couponsDao.findCoupBasedOnDates(currentUser.getUserId(),statusStr,fromDate, endDate);
+				
+		logger.debug(">>>>>>>>totalSize ::"+totalSize);
+		
+		//getCouponReports(0, tempCount);
+		renderingPromoList(couponsList);
+     	
+     	
+     	
+     	
+     	
+
+	}// onclick$resetAnchId()
+
+	public void setDateValues() {
+
+		Calendar cal = MyCalendar.getNewCalendar();
+		toDateboxId.setValue(cal);
+		logger.debug("ToDate (server) :" + cal);
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+		logger.debug("FromDate (server) :" + cal);
+		fromDateboxId.setValue(cal);
+
+	}//setDateValues()
+	public void onClick$getStoreBetweenDatesBtnId() {
+		
+		Calendar  start = storeFromDateboxId.getClientValue();
+		Calendar end = storeToDateboxId.getClientValue();
+		
+		if(end.before(start)) {
+			MessageUtil.setMessage("'From' date cannot be later than 'To' date.", "red");
+			return;
+		}
+		
+		storeFromDateStr = MyCalendar.calendarToString(getStartDate(storeFromDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+		storeToDateStr = MyCalendar.calendarToString(getEndDate(storeToDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+		 
+		int storeListSize = couponCodesDao.findTotalStoreCount(users.getUserOrganization().getUserOrgId(),storeFromDateStr,storeToDateStr);
+		 
+		 storePagingId.setTotalSize(storeListSize);
+		 storePagingId.setActivePage(0);
+		 
+		 int pNo = Integer.parseInt( memberPerPageStoreLBId.getSelectedItem().getLabel());
+		 fillStoreRedemption(0, pNo);
+	}
+	public void onClick$getBitweenDatesBtnId() {
+		try {
+		//	int index=statusLbId.getSelectedIndex();
+			fromDate_EndDate();
+			
+			Components.removeAllChildren(couponRowsId);
+			
+			String statusStr = statusLbId.getSelectedItem().getLabel();
+		//	onSelect$pageSizeLbId();
+			totalSize =couponsDao.findCoupBasedOnDates(users.getUserOrganization().getUserOrgId(),statusStr,fromDate, endDate);
+			couponRepListBottomPagingId.setTotalSize(totalSize);
+			
+			int tempCount = Integer.parseInt(pageSizeLbId.getSelectedItem().getLabel());
+			couponRepListBottomPagingId.setPageSize(tempCount);
+			couponRepListBottomPagingId.setActivePage(0);
+			couponRepListBottomPagingId.addEventListener("onPaging", this); 
+			getCouponReports(0,tempCount);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception ::" , e);
+		}
+	}//onClick$getBitweenDatesBtnId()
+	
+public void onSelect$memberPerPageStoreLBId() {
+		
+		try {
+			
+			logger.info("just enter here");
+			
+			
+			String selectStr = memberPerPageStoreLBId.getSelectedItem().getLabel();
+			int pNo = Integer.parseInt(selectStr);
+			
+			storePagingId.setPageSize(pNo);
+			storePagingId.setActivePage(0);	
+				
+			fillStoreRedemption(0,pNo);
+			
+		} catch (NumberFormatException e) {
+			logger.error("Exception ::" , e);
+		}
+	} // onClick$memberPerPageLBId
+	
+	
+	public void onChange$fromDateboxId (){
+		if(fromDateboxId.getValue() ==null || toDateboxId.getValue()== null) return;
+		Calendar  start = fromDateboxId.getClientValue();
+		Calendar end = toDateboxId.getClientValue();
+		
+		if(end.before(start)) {
+			MessageUtil.setMessage("'From' date cannot be later than 'To' date.", "red");
+			return;
+		}
+	}
+	
+	public void onChange$toDateboxId(){
+		
+		Calendar  start = fromDateboxId.getClientValue();
+		Calendar end = toDateboxId.getClientValue();
+		
+		if(end.before(start)) {
+			MessageUtil.setMessage("'From' date cannot be later than 'To' date.", "red");
+			return;
+		}
+	}
+	
+	private void defaultSettingForDateByStatus(String status) {
+
+		Calendar couponDate = null;
+		Calendar cal = Calendar.getInstance();
+		toDateboxId.setValue(cal);
+			couponDate = couponsDao.getCouponsDateByStatus(users.getUserOrganization().getUserOrgId(),status);
+		if(couponDate != null){
+			fromDateboxId.setValue(couponDate);
+		}
+		else{
+			fromDateboxId.setValue(cal);
+		}
+		
+		fromDate = MyCalendar.calendarToString(getStartDate(fromDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+		endDate = MyCalendar.calendarToString(getEndDate(toDateboxId), MyCalendar.FORMAT_DATETIME_STYEAR);
+		
+	}
+	
+	public void onSelect$statusLbId() {
+		
+		String status = statusLbId.getSelectedItem().getValue();
+		defaultSettingForDateByStatus(status);
+	}
+	
+	
+	public void onEvent(Event event) throws Exception {
+		// TODO Auto-generated method stub
+		super.onEvent(event);
+		
+		 if(event.getTarget() instanceof Label ) {
+		
+		Label tempLable = (Label)event.getTarget();
+		Row tempRow = (Row)tempLable.getParent();
+		
+		if(tempRow.getValue()!=null){
+		
+		Coupons couponObj = (Coupons)tempRow.getValue();
+		
+		logger.debug("couponObj is  :: "+couponObj);
+		if(couponObj != null){
+			
+			session.setAttribute("COUP_REDEEMED_DETAILS", couponObj);
+		}
+		}else{
+			String store = ""+tempLable.getAttribute("original value");
+			session.removeAttribute("COUP_REDEEMED_DETAILS");
+			session.setAttribute("STORE_REDEEMED_DETAILS", store);
+		}
+		Redirect.goTo(PageListEnum.REPORT_COUPONS);
+		
+	} else if(event.getTarget() instanceof Paging) {
+		/*String fromDate = MyCalendar.calendarToString(getStartDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+		String endDate = MyCalendar.calendarToString(getEndDate(), MyCalendar.FORMAT_DATETIME_STYEAR);
+		String statusStr = statusLbId.getSelectedItem().getLabel();*/
+		Paging paging = (Paging) event.getTarget();
+		int desiredPage = paging.getActivePage();
+		PagingEvent pagingEvent = (PagingEvent) event;
+		int pSize = pagingEvent.getPageable().getPageSize();
+		int ofs = desiredPage * pSize;
+		
+		if(paging.getAttribute("onPaging").equals("coupon")) {
+			this.couponRepListBottomPagingId.setActivePage(desiredPage);
+			getCouponReports(ofs, (byte) pagingEvent.getPageable().getPageSize());
+			
+		}else if(paging.getAttribute("onPaging").equals("store")) {
+			
+			this.storePagingId.setActivePage(desiredPage);
+			fillStoreRedemption(ofs, pSize);
+			
+		}
+		
+		
+	}
+	
+	}
+	
+	public void onClick$exportBtnStoreId(){
+
+
+		logger.debug("-- just entered --");
+		//int count = getCount();
+		//int count = recordSize;
+		int size = 1000;
+		String searchStr = "";
+		/*
+		if(!suppLstSearchTbId.getValue().equals("") && !suppLstSearchTbId.getValue().equalsIgnoreCase("Search Email Address")) {
+			
+			searchStr = suppLstSearchTbId.getValue();
+			
+		}*/
+
+		TimeZone tz =(TimeZone)Sessions.getCurrent().getAttribute("clientTimeZone"); 
+		//String type = (String)supptypeLbId.getSelectedItem().getValue();
+		//String fileType = exportFilterLbId.getSelectedItem().getLabel();
+		String fileType = "csv";
+		//String category = (String)supptypeLbId.getSelectedItem().getLabel();
+		String userName = GetUser.getUserName();
+		String usersParentDirectory = (String)PropertyUtil.getPropertyValue("usersParentDirectory");
+		String exportDir = usersParentDirectory + "/" + userName + "/Coupon/" ;
+		File downloadDir = new File(exportDir);
+		JdbcResultsetHandler jdbcResultsetHandler = null;
+		BufferedWriter bw = null;
+		
+		if(downloadDir.exists()){
+			try {
+				FileUtils.deleteDirectory(downloadDir);
+				logger.debug(downloadDir.getName() + " is deleted");
+			} catch (Exception e) {
+				logger.error("Exception");
+				logger.warn(downloadDir.getName() + " is not deleted");
+			}
+		}
+		if(!downloadDir.exists()){
+			downloadDir.mkdirs();
+		}
+		
+		String filePath = "";
+		StringBuffer sb = null;
+
+		logger.debug("Writing to the file : " + filePath);
+
+		
+		if(fileType.contains("csv")){
+			try {
+								
+				filePath = exportDir +  "StoreRedemption"+ "_" + System.currentTimeMillis() + ".csv";
+				
+				logger.debug("Download File path : " + filePath);
+				File file = new File(filePath);
+				bw = new BufferedWriter(new FileWriter(filePath));
+				//bw.write("\"Email Address\",\"Reason\" \r\n");
+				sb = new StringBuffer();
+
+				
+
+				sb.append("\"Store\",\"Revenue\",\"No. Of Redemptions\"");
+				sb.append("\r\n");
+				bw.write(sb.toString());
+				
+
+				String qry = "SELECT store_number, ROUND(SUM(tot_revenue),2) AS REVENUE, COUNT(coupon_code_id) as COUNT " +
+						"FROM coupon_codes WHERE orgId ="+users.getUserOrganization().getUserOrgId()+
+								" AND store_number IS NOT NULL AND coupon_code IS NOT NULL AND redeemed_on between '"+storeFromDateStr+"' AND '"+storeToDateStr+"'" +
+								"GROUP BY store_number ORDER BY redeemed_on DESC  ";
+			
+				jdbcResultsetHandler = new JdbcResultsetHandler();
+				jdbcResultsetHandler.executeStmt(qry);
+				
+				ResultSet resultSet = jdbcResultsetHandler.getResultSet();
+			
+				sb = new StringBuffer();
+				if (resultSet != null && !resultSet.isAfterLast()) {
+					while(resultSet.next()){
+						sb.append(fetchStoreName(resultSet.getString(1))+",");
+						sb.append(resultSet.getString(2)+",");
+						sb.append(resultSet.getString(3));
+						sb.append("\n");
+					}
+					
+				}
+				bw.write(sb.toString());
+				bw.flush();
+				bw.close();
+				
+				Filedownload.save(file, "text/csv");
+			} catch (Exception e) {
+				logger.info("Exception :: ",e);
+			}finally{
+				if(jdbcResultsetHandler!=null ) jdbcResultsetHandler.destroy();
+				;userName = null;usersParentDirectory = null;exportDir = null;downloadDir = null;
+				filePath = null;bw=null;
+				jdbcResultsetHandler = null;jdbcResultsetHandler = null;
+				System.gc();
+			}
+			logger.debug("-- exit --");
+		}
+				
+    }
+	
+
+}

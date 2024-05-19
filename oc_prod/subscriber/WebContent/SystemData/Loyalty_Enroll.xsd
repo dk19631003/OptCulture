@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ENROLLMENTREQS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="ENROLLMENTREQ">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HEADERINFO">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="REQUESTID" type="xs:string" />
+                    <xs:element name="PCFLAG" type="xs:string" minOccurs="0"/>
+                    <xs:element name="STORENUMBER" type="xs:string" minOccurs="0"/>
+                     <xs:element name="SUBSIDIARYNUMBER" type="xs:string" minOccurs="0"/>
+                    <xs:element name="SOURCETYPE" type="xs:string" minOccurs="0"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ENROLLMENTINFO">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="STORELOCATIONID" type="xs:string" />
+                    <xs:element name="CARDNUMBER" type="xs:string" />
+                    <xs:element name="CARDPIN" type="xs:string" />
+                    <xs:element name="CARDTYPE" type="xs:string" />
+                    <xs:element name="EMPID" type="xs:string" />
+                    <!--  <xs:element name="TIERNAME" type="xs:string" minOccurs="0"/> -->
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="CUSTOMERINFO">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="CUSTOMERID" type="xs:string" />
+                    <xs:element name="CUSTOMERTYPE" type="xs:string" />
+                    <xs:element name="FIRSTNAME" type="xs:string" />
+                    <xs:element name="MIDDLENAME" type="xs:string" />
+                    <xs:element name="LASTNAME" type="xs:string" />
+                    <xs:element name="PHONE" type="xs:string" />
+                    <xs:element name="PHONEPREF" type="xs:string" />
+                    <xs:element name="EMAIL" type="xs:string" />
+                    <xs:element name="EMAILPREF" type="xs:string" />
+                    <xs:element name="ADDRESS1" type="xs:string" />
+                    <xs:element name="ADDRESS2" type="xs:string" />
+                    <xs:element name="CITY" type="xs:string" />
+                    <xs:element name="STATE" type="xs:string" />
+                    <xs:element name="POSTAL" type="xs:string" />
+                    <xs:element name="COUNTRY" type="xs:string" />
+                    <xs:element name="MAILPREF" type="xs:string" />
+                    <xs:element name="BIRTHDAY" type="xs:string" />
+                    <xs:element name="ANNIVERSARY" type="xs:string" />
+                    <xs:element name="GENDER" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="AMOUNTDETAILS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ENTEREDAMOUNT" type="xs:string" />
+                    <xs:element name="VALUECODE" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="USERDETAILS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="USERNAME" type="xs:string" />
+                    <xs:element name="ORGANISATION" type="xs:string" />
+                    <xs:element name="TOKEN" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,7 @@
+{
+  "name": "BusTaxy",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

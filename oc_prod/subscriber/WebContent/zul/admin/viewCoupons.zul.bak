@@ -1,0 +1,817 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="viewCouponsWinId" apply="org.mq.marketer.campaign.controller.admin.ViewCouponsController"  
+		xmlns:h="native" 	xmlns:w="client" width="100%" >
+		
+			
+		<tabbox id="manageCouponsTabBoxId">
+		<tabs>
+				<tab label="Promotions" id="couponsTabId" selected="true"/>
+		  		<tab label="Create New Promotion" id="createCoupTabId" />
+		  </tabs>
+		  <tabpanels>
+			  	<tabpanel>
+			  	<h:table cellspacing="0" cellpadding="4" width="99%"  bgcolor="#F4F5F9" style="padding:2px;border:1px solid #cccccc;border-radius:5px;">
+			  	 <h:tr>
+			  	   <h:td>
+			  	      <hlayout>
+			  	   <div>
+			       	 <label value="Search by:" style="font-weight:bold;" />                              
+				     <listbox id="srchLbId" mold="select"  width="150px" >
+				        <listitem label="Status" value ="Status" selected="true"/>
+            			<listitem label="Promotion Name" value ="Name" />
+            			<listitem label="Created on" value="Date"/>
+        		     </listbox>
+			       </div>
+			       <div id="searchByPromoCodeNameDivId" visible="false">
+        		   	 <textbox id="searchByPromoCodeNameTbId" width="200px"/>
+        		   </div>
+			       
+			       <div id="searchByCreatedOnDivId" visible="false">
+			    	 <label value="Date:" sclass="theme-lbHeading" />
+					 <space />
+					 <label value="From: " />
+					 <datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+					 <space />
+					 <label value="To: " />
+					 <datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no future" />
+			      </div>
+			      <div id="searchByStatusDivId" visible="true">                           
+					  <listbox id="codeStatusLb" mold="select"  width="100px" >
+					    <listitem label="All" selected="true"  value="All"/>
+            			<listitem label="Active"  value="Active" />
+            			<listitem label="Running"  value="Running"/>
+            			<listitem label="Expired"  value="Expired" />
+            			<listitem label="Paused"  value="Paused"/>
+					  </listbox>
+				  </div>
+				  <div id="filterBtnDivId">
+				      <button label="Filter" id="filterBtnId" sclass="idle140" style="margin-left:20px;" />
+				  </div>
+				  <div id="resetAnchDivId" visible="true" style="margin-left:20px;margin-top:4px;" >
+				  	  <a label="Reset" id="resetAnchId" />
+				  </div>
+			  	</hlayout>
+			  	   </h:td>
+			  	 </h:tr>
+			  	</h:table>
+			  	
+			  	<div width="100%" >
+			  	
+			  		<separator />
+			  		<grid id="contactsGridId" emptyMessage="No data available" mold="paging" paginal="${pagingId}" >
+			  			<columns>
+							<column label="Promotion Name"></column>
+							<column label="Description"></column>
+							<column label="Promo-code Type" width="150px"></column>
+							<column label="Created on" width="100px"></column>	
+							<column label="Status" width="80px"></column>
+							<column label="Discount" width="180px"></column>
+							<column label="Validity Period" width="180px"></column>
+							<column label="No. of Codes" width="100px"></column>
+							<column label="Actions"></column>
+						</columns>
+						<rows id="couponRowsId"/>
+			  		</grid>
+			  		<h:table width="100%">
+					<h:tr>
+							<h:td align="right">
+						   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+						   		<listbox rows="1" mold="select" id="memberPerPageLBId" style="margin-right:30px;">
+									<listitem label="5" selected="true" />
+									<listitem label="10"  />
+									<listitem label="15"/>
+								</listbox>
+							</h:td>
+							<h:td width="280px"  >
+								<paging id="couponsPagingId" detailed="true" pageSize="5" width="280px" 
+									class="contactsViewPaging" style="border:none;"  />
+							</h:td>
+					</h:tr>
+					
+				</h:table>
+			  	<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			
+						<h:tr >
+						<h:td align="right"><image src="/img/play_icn.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Activate" style="font-size:11px;" /> </h:td>
+						
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+								<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+								 
+								<h:td align="right"><image src="/img/pause_icn.png"/></h:td>
+								<h:td  align="left" style="padding-right:30px;"><label value="- Pause" style="font-size:11px;" /> </h:td>
+								
+								<h:td align="right"><image src="/img/action_delete.gif"/></h:td>
+								<h:td align="left" style="padding-right:30px;"><label value="- Delete" style="font-size:11px;" /> </h:td>
+								
+								<h:td align="right"><image src="/img/theme/home/reports_icon.png"/></h:td>
+								<h:td align="left" style="padding-right:10px;"> <label value="- Reports" style="font-size:11px;" /> </h:td>
+								
+								<h:td align="right"><image src="/img/icons/Export-of-Promo-codes-icon.png"/></h:td>
+								<h:td align="left" style="padding-right:10px;"> <label value="- Export" style="font-size:11px;" /> </h:td>
+					</h:tr>
+				</h:table>
+			  	
+			  </div>
+			  
+			 </tabpanel>
+			  
+			 <tabpanel >
+
+			  		<h:table cellspacing="2" cellpadding="2" width="100%">
+			  		  <h:tr height="2"/>
+			  			
+			  			<h:tr>
+			  				<h:td width="200"><label  value="Promotion Name : "/> </h:td>
+			  				<h:td><textbox  id="couponNameTxtBxId" width="300px"/>
+			  				<image src="/img/icons/icon_q.png" tooltip="bcname"/>
+	  								<popup id="bcname" style="bgcolor:#CCCCCC;"  >
+										<label  value="( _, space ) are not allowed." sclass="labelPos" />
+									</popup>
+									</h:td>
+			  			</h:tr>
+			  			
+			  			<h:tr>
+			  				<h:td ><label  value="Description : "/> </h:td>
+			  				<h:td ><textbox  id="coupDescTxtBxId" rows="2" height="40px" width="300px"/></h:td>
+			  			</h:tr>
+			  			
+						<h:tr height="20"/>
+						
+						<h:tr>
+						
+			  				<h:td ><label  value="Enable Barcode : "/> </h:td>
+			  				<h:td ><hlayout><hbox align="center" spacing="10px">
+			  				<checkbox id="bcenableCoupChkBxId" style="margin:10 10 0 10px;"/>
+			  				<div visible="false" id="bcsizeCoupDivId">
+			  				<label value=" Barcode Type:" />
+			  				<listbox rows="1" mold="select" id="bctypeListboxId" style="padding:1px; margin-right:10px;">
+			  				    <listitem label="Linear barcode" value="LN" selected="true" />
+								<listitem label="QR Code" value="QR" />
+								<!-- <listitem label="Linear barcode" value="LN"/>
+								<listitem label="QR Code" value="QR" selected="true" /> -->
+								<listitem label="Aztec Code" value="AZ"/>
+								<listitem label="Data Matrix" value="DM"/>
+							</listbox>
+			  				<label value=" Dimension(Width X Height):" />
+			  				
+			  				<listbox rows="1" mold="select" width="150px" id="bcDimensionListboxId2"  style="padding:1px; margin-right:10px;"/>
+			  				
+							<image src="/img/icons/icon_q.png" tooltip="bchelp"/>
+	  								<popup id="bchelp" style="bgcolor:#CCCCCC;"  >
+										<label  value="Width and height can also be edited in email editor." sclass="labelPos" />
+									</popup>
+			  				</div>
+			  				</hbox>
+		  					</hlayout>
+			  				</h:td>
+			  					
+			  			</h:tr>
+			  			
+			  		  	<h:tr height="20"/>
+			  		  	<!--  -->	  	
+			  		  	<h:tr>
+					
+							<h:td valign="top" 	>
+									<label value="Promo-code generation :" />
+							</h:td>
+							<h:td colspan="2">
+								<groupbox width="600px">
+									<h:table width="600px"
+									style="background-color: #F8F8F8; border-bottom: 1px solid #CCCCCC; box-shadow: 0 0 2px #CCCCCC; padding: 10px;">
+										
+										<radiogroup  id="coupGenRadioGrId">
+										<!-- <radiogroup	id="triggerTypeRGId"> -->
+											<h:tr>
+												<h:td valign="top"
+													 align="left">
+													
+													<radio label="Single Promo-code" id="singRadioId" selected="true" radiogroup="coupGenRadioGrId" />
+													
+												</h:td>
+												<h:td valign="top"
+													 align="left">
+													<radio label="Multiple and random Promo-codes" id ="multRadioId"  radiogroup="coupGenRadioGrId"/>
+												</h:td>
+												
+											</h:tr>
+										</radiogroup>
+									</h:table>
+									
+									<div height="180px">
+										<div visible="true" id="singleSelCoupDivId">
+											<h:table>
+												<h:tr>
+													<h:td><label value=" Enter Promo-code:"/></h:td>
+													<h:td><textbox id="singCoupTxtBxId" value="Enter Code"  width="100px" maxlength="12"  style="font-size:11px;"
+						  							w:onClick="javascript: if(this.getValue()=='Enter Code') {  this.setValue(''); }" 
+											      	w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Enter Code'); }" focus="true"/></h:td>
+												</h:tr>
+												
+												<h:tr>
+													<h:td><label value=" Issue to:"/></h:td>
+													<h:td><longbox id="singlelimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="singCoupChkBxId" label="Unlimited Subscribers" style="display:inline-block;"/></h:td>
+												</h:tr>
+												
+												<h:tr>
+													<h:td><label value=" Redemption Limit:"/></h:td>
+													<h:td><longbox id="redeemdlimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="redeemdsingCoupChkBxId" label="Unlimited Redemptions " style="display:inline-block;"/></h:td>
+												</h:tr>
+												
+												<h:tr>
+													<h:td><label value=" Per Subscription Use Limit:"/></h:td>
+													<h:td><longbox id="perSubUselimitLongbxId" width="60px" maxlength="6"/></h:td>
+													<h:td><label value="or "/></h:td>
+													<h:td><checkbox id="unlimitSubChkBxId" label="Unlimited " 
+													style="display:inline-block;" onCheck="perSubUselimitLongbxId.setDisabled(unlimitSubChkBxId.isChecked())"/></h:td>
+												</h:tr>
+												
+												
+												<h:tr>
+													<h:td><checkbox id="onlylpChkBxId"  label="Redeemable By Loyalty Points :" /></h:td>
+													<h:td colspan="3">
+														<hbox align="center"  id="loyatyPntshboxId" visible="false">
+								  							<label value="No.of points required" style="padding-right:5px;"/>
+								  							<intbox id="lpIBxId" width="100px" />
+							  							</hbox>
+			  										</h:td>
+												</h:tr>
+												<h:tr>
+													<h:td><checkbox id="multiplePerReceiptChkBxId"  label="Allow multiple use per receipt :" /></h:td>
+												</h:tr>
+											</h:table>
+				  						</div>
+										
+										<div id="multiSelCoupDivId" style=" margin-top: 10px;">
+					  						<hbox align="center" spacing="10px">
+					  						</hbox>
+					  						<h:table>
+					  							<h:tr>
+							  						<h:td>
+							  							<label value="No. of codes generated"/>
+							  						</h:td>
+							  						<h:td width="40px">
+							  							<image src="/img/icons/icon_q.png" tooltip="help"/>
+						  								<popup id="help" style="bgcolor:#CCCCCC;"  >
+															<label  value="6 digits,alpha-numeric codes will be generated." sclass="labelPos" />
+														</popup>
+							  						</h:td>
+					  								<h:td>
+					  									<longbox id="multiCodLimitLongBxId" width="100px" maxlength="6"/>
+					  								</h:td>
+					  							</h:tr>
+					  							<h:tr>
+					  								<h:td /><h:td />
+					  								<h:td >
+							  							<checkbox id="multiCoupChkBxId" label="Auto-add Promo-codes"/>
+					  								</h:td>
+					  								<h:td align="left">
+							  							<image src="/img/icons/icon_q.png" tooltip="help1"/>
+							  							
+							  							<popup id="help1" style="bgcolor:#CCCCCC;" >
+															<label  value="Automatically add more Promo-codes when running low." sclass="labelPos" />
+														</popup>
+					  								
+					  								</h:td>
+							  						
+					  							</h:tr>
+					  						</h:table>
+					  							
+			  							</div>
+									
+									</div>									
+								</groupbox>
+							</h:td>
+						</h:tr>
+			  		  	
+			  		  	
+			  		 
+
+			
+			  		<h:tr height="20"/>
+			  	</h:table>
+			  
+			  	
+			  	
+			  	<h:table>
+		  			<h:tr>
+		  				<h:td valign="top" width="200" style="padding-top:5px;">
+		  					<label  value="Validity Period : "/> 
+		  				</h:td>
+		  				
+		  				<h:td  >
+						<div id="promoValidityPeriodDivId">
+		  				
+		  					<radiogroup id="promoRgId"  orient="vertical"/>
+		  					<vlayout>
+		  						<!-- <hlayout>
+		  							<radio id="dynamicRadio" radiogroup="promoRgId" label="Dynamic validity" />
+		  								<textbox id="dynamicValidityTbId" cols="25" maxlength="45" value="" width = "80px"/>
+		  								<label value="days, starting from" style="position: relative; top: 6px;" />
+		  								
+		  								<listbox id="dynamicValidityLbId" width="200px" mold="select">
+		  									<listitem label="Date of issue of promo-code" value="1" selected="true" />
+											<listitem label="Birthday" value="2" />
+											<listitem label="Anniversary" value="3" />
+		  								</listbox>
+		  						</hlayout> -->
+		  						
+		  						<hlayout>
+		  							<radio id="staticRadio" radiogroup="promoRgId" selected="true" label="Fixed validity"/>
+		  							<label value="From :" style="position: relative; top: 3px;" />
+		  							<datebox id="createDateBxId"
+		  					 			readonly="true" style="marging:right-10px;"/>
+		  					
+		  							<label Value="To :" style="position: relative; top: 3px;" />
+		  							<datebox id="expiryDateBxId"   readonly="true" />
+		  						</hlayout>
+		  						
+		  						<separator height="10px"/>
+							</vlayout>
+		  				</div>	
+						<div id="promoValidityPeriodDivIdDynamic">
+							<vlayout>	
+		  						<hlayout>
+		  							<radio id="dynamicRadio" radiogroup="promoRgId" label="Dynamic validity" />
+		  								<textbox id="dynamicValidityTbId" cols="25" maxlength="45" value="" width = "80px"/>
+		  								<label value="days, starting from" style="position: relative; top: 6px;" />
+		  								
+		  								<listbox id="dynamicValidityLbId" width="200px" mold="select">
+		  									<listitem label="Date of issue of promo-code" value="1" selected="true" />
+											<listitem label="Birthday" value="2" />
+											<listitem label="Anniversary" value="3" />
+		  								</listbox>
+		  						</hlayout>
+		  						
+		  						<!-- <hlayout>
+		  							<radio id="staticRadio" radiogroup="promoRgId" selected="true" label="Fixed validity"/>
+		  							<label value="From :" style="position: relative; top: 3px;" />
+		  							<datebox id="createDateBxId"
+		  					 			readonly="true" style="marging:right-10px;"/>
+		  					
+		  							<label Value="To :" style="position: relative; top: 3px;" />
+		  							<datebox id="expiryDateBxId"   readonly="true" />
+		  						</hlayout> -->
+		  					</vlayout>
+		  				</div>
+		  				</h:td>
+		  				
+		  				 <!-- <h:td>
+		  					<label value="From :"/>
+		  					
+		  					
+		  					<datebox id="createDateBxId"
+		  					 readonly="true" style="marging:right-10px;"/>
+		  					
+		  					<label Value="To :" style="margin:0 10px;"/>
+		  					<datebox id="expiryDateBxId"   readonly="true" />
+		  				</h:td>  -->
+		  			</h:tr>
+		  		  	<h:tr height="20"/>
+		  		  	
+		  		  	<!-- <h:tr>
+									<h:td>
+										<label value="Set day(s) of week :"  id="setDaysOfWeekValidityLblId"/>
+									</h:td>
+									
+									<h:td>
+									<div id="targetDaysDivId" >		
+										<checkbox label= "All days of the week, or" id="setDayOfWeekValidityChkBoxId"  />
+										<checkbox label= "Mon" id="ignoreMonChkBoxId" checked="true" value="2" sclass="dashboardMyLinks" />
+										<checkbox label= "Tue" id="ignoreTueChkBoxId" checked="true" value="3" sclass="dashboardMyLinks" /> 
+										<checkbox label= "Wed" id="ignoreWedChkBoxId" checked="true" value="4" sclass="dashboardMyLinks" /> 
+										<checkbox label= "Thu" id="ignoreThurChkBoxId" checked="true" value="5" sclass="dashboardMyLinks" /> 
+										<checkbox label= "Fri" id="ignoreFriChkBoxId" checked="true" value="6" sclass="dashboardMyLinks" /> 
+										<checkbox label= "Sat" id="ignoreSatChkBoxId" checked="true" value="7" sclass="dashboardMyLinks" /> 
+										<checkbox label= "Sun"  id="ignoreSunChkBoxId" checked="true" value="1" sclass="dashboardMyLinks" /> 
+									</div>
+									</h:td>
+					</h:tr>
+					
+					<h:tr height="20"/>
+					
+					<h:tr>
+						<h:td>
+							<label value="Set Time-of-Day Validity :"  id="setTimeOfDayValidityLblId"/>
+						</h:td>
+						
+						 <h:td>
+							<label  value="Between " />
+							<listbox id="setTimeLbId" width="80px" mold="select">
+								<listitem label="1 AM" value="1" selected="true" />
+								<listitem label="2 AM" value="2" />
+								<listitem label="3 AM" value="3" />
+								<listitem label="4 AM" value="4" />
+								<listitem label="5 AM" value="5" />
+								<listitem label="6 AM" value="6" />
+								<listitem label="7 AM" value="7" />
+								<listitem label="8 AM" value="8" />
+								<listitem label="9 AM" value="9" />
+								<listitem label="10 AM" value="10" />
+								<listitem label="11 AM" value="11" />
+								<listitem label="12 PM" value="12" />
+								<listitem label="1 PM" value="13" />
+								<listitem label="2 PM" value="14" />
+								<listitem label="3 PM" value="15" />
+								<listitem label="4 PM" value="16" />
+								<listitem label="5 PM" value="17" />
+								<listitem label="6 PM" value="18" />
+								<listitem label="7 PM" value="19" />
+								<listitem label="8 PM" value="20" />
+								<listitem label="9 PM" value="21" />
+								<listitem label="10 PM" value="22" />
+								<listitem label="11 PM" value="23" />
+							</listbox>
+							<label value="and" />
+							<listbox id="setTime1LbId" width="80px" mold="select">
+								<listitem label="1 AM" value="1" selected="true" />
+								<listitem label="2 AM" value="2" />
+								<listitem label="3 AM" value="3" />
+								<listitem label="4 AM" value="4" />
+								<listitem label="5 AM" value="5" />
+								<listitem label="6 AM" value="6" />
+								<listitem label="7 AM" value="7" />
+								<listitem label="8 AM" value="8" />
+								<listitem label="9 AM" value="9" />
+								<listitem label="10 AM" value="10" />
+								<listitem label="11 AM" value="11" />
+								<listitem label="12 PM" value="12" />
+								<listitem label="1 PM" value="13" />
+								<listitem label="2 PM" value="14" />
+								<listitem label="3 PM" value="15" />
+								<listitem label="4 PM" value="16" />
+								<listitem label="5 PM" value="17" />
+								<listitem label="6 PM" value="18" />
+								<listitem label="7 PM" value="19" />
+								<listitem label="8 PM" value="20" />
+								<listitem label="9 PM" value="21" />
+								<listitem label="10 PM" value="22" />
+								<listitem label="11 PM" value="23" />
+							</listbox>
+							
+							<a label="Add 1 more time-frame" style="color:#2886B9;font-weight:bold;text-decoration: underline;margin-top:5px;" id="addTimeFrameAnchId" />
+						</h:td>
+					</h:tr>
+					
+					<h:tr height="20"/> -->
+				
+		  			<h:tr>
+		  				<h:td ><label  value="Discount Criteria : "/> </h:td>
+		  				
+		  				<h:td >
+		  					
+		  					
+		  					<radiogroup  id="discountRadioGrId" />
+		  					<radio label="On Product" id="skuRadioId"  radiogroup="discountRadioGrId" selected="true" value="SKU"/>
+		  					<radio label="On Receipt" id="tpaRadioId"  radiogroup="discountRadioGrId" value="Total Purchase Amount"/>
+		  					
+		  				</h:td>
+		  			</h:tr>
+		  		</h:table>
+		  		
+		  		<separator height="10px"/>
+				  		
+				<groupbox   mold="3d" sclass="darkgroupbox" id="skuFilterGBxId" closable="false"  >
+				
+					<caption>
+					
+					<h:table cellpadding="0" cellspacing="0" border="0" height = "20">
+						<h:tr>
+							<h:td width="20"> 
+									
+								<image src="/images/action_add1.png" id= "showFilterImgId" tooltiptext="Show SKU Filters" style="margin-right:10px;cursor:pointer;" /> 
+								<image src="/images/Hide_icn.png" id= "hideFilterImgId" tooltiptext="Hide SKU Filters" style="margin-right:10px;cursor:pointer;" visible = "false" />
+					
+							</h:td> 
+							<h:td width="1250" > 
+								<label value = "Show/ Hide Inventory Attributes (Vendor Code, Dept. Code, Class, Sub-Class, Item Category, DCS)" style = "color:#FFFFFF;font-weight:bold;" />
+							
+							</h:td>
+						</h:tr>
+					</h:table>	
+						
+					</caption>
+				<div id = "filtersDivId" visible="false">
+					<h:table cellspacing="4" cellpadding="4">
+						<h:tr>
+							
+							
+							<h:td valign="top">
+							  <listbox id="vendorCodeFilterLBId" height="230px" 
+							  checkmark="true" multiple="true" emptyMessage="No vendor codes"  width="180px">
+							  <listhead>
+									<listheader width="40px" align="center"/>
+									<listheader label="Vendor Code" sort="auto" />
+								</listhead>
+								<auxhead  >
+				              		<auxheader align="center">
+				             			<toolbarbutton tooltiptext="filters|cl" />
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="vendorCodeMpId" sclass="myfilter" />
+		             					<toolbarbutton context="vendorCodeMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+				             			<textbox sclass="filterSearchVal" />
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+							
+							</h:td>
+							
+							<h:td valign="top">
+							  <listbox id="deptCodeFilterLBId" height="230px"  
+							  checkmark="true" multiple="true" emptyMessage="No department codes"  width="180px">
+							  <listhead>
+									<listheader width="40px" align="center"/>
+									<listheader label="Dept. Code" sort="auto" />
+								</listhead>
+								<auxhead  >
+				              		<auxheader align="center">
+				             			<toolbarbutton tooltiptext="filters|cl" />
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="deptCodeMpId" sclass="myfilter" />
+		             					<toolbarbutton context="deptCodeMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+				             			<textbox sclass="filterSearchVal" />
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+							
+							</h:td>
+							
+							<h:td valign="top">
+							  <listbox id="classFilterLBId" height="230px"  
+							  checkmark="true" multiple="true" emptyMessage="No class codes"  width="180px">
+							  <listhead>
+									<listheader width="40px" align="center"/>
+									<listheader label="Class " sort="auto" />
+								</listhead>
+								<auxhead  >
+				              		<auxheader align="center">
+				             			<toolbarbutton tooltiptext="filters|cl" />
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="classCodeMpId" sclass="myfilter" />
+		             					<toolbarbutton context="classCodeMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+				             			<textbox sclass="filterSearchVal" />
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+							
+							</h:td>
+							
+							<h:td valign="top">
+							  <listbox id="subClassFilterLBId" height="230px"  
+							  checkmark="true" multiple="true" emptyMessage="No sub-class codes"  width="180px">
+							  <listhead>
+									<listheader width="40px" align="center"/>
+									<listheader label="Sub-Class " sort="auto" />
+								</listhead>
+								<auxhead  >
+				              		<auxheader align="center">
+				             			<toolbarbutton tooltiptext="filters|cl" />
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="subClassCodeMpId" sclass="myfilter" />
+		             					<toolbarbutton context="subClassCodeMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+				             			<textbox sclass="filterSearchVal" />
+				             		</auxheader>
+				             	</auxhead>
+			  					</listbox>
+							
+							</h:td>
+							
+							
+							
+							
+							
+							<h:td valign="top">
+							  <listbox id="itemCategoryFilterLBId"  height="230px" checkmark="true"
+							  		 multiple="true" emptyMessage="No item categories"  width="180px">
+								  <listhead>
+										<listheader width="40px" align="center"/>
+										<listheader label="Item Category" sort="auto" />
+									</listhead>
+									<auxhead  >
+					              		<auxheader align="center">
+					             			<toolbarbutton tooltiptext="filters|cl" />
+					             		</auxheader> 
+					             		<auxheader>
+					            			<menupopup id="itemCatMpId" sclass="myfilter" />
+		             						<toolbarbutton context="itemCatMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+					             			<textbox sclass="filterSearchVal" />
+					             		</auxheader>
+					             	</auxhead>
+			  					</listbox>
+							</h:td>
+					
+							<h:td valign="top">
+							  <listbox id="dcsFilterLBId"  height="230px" checkmark="true"
+							  		 multiple="true" emptyMessage="No DCS codes"  >
+								  <listhead>
+										<listheader width="40px" align="center"/>
+										<listheader label="DCS" sort="auto" />
+									</listhead>
+									<auxhead  >
+					              		<auxheader align="center">
+					             			<toolbarbutton tooltiptext="filters|cl" />
+					             		</auxheader> 
+					             		<auxheader>
+					            			<menupopup id="dcsMpId" sclass="myfilter" />
+		             						<toolbarbutton context="dcsMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+					             			<textbox sclass="filterSearchVal" />
+					             		</auxheader>
+					             	</auxhead>
+			  					</listbox>
+							</h:td>
+					
+							
+					
+						</h:tr>
+						<h:tr>
+							<h:td align="left" >
+								<button id="applyFilterBtnId" label="Apply Filter" sclass="idle140" style="margin-right:20px;"/>
+							</h:td>
+							<h:td  align="left" >
+								<button id="clearFilterBtnId" label="Clear Filter" sclass="idle140" style="margin-right:20px;"/>
+							</h:td>
+						</h:tr>
+					</h:table>
+					
+				</div>	 
+					
+				</groupbox>
+	
+				 
+				 <h:table width="100%" cellspacing="5">
+				 <h:tr>
+				 	<h:td style="border:1px solid #CCC;" valign="top">
+				 	
+				 		<div id="mpvDivId" visible="false" style="text-align:center;margin-top:126px;" width="500px">
+				 			<h:table>
+				 				<h:tr>
+				 					
+				 					<h:td width="100px" align="right">
+					 					<checkbox id="mpvChkBoxId" style="padding-right:0px;"/>
+				 					</h:td>
+				 					<h:td>
+				 					
+								 		<label value="Minimum Purchase Amount"  id="mintAmtTxtLblId"/>
+								 		<label value=" $ " id="totAmtDollerLblId"/> 
+								 		<longbox id="totPurAmtLngBxId" maxlength="8"/>
+				 					</h:td>
+				 				</h:tr>
+				 			</h:table>
+				 			
+				 		</div>
+				 	
+				 		<div id="skuVisibleDivId" visible="true" width="500px" >
+								
+				 	
+							<listbox id="viewSKULbId" emptyMessage="No SKUs Found" checkmark="true" multiple="true" >
+								<listhead>
+									<listheader width="40px" align="center"/>
+									<listheader width="120px" label="SKU"  />
+									<listheader width="120px" label="Price" />
+									<listheader label="Description"   />
+								</listhead>
+								<auxhead id="skuFilterAhId" >
+				              		<auxheader align="center">
+				             			<toolbarbutton tooltiptext="filters|cl" />
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="skuMpId" sclass="myfilter" />
+             							<toolbarbutton context="skuMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+				             			<textbox sclass="filterSearchVal" width="60px"/>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="priceMpId" sclass="myfilter" />
+             							<toolbarbutton context="priceMpId" tooltiptext="filters|eq|ne|-|gt|lt|ge|le"/>
+				             			<doublebox sclass="filterSearchVal" width="60px"/>
+				             		</auxheader> 
+				             		<auxheader>
+				            			<menupopup id="descMpId" sclass="myfilter" />
+             							<toolbarbutton context="descMpId" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+				             			<textbox sclass="filterSearchVal" />
+				             		</auxheader> 
+				             		
+				             	</auxhead>
+							</listbox>	
+							
+							<h:table>
+								<h:tr>
+									<h:td >
+										<button id="selectAllSKUBtnId" label="Select All"  style="margin-right:20px;width:100px;"/>
+										<button id="deSelectAllSKUBtnId" label="Reset"  style="margin-right:20px;width:100px;" visible = "false"/>
+									</h:td>
+									<h:td  width = "280px">
+										<paging id="skuPaging" detailed="true" pageSize="10" width="280px" class="contactsViewPaging" style="border:none;margin-left:80px;"/>
+									</h:td>
+								</h:tr>
+							</h:table>
+							 
+						</div>			 	
+				 	</h:td>
+
+					<h:td style="border:1px solid #CCC;" >
+						<div style="text-align:center;"  width="150px">
+							<label value="Discount Type :"/>
+							<separator/>
+		  					
+		  					
+		  					<radiogroup  id="discTypeRadioId" />
+		  					<radio label="%" id="percentRadioId"  radiogroup="discTypeRadioId" selected="true" style="margin-left: 15px;" tooltiptext="Percentage"/>
+		  					<radio label="$" id="dollerRadioId"  radiogroup="discTypeRadioId" tooltiptext="Value"/>
+		  					
+		  					
+		  					<separator/>
+
+		  					<h:table align="center"><h:tr>
+		  					
+		  					<h:td >
+		  					<doublebox id="discountDblBxId" width="80px" maxlength="8"/>
+		  					</h:td>
+		  					
+		  					</h:tr></h:table>
+		  					<separator height="20px"/>
+					  		<button id="selectBtnId" label="Select Discount" style="margin-left:15px;"/>
+		  				</div>
+					</h:td>
+					<h:td align="left" valign="top">
+	  					<grid height="270px" emptyMessage="Not added."  width="99%" > 
+	  						<columns  >
+	  							<column id="column1Id" label="Percentage " width="80px"/>
+	  							<column id="column2Id" label =" SKU"/>
+	  							<column width="40px" align="center"/>
+	  						</columns>
+	  						<rows id="discountGenRowsId" />
+	  					</grid>
+			  				
+					</h:td>
+
+				 </h:tr>
+				 </h:table>
+				 
+				 <div id="storeSelectDivId" >
+				 
+					 <h:table>
+					 
+					 	<h:tr>
+					 		<h:td>
+					 			<label value="Run Promotion in All Stores"  />
+					 		</h:td>
+					 		<h:td colspan="2">
+					 			<checkbox id="allStoresChkBxId" style="margin:10 10 0 10px;" />
+					 		</h:td>
+					 	
+					 	</h:tr>
+					 	</h:table>
+					 	
+					 	<div id="selectedStoreDivId" >
+						 	<h:table>
+							 	<h:tr>
+							 		<h:td width="140px" />
+							 		<h:td>
+							 			<label value="Select store-numbers to run this promotion in" />
+							 		</h:td>
+							 		<h:td>
+							 			<combobox id="storeNumbCmboBxId" width="220px"/>
+							 		</h:td>
+							 		<h:td style="align:right" >
+							 			<image src="/images/action_add.gif" id= "addStoreImgId" tooltiptext="Add Store" style="cursor:pointer;margin-left:10px;" />
+							 		</h:td>
+							 	</h:tr>
+							 	<h:tr>
+							 		<h:td />
+							 		<h:td />
+							 		<h:td>
+							 			<listbox id="selectedStoreLbId" multiple="true" width="200px" height="200px"  sclass="contactsView" >
+							 				<listhead>
+							 					<listheader width="150px" />
+							 					<listheader />
+							 					
+							 				</listhead>
+							 				
+							 			</listbox>
+							 		</h:td>
+							 	</h:tr>
+						 	</h:table>
+				 		</div>
+				 	</div>
+				 
+				 <div align="right">
+				 	<button label="Cancel" id="cancelCoupBtnId" />
+				 	<button label="Save Promotion" id="genCoupBtnId" sclass="idle180 greenbtn" />
+				 </div>
+				  		
+			  </tabpanel>
+			  
+		  </tabpanels>
+		  
+	</tabbox>	
+</window>
+</zk>

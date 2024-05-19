@@ -1,0 +1,303 @@
+package org.mq.optculture.business.contactSubscription;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.ContactsLoyalty;
+import org.mq.marketer.campaign.beans.CustomFieldData;
+import org.mq.marketer.campaign.beans.FormMapping;
+import org.mq.marketer.campaign.beans.LoyaltyCards;
+import org.mq.marketer.campaign.beans.MailingList;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.dao.ContactsDao;
+import org.mq.marketer.campaign.dao.ContactsDaoForDML;
+import org.mq.marketer.campaign.dao.ContactsLoyaltyDao;
+import org.mq.marketer.campaign.dao.ContactsLoyaltyDaoForDML;
+import org.mq.marketer.campaign.dao.CustomFieldDataDao;
+import org.mq.marketer.campaign.dao.CustomFieldDataDaoForDML;
+import org.mq.marketer.campaign.dao.FormMappingDao;
+import org.mq.marketer.campaign.dao.MailingListDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.PurgeList;
+import org.mq.optculture.business.helper.ContactSubscriptionProcessHelper;
+import org.mq.optculture.business.helper.LoyaltyProgramHelper;
+import org.mq.optculture.data.dao.LoyaltyCardsDao;
+import org.mq.optculture.data.dao.LoyaltyCardsDaoForDML;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.model.BaseRequestObject;
+import org.mq.optculture.model.BaseResponseObject;
+import org.mq.optculture.model.ContactSubscriptionRequestObject;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+
+
+public class ContactSubscriptionServiceImpl implements ContactEnrollmentService {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+
+	@Override
+	public BaseResponseObject processRequest(BaseRequestObject baseRequestObject)	throws BaseServiceException {
+		BaseResponseObject baseResponseObject = null;
+		ContactSubscriptionRequestObject contactSubscriptionRequestObject = (ContactSubscriptionRequestObject) baseRequestObject;
+		ContactEnrollmentService contactSubscriptionService = (ContactEnrollmentService) ServiceLocator.getInstance().getServiceByName(OCConstants.CONTACT_SUBSCRIPTION_BUSINESS_SERVICE);
+		try {
+			baseResponseObject = (BaseResponseObject) contactSubscriptionService.processContactSubscriptionRequest(contactSubscriptionRequestObject);
+		} catch (Exception e) {
+			logger.debug("Exception",e);
+		}
+		return baseResponseObject;
+	}
+
+
+	@Override
+	public BaseResponseObject processContactSubscriptionRequest(ContactSubscriptionRequestObject contactSubscriptionRequestObject)
+			throws BaseServiceException {
+		BaseResponseObject baseResponseObject = new BaseResponseObject();
+		FormMapping formMapping = null;
+		PurgeList purgeList = (PurgeList) ServiceLocator.getInstance().getBeanByName(OCConstants.PURGELIST);
+		String msg = "";
+		String dbErrmsg = "";
+		String parentalSucessMsg = "";
+		boolean isEnableEvent = false;
+		long fmId = Long.parseLong(contactSubscriptionRequestObject.getFormId());
+		String hId = fmId+"";
+		ContactSubscriptionProcessHelper contactSubscriptionProcessHelper = new ContactSubscriptionProcessHelper();
+		try {
+			logger.debug("---------Entered -----------");
+			ServiceLocator locator = ServiceLocator.getInstance();
+			logger.debug("Entered try ");
+
+			FormMappingDao formMappingDao = (FormMappingDao) locator.getDAOByName(OCConstants.FORM_MAPPING_DAO);
+			formMapping = formMappingDao.findById(fmId);
+			String retMsg = contactSubscriptionProcessHelper.validateFormMapping(formMapping);
+			if(retMsg != null) {
+				msg += retMsg;
+				baseResponseObject.setResponseStr(retMsg);
+				return baseResponseObject;
+			}
+
+			HashMap<String, List> inputMapSettingHM = contactSubscriptionProcessHelper.prepareInputMap( formMapping.getInputFieldMapping());
+			if(inputMapSettingHM == null ) {
+				baseResponseObject.setResponseStr("form input fields mapping not found");
+				return baseResponseObject;
+
+			}
+
+			HashMap<String, String> formMapValuesHM = new HashMap<String, String>();
+			formMapValuesHM = contactSubscriptionProcessHelper.prepareFormMapValues(contactSubscriptionRequestObject.getFormValuesMap() , inputMapSettingHM);
+			if(formMapValuesHM == null )  {
+				baseResponseObject.setResponseStr("form value map is null");
+				return baseResponseObject;
+			}
+
+			logger.debug("inputMapSettingHM :" + inputMapSettingHM);
+			logger.debug("formMapValuesHM :" + formMapValuesHM);
+			logger.debug("formMapValuesHM size :" + formMapValuesHM.size());
+			logger.debug("received form  size :" + contactSubscriptionRequestObject.getFormValuesMap());
+
+			if(Constants.WEBFORM_TYPE_LOYALTY_CARD.equalsIgnoreCase(formMapping.getFormType())) {
+				String cardNumber = null;
+				String cardPin = null;
+				Map<String,String> cardDetails = contactSubscriptionProcessHelper.getCardNumberAndPin(formMapValuesHM, inputMapSettingHM);
+				ContactsLoyalty contactLoyalty = null;
+				Contacts ltyContact = null;
+				if(cardDetails !=null ) {
+					cardNumber = cardDetails.get("cardNumber");
+					cardPin = cardDetails.get("cardPin");
+					if(cardNumber == null || cardNumber.isEmpty() || cardPin == null || cardPin.isEmpty()){
+//					if ((cardNumber != null && cardPin == null)	|| (cardPin != null && cardNumber == null) ) {
+						msg += " \n card number or card pin is null";
+						baseResponseObject.setResponseStr(msg);
+						return baseResponseObject;
+					}
+				}
+				ContactsLoyaltyDao contactsLoyaltyDao = (ContactsLoyaltyDao) locator.getDAOByName(OCConstants.CONTACTS_LOYALTY_DAO);
+				ContactsLoyaltyDaoForDML contactsLoyaltyDaoForDML = (ContactsLoyaltyDaoForDML)locator.getInstance().getDAOForDMLByName(("contactsLoyaltyDaoForDML"));
+				LoyaltyCardsDao loyaltyCardsDao = (LoyaltyCardsDao) locator.getDAOByName(OCConstants.LOYALTY_CARDS_DAO);
+				LoyaltyCardsDaoForDML loyaltyCardsDaoForDML = (LoyaltyCardsDaoForDML) locator.getDAOForDMLByName(OCConstants.LOYALTY_CARDS_DAO_FOR_DML);
+				LoyaltyCards ltyCard = loyaltyCardsDao.findByCardNoAndCardPin(cardNumber, cardPin);
+				boolean isOCCard = false;
+				if(ltyCard != null) isOCCard = true;
+				
+				contactLoyalty = contactsLoyaltyDao.findContLoyaltyByCardIdAndPin(Long.parseLong(cardNumber), cardPin,isOCCard);
+				if (contactLoyalty == null) {
+					msg += " \n no loyalty contact found with given card number";
+					baseResponseObject.setResponseStr(msg);
+					return baseResponseObject;
+				}
+				UsersDao usersDao = (UsersDao) locator.getDAOByName(OCConstants.USERS_DAO);
+				Users contLtyUser = usersDao.findByUserId(contactLoyalty.getUserId());
+				MailingListDao mailingListDao=(MailingListDao) ServiceLocator.getInstance().getDAOByName(OCConstants.MAILINGLIST_DAO);
+				MailingList posList = mailingListDao.findListTypeMailingList(Constants.MAILINGLIST_TYPE_POS, contLtyUser.getUserId());
+
+				Contacts inputContact = contactSubscriptionProcessHelper.prepareInputContactObj(contLtyUser, posList.getMlBit().longValue());
+				if(inputContact != null) logger.debug("contact    ");
+				Map<String, Object> contactAndDataFlags = contactSubscriptionProcessHelper.setInputConatctValue(formMapValuesHM, inputMapSettingHM, contLtyUser, true, formMapping, inputContact);
+				if(contactAndDataFlags != null) {
+					inputContact = (Contacts) contactAndDataFlags.get("contact");
+					msg += (String) contactAndDataFlags.get("msg");
+				}
+
+				ltyContact = contactLoyalty.getContact();
+				if (ltyContact == null) {
+					if ((inputContact.getEmailId() == null || inputContact.getEmailId().trim().length() == 0) &&
+							(inputContact.getMobilePhone() == null || inputContact.getMobilePhone().trim().length() == 0)) {
+						msg += "\n No email Id, mobile, card Number and card pin";
+						baseResponseObject.setResponseStr(msg);
+						return baseResponseObject;
+					}
+//					if (inputContact.getEmailId() != null || inputContact.getMobilePhone() != null) {
+					ltyContact = contactSubscriptionProcessHelper.getDbContactWithPrority(contLtyUser.getUserId().longValue(),inputContact);
+//					}
+
+					if (ltyContact != null) {
+						Map<String, Object> contactWithLoyalty = contactSubscriptionProcessHelper.processExistingContactForLoyalty( inputContact, ltyContact,formMapping, posList,
+								contLtyUser, purgeList);
+						ltyContact = (Contacts) contactWithLoyalty.get("ltyContact");
+//						dbErrmsg += (String) contactWithLoyalty.get("dbErrmsg");
+					}// if contact exist
+					else {
+						Map<String, Object> contactWithLoyalty = contactSubscriptionProcessHelper.processNewContactForLoyalty(inputContact,  posList,  contLtyUser,
+								purgeList,  formMapping);
+						ltyContact = (Contacts) contactWithLoyalty.get("ltyContact");
+						msg += (String) contactWithLoyalty.get("msg");
+					}// if new contact
+					ltyContact.setLoyaltyCustomer((byte) 1);
+					contactLoyalty.setContact(ltyContact);
+				}
+				else {
+					Map<String, Object> contactWithLoyalty = contactSubscriptionProcessHelper.processExistingContactForLoyalty(inputContact,ltyContact,formMapping,
+							posList,contLtyUser, purgeList);
+					ltyContact = (Contacts) contactWithLoyalty.get("ltyContact");
+//					dbErrmsg += (String) contactWithLoyalty.get("dbErrmsg");
+				}
+				ContactsDaoForDML contactsDaoDml =  (ContactsDaoForDML) locator.getDAOForDMLByName(OCConstants.CONTACTS_DAO_FOR_DML);
+				contactsDaoDml.saveOrUpdate(ltyContact);
+				contactLoyalty.setIsRegistered((byte)1);
+				contactsLoyaltyDaoForDML.saveOrUpdate(contactLoyalty);
+				
+				LoyaltyProgramHelper.updateLoyaltyMembrshpPhone(ltyContact, ltyContact.getMobilePhone());
+				if(ltyCard != null) {
+					ltyCard.setRegisteredFlag(OCConstants.FLAG_YES);
+					//loyaltyCardsDao.saveOrUpdate(ltyCard);
+					loyaltyCardsDaoForDML.saveOrUpdate(ltyCard);
+				}
+			}//if form type loyalty card verification
+			else { //form type is sign-up
+				Long listId = formMapping.getListId();
+				if(listId == null) {
+					logger.error("Exception : Error occured while fetch FormMapping Object **");
+					msg += "\n form configured List is not found";
+					baseResponseObject.setResponseStr(msg);
+					return baseResponseObject;
+				}
+				MailingListDao  mailingListDao = (MailingListDao) locator.getDAOByName(OCConstants.MAILINGLIST_DAO);
+				MailingList mailingList = mailingListDao.findByListId(listId);
+				if(mailingList == null) {
+					logger.error("Exception : mailing list is not found");
+					baseResponseObject.setResponseStr("\n mailing list is not found");
+					return baseResponseObject;
+				}
+				UsersDao usersDao = (UsersDao) locator.getDAOByName(OCConstants.USERS_DAO);
+				Users user = usersDao.findMlUser(mailingList.getUsers().getUserId());
+
+				Contacts inputContact = contactSubscriptionProcessHelper.prepareInputContactObj(user, mailingList.getMlBit().longValue());
+
+				String parentEmail = null;
+				String storeLocation = null;
+				String enroll = null;
+				CustomFieldData customFieldData = new CustomFieldData();
+				boolean isCFDataSet = false;
+
+				Map<String, Object> contactAndDataFlags = contactSubscriptionProcessHelper.setInputConatctValue(formMapValuesHM, inputMapSettingHM, user, false, formMapping, inputContact);
+				if(contactAndDataFlags != null) {
+					inputContact = (Contacts) contactAndDataFlags.get("contact");
+					msg += (String)  contactAndDataFlags.get("msg");
+					isCFDataSet = (Boolean) contactAndDataFlags.get("isCFDataSet");
+					parentEmail = (String) contactAndDataFlags.get("parentEmail");
+					storeLocation = (String) contactAndDataFlags.get("storeLocation");
+					enroll = (String) contactAndDataFlags.get("enroll");
+				}
+				if ((inputContact.getEmailId() == null || inputContact.getEmailId().trim().length() == 0) &&
+						(inputContact.getMobilePhone() == null || inputContact.getMobilePhone().trim().length() == 0)) {
+					msg += "\n No email Id, mobile, card Number and card pin";
+					baseResponseObject.setResponseStr(msg);
+					return baseResponseObject;
+				}
+
+				boolean isMinor = false;
+				if(Constants.WEBFORM_TYPE_SIGNUP.equalsIgnoreCase(formMapping.getFormType()) && formMapping.getEnableParentalConsent() == OCConstants.FLAG_YES){
+					if (inputContact.getBirthDay() == null){
+						msg += "\n No birthday entered";
+						baseResponseObject.setResponseStr(msg);
+						return baseResponseObject;
+					}
+					Map<String, Object> minorContactFlags = contactSubscriptionProcessHelper.createMinorContact(formMapping, user, inputContact, mailingList, parentEmail);
+					isMinor = (Boolean) minorContactFlags.get("isMinor");
+					isEnableEvent = (Boolean) minorContactFlags.get("isEnableEvent");
+					parentalSucessMsg = (String) minorContactFlags.get("parentalSucessMsg");
+					if(isMinor) return baseResponseObject;
+				}
+				if(isMinor == false && inputContact.getEmailId() == null && inputContact.getMobilePhone() == null) {
+					msg += "\n No email Id or phone number and is not an underAge";
+					baseResponseObject.setResponseStr(msg);
+					return baseResponseObject;
+				}
+				// Check the Contact exists with the unique identifier column value
+				Contacts dbContact = null;
+//				if (inputContact.getEmailId() != null || inputContact.getMobilePhone() != null) {
+				dbContact = contactSubscriptionProcessHelper.getDbContactWithPrority(user.getUserId().longValue(),inputContact);
+//				}
+
+				if (dbContact != null) {
+					Map<String, Object> messageRetVal = contactSubscriptionProcessHelper.processExistingContact( dbContact, inputContact, mailingList, user, purgeList, formMapping, isEnableEvent, enroll, storeLocation);
+					dbErrmsg += (String) messageRetVal.get("dbErrmsg");
+					msg += (String) messageRetVal.get("msg");	
+				}// if contact exist
+				else {
+					msg += contactSubscriptionProcessHelper.processNewContact(inputContact,  mailingList,  user,  purgeList,  formMapping,  isEnableEvent, enroll, storeLocation, isMinor);
+				}// if new contact
+				if (isCFDataSet) {
+					try {
+						customFieldData.setContact(inputContact);
+						CustomFieldDataDao cfDataDao = (CustomFieldDataDao) locator.getDAOByName(OCConstants.CUSTOM_FIELD_DAO);
+						CustomFieldDataDaoForDML cfDataDaoForDML = (CustomFieldDataDaoForDML) locator.getDAOForDMLByName(OCConstants.CUSTOM_FIELD_DAO_FORDML);
+					//	cfDataDao.saveOrUpdate(customFieldData);
+						cfDataDaoForDML.saveOrUpdate(customFieldData);
+
+					} catch (Exception e) {
+						logger.debug("Problem while saving custom field : ", e);
+						msg += "\n Problem while saving custom field :";
+						baseResponseObject.setResponseStr(msg);
+						return baseResponseObject;
+					}
+				}
+				logger.debug("Contacts Has Been Saved Successfully .");
+				logger.debug("---------Exiting -----------");
+			}
+		}catch(Exception e){
+			logger.error("** Exception: Error occured while returning image for Form Mapping ** ", e);
+		}
+		finally {
+			try {
+				logger.debug("**** finally called ********");
+				if (formMapping == null) {
+					logger.error("No form Mapping found with the given hid");
+					baseResponseObject.setResponseStr("No form Mapping found with the given hid");
+					baseResponseObject.setAction(OCConstants.FORM_MAPPING_NULL_URL);
+					return baseResponseObject;
+				}
+				baseResponseObject = contactSubscriptionProcessHelper.setResponseObject(msg, dbErrmsg, parentalSucessMsg, hId, formMapping.getURL(), formMapping);
+				return baseResponseObject;
+			} catch (Exception e) {
+				logger.error("****Error occured while redirecting user to URL.",e);
+			}
+		}
+		return baseResponseObject;
+	}
+}

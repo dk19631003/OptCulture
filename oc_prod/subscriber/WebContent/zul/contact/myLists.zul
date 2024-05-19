@@ -1,0 +1,223 @@
+<?page title="My Contact LIsts" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style>
+ .custCheck {
+  width:140px;
+ }
+ 
+ 
+</style>
+<window id="viewContactsListWinId"  border="0" apply="org.mq.marketer.campaign.controller.contacts.ViewListController"  
+xmlns:h="http://www.w3.org/1999/xhtml" 
+	xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%" >
+	<!-- <style src="/css/theme.css" /> -->
+		
+		<tabbox  width="99%" id="viewTabboxId" >
+		  <tabs>
+				<tab label="Lists" id="mlListTabId" selected="true"/>
+		  		<tab label="Contacts" id="contactsTabId"/>
+		  </tabs>
+	  	  <tabpanels>
+			<tabpanel>
+			<h:table width="100%" bgcolor="#F9F9F9" cellspacing="0" cellpadding="0">
+			<h:tr>
+			 	<h:td colspan="3">
+					<label value="NOTE : " style="font-weight:bold"/>
+					<label value="No actions can be performed on POS list." />
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td width="25%">
+					<bandbox id="listActionsBandBoxId" mold="rounded" disabled="true" buttonVisible="false" readonly="true" width="200px" value="Bulk Actions" 
+						style="font-weight:bold;">
+									
+						<bandpopup>
+									
+							<h:table width="100%" cellspacing="0" cellpadding="3">
+								<h:tr>
+									<h:td width="150"> <label  value="Delete Selected: " sclass="boldLabel" /> </h:td>
+									<h:td align="right"> <button id="delContactsBtnId" label="Delete" sclass="idle70 greenbtn"/> </h:td>
+								</h:tr>
+			
+								<h:tr> <h:td colspan="2"><h:hr/> </h:td> </h:tr>
+								
+								<h:tr bgcolor="#f5f8fb">
+									<h:td colspan="2" align="right">
+										<button label="Close" sclass="idle70" onClick="listActionsBandBoxId.close();"/>
+									 </h:td>
+								</h:tr>
+							</h:table>
+						</bandpopup>
+					</bandbox>
+
+				</h:td>		
+				
+				<h:td >
+					<checkbox id="checkBoxId" label="Show Filters" onCheck="contactsListFilterAhId.setVisible(self.isChecked()); " />
+				</h:td>
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="membersPerPageListboxId" style="margin-right:30px;">
+						<listitem label="5"/>
+						<listitem label="10"  selected="true" />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				
+				<h:td width="350">
+					<paging id="mlistPaging" detailed="true" pageSize="10" width="340px" 
+						class="contactsViewPaging" style="border:none;" visible="false"/>
+						
+						<paging id="pagingId"  style="border:none;" autohide="false" pageSize="10" detailed="true" width="340px"/>
+						
+				</h:td>
+			</h:tr>
+		</h:table>
+				
+			<separator />	
+			
+			<menupopup id="contactsListMpId" />
+			<listbox id="contactsListLBId" width="100%" emptyMessage="No Mailing Lists Found..." style="align:center" checkmark="true" multiple="true" sclass="contactsView" 
+				mold="paging" paginal="${pagingId}" >
+				
+				
+				<listhead sizable="false" style="background-color:#488eb0;height:20px;" menupopup="contactsListMpId">
+				
+					<listheader label="" width="60px" align="center"/>
+					<listheader label="List Name" width="25%" maxlength="25" />
+					<listheader width="15%" align="center" label="Size" />
+					<listheader label="Description" width="20%"  align="left" maxlength="40" style="padding-left:10px;"/>
+					<listheader label="Last Modified Date" width="20%"  align="center" />
+					<listheader label="Actions" align="center"/>
+				</listhead>
+				<auxhead id="contactsListFilterAhId" visible="false">
+              		<auxheader align="center">
+             			<toolbarbutton tooltiptext="filters|cl" />
+             		</auxheader> 
+             		<auxheader>
+             			<menupopup id="testId1" sclass="myfilter" />
+             			<toolbarbutton context="testId1" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox id="textBoxId1" sclass="filterSearchVal" />
+             		</auxheader> 
+
+             		<auxheader>
+             			<menupopup id="testId2" sclass="myfilter" />
+             			<toolbarbutton context="testId2" tooltiptext="filters|eq|ne|-|lt|gt|ge|le"/>
+             			<intbox id="intBoxId" sclass="filterSearchVal" />
+             		</auxheader>
+
+             		<auxheader>
+	             		<menupopup id="testId3" sclass="myfilter" />
+	             		<toolbarbutton context="testId3" tooltiptext="filters|cs|sw|ew|-|eq|ne"/>
+             			<textbox id="textBoxId2" sclass="filterSearchVal" onChange=""/>
+             		</auxheader> 
+             		<auxheader>
+	             		<menupopup id="testId4" sclass="myfilter" />
+	             		<toolbarbutton context="testId4" tooltiptext="filters|eq|ne|-|gt|lt|ge|le"/>
+             			<datebox id="dateBoxId" format="dd MMM, yyyy" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" />
+             		</auxheader>
+             		<auxheader/> 
+             	</auxhead>
+			</listbox>
+		
+		<div id="warnDivId" visible="false"  >
+			<label value="You don't have any lists in your account."  />
+			<a  label="to create new Click here"  id="upLoadContactsAnchrId"  ></a>
+		</div>
+		<h:table  width="100%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+			<h:tr>
+				<h:td width="280px"  >
+				<paging id="mlistPaging1" detailed="true" pageSize="10" width="280px" 
+					class="contactsViewPaging" style="border:none;" visible="false"/>
+			</h:td>
+			</h:tr>
+		
+		</h:table>			
+				
+		<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			
+				<h:tr >
+				    
+				    <h:td align="right"> <image src="/img/icons/add-bulk-contacts-icon1.png"/></h:td>
+					<h:td align="left" style="padding-right:30px;" > <label value="- Add Bulk Contacts" style="font-size:11px;" /> </h:td> 
+					 
+					<h:td align="right"> <image src="/img/icons/add_icon.png"/></h:td>
+					<!-- <h:td align="left" style="padding-right:30px;" > <label value="- Add Contacts" style="font-size:11px;" /> </h:td> -->
+					<h:td align="left" style="padding-right:30px;" > <label value="- Add Contact" style="font-size:11px;" /> </h:td>
+					<h:td align="right"><image src="/img/icons/edit_lists_icon.png"/></h:td>
+					<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+					<h:td align="right"><image src="/img/icons/copy.png"/></h:td>
+					<h:td  align="left" style="padding-right:30px;"><label value="- Copy" style="font-size:11px;" /> </h:td>
+					<h:td align="right"><image src="/img/icons/Export-of-Promo-codes-icon.png"/></h:td>
+					<h:td  align="left" style="padding-right:30px;"><label value="- Export" style="font-size:11px;" /> </h:td>
+					<h:td align="right"><image src="/img/icons/delete_icon.png"/></h:td>
+					<h:td align="left" style="padding-right:30px;"><label value="- Delete" style="font-size:11px;" /> </h:td>
+					<h:td visible="false" align="right"><image src="/img/icons/purge_icon_gray.gif"/></h:td>
+					<h:td visible="false" align="left" style="padding-right:10px;"> <label value="- Purge List" style="font-size:11px;" /> </h:td>
+				</h:tr>
+					
+			
+			
+			</h:table>
+					
+					
+				
+			<popup id="copyListPopupId" width="300px" >
+		 
+			Provide List name
+            <textbox id="copyListNameTbId" value=""/> 
+			<!--<button label="Copy" onClick="viewContactsListWinId.copyList(copyListNameTbId.getValue())"/>
+			--><button label="Copy" id="copyListNameBtnId"/>
+		</popup>
+	</tabpanel>
+	
+	 <tabpanel>
+	  		
+	  		 <include id="viewContactsIncId" src=""  /> 
+	  	
+	  </tabpanel> 
+	</tabpanels>
+	</tabbox>
+	<timer id="timer" delay="10000" repeats="true"  />
+	<!--	
+	
+	
+	
+	
+	<timer id="timer" delay="10000" repeats="true"  onTimer="viewContactsListWinId.checkListsPurgingStatus()" />
+	<zscript>
+		<![CDATA[
+		
+         viewContactsListWinId.init(mlistPaging, contactsListLBId, mlistVboxId, warnDivId, copyListPopupId, copyListNameTbId);
+         if(!desktop.isServerPushEnabled())
+        	 desktop.enableServerPush(true);
+         ]]>
+		
+	</zscript>
+	
+-->
+<window id="custExport" title="Select Fields to Export" border="normal"  width="650px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="650px" style="margin:15px;" />
+					<!-- <checkbox label="Email Name" sclass="custCheck"/> 
+				</div>  -->
+								
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td ><a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />   <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+</window>
+</window>
+
+
+</zk>

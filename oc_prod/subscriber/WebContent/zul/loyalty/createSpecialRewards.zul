@@ -1,0 +1,314 @@
+<?page title="Special Rules" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<window  id="createSpecialPromomtionWinId"  xmlns:h="http://www.w3.org/1999/xhtml"                         
+	xmlns:w="http://www.zkoss.org/2005/zk/client" width="100%" apply="org.mq.optculture.controller.loyalty.CreateSpecialRewardsController">
+	  
+	  <style>
+	  .mydiv{
+	  display:inline
+	  }
+	  </style>
+	<div id="specialRuleFirstDivId" visible="true">
+			<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+				<caption>
+					<label value="Basic Settings" />
+				</caption>
+
+				<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:2px;" >
+					
+					<h:tr height="50" valign="top">
+						<h:td width="20%">
+							<label value="Reward Name: "/><label value="*" style="color:red;" />
+							</h:td>
+						<h:td>
+							<textbox id="rewardNameTbId"  maxlength="50" width="340px"/><label id="nameStatusLblId" />
+						</h:td>
+					</h:tr>
+				
+					<h:tr height="50" valign="top">
+						<h:td width="20%" valign="top">
+							<label value="Description:"/>
+							</h:td>
+						<h:td>
+							<textbox id="descriptionTbId" rows="4" height="100px" width="340px"/>
+							<h:br />
+						</h:td>
+					</h:tr>	
+						
+					</h:table>
+			</groupbox>
+	
+			<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption>
+					<label value="Define Reward Rule" />
+			</caption>
+			
+			
+				<h:table width="100%" cellspacing="0" cellpadding="0">
+				<h:tr>
+					
+					<h:td width="225" valign="top" >
+					
+						<groupbox sclass="gbStyle"   closable="false" >
+							<caption label="Attribute(s)" />
+							<tabbox mold="accordion" height="500px" style="margin:5px;">
+								 <tabs >
+									<tab visible="false" width="0px"/> 
+								
+								</tabs> 
+								<tabpanels>
+									<tabpanel style="border:0 none; padding:1px 0;">
+									<listbox  style="border:0px;" id="AttrLbId" sclass="segmentList" height="410px">
+									</listbox>
+									
+									</tabpanel>
+									
+								</tabpanels>
+							
+							</tabbox>
+						</groupbox>
+						
+					</h:td>
+					
+					<h:td width="10" />
+					
+					<h:td valign="top">
+					
+					<groupbox  closable="false">
+						<caption label="Criteria" />
+							
+						<groupbox  mold="3d" sclass="darkgroupbox"  >
+							<caption label="Attribute Rules" >
+								<h:table cellpadding="0" cellspacing="0" border="0">
+								<h:tr>
+									<h:td width="20"> <a src="images/Info_icn.png" 
+										tooltiptext="Drag-and-Drop  Attribute(s) to create special reward rules."/> </h:td> 
+									<h:td width="20"> <image src="images/Hide_icn.png" tooltiptext="Hide / Show"/>
+									 </h:td> 
+								</h:tr>
+								</h:table>
+							</caption>
+							
+							
+							<div id="AttributeDivId" droppable="outerDivDropable" style="min-height:10px; padding-bottom: 50px;position:relative;" >
+								<div sclass="drop_and_div">
+									<label value="AND"  
+									style="display:none; margin-left: 5px;position:absolute;top: -20px;" />
+									<label value="Drag Attribute(s) here to create AND combination rule." />
+								</div>
+							</div>
+						</groupbox>
+					</groupbox>
+					</h:td>
+				</h:tr>
+			</h:table>
+						
+		</groupbox>
+		<separator/>
+		<div align="right" style ="margin-right:60px;" >
+		<button label="Save As Draft"  width="100px" id="draftBtnId" />
+		<button label="Next" sclass="idle140 greenbtn" width="100px" id="proceedBtnId" /></div>
+		
+	
+	</div>	
+	<div id="specialRulesecondDivID" visible="ture">
+			<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+				<caption>
+					<label value="Define Reward Setting" />
+				</caption>
+
+				<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:2px;" >
+						<h:tr height="40" valign="top">
+						<h:td width="25%" >
+							<label value="Additional Reward "
+								style="display:inline-block;" /><label value="*" style="color:red;" />
+						</h:td>
+						<h:td colspan="2">
+							<listbox id="rewardTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+							</listbox>
+							
+							<listbox id="rewardValueCodeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Select Reward Type"  selected="true"></listitem>
+								<listitem label="Points" value="Points"></listitem>
+								<listitem label="Currency" value="Amount"></listitem>
+							</listbox>
+							<listbox id="tierLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Select Tier" selected="true"></listitem>
+							</listbox>
+							<textbox id="valueTbId" value=""
+								name="valueTb" width="50px" maxlength="60" style="padding-left:5px; margin-left:10px;"  />
+								<div id="multiplierDivId" visible="false" class="mydiv">
+								<label value="x rewards earned on the purchase as per loyalty program rules." />
+								</div>
+						</h:td> 
+					</h:tr>
+					<h:tr height="30" valign="top">
+						<h:td >
+							<label id="deducItemPriceLBId" value="Exclude item-value from regular issuance:"></label>
+							</h:td>
+							<h:td >
+							<checkbox id="deducItemPriceChkId"/>
+							</h:td>
+						</h:tr>
+					<h:tr height="40" valign="top">
+						<h:td width="25%">
+							<label value="Reward Expiration:"/>
+						</h:td>
+						<h:td colspan="2">
+						<listbox id="RewardExpiryLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="At the end of" selected="true"></listitem>
+						</listbox>
+						<listbox id="RewardExpiryTypeLbId" mold="select"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Month(s)" value="Month" selected="true"></listitem>
+								<listitem label="Year(s)" value="Year"></listitem>
+						</listbox>
+							
+							<listbox id="rewardExpiryTypeValueLbId" mold="select" />
+						</h:td>
+	
+					</h:tr>
+					
+					
+					<h:tr height="50" valign="top">
+						<h:td width="25%">
+							<label value="Auto-Communication:"/>
+						</h:td>
+						<h:td colspan="2">
+						<listbox id="autoEmailLbId" mold="select" width="150px"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Select Auto Email" selected="true"></listitem>
+							</listbox>
+							<image src="/images/Preview_icn.png" id="previewEmailTemplateImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="previewEmailTemplateBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editEmailTemplateImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="editEmailTemplateBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addEmailTemplateImgId" visible="true"
+									style="margin-left:20px;" />
+								<a label="Add Message"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="addEmailTemplateBtnId" sclass="idle140" />
+							
+							
+							<h:br/>
+							<listbox id="autoSMSLbId" mold="select" width="150px"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Select Auto SMS" selected="true"></listitem>
+							</listbox>
+                                <image src="/images/Preview_icn.png" id="previewSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Preview" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="previewSmsBtnId" sclass="idle140" />
+								<image src="/img/email_edit.gif" id="editSmsImgId" visible="false"
+									style="margin-left:20px;" />
+								<a label="Edit Message" visible="false"
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="editSmsBtnId" sclass="idle140" />
+									<image src="/images/action_add.gif" id="addmsImgId"
+									style="margin-left:20px;" />
+								<a label="Add Message" 
+									style="color:#2886B9;text-decoration: underline;margin-left:5px;"
+									id="addSmsBtnId" sclass="idle140" />								
+							
+						</h:td>
+	
+					</h:tr>
+				
+			<h:tr>
+			<h:td width="25%" height="50" valign="top">			
+							<label value="Exluded Discount Codes :"
+								style="display:inline-block;" /><label/>
+						</h:td>
+						<h:td colspan="2">
+							<listbox id="excludeQuantityLbId" mold="select" disabled="true"
+								style="margin-top:5px;position:relative;">
+								<listitem label="Select Item "  selected="true"></listitem>
+							</listbox>
+							
+							<textbox id="IgnoreItemQuantityTbId" value="" disabled="true"
+								name="valueTb" width="50px" maxlength="60" style="padding-left:5px; margin-left:10px;"  />
+								<div id="IgnoreQtyDiv" visible="false" class="mydiv">
+								<label value="X of reward value earned on purchase." />
+								</div>
+						</h:td>
+			</h:tr>
+			
+			<h:tr>
+			<h:td width="25%" height="50" valign="top">			
+							<label value="If receipt details are not provided, reverse rewards as per current  rules :"
+								style="display:inline-block;" /><label/>
+			</h:td>
+						<h:td colspan="2">
+							<checkbox id="enableReturnOnCurrentRuleChkId"/>
+			</h:td>
+			</h:tr>
+				<h:tr>
+			<h:td width="25%" height="50" valign="top">			
+							<label value="Issunance Window(Hours)"
+								style="display:inline-block;" /><label/>
+			</h:td>
+						<h:td colspan="2">
+							<textbox id="issuanceWindowTextBox" value="" 
+								name="valueTb" width="100px" maxlength="60" style="padding-left:5px;"  />
+										</h:td>
+			</h:tr>
+			
+					</h:table>
+			</groupbox>
+			<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption>
+					<label value="Select Loyalty Program(s)" />
+			</caption>
+			
+			
+				<h:table width="100%" cellspacing="0" cellpadding="0">
+				<h:tr>
+					
+					<h:td width="225" valign="top" >
+					<h:tr height="50">
+
+						<h:td width="360" colspan="2">
+								<listbox id="loyaltyProgramLbId" width="300px" multiple="true" checkmark="true" rows="4" selectedItem="@{selectedUserAcc, converter=com.nsia.doku.escrow.converter.SelectedItemConverter}" sclass="contactsView">
+									<listhead style="background-color:#488eb0;">
+										<listheader label="Select Loyalty Program(s)" width="100%" align="left" maxlength="30"/>
+									</listhead>
+								</listbox>
+						</h:td>
+					</h:tr>
+
+					</h:td>
+				</h:tr>	
+				
+			</h:table>	
+
+			</groupbox>
+			<separator/>
+			<div align="right" style ="margin-right:60px;" >
+			<button label="Back" width="100px" id="backBtnId" />
+			<button label="Save As Draft"  id="nextdraftBtnId" />
+			<button label="Activate Reward" sclass="idle140 greenbtn"  id="updateBtnId" /></div>
+	</div>		
+		 <window id="previewWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton label="Close" onClick="previewWin.setVisible(false);event.stopPropagation();"/>
+			</caption>
+			<div id="contentDivId" width="750px" height="500px" style="overflow:auto">
+			<iframe id="html" width="100%" height="100%"/>
+			</div>
+		</window>
+
+</window>
+
+</zk>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.WATemplates" table="wa_templates">
+    <id name="templateId" type="java.lang.Long" column="template_id">
+      <generator class="native"/>
+    </id>
+    <property name="templateName" type="string" column="template_name" not-null="true"/>
+    <property name="provider" type="string" column="provider"/>
+	<property name="type" type="string" column="type"/>
+	<property name="jsonContent" type="string" column="json_content" not-null="true"/>
+	<property name="placeholders" type="string" column="placeholders" />
+	<property name="templateRegisteredId" type="string" column="template_registered_id" />
+    <property name="userId" type="java.lang.Long" column="user_id" />
+    <property name="orgId" type="java.lang.Long" column="org_id" />
+    
+    <property name="status" type="string" column="status"/>
+    <property name="headers" type="string" column="headers"/>
+    <property name="createdDate" type="calendar" column="created_date" />
+    <property name="modifiedDate" type="calendar" column="modified_date" />
+    <property name="createdBy" type="calendar" column="created_by" />
+    <property name="modifiedBy" type="calendar" column="modified_by" />
+
+  </class>
+</hibernate-mapping>
+
+
+ 

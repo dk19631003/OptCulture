@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+	<bean
+		class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" />
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="10000000" />
+	</bean>
+
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/urlRedirect.mqrm">urlRedirectBeanId</prop>
+				<prop key="/updateReport.mqrm">campaignReportController</prop>
+				<prop key="/confirmation.mqrm">confirmationController</prop>
+				<prop key="/smsDeliveryReport.mqrm">updateSMSDeliveryReportsController</prop>
+				<!-- <prop key="/updateSMSDeliveryReport.mqrm">updateClickatellHTTPDLR</prop> -->
+				<prop key="/update2WaySMSDeliveryReport.mqrm">updateClickaTellTwoWayMessageController</prop>
+				<prop key="/sendGridEventHandler.mqrm">externalSMTPController</prop>
+				<prop key="/updateBounceReport.mqrm">bounceReportController</prop>
+				<prop key="/sendDigitalReceipt.mqrm">digitalReceiptsController</prop>
+				<prop key="/simpleMailSender.mqrm">simpleMailController</prop>
+				<prop key="/purgeContacts.mqrm">purgeController</prop>
+				<!--temp sol for Dead lock on sales relational mapping updates  -->
+				<prop key="/pingSalesUpdateErrorLogMoniotor.mqrm">pingSalesUpdateErrorLogMoniotor</prop>
+				<prop key="/couponProvider.mqrm">couponProvider</prop>
+				<prop key="/updateInBoundSMS.mqrm">SMSInboundMessage</prop>
+				<prop key="/updateInBoundSMSInfobip.mqrm">InfobipSMSInboundMessage</prop>
+				<prop key="/updateAutoResponseDLR.mqrm">updateUnicelHTTPDLR</prop>
+				<prop key="/updateDLR.mqrm">updateClickatellHTTPDLR</prop>
+				<prop key="/updateWADLR.mqrm">updateWAHTTPDLR</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="viewNameTranslator"
+		class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+	</bean>
+	
+	
+	<!-- <bean id="urlRedirectBeanId" class="org.mq.captiway.scheduler.UrlShortningDispServlet">
+		<property name="urlShortCodeMappingDao">
+			<ref bean="urlShortCodeMappingDao" />
+		</property>
+	
+	</bean> -->
+	
+	<bean id="urlRedirectBeanId" class="org.mq.optculture.controller.UrlShortCodeService">
+		
+	
+	</bean>
+	
+	<!-- 
+		for the majority of the controllers use the new ControllerClassNameHandlerMapping 
+		above, but because the class used is the ParameterizableViewController we
+		are specifying a bean name to define the mapping as /index.htm
+	-->
+	<bean name="indexController"
+		class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+		p:viewName="index" />
+
+	<bean id="campaignReportManager" class="org.mq.captiway.scheduler.campaign.CampaignReportManager">
+	</bean>
+
+	<bean id="couponProvider" class="org.mq.captiway.scheduler.services.CouponProviderForSubscriber">
+	<property name="couponCodesDao">
+			<ref bean="couponCodesDao" />
+	</property>
+	</bean>
+
+
+	<bean id="campaignReportController"
+		class="org.mq.captiway.scheduler.campaign.CampaignReportController">
+		<property name="campaignReportDao">
+			<ref bean="campaignReportDao" />
+		</property>
+		<property name="campaignSentDao">
+			<ref bean="campaignSentDao" />
+		</property>
+		<property name="campaignSentDaoForDML">
+			<ref bean="campaignSentDaoForDML" />
+		</property>
+		<property name="opensDao">
+			<ref bean="opensDao" />
+		</property>
+		<property name="opensDaoForDML">
+			<ref bean="opensDaoForDML" />
+		</property>
+		<property name="emailClientDao">
+			<ref bean="emailClientDao" />
+		</property>
+		<property name="clicksDao">
+			<ref bean="clicksDao" />
+		</property>
+		<property name="clicksDaoForDML">
+			<ref bean="clicksDaoForDML" />
+		</property>
+		<property name="unsubscribesDao" ref="unsubscribesDao" />
+		<property name="unsubscribesDaoForDML" ref="unsubscribesDaoForDML" />
+
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		<property name="contactsDaoForDML">
+			<ref bean="contactsDaoForDML" />
+		</property>
+		<property name="campaignReportManager">
+			<ref bean="campaignReportManager" />
+		</property>
+		<property name="contactScoreSetting">
+			<ref bean="contactScoreSetting" />
+		</property>
+		
+		<property name="externalSMTPEventsProcessor">
+			<ref bean="externalSMTPEventsProcessor" />
+		</property>
+		<property name="campaignReportEventsQueue">
+			<ref bean="campaignReportEventsQueue" />
+		</property>
+		
+		
+	</bean>
+	
+	<!-- added for SMS module......to update the SMS Delivery Reports (in SMSCampaignSent update the delivered status 
+		from the reports given by NetCore ping back URL process)-->
+	
+	<bean id="updateSMSDeliveryReportsController" class="org.mq.captiway.scheduler.campaign.UpdateSMSDeliveryReportsController">
+		<property name="smsCampaignSentDao">
+			<ref bean="smsCampaignSentDao"/>
+		</property>
+		<property name="usersDao">
+			<ref bean="usersDao"/>
+		</property>
+		<property name="smsSuppressedContactsDao">
+			<ref bean="smsSuppressedContactsDao"/>
+		</property>
+		<property name="smsSuppressedContactsDaoForDML">
+			<ref bean="smsSuppressedContactsDaoForDML"/>
+		</property>
+		
+	</bean>
+	
+	<!-- <bean id="updateClickaTellSMSDeliveryReportController" class="org.mq.captiway.scheduler.campaign.UpdateClickaTellSMSDeliveryReportController">
+		<property name="smsCampaignSentDao">
+			<ref bean="smsCampaignSentDao"/>
+		</property>
+		<property name="usersDao">
+			<ref bean="usersDao"/>
+		</property>
+		<property name="smsSuppressedContactsDao">
+			<ref bean="smsSuppressedContactsDao"/>
+		</property>
+		<property name="smsBouncesDao">
+			<ref bean="smsBouncesDao"/>
+		</property>
+		<property name="smsCampaignReportDao">
+			<ref bean="smsCampaignReportDao"/>
+		</property>
+		<property name="contactsDao" >
+		<ref bean="contactsDao"/>
+		</property>
+		
+	</bean> -->
+	<!-- <bean id="updateClickaTellTwoWayMessageController" class="org.mq.captiway.scheduler.campaign.UpdateClickaTellTwoWayMessageController">
+		<property name="smsCampaignSentDao">
+			<ref bean="smsCampaignSentDao"/>
+		</property>
+		<property name="usersDao">
+			<ref bean="usersDao"/>
+		</property>
+		<property name="smsSuppressedContactsDao">
+			<ref bean="smsSuppressedContactsDao"/>
+		</property>
+		<property name="clickaTellSMSInboundDao">
+			<ref bean="clickaTellSMSInboundDao"/>
+		</property>
+		<property name="orgSMSkeywordsDao">
+			<ref bean="orgSMSkeywordsDao"/>
+		</property>
+		<property name="couponCodesDao">
+			<ref bean="couponCodesDao"/>
+		</property>
+		
+		<property name="smsSettingsDao">
+			<ref bean="smsSettingsDao"/>
+		</property>
+		<property name="contactsDao">
+		<ref bean="contactsDao" />
+		</property>
+		<property name="clickaTellApi">
+		<ref bean="clickaTellApi" />
+		</property>
+		<property name="mailingListDao">
+			<ref bean="mailingListDao" />
+		</property>
+		
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+	</bean> -->
+	
+	<bean id="updateClickaTellTwoWayMessageController" class="org.mq.optculture.controller.ClickaTellSMSInBoundService">
+	</bean>
+	
+	
+	<bean id="bounceReportController" class="org.mq.captiway.scheduler.campaign.BounceReportController">
+		<property name="campaignsDao" ref="campaignsDao" />
+		<property name="bouncesDao" ref="bouncesDao"/>
+		<property name="bouncesDaoForDML" ref="bouncesDaoForDML"/>
+		<property name="campaignReportDao" ref="campaignReportDao" />
+		<property name="campaignSentDao" ref="campaignSentDao" />
+		<property name="campaignSentDaoForDML" ref="campaignSentDaoForDML" />
+		
+		<property name="contactsDao" ref="contactsDao" />
+		<property name="usersDao" ref="usersDao" />
+		<property name="suppressedContactsDao" ref="suppressedContactsDao" />
+		<property name="contactsDaoForDML" ref="contactsDaoForDML" />
+		<property name="suppressedContactsDaoForDML" ref="suppressedContactsDaoForDML" />
+	
+	
+	</bean>
+	
+	
+	
+	
+	
+	<bean id="confirmationController"
+		class="org.mq.captiway.scheduler.campaign.ConfirmationController">
+		<property name="userFromEmailIdDao">
+			<ref bean="userFromEmailIdDao" />
+		</property>
+		
+		
+		
+		<property name="userFromEmailIdDaoForDML">
+			<ref bean="userFromEmailIdDaoForDML" />     
+		</property>
+		
+		<property name="contactsDao">
+			<ref bean="contactsDao" />
+		</property>
+		<property name="contactsDaoForDML">
+			<ref bean="contactsDaoForDML" />
+		</property>
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+		
+		<property name="optInReportDao">
+			<ref bean="optInReportDao" />
+		</property>
+		
+		<property name="optInReportDaoForDML">
+			<ref bean="optInReportDaoForDML" />
+		</property>
+		
+		<property name="contactParentalConsentDao">
+			<ref bean="contactParentalConsentDao" />
+		</property>
+		<property name="contactParentalConsentDaoForDML">
+			<ref bean="contactParentalConsentDaoForDML" />
+		</property>
+		
+		<property name="customTemplatesDao">
+			<ref bean="customTemplatesDao" />
+		</property>
+		<property name="mailingListDao">
+			<ref bean="mailingListDao" />
+		</property>
+		
+	</bean>	
+	
+	   <bean name="externalSMTPController" class="org.mq.captiway.scheduler.campaign.ExternalSMTPEventsController">
+   		
+		
+		<property name="externalSMTPEventsProcessor">
+			<ref bean="externalSMTPEventsProcessor" />
+		</property>
+		<property name="externalSMTPEventsQueue">
+			<ref bean="externalSMTPEventsQueue" />
+		</property>
+		<!-- <property name="drSentDao">
+			<ref bean="drSentDao" />
+		</property>
+		 -->
+	</bean> 
+	
+	
+	
+	 
+	<bean id="simpleMailController"
+		class="org.mq.captiway.scheduler.services.SimpleMailController">
+		<property name="emailQueueDao">
+			<ref bean="emailQueueDao" />
+		</property>
+		<property name="emailQueueScheduler">
+			<ref bean="emailQueueScheduler" />
+		</property>
+		
+		
+		
+	</bean>	
+	
+	<bean id="purgeController" class="org.mq.captiway.scheduler.services.PurgeController">
+	<property name="purgeScheduler" ref="purgeScheduler"></property>
+	</bean>
+	
+	<!--temp sol for Dead lock on sales relational mapping updates  -->
+	<bean id="pingSalesUpdateErrorLogMoniotor"
+		class="org.mq.captiway.scheduler.services.PingSalesUpdateErrorLogMoniotor">
+		
+	</bean>	
+	
+	
+	<bean id="digitalReceiptsController"
+		class="org.mq.captiway.scheduler.services.DigitalReceiptsRestService">
+		<property name="usersDao" ref="usersDao" />  
+		<property name="emailQueueDao" ref="emailQueueDao" />
+		<property name="digitalReceiptMyTemplatesDao" ref="digitalReceiptMyTemplatesDao" /> 
+		<property name="emailQueueScheduler" ref="emailQueueScheduler" />
+		<property name="digitalReceiptUserSettingsDao" ref="digitalReceiptUserSettingsDao" />
+		<property name="contactsDao" ref="contactsDao" />
+		<property name="mailingListDao" ref="mailingListDao" />
+		
+	</bean>	
+	
+	<bean  id="SMSInboundMessage"
+		class="org.mq.optculture.controller.UnicelSMSInBoundService">
+	
+	</bean>	
+	
+	<!-- Added for InfoBip  -->
+	<bean  id="InfobipSMSInboundMessage"
+		class="org.mq.optculture.controller.InfobipSMSInBoundService">
+	
+	</bean>	
+	<bean  id="updateClickatellHTTPDLR" class="org.mq.optculture.controller.ClickATellHTTPDLRService">
+	
+	</bean>
+	<bean  id="updateUnicelHTTPDLR" class="org.mq.optculture.controller.UnicelHTTPDLRService">
+
+	</bean>
+	<bean  id="updateWAHTTPDLR" class="org.mq.optculture.controller.WAHTTPDLRService">
+	
+	</bean>	
+</beans>

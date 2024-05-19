@@ -1,0 +1,507 @@
+<zk>
+	<style >
+		.redStar{
+		font-size:14px;color:red;
+	    }
+	    .lbl, .z-checkbox, .z-radio {
+	    display: block-inline;
+	    }
+	    .z-overflow-hidden {
+ 		overflow: visible;
+		}
+		div.z-listcell-cnt {
+    	line-height: 10px;
+		}
+	</style>
+	<window id="createLtyPrgmWinId" apply="org.mq.optculture.controller.loyalty.CreateLoyaltyProgramController" width="100%" 
+		xmlns:h="http://www.zkoss.org/2005/zk/native"  xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<div>
+			<label value="Set preferences for your loyalty or gift program." />
+		</div>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+			<caption> <label value="Program Settings"/> </caption>
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:0px;" >
+				<h:tr  height="50">
+					<h:td   width="300">
+						<label value="Program Name:"/>
+						<label value="*" sclass="redStar"/>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<textbox  id="prgmNameTbId" value="" width="250px"  maxlength="60"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td  width="300">
+						<label value="Description:"/>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<textbox id="prgmDescTbId" rows="2" height="40px" width="250px"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="50">
+					<h:td width="300">
+						<label value="Import Settings From Program:"/>
+						<image src="/img/icons/icon_q.png" tooltip="addPrgmPopId"  style="padding-left:5px;" id="helpImgId" />
+						<popup id="addPrgmPopId" width="500px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="Add settings from an existing program instead of creating program from scratch."
+											sclass="labelPos" />
+									</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<listbox  id="addPrgmLbId"  rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Select Program" selected="true" ></listitem>
+						</listbox>
+						<space />
+						
+						<button label="Import Settings" sclass="idle140 greenbtn" id="importBtnId" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr  height="50">
+					<h:td width="300" valign="top" style="padding-top:10px;">
+						<label value="Program Type:" style="margin-top:10px;"/>
+					</h:td>
+					<h:td colspan="2" valign="top">
+					<radiogroup id="prgmTypeRadioGrId" />
+						<radio label="Loyalty" id="loyaltyRadioId" radiogroup="prgmTypeRadioGrId"
+							selected="true" value="Loyalty"/>
+						<radio label="Perk" id="perkRadioId" radiogroup="prgmTypeRadioGrId"
+							 value="Perk" />
+					</h:td>
+					</h:tr>
+				<h:tr  height="50">
+					<h:td width="300" valign="top" style="padding-top:10px;">
+						<label value="Membership Type:" style="margin-top:10px;"/>
+					</h:td>
+					<h:td colspan="2" valign="top">
+						<radiogroup id="ltyPrgmTypeRadioGrId" />
+						<radio label="Card-based" id="cardNoRadioId" radiogroup="ltyPrgmTypeRadioGrId"
+							selected="true" value="cardBased"/>
+						<radio label="Mobile-based" id="mobileNoRadioId" radiogroup="ltyPrgmTypeRadioGrId"
+							 value="mobileBased" />
+						<radio label=" Based on custom-membership numbers" id="dynamicMemNoRadioId" radiogroup="ltyPrgmTypeRadioGrId"
+							 value="customBased" />
+						<!-- <radio label=" Perk" id="perkRadioId" radiogroup="ltyPrgmTypeRadioGrId"
+							 value="perkProgram" /> -->
+						<div id="dynamicMemTypeDivId" visible="false">
+						<h:table>
+						<h:tr>
+						<h:td width="80px">
+						<label value="Card Type:" style="margin-top:10px;"/>
+						</h:td>
+						<h:td>
+						<listbox  id="dynamicMemCardType"  rows="1" mold="select" style="position:relative;" width="150px">
+						<!-- 	<listitem label="Alphanumeric" selected="true" value="A" ></listitem> -->
+							<listitem label="Numeric" selected="true" value="N"></listitem>
+						</listbox>
+						</h:td>
+						<h:td  colspan="2">
+						<label value="Length:" style="margin-left:10px;"/>
+						<image src="/img/icons/icon_q.png" tooltip="lengthPopId"   style="padding-left:5px;"  />
+										<popup  width="500px"  id="lengthPopId"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Card Number length should be between 4 to 20 digits."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+											</h:table>
+						</popup>
+						</h:td>
+						<h:td>
+						<intbox  id="lengthTbId"  width="50px"  maxlength="2"  style="margin-left:20px;"/>
+						</h:td>
+						</h:tr>
+						</h:table>
+						</div>
+							
+						<div id="ltyPrgmTypeDivId" visible="true">
+							<h:table cellspacing="0" cellpadding="0" width="85%" align="left" >
+								<h:tr height="40">
+									<h:td width="300">
+										<label value="Restrict Membership per Customer with Mobile No.:"/>
+									</h:td>
+									
+									<h:td >
+										<checkbox id="enableUniqueMblNoChkId" checked="false"/>
+									</h:td>
+								</h:tr>
+								<h:tr height="40">
+									<h:td width="300">
+										<label value="Restrict Membership per Customer with Email Id.:"/>
+									</h:td>
+									
+									<h:td >
+										<checkbox id="enableUniqueEmailChkId" checked="false"/>
+									</h:td>
+								</h:tr>
+								<h:tr height="40" >
+									<h:td  width="300" >
+									<div id="defaultPgmDivId" >
+										<label value="Issue Virtual Card Numbers from this program:"/>
+										<image src="/img/icons/icon_q.png" tooltip="defaultPrgmPopId"  style="padding-left:5px;" id="helpImageId" />
+										<popup id="defaultPrgmPopId" width="500px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="When checked, enrollments without card number (i.e., virtual card enrollments) will be defaulted to this loyalty program."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+											</h:table>
+										</popup>
+										</div>
+									</h:td>
+						
+									<h:td >
+										<checkbox id="enableDefaultChkId"/>
+									</h:td>
+								</h:tr>
+								<!-- <h:tr height="40" >
+									<h:td  width="300">
+										<label value="Allow user-generated card-number in enrollment: "/>
+										<image src="/img/icons/icon_q.png" tooltip="userGeneratedCardSetPrgmPopId"  style="padding-left:5px;" id="userGeneratedCardSetHelpImageId" />
+										<popup id="userGeneratedCardSet" width="500px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="When checked, enrollments without card number (i.e., virtual card enrollments) will be defaulted to this loyalty program."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+											</h:table>
+										</popup>
+									</h:td>
+						
+									<h:td >
+										<checkbox id="enableUserGeneratedCardChkId"/>
+									</h:td>
+								</h:tr> -->
+								
+							</h:table>
+						
+						</div>
+					</h:td>
+				</h:tr>
+				<!-- <h:tr  height="50">
+					<h:td width="200" />
+					<h:td colspan="2">
+						
+					</h:td>
+				</h:tr> -->
+				<h:tr height="50">
+					<h:td width="300" valign="top" style="padding-top:5px;">
+						<label value="Enable Tiered Program:"/>
+					</h:td>
+					<h:td colspan="2" valign="top">
+						<hbox>
+							<checkbox id="enableTierChkId"/>
+							<div id="noOfTiersDivId" visible="false">
+								<label value="Number of tiers:" style="padding-left:10px;padding-right:10px;"/>
+								<listbox  id="noOfTiersLbId"  rows="1" mold="select" style="position:relative;" width="50px">
+									<listitem label="1" value="1" selected="true" visible="false"/>
+									<listitem label="2" value="2"/>
+									<listitem label="3" value="3"/>
+									<listitem label="4" value="4"/>
+									<listitem label="5" value="5"/>
+									<listitem label="6" value="6"/>
+									<listitem label="7" value="7"/>
+									<listitem label="8" value="8"/>
+									<listitem label="9" value="9"/>
+									<listitem label="10" value="10"/>
+								</listbox>
+							</div>
+						</hbox>
+					</h:td>
+				</h:tr>
+				<!-- <h:tr height="50">
+					<h:td  width="200">
+						<label value="Select Program Status:"/>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<listbox  id="prgmStatusLbId"  rows="1" mold="select" style="position:relative;" width="200px">
+							<listitem label="Draft" value="Draft"  selected="true" />
+							<listitem label="Active" value="Active"/>
+							<listitem label="Suspended" value="Suspended"/>
+						</listbox>
+					</h:td>
+				</h:tr> -->
+				<!-- <h:tr height="50">
+					<h:td  width="200">
+						<label value="Make Default Program for enrollment:"/>
+						<image src="/img/icons/icon_q.png" tooltip="defaultPrgmPopId"  style="padding-left:5px;" id="helpImageId" />
+						<popup id="defaultPrgmPopId" width="500px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="When card number is not given in enrollment request, enrollments will be done to the virtual card-set in this program."
+											sclass="labelPos" />
+									</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+					</h:td>
+					
+					<h:td  colspan="2">
+						<checkbox id="enableDefaultChkId"/>
+					</h:td>
+				</h:tr> -->
+			</h:table>
+		</groupbox>
+		<groupbox width="95%"  style="margin-top:10px;"	sclass="gbStyle" closable="false">
+			<caption> <label value="Transactional Settings"/> </caption>
+			<h:table cellspacing="0" cellpadding="0" width="85%" align="left" style="padding-left:20px;margin-bottom:10px;" >
+			<!-- <h:tr height="50">
+					<h:td  valign="bottom"  width="200">
+						<label value="Allow only Single Membership per Customer by Mobile No.:"/>
+					</h:td>
+					
+					<h:td  valign="bottom"  colspan="2">
+						<checkbox id="enableUniqueMblNoChkId"/>
+					</h:td>
+				</h:tr> -->
+				
+				<div id="patialReturnDivId" visible="false">
+				<h:tr>
+					<h:td valign="top" width="300">
+						<label value="Reverse in proportion during partial reversals: "/>
+						<image src="/img/icons/icon_q.png" tooltip="partialReversalPopId"  style="padding-left:5px;" />
+						<popup id="partialReversalPopId" width="500px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="When points/currency to be reversed for items returned is higher than balance available: "
+											sclass="labelPos" />
+										<!-- <l value="" sclass="labelPos" /> -->	
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label
+											value="If left checked, reversal will be done partially to the extent of the balance."
+											sclass="labelPos" />
+										<!-- <l value="" sclass="labelPos" /> -->	
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td>
+										<label
+											value="If unchecked, no reversal will be done."
+											sclass="labelPos" />
+										<!-- <l value="" sclass="labelPos" /> -->	
+									</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+					</h:td>
+					<h:td valign="top" colspan="2">
+						<hbox>
+							<checkbox id="enablePartialReturnsAuthChkId" checked="true" />
+						</hbox>
+					</h:td>
+				</h:tr>
+				</div>
+				<h:tr height="20" />
+				<h:tr height="150">
+					<h:td width="300" valign="top">
+						<label value="Enrollment Requisites:"/>
+					</h:td>
+					
+					<h:td  width="200">
+						<listbox  id="regReqLbId"  rows="12" multiple="true"   width="150px" sclass="contactsView no-back">
+							<listitem label="First Name" value="firstName" />
+							<listitem label="Last Name" value="lastName" />
+							<listitem label="Mobile Number" value="mobilePhone" />
+							<listitem label="Email Address" value="emailId" />
+							<listitem label="Street" value="addressOne" />
+							<listitem label="City" value="city" />
+							<listitem label="State" value="state" />
+							<listitem label="Postal Code" value="zip" />
+							<listitem label="Country" value="country" />
+							<listitem label="Birthday" value="birthDay" />
+							<listitem label="Anniversary" value="anniversary" />
+							<listitem label="Gender" value="gender" />
+						</listbox>
+					</h:td>
+					<h:td  valign="top">
+						<label value="Selected Field(s):" id="requisitesLbId" visible="false" style="color:#2886B9;" />
+						<label id="selectedFieldsLblId" visible="false" value="" style="color:#2886B9;font-weight:bold;margin-left:5px;"/>
+					</h:td>
+				</h:tr>
+				<h:tr height="26">
+					<h:td>	</h:td>
+
+					<h:td colspan="2" valign="top" style="padding-top:5px;">	
+						<image src="/img/icons/icon_i.png" />	
+					<!-- </h:td>
+					
+					<h:td valign="top" style="padding-top:3px;"> 	 -->
+						<label value="Hold down CTRL key and click for multiple selections or to deselect. " sclass="labelPos" />
+					</h:td>
+				</h:tr>
+				<!-- <h:tr height="10"/>
+				<div id="redemptionDivId">
+				<h:tr height="50" >
+					<h:td valign="top" width="300">
+						<label value="Require Authentication by OTP for Redemption:"/>
+						<image src="/img/icons/icon_q.png" tooltip="otpAuthPopId"  style="padding-left:5px;" />
+						<popup id="otpAuthPopId" width="500px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="OTP is a One Time Password sent to customer's mobile no. and expires after 3 hours."
+											sclass="labelPos" />
+									</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+					</h:td>
+					
+					<h:td valign="top" colspan="2">
+						<hbox>
+							<checkbox id="enableOTPAuthChkId"/>
+							<div id="otpEnabledDivId" visible="false">
+								<label value="Authenticate when amount is greater than (Optional): " />
+								<textbox  id="otpAmtLimitTbId" value="" width="100px"  maxlength="60"/>
+							</div>
+						
+						</hbox>
+					</h:td>
+				</h:tr>
+				</div> -->
+				
+				 <!-- <div> 
+					<h:tr height= "26"/>
+						<div>
+							<h:tr>
+								<h:td valign ="top" width = "300">
+									<label value="Include redeemed amount for issuance:" />
+									</h:td>
+									<h:td valign="top" colspan="2">
+										<checkbox id="enableRedeemedAmountChkId" />
+									</h:td>
+							</h:tr>
+						</div>
+				</div>  -->
+				<h:tr height="20"/>
+				<!-- <h:tr >
+					<h:td width="300">
+						<label value="Minimum Receipt Amount:"/>
+					</h:td>
+					
+					<h:td valign="top" colspan="2">
+						<textbox  id="minReceiptAmtValueTbId" value="" width="80px"  maxlength="60"/>
+						<label value=" Required to Redeem " />
+					</h:td>
+					
+				</h:tr>
+				<h:tr height="20"/>
+				<h:tr >
+					<h:td width="300">
+						<label value="Minimum Balance:"/>
+					</h:td>
+					<h:td valign="top" width="50">
+					<listbox id="minBalanceTypeLbId" mold="select">
+								<listitem label="Points" value="Points"
+									selected="true">
+								</listitem>
+								<listitem label="Currency" value="Amount">
+								</listitem>
+					</listbox>
+					<textbox  id="minBalanceValueTbId" value="" width="80px"  maxlength="60"/>
+						<label value=" Required to Redeem" />
+					</h:td>
+				</h:tr> -->
+				<!-- <h:tr height="26"/>
+				<div id="redeemPercentageDivId">
+				<h:tr>
+					<h:td valign="top" width="300">
+						<label value="Limit Redemption Amount to (Optional):"/>
+						<image src="/img/icons/icon_q.png" tooltip="limitRedeemPopId"  style="padding-left:5px;" />
+						<popup id="limitRedeemPopId" width="300px"
+							style="bgcolor:#CCCCCC">
+							<h:table>
+								<h:tr>
+									<h:td>
+										<label
+											value="This limit is to redeem in a specific receipt/invoice."
+											sclass="labelPos" />
+									</h:td>
+								</h:tr>
+							</h:table>
+						</popup>
+					</h:td>
+					
+					<h:td valign="top" width="310">
+						<textbox id="redemptionPercentageTbId" value=""
+								 width="100px" maxlength="60" style="padding-left:5px;"/>
+						<label value="% of Billed Amount, or flat value of"/>
+					</h:td>
+					<h:td valign="top">
+						<textbox id="redemptionValueTbId" value=""
+								name="valueTb" width="100px" maxlength="60"/>
+						<label value="whichever is lower"/>
+					</h:td>
+					
+				</h:tr>
+				<h:tr height="26"/>
+				</div> -->
+				<div id="enableIssuanceDisDivId" visible="false">
+				<h:tr>
+					<h:td valign="top" width="300">
+						<label value="Disable Issaunace on Purchase Amount:"/>
+					</h:td>
+					<h:td valign="top" colspan="2">
+						<hbox>
+							<checkbox id="enableIssuanceDisChkId"  />
+						</hbox>
+					</h:td>
+				</h:tr>
+				
+				</div>
+				
+				
+			</h:table>
+		</groupbox>
+		<h:table cellspacing="2" cellpadding="1" align="right" style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+		<h:tr >
+			<h:td colspan="6" style="padding-right:30px;">
+					<button label="Next" sclass="idle140" id="nextBtnId" visible="false"/>
+					<button label="Save &amp; Continue" sclass="idle140 greenbtn" id="saveBtnId"/>
+			</h:td>
+		</h:tr>
+		</h:table>	
+		<div>
+						<popup id="userGeneratedCardSetPopupId" width="300px" >
+							Please enter card-set name
+				            <textbox id="userGeneratedCardSetPwdTbId" width="250px" maxlength="60"  value ="" /> 
+				            <div align="right" style="margin-top:5px;"><button label="Submit" id="submituserGeneratedCardSetBtnId" /></div>
+							
+						</popup>
+					</div>
+	</window>
+</zk>

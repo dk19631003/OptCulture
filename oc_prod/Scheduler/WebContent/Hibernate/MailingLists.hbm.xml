@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.MailingList"
+		table="mailing_lists">
+		<id name="listId" type="java.lang.Long">
+			<column name="list_id" />
+			<generator class="native" />
+		</id>
+		<property name="listName" type="string">
+			<column name="list_name" length="50" not-null="true"
+				unique-key="Unique_Mlist" />
+		</property>
+		<property name="description" type="string">
+			<column name="description" length="128" />
+		</property>
+		<property name="createdDate" type="date">
+			<column name="Created_date" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="30"/>
+		</property>
+		<property name="lastStatusChangeDate" type="timestamp">
+			<column name="last_statusChangeDate" />
+		</property>
+		<property name="lastModifiedDate" type="timestamp">
+			<column name="last_modifiedDate" />
+		</property>
+		<property name="custField" type="boolean">
+			<column name="cust_field" default="false" not-null="false" />
+		</property>
+		<property name="custTemplateId" type="java.lang.Long">
+			<column name="custom_template_id" not-null="false" />
+		</property>
+		<property name="checkDoubleOptin" type="boolean">
+			<column name="check_double_optin" default="false" not-null="true"/>
+		</property>
+		<property name="checkParentalConsent" type="boolean">
+			<column name="check_parental_consent" default="false" not-null="true"/>
+		</property>
+		<property name="consentCutomTempId" type="java.lang.Long">
+			<column name="consent_template_id" not-null="false" />
+		</property>
+   		<property name="loyaltyCutomTempId" type="java.lang.Long">
+			<column name="loyalty_template_id" not-null="false" />
+		</property>
+		
+		<property name="consent" type="boolean">
+			<column name="consent" default="false" not-null="true" />
+		</property>
+		<property name="checkLoyaltyOptin" type="boolean">
+			<column name="check_loyalty_optin" default="false" />
+		</property>
+		
+		<property name="checkWelcomeMsg" type="boolean">
+			<column name="check_welcome_msg" default="false" />
+		</property>
+		<property name="welcomeCustTempId" type="java.lang.Long">
+			<column name="welcome_template_id" not-null="false" />
+		</property>
+		
+		<property name="mlBit" type="java.lang.Long">
+			<column name="mlbit" />
+		</property>
+		
+		<!-- Added new column for performance -->
+		<property name="listSize" type="java.lang.Long">
+			<column name="list_size" />
+		</property>
+		
+		<set name="campaigns" table="mlists_campaigns"
+			cascade="save-update" lazy="false" inverse="true">
+			<key column="list_id" />
+			<many-to-many
+				class="org.mq.captiway.scheduler.beans.Campaigns"
+				column="campaign_id" />
+		</set>
+		
+		
+		<set name="sharedToDomain" table="mlists_domains" >
+			<key column="list_id" />
+			<many-to-many class="org.mq.captiway.scheduler.beans.UsersDomains" column="domain_id" />
+		</set>
+		
+		<!--<set name="sharedToDomain" table="mlists_domains"
+			  inverse="true">
+			<key column="list_id" />
+			<many-to-many
+				class="org.mq.captiway.scheduler.beans.UsersDomains"
+				column="domain_id" />
+		</set>
+		
+		--><many-to-one name="users"
+			class="org.mq.captiway.scheduler.beans.Users" foreign-key="userId"
+			fetch="select" lazy="false">
+			<column name="user_id" not-null="true"
+				unique-key="Unique_Mlist" />
+		</many-to-one>
+		<!--  triggerSet will be the object to which we will create getter and setter in MailingList bean -->
+		<set name="triggersSet" table="mlists_trigger" cascade="save-update" lazy="false" inverse="true">
+			<key column="list_id" />
+			<many-to-many class="org.mq.captiway.scheduler.beans.EventTrigger" column="id" />
+		</set>
+		
+		<property name="listType" type="string">
+			<column name="list_type" length="100" />
+		</property>
+		
+		
+		
+	
+	</class>
+</hibernate-mapping>

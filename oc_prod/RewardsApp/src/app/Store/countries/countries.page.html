@@ -1,0 +1,98 @@
+
+
+<ion-content  forceOverscroll="false">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent">
+    <div class="colorClass ht25 posrelative ">
+       
+        <ion-grid class="ht100">
+          <ion-row >
+            <ion-col>
+                <ion-item lines="none"  class="mr-right-5  bgAuto">
+                    <ion-label  text-wrap class="title">
+                        {{'Stores' | translate }}
+                    </ion-label>
+                  </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row >
+            <ion-col class="pad5">
+
+            </ion-col>
+          </ion-row>
+          <ion-row class="posabsolute wd100">
+            <ion-col size="1">
+
+            </ion-col>
+            <ion-col class="textCenter col1" size="5">
+                <ion-button  fill="clear" [ngClass]="{'borderleft': textDir == 'rtl'}"  class="col1 text_transform mr0 wd100" (click)="goTofilter()">
+                    <ion-icon slot="start"   src="assets/images/filter.svg"></ion-icon>
+                    <!-- <ion-icon slot="start" mode="ios" name="options" class="black rotate90"></ion-icon> -->
+                    <ion-text class="filterText">  {{'FilterBy' | translate }} </ion-text>
+               </ion-button> 
+            </ion-col>
+            <ion-col class="textCenter col2" size="5">
+                <ion-button  fill="clear" [ngClass]="{'borderleft': textDir == 'ltr'}" class="text_transform mr0 wd100" (click)="goTOSort()">
+                    <ion-icon slot="start"   src="assets/images/sortby.svg"></ion-icon>
+                    <!-- <ion-icon color="dark" slot="start" name="logo-buffer"></ion-icon> -->
+                    <ion-text class="filterText">{{'SortBy' | translate }} </ion-text>
+               </ion-button> 
+            </ion-col>
+            <ion-col size="1">
+
+              </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+
+    <!-- <ion-item-group *ngFor="let group of groupedCountries">
+
+        <ion-item-divider light>{{group.letter}}</ion-item-divider>
+        <ion-item (click)="goToCities(contact)" *ngFor="let contact of group.contacts">
+          {{contact}}
+        </ion-item>
+  
+      </ion-item-group> -->
+
+      <div class="mr-right-5  wd100">
+        <ion-card class="border-radius wd90" mode="ios" *ngFor="let store of allStores">
+          <ion-grid (click)="goToStoreInfo(store)">
+            <ion-row >
+              <ion-col size="10">
+                <ion-text class="title black" >
+                   {{store.storeName}}
+                </ion-text>
+              </ion-col>
+              <ion-col>
+                  <ion-icon class="right arrowIcon" mode="ios" name="arrow-forward"></ion-icon>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-text class="addrText">
+                    {{store.locality}},{{store.city}},{{store.state}},{{store.country}},{{store.zipCode}}
+                </ion-text>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                  <ion-text class="addrText"> Stores phone number:</ion-text><br/>
+                  <ion-text class="addrText">{{store.mobileNo}}</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </div>
+
+      <!-- <ion-infinite-scroll threshold="200px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText="{{loadDatamsg}}">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll> -->
+  </ion-col>
+  <ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+  </ion-row>
+  </ion-grid>
+</ion-content>

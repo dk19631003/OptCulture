@@ -1,0 +1,78 @@
+<zk>
+<?link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" ?>
+<?link rel="icon" type="image/x-icon" href="img/favicon.ico" ?>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.useradmin.SubscriberSettingsController" 
+					 xmlns:w="http://www.zkoss.org/2005/zk/client"
+					  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+			  
+			<groupbox sclass="gbStyle" closable="false" style="padding:15px 10px" >
+			<caption label="Settings"  />
+					
+				<h:table cellspacing="0" cellpadding="2" width="100%" >
+					<h:tr >
+						<h:td valign="top">
+						<label style="float:left; margin:5px 5px  5px 0; " value="Enable Subscriber Preference Center:"/>
+						<checkbox id="enableChkBoxId" />
+						</h:td>
+					
+						<h:td width="210" align="center" vailgn="bottom">
+						
+							<toolbarbutton id="addCategoryTBarBtnId" label="Add Category"   image="img/icons/add_icon.png"    />
+						</h:td>
+					</h:tr>
+				</h:table>
+	
+		<grid id="prferenceGId" >
+		<columns  menupopup="auto" >
+						  
+					       <column label="Preference Category"   />
+					       <column label="Description (what your customer will see)" />
+				           <column label="Visibility"/>
+					       <column label="Add Sub-category" />
+					       </columns>
+		<rows id="preferenceRowsId" />
+		
+		
+		</grid>
+		
+			<h:br/>
+			
+		 <h:table width="100%" style="display:none" >
+		    <h:tr>
+				<h:td align="right">
+			   		<label value="Items per page:"  style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="itemsPerPageLBId" style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true"  />
+						<listitem label="15"/>
+					</listbox>
+				</h:td>
+				<h:td width="280px"  >
+					<paging id="prferencesPerPagingId" detailed="true" pageSize="10" width="280px" 
+						class="contactsViewPaging" style="border:none;"  />
+				</h:td>
+		   </h:tr>
+	   </h:table>
+	   
+	   	 <h:table width="100%" >
+		    <h:tr >
+				<h:td >
+	   <label value="To see how subscription preference page looks to  your subscribers" />
+	   <a id="subsAncId" label="click here" />.
+	   </h:td>
+	   
+	   <h:td align="center">
+	   <button label="Save Changes" sclass="idle140 greenbtn" id="saveBtnId" style="padding:left;40px"/>
+	   <button label="Cancel" sclass="idle140 " id="cancelBtnId" style="padding:left;40px"/>
+	   </h:td>
+	   </h:tr>
+	   </h:table>
+						
+							
+				
+	
+							
+			</groupbox>	
+	
+	</window>
+</zk>

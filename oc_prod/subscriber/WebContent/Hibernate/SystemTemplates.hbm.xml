@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SystemTemplates"
+		table="system_templates">
+		<id name="templateId" type="java.lang.Long">
+			<column name="template_id" />
+			<generator class="native" />
+		</id>
+		<property name="name" type="string">
+			<column name="name" length="50" not-null="true" />
+		</property>
+		<property name="divisions" type="string">
+			<column name="divisions" not-null="true" />
+		</property>
+		<property name="htmlText" type="text">
+			<column name="html_text" />
+		</property>
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		<property name="dirName" type="string">
+			<column name="dir_name" length="50" not-null="true" />
+		</property>
+		<property name="jsonText" type="string">
+			<column name="json_text" length="16777215" />
+		</property>
+		<!-- 
+			<set name="categories" table="categories_templates" lazy="false">
+			<key column="template_id"/>
+			<many-to-many class="org.mq.marketer.campaign.beans.TemplateCategory" column="category_id"/>
+			</set>
+			<many-to-one name="user"
+			class="org.mq.marketer.campaign.beans.Users"
+			foreign-key="user_SysTempId" fetch="select">
+			<column name="uid" not-null="true"
+			unique-key="Unique_email" />
+			</many-to-one>
+		-->
+		<many-to-one name="templateCategory"
+			class="org.mq.marketer.campaign.beans.TemplateCategory"
+			foreign-key="TempCat_SysTempId" fetch="select" lazy="false">
+			<column name="category_id" not-null="true"
+				unique-key="Unique_email" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>

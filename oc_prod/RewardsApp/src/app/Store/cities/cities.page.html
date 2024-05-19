@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start" >
+          <ion-button  (click)="backButtonEvent()">
+            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+    <ion-title>Cities</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-item-group *ngFor="let group of groupedCities">
+
+        <ion-item-divider light>{{group.letter}}</ion-item-divider>
+        <ion-item (click)="goToBrands(contact)" *ngFor="let contact of group.contacts">{{contact}}</ion-item>
+  
+      </ion-item-group>
+
+</ion-content>

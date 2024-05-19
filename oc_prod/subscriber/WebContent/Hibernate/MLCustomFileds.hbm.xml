@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.MLCustomFields"
+		table="ml_customFileds">
+		<id name="cId" type="java.lang.Long">
+			<column name="c_id" unique-key="Unique_cf" />
+			<generator class="native" />
+		</id>
+		<property name="selectedField" type="string">
+			<column name="selected_field" length="50" />
+		</property>
+		<property name="fieldIndex" type="int">
+			<column name="field_index" />
+		</property>
+		<property name="custFieldName" type="string">
+			<column name="custfield_name" length="100" />
+		</property>
+		<property name="dataType" type="string">
+			<column name="data_type" length="30" />
+		</property>
+		<property name="defaultValue" type="string">
+      		<column name="default_value" length="256" />
+    	</property>
+    	<property name="format" type="string">
+      		<column name="format" length="256" />
+    	</property>
+    	
+		<many-to-one name="mailingList"
+			class="org.mq.marketer.campaign.beans.MailingList"
+			foreign-key="listId"  fetch="select">
+			<column name="list_id" not-null="true"
+				unique-key="Unique_cf" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.LoyaltyProgram"
+		table="loyalty_program">
+		<id name="programId" type="java.lang.Long" column="program_id">
+			<generator class="native" />
+		</id>
+		<property name="programName" type="string">
+			<column name="program_name" not-null="true" length="60"/>
+		</property>
+		<property name="description" type="string">
+			<column name="description" />
+		</property>
+		<property name="tierEnableFlag" type="char">
+			<column name="tier_enable_flag" />
+		</property>
+		<property name="noOfTiers" type="int">
+			<column name="no_of_tiers" default="1"/>
+		</property>
+		<property name="status" type="string">
+			<column name="status" length="60" not-null="true"/>
+		</property>
+		<property name="defaultFlag" type="char">
+			<column name="default_flag" />
+		</property>
+		<property name="uniqueMobileFlag" type="char">
+			<column name="unique_mobile_flag" />
+		</property>
+		<property name="regRequisites" type="string">
+			<column name="reg_requisites" />
+		</property>
+		<!-- <property name="bonusRewardType" type="string">
+			<column name="bonus_reward_type" />
+		</property>
+		<property name="bonusRewardValue" type="double">
+     		<column name="bonus_reward_value"/>
+    	</property> -->
+    	<!-- <property name="redemptionOTPFlag" type="char">
+			<column name="redemption_otp_flag" />
+		</property> -->
+		<property name="userId" type="java.lang.Long">
+	      <column name="user_id" not-null="true"/>
+	    </property>
+	    <property name="orgId" type="java.lang.Long">
+	      <column name="org_id" not-null="true"/>
+	    </property>
+	    <property name="createdDate" type="calendar">
+			<column name="created_date" not-null="true"/>
+		</property>
+		<property name="modifiedDate" type="calendar">
+			<column name="modified_date" />
+		</property>
+		<property name="createdBy" type="string">
+			<column name="created_by" not-null="true" length="60"/>
+		</property>
+		<property name="modifiedBy" type="string">
+			<column name="modified_by" length="60"/>
+		</property>
+		<!-- <property name="rewardExpiryOnLevelUpgd" type="char">
+			<column name="reward_expiry_on_level_upgd" />
+		</property> -->
+		<property name="mbrshipExpiryOnLevelUpgdFlag" type="char">
+			<column name="mbrship_expiry_on_level_upgd_flag" />
+		</property>
+		<property name="draftStatus" type="string">
+			<column name="draft_status" />
+		</property>
+		
+		<property name="rewardExpiryFlag" type="char">
+			<column name="reward_expiry_flag" />
+		</property>
+		
+		<property name="membershipExpiryFlag" type="char">
+			<column name="membership_expiry_flag" />
+		</property>
+		
+		<!-- <property name="mobileNoBasedFlag" type="char">
+			<column name="mobile_no_based_flag" />
+		</property> -->
+	
+		<property name="membershipType" type="string">
+			<column name="membership_type" />
+		</property>
+		
+		<property name="giftAmountExpiryFlag" type="char">
+			<column name="gift_amount_expiry_flag" />
+		</property>
+		<property name="giftAmountExpiryDateType" type="string">
+			<column name="gift_amount_expiry_date_type" length="60"/>
+		</property>
+		<property name="giftAmountExpiryDateValue" type="java.lang.Long">
+			<column name="gift_amount_expiry_date_value"/>
+		</property>
+		<property name="giftMembrshpExpiryFlag" type="char">
+			<column name="gift_membrshp_expiry_flag" />
+		</property>
+		<property name="giftMembrshpExpiryDateType" type="string">
+			<column name="gift_membrshp_expiry_date_type" length="60"/>
+		</property>
+		<property name="giftMembrshpExpiryDateValue" type="java.lang.Long">
+			<column name="gift_membrshp_expiry_date_value"/>
+		</property>
+		<!-- <property name="otpLimitAmt" type="double">
+     		<column name="otp_limit_amt"/>
+    	</property> -->
+    	<property name="rewardType" type="string">
+			<column name="reward_type" />
+		</property>
+	</class>
+</hibernate-mapping>

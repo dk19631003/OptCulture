@@ -1,0 +1,31 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+
+<script defer="true">
+//	window.opener.location.reload(false);
+ window.opener.location.reload();
+ window.close();
+</script>
+
+ 
+<window title="Facebook" border="normal" xmlns:h="native"  
+	  apply="org.mq.marketer.campaign.controller.social.FacebookConnectedController" >
+Twitter Connected...
+
+<h:form id="disconnect" method="post">
+	<h:div class="formInfo">
+		The Spring Social Showcase sample application is already connected to your Twitter account.
+			Click the button if you wish to disconnect.			
+	</h:div>
+
+	<h:button type="submit">Disconnect</h:button>	
+	<h:input type="hidden" name="_method" value="delete" />
+</h:form>
+ 
+ <button id="facebookProfileBtnId" label="View your Facebook profile" />
+ 
+</window>
+
+
+</zk>

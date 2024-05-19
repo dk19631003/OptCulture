@@ -1,0 +1,59 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  border="0" id="billingWinId" 
+		 xmlns:w="http://www.zkoss.org/2005/zk/client"
+		xmlns:h="http://www.zkoss.org/2005/zk/native" apply="org.mq.marketer.campaign.controller.useradmin.BillingDetailsController">
+	 <window id="profileIframeWin" title="Billing Info" width="460px" style="overflow:auto;" border="normal" 
+	 mode="overlapped" visible="false" position="center">
+						<caption>
+							<toolbarbutton id="profileIframeWinCloseTbBtnId" label="Close" />
+						</caption>
+						
+						<include id="myJspIncId" style="overflow:auto;"/>
+						
+					</window>
+					<groupbox width="800px" closable="false"  sclass="gbStyle">
+					     	<caption label="Credit Card Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+					     	<h:table cellspacing="0" cellpadding="0"   align="right">
+					     		<h:tr>
+					     		<h:td  align="right" >
+					     			<image align="center" src="/img/icons/20130921070637649_easyicon_net_48.png" />	
+					     			
+					     			<a   label="Add Credit Card" style="font-weight:bold; font-size:13px;color:#43A0BA;"  
+					     			 id="requestForPopupAnchId"/>
+					     		
+					     		</h:td>
+					     		</h:tr>
+					     		
+								</h:table>
+								<grid width="100%" emptyMessage="No Card details found.">
+									<columns>
+										<column label="Cardholder's Name"  />
+										<column label="Last 4 digits of card" width="350px"  ></column>
+										
+										<column label="Action" width="70px" />
+										
+									</columns>
+									<rows id="cardRowsId" />
+								</grid>
+								
+					     		<h:table cellspacing="5" cellpadding="5"  width="100%">
+							<h:tr>
+								<h:td>
+									<label value="Please Note :" style="font-weight:bold;font-size:13px;" />
+									<label value="In order to be PCI DSS complaint and for security reasons, your credit card details are not stored with OptCulture but with our payment processor, Authorize.net."    />
+									
+								</h:td>
+								<h:td>
+									<image src="/img/icons/Authorize.net.png" />
+								</h:td>
+							</h:tr>
+						
+						</h:table>
+				     	
+					     		
+					     
+				     	
+				     	</groupbox>
+</window>
+</zk>

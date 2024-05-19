@@ -1,0 +1,366 @@
+package org.mq.optculture.business.helper;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.captiway.scheduler.beans.Contacts;
+import org.mq.captiway.scheduler.beans.ContactsLoyalty;
+import org.mq.captiway.scheduler.beans.EmailQueue;
+import org.mq.captiway.scheduler.beans.LoyaltyProgram;
+import org.mq.captiway.scheduler.beans.OCSMSGateway;
+import org.mq.captiway.scheduler.beans.SMSSettings;
+import org.mq.captiway.scheduler.beans.UserOrganization;
+import org.mq.captiway.scheduler.beans.Users;
+import org.mq.captiway.scheduler.dao.ContactsLoyaltyDao;
+import org.mq.captiway.scheduler.dao.ContactsLoyaltyDaoForDML;
+import org.mq.captiway.scheduler.dao.EmailQueueDao;
+import org.mq.captiway.scheduler.dao.SMSSettingsDao;
+import org.mq.captiway.scheduler.dao.UsersDao;
+import org.mq.captiway.scheduler.services.CaptiwayToSMSApiGateway;
+import org.mq.captiway.scheduler.utility.Constants;
+import org.mq.captiway.scheduler.utility.MyCalendar;
+import org.mq.captiway.scheduler.utility.PropertyUtil;
+import org.mq.captiway.scheduler.utility.SMSStatusCodes;
+import org.mq.captiway.scheduler.utility.Utility;
+import org.mq.optculture.data.dao.LoyaltyProgramDao;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+
+public class LoyaltyProgramHelper {
+
+	private static final Logger logger = LogManager.getLogger(Constants.SCHEDULER_LOGGER);
+	
+	/**
+	 * 
+	 * @param createdDate
+	 * @param upgradedDate
+	 * @param upgdResetFlag
+	 * @param dateType
+	 * @param dateValue
+	 * @return
+	 */
+	public static String getMbrshipExpiryDate(Calendar createdDate, Calendar upgradedDate, boolean upgdResetFlag,
+			String dateType, Long dateValue){
+		
+		Calendar expiryCal = null;
+		
+		if(upgdResetFlag == true){
+			
+			if(upgradedDate != null){
+				expiryCal = (Calendar)upgradedDate.clone();
+			}
+			else{
+				expiryCal = (Calendar)createdDate.clone();
+			}
+			
+		}
+		else{
+			expiryCal = (Calendar)createdDate.clone();
+		}
+		
+		if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_MONTH.equals(dateType)){
+			expiryCal.add(Calendar.MONTH, dateValue.intValue());
+		}
+		else if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_YEAR.equals(dateType)){
+			expiryCal.add(Calendar.YEAR, dateValue.intValue());
+		}
+		
+		return MyCalendar.calendarToString(expiryCal, MyCalendar.FORMAT_YEARTODATE);
+		
+	}
+	
+	public static String getGiftMbrshipExpiryDate(Calendar createdDate, String dateType, Long dateValue){
+		
+		Calendar expiryCal = (Calendar)createdDate.clone();
+		
+		if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_MONTH.equals(dateType)){
+			expiryCal.add(Calendar.MONTH, dateValue.intValue());
+		}
+		else if(OCConstants.LOYALTY_MEMBERSHIP_EXPIRYDATE_TYPE_YEAR.equals(dateType)){
+			expiryCal.add(Calendar.YEAR, dateValue.intValue());
+		}
+		
+		return MyCalendar.calendarToString(expiryCal, MyCalendar.FORMAT_YEARTODATE);
+		
+	}
+	
+	public static void updateLoyaltyMembrshpPhone(Contacts contact, String newPhone){
+		try{
+			logger.info("========= entered updateLoyaltyMembrshpPhone =========");
+			if(contact.getContactId() == null) return; 
+			ContactsLoyaltyDao contactsLoyaltyDao = (ContactsLoyaltyDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_LOYALTY_DAO);
+			ContactsLoyaltyDaoForDML contactsLoyaltyDaoForDML = (ContactsLoyaltyDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.CONTACTS_LOYALTY_DAO_FOR_DML);
+			List<ContactsLoyalty> contactLoyaltyList = contactsLoyaltyDao.findOCLoyaltyListByContactId(contact.getContactId());
+			if(contactLoyaltyList == null || contactLoyaltyList.size() == 0) return;
+
+			for (ContactsLoyalty loyalty : contactLoyaltyList) {
+
+				boolean isDifferentMobile = false;
+				boolean sendUpdateAlert = false;
+				String conMobile = loyalty.getMobilePhone();
+				//to identify whether entered one is same as previous mobile
+				if(newPhone != null && !newPhone.isEmpty()) {
+					if(conMobile != null && !conMobile.isEmpty() && !conMobile.equals(newPhone)) {
+						if( (conMobile.length() < newPhone.length() && !newPhone.endsWith(conMobile) ) ||
+								(newPhone.length() < conMobile.length() && !conMobile.endsWith(newPhone)) || conMobile.length() == newPhone.length()) {
+							isDifferentMobile = true;
+							sendUpdateAlert = true;
+						}
+					}
+					else if(conMobile == null || conMobile.isEmpty()){
+						isDifferentMobile = true;
+					}
+				}
+
+				if(isDifferentMobile) {
+					if(OCConstants.LOYALTY_MEMBERSHIP_TYPE_CARD.equalsIgnoreCase(loyalty.getMembershipType())) {
+						LoyaltyProgramDao loyaltyProgramDao =  (LoyaltyProgramDao) ServiceLocator.getInstance().getDAOByName(OCConstants.LOYALTY_PROGRAM_DAO);
+						LoyaltyProgram prgmObj = loyaltyProgramDao.findById(loyalty.getProgramId());
+						if(prgmObj.getUniqueMobileFlag() == OCConstants.FLAG_YES) {
+							ContactsLoyalty tempLtyContact = contactsLoyaltyDao.getLoyaltyByPrgmAndPhone(loyalty.getProgramId(),newPhone);
+							if(tempLtyContact != null) continue;
+							loyalty.setMobilePhone(newPhone);
+							contactsLoyaltyDaoForDML.saveOrUpdate(loyalty);
+							logger.info("updated loyalty registered phone from::"+conMobile+" to::"+newPhone);
+							if(sendUpdateAlert){
+								sendUpdateAlert(loyalty, conMobile, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+							else{
+								sendAddAlert(loyalty, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+						}
+						else {
+							loyalty.setMobilePhone(newPhone);
+							contactsLoyaltyDaoForDML.saveOrUpdate(loyalty);
+							logger.info("updated loyalty registered phone from::"+conMobile+" to::"+newPhone);
+							if(sendUpdateAlert){
+								sendUpdateAlert(loyalty, conMobile, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+							else{
+								sendAddAlert(loyalty, newPhone, contact.getEmailId(), contact.getContactId());
+							}
+						}
+					}
+					else if(OCConstants.LOYALTY_MEMBERSHIP_TYPE_MOBILE.equalsIgnoreCase(loyalty.getMembershipType())) {
+						ContactsLoyalty tempContact = contactsLoyaltyDao.getLoyaltyByPrgmAndMembrshp(loyalty.getProgramId(),newPhone); 
+						if (tempContact != null) continue;
+						loyalty.setMobilePhone(newPhone);
+						loyalty.setCardNumber(newPhone);
+						contactsLoyaltyDaoForDML.saveOrUpdate(loyalty);
+						logger.info("updated loyalty registered phone from::"+conMobile+" to::"+newPhone);
+						if(sendUpdateAlert){
+							sendUpdateAlert(loyalty, conMobile, newPhone, contact.getEmailId(), contact.getContactId());
+						}
+						else{
+							sendAddAlert(loyalty, newPhone, contact.getEmailId(), contact.getContactId());
+						}
+					}
+				}
+				else continue;
+			}
+			logger.info("========= exited updateLoyaltyMembrshpPhone =========");
+		}catch(Exception e){
+			logger.error("Exception::",e);
+		}
+
+	}
+
+	private static void sendAddAlert(ContactsLoyalty loyalty, String newPhone,	String emailId, Long contactId) {
+		try{
+			UsersDao usersDao = (UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			Users user = usersDao.findByUserId(loyalty.getUserId());
+			String phoneSubStr = StringUtils.right(newPhone, 4);
+			String orgName = user.getUserOrganization().getOrganizationName();
+			if(emailId != null && !emailId.isEmpty()){
+				String messageStr = PropertyUtil.getPropertyValueFromDB("ltyPhoneAddTemplate");
+				messageStr = messageStr.replace("[toStr]", phoneSubStr);
+
+				EmailQueueDao emailQueueDao = (EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+				EmailQueue email = new EmailQueue(null, Constants.EQ_TYPE_LOYALTY_OC_ALERTS, messageStr, Constants.EQ_STATUS_ACTIVE, emailId, user, MyCalendar.getNewCalendar().getTime(), orgName+": Your Phone Number Updated Successfully!", contactId , null);
+				emailQueueDao.saveOrUpdate(email);
+			}
+
+			if(!user.isEnableSMS()) return;
+
+			String message = PropertyUtil.getPropertyValueFromDB("ltyPhoneAddSmsMsgTemplate");
+			message = message.replace("[orgName]", orgName);
+			message = message.replace("[toStr]", phoneSubStr);
+			
+			//validate loyalty phone no and new phone no
+			Map<String, Object> resultMap = null;
+
+			resultMap = validateMobile(user,newPhone);
+			newPhone = (String) resultMap.get("phone"); 
+			boolean phoneIsValid = (Boolean) resultMap.get("isValid");
+
+			if(phoneIsValid){
+				sendSmsAlert(user, newPhone, message);
+			}
+		}catch(Exception e){
+			logger.error("Exception in sending alerts", e);
+		}
+	}
+
+	private static void sendUpdateAlert(ContactsLoyalty loyalty, String conMobile, String newPhone, String emailId, Long contactId) {
+		try{
+			UsersDao usersDao = (UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			Users user = usersDao.findByUserId(loyalty.getUserId());
+			String conMobileSubStr = StringUtils.right(conMobile, 4);
+			String phoneSubStr = StringUtils.right(newPhone, 4);
+			String orgName = user.getUserOrganization().getOrganizationName();
+			if(emailId != null && !emailId.isEmpty()){
+				String messageStr = PropertyUtil.getPropertyValueFromDB("ltyPhoneUpdateTemplate");
+				messageStr = messageStr.replace("[fromStr]", conMobileSubStr);
+				messageStr = messageStr.replace("[toStr]", phoneSubStr);
+
+				EmailQueueDao emailQueueDao = (EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+				EmailQueue email = new EmailQueue(null, Constants.EQ_TYPE_LOYALTY_OC_ALERTS, messageStr, Constants.EQ_STATUS_ACTIVE, emailId, user, MyCalendar.getNewCalendar().getTime(), orgName+": Your Phone Number Updated Successfully!", contactId , null);
+				emailQueueDao.saveOrUpdate(email);
+			}
+
+			if(!user.isEnableSMS()) return;
+
+			String message = PropertyUtil.getPropertyValueFromDB("ltyPhoneUpdateSmsMsgTemplate");
+			message = message.replace("[orgName]", orgName);
+			message = message.replace("[fromStr]", conMobileSubStr);
+			message = message.replace("[toStr]", phoneSubStr);
+			
+			//validate loyalty phone no and new phone no
+			Map<String, Object> resultMap = null;
+
+			resultMap = validateMobile(user, conMobile);
+			conMobile = (String) resultMap.get("phone");
+			boolean conMobileIsValid = (Boolean) resultMap.get("isValid");
+
+			resultMap = validateMobile(user,newPhone);
+			newPhone = (String) resultMap.get("phone"); 
+			boolean phoneIsValid = (Boolean) resultMap.get("isValid");
+
+			if(conMobileIsValid){
+				sendSmsAlert(user, conMobile, message);
+			}
+			if(phoneIsValid){
+				sendSmsAlert(user, newPhone, message);
+			}
+		}catch(Exception e){
+			logger.error("Exception in sending alerts", e);
+		}
+	}
+	
+
+	public static Map<String,Object> validateMobile(Users user, String phone) {
+		Map<String, Object> resultMap =  new HashMap<String, Object>();
+		phone = phone.trim();
+		UserOrganization organization=  user!=null ? user.getUserOrganization() : null ;
+		phone = Utility.phoneParse(phone,organization);
+
+		if(phone != null &&
+				!phone.startsWith(user.getCountryCarrier().toString()) && phone.length() >= user.getUserOrganization().getMinNumberOfDigits() && phone.length() <=user.getUserOrganization().getMaxNumberOfDigits()) {
+			phone = user.getCountryCarrier().toString()+phone;
+		}
+		try{
+			Long.parseLong(phone);
+			resultMap.put("phone", phone);
+			resultMap.put("isValid", true);
+		}catch (Exception e) {
+			resultMap.put("phone", phone);
+			resultMap.put("isValid", false);
+			return resultMap;
+		}
+
+		return resultMap;
+	}
+
+	public static void sendSmsAlert(Users user, String phone, String message) {
+
+		try{
+
+			OCSMSGateway ocGateway = GatewayRequestProcessHelper.getOcSMSGateway(user, 
+					SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+			CaptiwayToSMSApiGateway captiwayToSMSApiGateway = new CaptiwayToSMSApiGateway();
+			if(!ocGateway.isPostPaid() && !captiwayToSMSApiGateway.getBalance(ocGateway, 1)) {
+				return;
+			}
+
+			if(!(((user.getSmsCount() == null ? 0 : user.getSmsCount()) - (user.getUsedSmsCount() == null ? 0 : user.getUsedSmsCount())) >=  1)) {
+				return;
+			}
+
+			String msgContent= "";
+			String messageHeader = findMessageHeader(user);
+
+			if(messageHeader == ""){
+				msgContent= message;
+			}
+			else{
+				msgContent= messageHeader+message;
+			}
+
+			String senderId = ocGateway.getSenderId();
+			captiwayToSMSApiGateway.sendSingleSms(ocGateway, msgContent, phone, senderId);
+			/**
+			 * Used SMS Count
+			 */
+			try {
+				UsersDao usersDao = (UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+				usersDao.updateUsedSMSCount(user.getUserId(), 1);
+			} catch (Exception e) {
+				logger.error("Exception while updating used sms count",e);
+			}
+
+			/**
+			 * Update SMS Queue.
+			 */
+			SmsQueueHelper smsQueueHelper = new SmsQueueHelper();
+			smsQueueHelper.updateSMSQueue(phone, msgContent, Constants.SMS_MSG_TYPE_ALERTSMS,  user, senderId);
+
+			return;
+		}catch(Exception e){
+			logger.error("Exception in sending sms alert ...", e);
+			return;
+		}
+	}
+
+	private static String findMessageHeader(Users user){
+
+		String messageHeader = Constants.STRING_NILL;
+		try{
+
+			List<SMSSettings> smsSettings = null;
+			SMSSettingsDao smsSettingsDao = (SMSSettingsDao)ServiceLocator.getInstance().getDAOByName("smsSettingsDao");
+
+			if(SMSStatusCodes.optOutFooterMap.get(user.getCountryType())) {
+
+				smsSettings = smsSettingsDao.findByUser(user.getUserId());
+				if(smsSettings != null) {
+					SMSSettings optinSettings = null;
+					SMSSettings optOutSettings = null;
+					SMSSettings helpSettings = null;
+
+					for (SMSSettings eachSMSSetting : smsSettings) {
+
+						if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN)) optinSettings = eachSMSSetting;
+						else if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTOUT)) optOutSettings = eachSMSSetting;
+						else if(eachSMSSetting.getType().equalsIgnoreCase(OCConstants.SMS_PROGRAM_KEYWORD_TYPE_HELP)) helpSettings = eachSMSSetting;
+
+					}
+					if(optinSettings != null && messageHeader.isEmpty()) messageHeader = optinSettings.getMessageHeader();
+					else if(optOutSettings != null && messageHeader.isEmpty()) messageHeader = optOutSettings.getMessageHeader();
+					else if(helpSettings != null && messageHeader.isEmpty()) messageHeader = helpSettings.getMessageHeader();
+				}
+
+			}
+		}catch(Exception e){
+			logger.error("Exception in find message header...", e);
+			return messageHeader;
+		}
+		return messageHeader;
+
+	}
+
+}
+

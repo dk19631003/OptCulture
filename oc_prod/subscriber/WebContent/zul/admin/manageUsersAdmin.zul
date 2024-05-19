@@ -1,0 +1,587 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<!-- <zk>
+<window title="new page title" border="normal">
+New Content Here!
+</window>
+</zk> -->
+<zk>
+	<window id="custWin" apply="org.mq.marketer.campaign.controller.admin.ManageUsersAdminController" 
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native" width="100%">
+				  
+				  <groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px" id="createListGroupBoxId">
+				<caption label="Manage Users Settings"  />
+				<div id="userOrgListDivId">
+					<h:table cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td  width="200" >
+								<label value="Select Organization :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="orgListBxId" mold="select" width="200px">
+								<listitem label="--select--" selected="true"/>
+									
+								</listbox>
+							</h:td>	
+							<h:td  width="200" >
+							(OR)
+							
+							<space></space>
+								<label value="Select OrganizationID :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="orgListBx" mold="select" width="200px">
+									<listitem label="--select--" selected="true"/>
+									
+								</listbox>
+							</h:td>	
+							<div id="userdivid" visible="false">
+							<h:td >
+								<label value="Select User :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<listbox id="usersListBxId" mold="select" width="200px">
+								<listitem label="--select--" selected="true"/>
+									
+								</listbox>
+							</h:td>	
+							</div>
+							
+	
+						</h:tr>
+					
+					</h:table>
+				</div>
+					
+				<!-- <div id="createListDivId" width="100%" > 
+					<h:table cellspacing="2" cellpadding="2" width="100%">
+						<h:tr>
+							<h:td width="200" >
+								<label value="POS List Name :" />
+								<label value="*" style="font-size:15px;color:red;" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="posListTxtBoxId" width="270px" maxlength="50" cols="30"/>
+							</h:td>	
+						</h:tr>
+						
+						<h:tr>
+							<h:td valign="top">
+								<label value="Description :" />
+							</h:td>
+							
+							<h:td >
+								<textbox id="posListDescTbId" rows="5" width="270px" maxlength="125" height="100px"/>
+							</h:td>	
+						</h:tr>	
+						
+						<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Double opt-in email:" />
+								</h:td>
+								
+								<h:td >
+									<checkbox id="doubleOptInCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+								
+						</h:tr>
+						<h:tr>
+							<h:td  width="200" />
+								<h:td>
+									<div id="doubleOptLtDiv" width="100%"  style="z-index: 0;" visible="false">
+         								<label value="Opt-in Email:" />
+										<listbox id="optInEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+										  <listitem  selected="true" label="Select Message" />
+										</listbox>
+										<image id="optInPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+										<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="previewBtnId" sclass="idle140"/>
+	         						</div>   
+								</h:td>
+						</h:tr>
+						
+						<h:tr style="display:none;">
+								<h:td  width="200">
+									<label value="Enable a Parental Consent email:" />
+								</h:td>
+								
+								<h:td >
+									<checkbox id="parentalConsentCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+						</h:tr>
+						
+						<h:tr style="display:none;">
+							<h:td  width="200" />
+							<h:td>
+							 
+								<div id="parentalOptLtDiv" width="100%"  style="z-index: 0;" visible="false">
+	          						<label value="Parental Consent Email :" />
+									<listbox id="parentalConsentEmailLbId"  width="270px"   mold="select" sclass="contactsView">
+									  <listitem  selected="true" label="Select Message" />
+									</listbox>
+									
+									<image id="parentalPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+									<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="parentalPreviewBtnId" sclass="idle140"/>
+        						</div>  
+							</h:td>
+						</h:tr>
+						LOYALTY OPT_IN
+
+
+						<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Loyalty opt-in email:" id="optionsbasedOnloyalityType" visible="false"/>
+								</h:td>
+								
+								<h:td >
+									<div id="optionsbasedOnloyalityTypeCheckbox" visible="false">
+										<checkbox id="loyaltyOptInCbId"  checked="false" style="padding-right:0px;" />
+									</div>	
+								</h:td>
+								
+						</h:tr>						
+						<h:tr>
+							<h:td  width="200" />
+							<h:td>
+							
+								<div id="loyaltyOptLtDiv" width="100%" visible="false" style="z-index: 0;">
+	          						<label value="Loyalty Opt-in Email :" />
+									<listbox id="LoyaltyOptinEmailLbId"  width="270px"   mold="select" sclass="contactsView">
+									  <listitem  selected="true" label="Select Message" />
+									</listbox>
+									
+									<image id="loyaltyPreviewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+									<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="loyaltyPreviewBtnId" sclass="idle140"/>
+        						</div>  
+							</h:td>
+						</h:tr>
+						 Welcome Email
+						
+						<h:tr>
+								<h:td  width="200">
+									<label value="Enable a Welcome Email:" />
+								</h:td>
+								<h:td >
+									<checkbox id="welcomeEmailsCbId"  checked="false" style="padding-right:0px;" />
+								</h:td>
+								</h:tr>
+								
+								<h:tr>
+							<h:td  width="200" />
+							<h:td>
+							
+								<div id="enableWelcomeEmailDivId" width="100%" visible="false" style="z-index: 0;">
+	          						<label value="Welcome Message:" />
+									<listbox id="welcomeEmailsLbId"  width="270px"   mold="select" sclass="contactsView">
+									  <listitem  selected="true" label="Select Message" />
+									</listbox>
+									
+									<image id="previewIconId" src="/images/Preview_icn.png" style="margin-left:20px;"/>
+									<a label="Preview" style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;" id="welcomeMessagePreviewBtnId" sclass="idle140"/>
+										<a label="Edit Message"
+											style="color:#2886B9;font-weight:bold;text-decoration: underline;padding:0px 10px;"
+											id="editMsgBtnId" sclass="idle140" />
+        						</div>  
+							</h:td>
+						</h:tr>
+								
+						
+						
+					</h:table>
+				</div> -->
+				
+	         	<div align="right">
+					<!-- <button label="Save &amp; Continue" id="creatListNxtBtnId" visible="false" sclass="idle140"/> -->
+	         	    <!-- <button label="Save" id="step1SaveBtnId" visible="false" sclass="idle140"/> -->
+	         	    <!-- <button label="Next" id="step1NxtBtnId" visible="false" sclass="idle140 greenbtn"/> -->
+	         	</div>
+				
+				
+		</groupbox>
+		 <groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px" id="manageUserListGroupBoxId">		  
+		<tabbox id="manageUsersTabBoxId" >
+			<tabs>
+				<tab label="Current Users" />
+				<tab label="Create New User" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<!--<h:table cellspacing="0" cellpadding="4" width="100%" border="0" style="padding:10px 0px;border-radius:5px;">
+					<h:tr >
+						<h:td width="310" >
+							<label value="Search : "/>
+						
+							<textbox id="searchBoxId" value="Search User..." 
+								w:onClick="javascript: if(this.getValue()=='Search User...') {  this.setValue(''); }" 
+								w:onBlur ="javascript: if(this.getValue()=='') {  this.setValue('Search User...'); }" focus="true"/> 
+							 
+						</h:td>
+						
+						<h:td width="400px"  >
+							<div>
+								<label value="User By :" sclass="boldLabel"/>
+							
+								<listbox id="userByLbId" rows="1" mold="select" style="position:relative;left:10px;">
+									<listitem label="All" selected="true"/>
+									<listitem label="Organization Unit"/>
+									<listitem label="Role"/>
+									<listitem label="Status"/>
+									
+								</listbox>
+								<listbox id="filterOptionLbId" rows="1" mold="select" style="position:relative;left:10px;" width="100px">
+									<listitem label="Select" selected="true"/>
+								</listbox>
+								
+							</div>
+						</h:td>
+						
+						<h:td align="right" >
+							 <button  id="userFilterBtnId" sclass="idle140"	label="Filter" />
+							 <a label="Reset" id="resetSearchCriteriaAnchId" />
+						</h:td>
+					
+					</h:tr>
+					</h:table >
+					
+					
+					-->
+					<grid id="customersGridId"  emptyMessage="No users exist, To create new user Click on 'Create new User' Button"	
+						style="padding-bottom:1px; margin-bottom: 10px;">
+					 	
+					 	<columns menupopup="auto" sizable="true" >
+					       <column label="User Name"  sort="auto" />
+					       <column label="Email Id" />
+					       <column label="Name" />
+				           <column label="Org. Unit" />
+					       <column label="Role" />
+					       <column label="Status" />
+					       <column label="Actions" />
+					       
+					     </columns>
+					    <auxhead id="contactsListFilterAhId" visible="true">
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+		             		<auxheader>
+		            			<listbox mold="select" sclass="filterSearchOpt"  >
+		             				<listitem label="Contains" selected="true"/> <listitem label="Starts With"/>
+		             				<listitem label="Ends With"/> <listitem label="Equals"/>
+		             			</listbox>
+		             			<textbox sclass="filterSearchVal" />
+		             		</auxheader>
+              				<auxheader>
+			                	<listbox mold="select" sclass="filterSearchOpt">
+              						<listitem label="Equals" selected="true"/> 
+              						<listitem label="Not Equals" />
+              					</listbox>
+             						<listbox mold="select" width="60%">
+              						<listitem label="" value="" selected="true"/>
+		                			<listitem label="Active" value="Active"/>
+		                			<listitem label="In Active" value="In Active"/>
+              					</listbox>
+              				</auxheader>
+	           		     	<auxheader align="center">
+		             			<toolbarbutton src="/img/cancel.gif" tooltiptext="Clear filter" style="cursor:pointer;"/>
+		             		</auxheader> 
+		             	</auxhead> 
+					</grid>
+					<div>
+						<popup id="changePwdPopupId" width="300px" >
+			 
+							Enter New Password
+				            <textbox id="changePwdTbId" maxlength="25" type="password" value ="" /> 
+							
+							<button label="Change Password" id="changePwdBtnId" />
+						</popup>
+					</div>
+					
+					<h:tr>
+			<h:table idth="100%" align="right"
+				style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+					<h:tr >
+						<h:td align="right"><image src="/img/theme/preview_icon.png " /></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- View" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/email_edit.gif"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Edit" style="font-size:11px;" /> </h:td>
+						<h:td align="right"><image src="/img/icons/Change-password.png"/></h:td>
+						<h:td align="left" style="padding-right:30px;"><label value="- Change Password" style="font-size:11px;" /> </h:td>
+						
+					</h:tr>
+			</h:table>
+			</h:tr>
+			
+			<!-- <separator height="20px"/>	
+			<h:tr>
+			<h:table width="100%">
+				<h:tr>
+					<h:td align="right">
+						<button label="Back" id="BackBtnId" />
+						
+					</h:td>
+				</h:tr>
+			</h:table>
+			</h:tr> -->
+			
+			
+					
+				</tabpanel>
+				<tabpanel>
+					<groupbox sclass="gbStyle" closable="false"  style="padding:15px 10px">
+						<caption label="User Details"  />
+						<h:table>
+							<h:tr>
+								<h:td width="200">
+									<label value="User Name: " /><label value=" * " style="color:red;" />
+								</h:td>
+								<h:td>
+									<textbox  id="userNameTbId" value = "" cols="30" maxlength="400" />
+									<label id="nameStatusLblId" />
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<!-- <h:tr>
+								<h:td>
+								<label value="Password " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="passwordTbId" value="" cols="30" maxlength="25" type="password"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Reenter Password " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="rePasswordTbId" value="" cols="30" maxlength="25" type="password"/>
+								</h:td>
+							</h:tr> -->
+						
+							
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="First Name " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox id="firstNameTbId" value="" cols="30" maxlength="50"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr >
+								<h:td><label value="Last Name" />
+								</h:td>
+								<h:td><textbox cols="30" value="" id="lastNameTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>	
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td><label value="Email Id " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><textbox cols="30" value="" id="emailIdTbId" maxlength="60"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr >
+										<h:td><label value="Phone" />
+										</h:td>
+										<h:td ><textbox cols="30" id="phoneTbId" 
+										tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+										xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+										 maxlength="15"/>
+										</h:td>
+									</h:tr>	
+							<h:tr >
+								<h:td><label value="Activate User:" />
+								</h:td>
+								<h:td>
+									<checkbox id="activateUserChkBoxId" checked="true"/>
+								</h:td>
+							</h:tr>	
+							
+							<h:tr height="10"/>
+							<div id="domaindivId">
+							<h:tr >
+								<h:td><label value="Organization Unit: " /><label value=" * " style="color:red;"/>
+								</h:td>
+								<h:td><listbox id="domainLbId" width="200px" mold="select"/>
+								<a label="Add New" id="addNewDomainAnchId" style="margin-left:10px;"/>
+								</h:td>
+							</h:tr>	
+							</div>
+							<h:tr height="10"/>
+							
+							<h:tr >
+								<h:td><label value="Role" /><label value="*" style="color:red;"/>
+								</h:td>
+								<h:td>
+									<listbox id="RoleLbId" width="200px"  mold="select">
+										
+										<!--<listitem label="Basic User" value="ROLE_USER_BASIC" selected="true"/>
+										<listitem label="Power User" value="ROLE_USER_POWER" />
+										
+									--></listbox>
+									<label id="isPwrUserExistsLblId" style="color:red;"/>
+									
+								</h:td>
+							</h:tr>		
+							
+						</h:table>
+					</groupbox>
+					<groupbox closable="false" style="padding:15px 10px;" sclass="gbStyle">
+					<caption label="Address Details" />
+					<h:table >
+						<h:tr>
+							<h:td   width="200">
+					
+								<label value="Address One" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="addressOneTbId" value="" cols="30" maxlength="50"/>
+							</h:td>
+						</h:tr>
+						<h:tr height="10"/>
+						<h:tr>
+							<h:td><label value="Address Two" />
+							</h:td>
+							<h:td ><textbox id="addressTwoTbId" value="" cols="30" maxlength="50"/>
+							</h:td>
+						</h:tr>
+						<h:tr height="10"/>
+						<h:tr >
+							<h:td><label value="City" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td ><textbox cols="30" value="" id="cityTbId" maxlength="50"/>
+							</h:td>
+						</h:tr>	
+						<h:tr height="10"/>
+						<h:tr >
+						<h:td><label value="State" /><label value="*" style="color:red;"/>
+						</h:td>
+						<h:td ><textbox id="stateTbId" value="" cols="30" maxlength="30"/>
+						</h:td>
+						</h:tr>
+						<h:tr height="10"/>	
+						<h:tr >
+							<h:td><label value="Country" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td ><textbox cols="30" value="" id="countryTbId" maxlength="30"/>
+							</h:td>
+						</h:tr>	
+						<h:tr height="10"/>
+						<h:tr >
+							<h:td><label value="Zip Code" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td ><textbox id="pinTbId"   cols="30" maxlength="20"/>
+							</h:td>
+						</h:tr>	
+									
+								
+					</h:table>
+					</groupbox>
+		
+					<div id="creditsDivId" visible="false">
+					<groupbox sclass="gbStyle" closable="false" style="padding:15px 10px" >
+						<caption label="Assign Credits"  />
+						
+						<h:table >
+							<h:tr>
+								<h:td  width="200">
+									<label value="Email limit:" />
+								</h:td>
+								<h:td>	
+									<intbox id="emailLimitIntBoxId" value="0"  width="200px" />
+									
+								
+								</h:td>
+							</h:tr>
+							<h:tr height="10"/>
+							<h:tr>
+								<h:td>
+								
+								<label value="Enable SMS" />
+								</h:td>
+								<h:td>
+								
+								<checkbox id="enableSMSChkId"    />
+								
+							</h:td>
+							</h:tr>
+						</h:table>	
+						
+						
+						<div id="smsDivId" visible="false" style="padding:10px;">
+							
+							<label value="SMS limit:" style="display:inline-block;width:200px;"/>
+							<intbox id="SMSimitIntBoxId" value="0"  width="200px" />
+							
+						</div>
+					
+					
+					</groupbox>
+					</div>
+					<div align="right" style="padding:10px 10px;">
+						<button label="Back" visible="false" sclass="idle140" id="backBtnId" />
+						<button label="Edit" visible="false" sclass="idle140 greenbtn" id="editUserBtnId" />
+						
+						<button label="Create" sclass="idle140 greenbtn" id="createUserBtnId"/>
+						<button label="Save" visible="false" sclass="idle140 greenbtn" id="saveUserBtnId"/>
+					</div>
+				
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+				
+
+	<window id="createDomainWinId" visible="false" closable="true" title="Create Organization Unit" 
+						height="180px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+			<h:table style="padding:10px;">
+				<h:tr>
+					<h:td colspan="2"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+				</h:tr>
+				<h:tr>
+					<h:td ><label value=" Organization Unit Name :" /></h:td>
+					<h:td ><textbox  id="domainNameTbId" value="" width="160px"/></h:td>
+				</h:tr>
+				
+				<h:tr height="10" />
+				<h:tr>
+					<h:td colspan="2" align="right">
+					<button label="Cancel" sclass="idle70"  id="cancelDomainBtnId" /><button label="Save" sclass="idle70 greenbtn" id="saveDomainBtnId" /></h:td>
+				</h:tr>
+			</h:table>
+		</window>
+		</groupbox>
+		
+	
+	
+	</window>
+</zk>
+
+			

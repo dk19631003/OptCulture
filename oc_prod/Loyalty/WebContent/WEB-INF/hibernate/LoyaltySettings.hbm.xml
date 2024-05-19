@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.loyality.common.hbmbean.LoyaltySettings" table="loyalty_settings">
+		<id name="ltySettingId" type="java.lang.Long" column="lty_setting_id">
+			<generator class="native" />
+		</id>
+		
+		<property name="userId" type="java.lang.Long">
+			<column name="user_id" />
+		</property>
+		
+		<property name="userOrgId" type="java.lang.Long">
+			<column name="user_org_id" />
+		</property>
+		
+		<property name="urlStr" type="string">
+			<column name="url_str" />
+		</property>
+		
+		<property name="colorCode" type="string">
+			<column name="color_code" />
+		</property>
+		
+		<property name="path" type="string">
+			<column name="path" />
+		</property>
+		
+		<property name="loyaltyType" type="string">
+			<column name="loyalty_type" />
+		</property>
+		
+		<!-- <one-to-one name="orgOwner" class="org.mq.loyality.common.hbmbean.Users" fetch="select" foreign-key="org_owner" > </one-to-one> -->
+		<many-to-one name="orgOwner" class="org.mq.loyality.common.hbmbean.Users" 
+			foreign-key="userId" fetch="select">
+			<column name="org_owner" not-null="true"  />
+		</many-to-one>
+		
+    </class>
+</hibernate-mapping>

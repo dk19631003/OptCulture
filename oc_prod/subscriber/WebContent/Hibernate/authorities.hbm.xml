@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.Authorities" table="authorities">
+    <id name="authorityId" type="java.lang.Long" column="authority_id">
+      <generator class="native"/>
+    </id>
+	<property name="authority" type="string" column="authority" length="50" not-null="true"/>
+    <property name="username" type="string" column="username" length="20" not-null="true"/>
+  </class>
+</hibernate-mapping>
+
+
+ 

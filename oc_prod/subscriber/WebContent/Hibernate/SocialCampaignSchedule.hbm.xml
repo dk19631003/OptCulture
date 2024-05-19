@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.SocialCampaignSchedule" table="social_campaign_schedules">
+		
+		<id name="scheduleId" type="java.lang.Long">
+			<column name="schedule_id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="campaignId" type="java.lang.Long">
+			<column name="campaign_id" />
+		</property>
+		
+		
+		<property name="campaignContent" type="java.lang.String"  >
+			<column name="campaign_content" length="2000" />
+		</property>
+		
+		<property name="postType" type="java.lang.String">
+			<column name="post_type" />
+		</property>
+		
+		<property name="urlLinks" type="java.lang.String">
+			<column name="url_links" />
+		</property>
+		
+		<property name="createdDate" type="calendar">
+			<column name="created_date" />
+		</property>
+		
+		<property name="lastModifiedDate" type="calendar">
+			<column name="last_modified_date" />
+		</property>
+		
+		<property name="scheduleDate" type="calendar">
+			<column name="schedule_date" />
+		</property>
+		
+		<property name="scheduleStatus" type="java.lang.String">
+			<column name="schedule_status" />
+		</property>
+		
+		<property name="failureStatus" type="java.lang.String">
+			<column name="failure_status" length="255"/>
+		</property>
+		
+	
+		
+	</class>
+</hibernate-mapping>

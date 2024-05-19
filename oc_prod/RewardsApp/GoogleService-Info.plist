@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>759427207028-eup17udjc63h5mspndoa91lv2s5q7ubc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.759427207028-eup17udjc63h5mspndoa91lv2s5q7ubc</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA6ZCtke6qWB9DNG7qM_LqPgAYFlVm9Vwc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>759427207028</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mq.martins</string>
+	<key>PROJECT_ID</key>
+	<string>oc-beside</string>
+	<key>STORAGE_BUCKET</key>
+	<string>oc-beside.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:759427207028:ios:43bea63b0ce47774682621</string>
+	<key>DATABASE_URL</key>
+	<string>https://oc-beside.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,0 +1,46 @@
+<zk>
+	<window id="fieldSelectWinId" apply="org.mq.marketer.campaign.controller.contacts.FieldSelectionController" xmlns:h="native">
+	
+	
+		<h:table cellpadding="0" cellspacing="0" width="100%">
+			<h:tr>
+				<h:td>
+					<label value="Import from file" sclass="theme-lbHeading"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<h:hr sclass="theme-hrLine"/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<label value="Note : Please select the same order of columns in the file to be uploaded."/>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td align="right">
+					<h:br/>
+				</h:td>
+			</h:tr>
+			</h:table>
+
+			<grid id="fieldsGridId" width="99%">
+				<rows id="fieldRowsId" />
+			</grid>
+			
+			<toolbarbutton id="addTbId" image="/images/action_add.gif" label="Add column"  sclass="tbbLink" 
+				style="margin:15px 0 0 100px; text-decoration: underline; color:#2787BA; font-weight:bold;font-size:12px;"/>
+
+			<h:table cellpadding="0" cellspacing="0" width="100%">
+			<h:tr >
+				<h:td align="right">
+						<button label="Next" id="nextBtnId" sclass="idle140 greenbtn"/>
+						<button label="Back" id="backBtnId" sclass="idle140"/>
+				</h:td>
+			</h:tr>
+		</h:table>
+		
+		
+	</window>
+</zk>

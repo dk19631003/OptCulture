@@ -1,0 +1,124 @@
+
+
+<ion-content dir="{{textDir}}" forceOverscroll="false">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0">
+  <div class="colorClass ht25" >
+    <ion-grid>
+      <ion-row>
+        <ion-col size="7">
+            <ion-toolbar color="#ffe000">
+                <ion-buttons slot="start" >
+                    <ion-button  (click)="backButtonEvent()">
+                      <ion-icon mode="md" color="light" slot="icon-only" name="arrow-back"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+          <ion-item lines="none"  class="mr-right-5 mr-left-5 color-background">
+            <ion-label  text-wrap class="title">
+               {{'SortBy' | translate}}
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col size="5">
+            <ion-button  *ngIf="isSelected" mode="ios" (click)="clearAll()" color="light" shape="round" class="Login-Button mrtop45 text_transform mgtop0" >
+                <ion-icon    name="close"  style="color:black;"></ion-icon>
+                <ion-text class="Login-Button-Text ">{{'ClearAll' | translate}}</ion-text>
+              </ion-button>
+            <!-- <div class="mrtop45" *ngIf="!isSelected">
+                <ion-icon name="more" mode="md" size="large" (click)="changeType('Brand')"></ion-icon>
+            </div> -->
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+   </div>
+   <div class="split left">
+    <ion-list class="pdbottom0" mode="md" [ngClass]="{'bgColor': type == 'Order'}">
+      <ion-item lines="full"  (click)="changeType('Type')" [ngClass]="{'itemBg': type == 'Order'}">
+        <ion-label class="typeText bold" >
+            {{'Type' | translate}}
+
+        </ion-label>
+      </ion-item>
+      <ion-item lines="{{lines}}" (click)="changeType('Order')" [ngClass]="{'itemBg': type == 'Type'}" >
+          <ion-label class="typeText bold">
+            {{'Order' | translate}}
+          </ion-label>
+        </ion-item>
+    </ion-list>
+    </div>
+    
+    <div class="split right">
+      <ion-grid class="col1 pdleft0" *ngIf="type == 'Type'">
+          <ion-row>
+              <ion-col class="col1 pdleft0">
+                
+                  <ion-list lines="full" mode="md">
+                      <ion-radio-group  mode="md" [(ngModel)]="orderType" (ionChange)="changeOrderType()">
+                    <!-- <ion-item >
+                    <ion-label>{{'Storename' |translate}}</ion-label>
+                    <ion-radio  mode="md" value="storeName"></ion-radio>
+                  </ion-item> -->
+                  <!-- <ion-item>
+                      <ion-label>{{'POSstoreid' |translate}}</ion-label>
+                      <ion-radio  mode="md" value="POSStoreID"></ion-radio>
+                    </ion-item> -->
+                  <ion-item>
+                    <ion-label>{{'Country' |translate}} </ion-label>
+                    <ion-radio  mode="md" value="country"></ion-radio>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label>{{'City' |translate}} </ion-label>
+                    <ion-radio  mode="md" value="city"></ion-radio>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label>Locality </ion-label>
+                    <ion-radio  mode="md" value="locality"></ion-radio>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label>{{'Brand' |translate}}</ion-label>
+                    <ion-radio  mode="md" value="brand"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+                    
+                  </ion-list>
+              </ion-col>
+             
+            </ion-row>
+           
+      </ion-grid>
+
+      <ion-grid class="col1 pdleft0" *ngIf="type == 'Order'">
+          <ion-row >
+              <ion-col class="col1 pdleft0">
+                <ion-list mode="md">
+                  <ion-radio-group  mode="md" [(ngModel)]="order" (ionChange)="changeOrder()">
+                    <ion-item lines="full">
+                      <ion-label>{{'Ascending' |translate}} </ion-label>
+                      <ion-radio  mode="md" value="ASC"></ion-radio>
+                    </ion-item>
+                    <ion-item lines="full">
+                      <ion-label>{{'Descending' |translate}} </ion-label>
+                      <ion-radio   mode="md" value="DESC"></ion-radio>
+                    </ion-item>
+                  </ion-radio-group>
+            </ion-list>
+              </ion-col>
+             
+            </ion-row>
+        
+      </ion-grid>
+    </div>
+
+    <div class="wd100   posabsolute ht5">
+        <ion-button expand="full"  type="submit" (click)="dismiss()"   class="Login-Button text_transform margin0" > 
+            <ion-text class="Login-Button-Text ">{{'Apply' |translate}}  </ion-text>
+          </ion-button>
+    </div>
+
+  </ion-col>
+  <ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+  </ion-row>
+  </ion-grid>
+</ion-content>

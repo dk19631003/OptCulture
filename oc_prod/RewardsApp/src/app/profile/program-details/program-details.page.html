@@ -1,0 +1,56 @@
+
+
+<ion-content>
+  <ion-grid fixed class="padding0 margin0 wd100 ht100">
+    <ion-row class="ht100">
+      <ion-col size="12" size-md="4" size-lg="4" class="padding0 overflowcontent">
+  <div>
+    <ion-toolbar  >
+        <ion-buttons slot="start" >
+            <ion-button (click)="backButtonEvent()">
+              <ion-icon mode="md" color="dark" slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</div>
+<ion-item lines="none"  >
+  <ion-label text-wrap class="titleText header">
+    Program Details
+  </ion-label>
+</ion-item>
+<table>
+  <tr>
+  <!-- <th> Tier</th> -->
+  <th>Earn Rule</th>
+  <!-- <th>Redeem Rule</th> -->
+  </tr>
+  <tr *ngFor="let privilage of programList">
+    <!-- <td>{{privilage.priviliegeTier}}</td> -->
+    <td>{{privilage.earnrule}}</td>
+    <!-- <td>{{privilage.redeemrule}}</td> -->
+  </tr>
+</table>
+
+<ion-item lines="none"  >
+  <ion-label text-wrap class="subheader">
+   Bonus Rules
+  </ion-label>
+</ion-item>
+
+<table>
+  <tr>
+  <th>Rule</th>
+  <th>Bonus </th>
+  <th>Expiration Rule </th>
+  </tr>
+  <tr *ngFor="let threShold of thresholdList">
+    <td>{{threShold.Rule}}</td>
+    <td>${{threShold.BonusAmount}}</td>
+    <td>{{threShold.ExpirationRule}}</td>
+  </tr>
+</table>
+</ion-col>
+<ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>

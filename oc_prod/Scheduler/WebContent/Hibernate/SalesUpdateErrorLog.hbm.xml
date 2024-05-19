@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.SalesUpdateErrorLog" table="sales_update_error_log">
+    <id name="id" type="java.lang.Long">
+      <column name="id"/>
+      <generator class="native"/>
+    </id>
+	<property name="userId" type="long">
+      <column name="user_id"/>
+    </property>
+     <property name="cretedOn" type="calendar">
+      <column name="created_on"/>
+    </property>
+  <property name="lastFetchedTime" type="calendar">
+      <column name="last_fetched_time"/>
+    </property>
+	<property name="status" type="string">
+      <column name="status"/>
+    </property>
+       <property name="query" type="text" column="query" />	   
+     <property name="count" type="int">
+    	<column name="count" default="0"/>
+    </property>
+    
+	   
+	
+ </class>
+</hibernate-mapping>

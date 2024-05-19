@@ -1,0 +1,1329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.5.xsd
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	
+	<task:annotation-driven />
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="/WEB-INF/jdbc.properties" />
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:url="${jdbc.url}"
+		p:username="${jdbc.username}"
+		p:password="${jdbc.password}" />
+		
+			
+	<bean id="dataSourceForDML" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:driverClassName="${jdbc_dml.driverClassName}" p:url="${jdbc_dml.url}"
+		p:username="${jdbc_dml.username}" p:password="${jdbc_dml.password}" />		
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource">
+		</property>
+	</bean>
+	<bean id="jdbcTemplateForDML" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSourceForDML">
+		</property>
+	</bean>
+	
+	<!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
+
+	<!-- lets use the Commons-based implementation of the MultipartResolver interface -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- <property name="dataSource" ref="dataSource" /> -->
+		<property name="configLocation">
+			<value>classpath:hibernate.cfg.xml</value>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>/Hibernate</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.mq.captiway.scheduler.services.OCMySQLDialect
+			</value>
+		</property>
+	</bean>    
+	<bean id="sessionFactoryForDML" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- <property name="dataSource" ref="dataSource" /> -->
+		<property name="configLocation">
+			<value>classpath:hibernate_dml.cfg.xml</value>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>/Hibernate</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.mq.captiway.scheduler.services.OCMySQLDialect
+			</value>
+		</property>
+	</bean>
+	<bean id="CharacterCodesDao" class="org.mq.captiway.scheduler.dao.CharacterCodesDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="CharacterCodesDaoForDML" class="org.mq.captiway.scheduler.dao.CharacterCodesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+
+	<bean id="contactsDao" class="org.mq.captiway.scheduler.dao.ContactsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+	<bean id="contactsDaoForDML"
+		class="org.mq.captiway.scheduler.dao.ContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="emailQueueDao" class="org.mq.captiway.scheduler.dao.EmailQueueDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="emailQueueDaoForDML" ref="emailQueueDaoForDML"></property>
+	</bean>
+	
+	<bean id="emailQueueDaoForDML" class="org.mq.captiway.scheduler.dao.EmailQueueDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+	
+	<bean id="userCampaignExpirationDao"
+		class="org.mq.captiway.scheduler.dao.UserCampaignExpirationDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userCampaignExpirationDaoForDML"
+		class="org.mq.captiway.scheduler.dao.UserCampaignExpirationDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="mailingListDao" class="org.mq.captiway.scheduler.dao.MailingListDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="mailingListDaoForDML" class="org.mq.captiway.scheduler.dao.MailingListDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+	
+	<bean id="contactParentalConsentDao" class="org.mq.captiway.scheduler.dao.ContactParentalConsentDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="contactParentalConsentDaoForDML" class="org.mq.captiway.scheduler.dao.ContactParentalConsentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	
+	<bean id="optInReportDao" class="org.mq.captiway.scheduler.dao.OptInReportDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+		<bean id="optInReportDaoForDML" class="org.mq.captiway.scheduler.dao.OptInReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+	
+	<bean id="mlCustomFieldsDao" class="org.mq.captiway.scheduler.dao.MLCustomFieldsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+	 <bean id="mlCustomFieldsDaoForDML" class="org.mq.captiway.scheduler.dao.MLCustomFieldsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean> 
+	
+	<bean id="campaignsDao" class="org.mq.captiway.scheduler.dao.CampaignsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="campaignsDaoForDML" class="org.mq.captiway.scheduler.dao.CampaignsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+	<bean id="scheduleDao" class="org.mq.captiway.scheduler.dao.ScheduleDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="scheduleDaoForDML" class="org.mq.captiway.scheduler.dao.ScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+
+	<bean id="usersDao" class="org.mq.captiway.scheduler.dao.UsersDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="usersDaoForDML" class="org.mq.captiway.scheduler.dao.UsersDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="organizationStoresDao"
+		class="org.mq.captiway.scheduler.dao.OrganizationStoresDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<!-- added newly for campaign report associated lists fetching -->
+	
+	<bean id="campReportListsDao" class="org.mq.captiway.scheduler.dao.CampReportListsDao">
+	
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	</bean>
+	
+	<bean id="campReportListsDaoForDML" class="org.mq.captiway.scheduler.dao.CampReportListsDaoForDML">
+	
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	
+	</bean>
+	<bean id="smsCampReportListsDao" class="org.mq.captiway.scheduler.dao.SMSCampReportListsDao">
+	
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	</bean>
+	<bean id="smsCampReportListsDaoForDML" class="org.mq.captiway.scheduler.dao.SMSCampReportListsDaoForDML">
+	
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	
+	</bean>
+	
+	<bean id="messagesDao" class="org.mq.captiway.scheduler.dao.MessagesDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="messagesDaoForDML" class="org.mq.captiway.scheduler.dao.MessagesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	<bean id="smsSettingsDao" class="org.mq.captiway.scheduler.dao.SMSSettingsDao">
+	
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	</bean>
+	<bean id="smsSettingsDaoForDML" class="org.mq.captiway.scheduler.dao.SMSSettingsDaoForDML">
+	
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	
+	</bean>
+	
+
+	<bean id="errorLogDao" class="org.mq.captiway.scheduler.dao.ErrorLogDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="errorLogDaoForDML" class="org.mq.captiway.scheduler.dao.ErrorLogDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+
+	<bean id="bouncesDao" class="org.mq.captiway.scheduler.dao.BouncesDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="bouncesDaoForDML" class="org.mq.captiway.scheduler.dao.BouncesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	
+	<bean id="smsBouncesDao" class="org.mq.captiway.scheduler.dao.SMSBouncesDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="smsBouncesDaoForDML" class="org.mq.captiway.scheduler.dao.SMSBouncesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	
+	<bean id="unsubscribesDao" class="org.mq.captiway.scheduler.dao.UnsubscribesDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+		<bean id="unsubscribesDaoForDML" class="org.mq.captiway.scheduler.dao.UnsubscribesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+
+	<bean id="campaignReportDao" class="org.mq.captiway.scheduler.dao.CampaignReportDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="campaignReportDaoForDML" class="org.mq.captiway.scheduler.dao.CampaignReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+	
+	<bean id="smsCampaignReportDao" class="org.mq.captiway.scheduler.dao.SMSCampaignReportDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+	<bean id="smsCampaignReportDaoForDML" class="org.mq.captiway.scheduler.dao.SMSCampaignReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+	
+	<bean id="smsClicksDao" class="org.mq.captiway.scheduler.dao.SMSClicksDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="smsClicksDaoForDML" class="org.mq.captiway.scheduler.dao.SMSClicksDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	<bean id="smsCampaignSentDao" class="org.mq.captiway.scheduler.dao.SMSCampaignSentDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="smsCampaignSentDaoForDML" class="org.mq.captiway.scheduler.dao.SMSCampaignSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+	
+	
+	<bean id="campaignSentDao" class="org.mq.captiway.scheduler.dao.CampaignSentDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+	
+	<bean id="campaignSentDaoForDML" class="org.mq.captiway.scheduler.dao.CampaignSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML"/>
+	</bean>
+	
+	<bean id="notSentToContactsDao" class="org.mq.captiway.scheduler.dao.NotSentToContactsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="notSentToContactsDaoForDML" class="org.mq.captiway.scheduler.dao.NotSentToContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	
+	<bean id="clicksDao" class="org.mq.captiway.scheduler.dao.ClicksDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="clicksDaoForDML" class="org.mq.captiway.scheduler.dao.ClicksDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	
+	<bean id="opensDao" class="org.mq.captiway.scheduler.dao.OpensDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="opensDaoForDML" class="org.mq.captiway.scheduler.dao.OpensDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+
+	<bean id="emailClientDao" class="org.mq.captiway.scheduler.dao.EmailClientDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	<bean id="emailClientDaoForDML" class="org.mq.captiway.scheduler.dao.EmailClientDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+
+
+	<bean id="userFromEmailIdDao" class="org.mq.captiway.scheduler.dao.UserFromEmailIdDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="userFromEmailIdDaoForDML" class="org.mq.captiway.scheduler.dao.UserFromEmailIdDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+
+	<bean id="mqsRequestDao" class="org.mq.captiway.scheduler.dao.MQSRequestDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+		<bean id="mqsRequestDaoForDML" class="org.mq.captiway.scheduler.dao.MQSRequestDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	
+	<bean id="customTemplatesDao"
+		class="org.mq.captiway.scheduler.dao.CustomTemplatesDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="customTemplatesDaoForDML"
+		class="org.mq.captiway.scheduler.dao.CustomTemplatesDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="campaignScheduleDao" class="org.mq.captiway.scheduler.dao.CampaignScheduleDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="campaignScheduleDaoForDML" class="org.mq.captiway.scheduler.dao.CampaignScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="emailContentDao" class="org.mq.captiway.scheduler.dao.EmailContentDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="emailContentDaoForDML" class="org.mq.captiway.scheduler.dao.EmailContentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	</bean>
+	
+	
+	<bean id="smsCampaignsDao"
+		class="org.mq.captiway.scheduler.dao.SMSCampaignsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="smsCampaignsDaoForDML"
+		class="org.mq.captiway.scheduler.dao.SMSCampaignsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="smsCampaignScheduleDao"
+		class="org.mq.captiway.scheduler.dao.SMSCampaignScheduleDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="smsCampaignScheduleDaoForDML"
+		class="org.mq.captiway.scheduler.dao.SMSCampaignScheduleDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+		
+	<bean id="userSMSSenderIdDao"
+		class="org.mq.captiway.scheduler.dao.UserSMSSenderIdDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userSMSGatewayDao"
+		class="org.mq.captiway.scheduler.dao.UserSMSGatewayDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	
+	<bean id="OCSMSGatewayDao"
+		class="org.mq.captiway.scheduler.dao.OCSMSGatewayDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="smsDeliveryReportDao"
+		class="org.mq.captiway.scheduler.dao.SMSDeliveryReportDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="smsDeliveryReportDaoForDML"
+		class="org.mq.captiway.scheduler.dao.SMSDeliveryReportDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<bean id="orgSMSkeywordsDao"
+		class="org.mq.captiway.scheduler.dao.OrgSMSkeywordsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="orgSMSkeywordsDaoForDML"
+		class="org.mq.captiway.scheduler.dao.OrgSMSkeywordsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="contactsLoyaltyDao" class="org.mq.captiway.scheduler.dao.ContactsLoyaltyDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	<bean id="contactsLoyaltyDaoForDML" class="org.mq.captiway.scheduler.dao.ContactsLoyaltyDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	<bean id="clickaTellSMSInboundDao" class="org.mq.captiway.scheduler.dao.ClickaTellSMSInboundDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+	
+	<bean id="clickaTellSMSInboundDaoForDML" class="org.mq.captiway.scheduler.dao.ClickaTellSMSInboundDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean> 
+	
+	<!-- for AutoProgram module -->
+	
+	<bean id="autoProgramDao"
+		class="org.mq.captiway.scheduler.dao.AutoProgramDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	
+	<bean id="autoProgramComponentsDao"
+		class="org.mq.captiway.scheduler.dao.AutoProgramComponentsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="autoProgramComponentsDaoForDML"
+		class="org.mq.captiway.scheduler.dao.AutoProgramComponentsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="purgeDao" class="org.mq.captiway.scheduler.dao.PurgeDao">
+	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="purgeDaoForDML" class="org.mq.captiway.scheduler.dao.PurgeDaoForDML">
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="componentsAndContactsDao" class="org.mq.captiway.scheduler.dao.ComponentsAndContactsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	
+	</bean>
+	
+	<bean id="componentsAndContactsDaoForDML" class="org.mq.captiway.scheduler.dao.ComponentsAndContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	
+	</bean>
+	
+	<bean id="switchConditionDao" class="org.mq.captiway.scheduler.dao.SwitchConditionDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	
+	</bean>
+	
+	<bean id="tempComponentsDataDao" class="org.mq.captiway.scheduler.dao.TempComponentsDataDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	
+	</bean>
+	
+	<bean id="tempComponentsDataDaoForDML" class="org.mq.captiway.scheduler.dao.TempComponentsDataDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	
+	</bean>
+	
+	<bean id="tempActivityDataDao" class="org.mq.captiway.scheduler.dao.TempActivityDataDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	
+	</bean>
+	
+	<bean id="tempActivityDataDaoForDML" class="org.mq.captiway.scheduler.dao.TempActivityDataDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+	
+	</bean>
+	
+	
+	<bean id="programOnlineReportsDao" class="org.mq.captiway.scheduler.dao.ProgramOnlineReportsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="programOnlineReportsDaoForDML" class="org.mq.captiway.scheduler.dao.ProgramOnlineReportsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="vmtaDao"
+		class="org.mq.captiway.scheduler.dao.VmtaDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="segmentRulesDao"
+		class="org.mq.captiway.scheduler.dao.SegmentRulesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="segmentRulesDaoForDML"
+		class="org.mq.captiway.scheduler.dao.SegmentRulesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	
+	<bean id="suppressedContactsDao" class="org.mq.captiway.scheduler.dao.SuppressedContactsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean> 
+	
+	<bean id="suppressedContactsDaoForDML" class="org.mq.captiway.scheduler.dao.SuppressedContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean> 
+
+	<bean id="smsSuppressedContactsDao" class="org.mq.captiway.scheduler.dao.SMSSuppressedContactsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		 <property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="smsSuppressedContactsDaoForDML" class="org.mq.captiway.scheduler.dao.SMSSuppressedContactsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML"/>
+		 <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+
+
+
+	
+    <!--  EventTrigger -->
+    <bean id="customFieldDataDao" class="org.mq.captiway.scheduler.dao.CustomFieldDataDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	 <bean id="customFieldDataDaoForDML" class="org.mq.captiway.scheduler.dao.CustomFieldDataDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+    <bean id="triggerCustomEventsDao" class="org.mq.captiway.scheduler.dao.TriggerCustomEventsDao"> 
+    	<property name="sessionFactory" ref="sessionFactory" />	
+    </bean>
+    
+    <bean id="eventTriggerDao" class="org.mq.captiway.scheduler.dao.EventTriggerDao">
+      <property name="sessionFactory" ref="sessionFactory" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+    
+       
+    <bean id="eventTriggerDaoForDML" class="org.mq.captiway.scheduler.dao.EventTriggerDaoForDML">
+      <property name="sessionFactory" ref="sessionFactoryForDML" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+    </bean>
+    
+    <bean id="eventTriggerEventsDaoForDML" class="org.mq.captiway.scheduler.dao.EventTriggerEventsDaoForDML">
+      <property name="sessionFactory" ref="sessionFactoryForDML" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+    </bean>
+    
+     <bean id="eventTriggerEventsDao" class="org.mq.captiway.scheduler.dao.EventTriggerEventsDao">
+      <property name="sessionFactory" ref="sessionFactory" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+     <bean id="contactSpecificDateEventsDao" class="org.mq.captiway.scheduler.dao.ContactSpecificDateEventsDao">
+      <property name="sessionFactory" ref="sessionFactory" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+    
+    
+     <bean id="contactSpecificDateEventsDaoForDML" class="org.mq.captiway.scheduler.dao.ContactSpecificDateEventsDaoForDML">
+      <property name="sessionFactory" ref="sessionFactoryForDML" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+    </bean>
+    <!--  EventTrigger added to scheduler -->
+
+	
+	
+	<!--For AutoProgram scheduler timertask-->
+	
+	
+	
+	
+	
+	
+	 <bean id="myTemplatesDao" class="org.mq.captiway.scheduler.dao.MyTemplatesDao">
+      <property name="sessionFactory" ref="sessionFactory" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+    <bean id="myTemplatesDaoForDML" class="org.mq.captiway.scheduler.dao.MyTemplatesDaoForDML">
+      <property name="sessionFactory" ref="sessionFactoryForDML" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+    </bean>
+    
+    <bean id="digitalReceiptMyTemplatesDao" class="org.mq.captiway.scheduler.dao.DigitalReceiptMyTemplatesDao">
+      <property name="sessionFactory" ref="sessionFactory" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+     <bean id="digitalReceiptMyTemplatesDaoForDML" class="org.mq.captiway.scheduler.dao.DigitalReceiptMyTemplatesDaoForDML">
+      <property name="sessionFactory" ref="sessionFactoryForDML" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+    </bean>
+    <bean id="externalSMTPEventsDao" class="org.mq.captiway.scheduler.dao.ExternalSMTPEventsDao">
+      <property name="sessionFactory" ref="sessionFactory" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+    <bean id="externalSMTPEventsDaoForDML" class="org.mq.captiway.scheduler.dao.ExternalSMTPEventsDaoForDML">
+      <property name="sessionFactory" ref="sessionFactoryForDML" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+    </bean>
+    
+    
+    
+     <bean id="campaignReportEventsDao" class="org.mq.captiway.scheduler.dao.CampaignReportEventsDao">
+      <property name="sessionFactory" ref="sessionFactory" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+         <bean id="campaignReportEventsDaoForDML" class="org.mq.captiway.scheduler.dao.CampaignReportEventsDaoForDML">
+      <property name="sessionFactory" ref="sessionFactoryForDML" /> 
+      <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+    </bean>
+    
+	
+	<bean id="digitalReceiptUserSettingsDao"
+		class="org.mq.captiway.scheduler.dao.DigitalReceiptUserSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="digitalReceiptUserSettingsDaoForDML"
+		class="org.mq.captiway.scheduler.dao.DigitalReceiptUserSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	<!-- <bean id="captiwayToSMSApiGateway" class="org.mq.captiway.scheduler.services.CaptiwayToSMSApiGateway">
+		<property name="smsCampaignSentDao" ref="smsCampaignSentDao"/>
+		<property name="smsDeliveryReportDao" ref="smsDeliveryReportDao"/>
+		<property name="cellNextApi" ref="cellNextApi"/>
+		<property name="netCoreApi" ref="netCoreApi"/>
+		<property name="clickaTellApi" ref="clickaTellApi"/>
+		<property name= "smsCampaignReportDao" ref="smsCampaignReportDao"/>
+		<property name="smsSuppressedContactsDao" ref="smsSuppressedContactsDao"/>
+		<property name="smsBouncesDao" ref="smsBouncesDao" />
+		<property name="contactsDao" ref="contactsDao" />
+		
+	</bean> -->
+	
+	<bean id="cellNextApi" class="org.mq.captiway.scheduler.services.CellNextApi">
+	</bean>
+	
+	<bean id="netCoreApi" class="org.mq.captiway.scheduler.services.NetCoreApi">
+	    
+		<property name="smsDeliveryReportDao" ref="smsDeliveryReportDao"/>
+		<property name="smsDeliveryReportDaoForDML" ref="smsDeliveryReportDaoForDML"/>
+		
+		
+	</bean>
+	<!-- <bean id="clickaTellApi" class="org.mq.captiway.scheduler.services.ClickaTellApi">
+	<property name="emailQueueDao" ref="emailQueueDao" />
+	
+	</bean> -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<bean id="pmtaQueue" class="org.mq.captiway.scheduler.PMTAQueue">
+	</bean>
+	<bean id="externalSMTPEventsQueue" class="org.mq.captiway.scheduler.campaign.ExternalSMTPEventsQueue">
+	</bean>
+	<bean id="externalSMTPSpamEventsQueue" class="org.mq.captiway.scheduler.campaign.ExternalSMTPSpamEventsQueue">
+	</bean>
+	<bean id="campaignReportEventsQueue" class="org.mq.captiway.scheduler.campaign.CampaignReportEventsQueue">
+	</bean>
+	<bean id="smsQueue" class="org.mq.captiway.scheduler.SMSQueue">
+	</bean>
+	
+	<bean id="programQueue" class="org.mq.captiway.scheduler.ProgramQueue">
+	</bean>
+	
+	<bean id="usersDomainsDao" class="org.mq.captiway.scheduler.dao.UsersDomainsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="usersDomainsDaoForDML" class="org.mq.captiway.scheduler.dao.UsersDomainsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="userScoreSettingsDao" class="org.mq.captiway.scheduler.dao.UserScoreSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="userScoreSettingsDaoForDML" class="org.mq.captiway.scheduler.dao.UserScoreSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="contactScoresDao" class="org.mq.captiway.scheduler.dao.ContactScoresDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="contactScoresDaoForDML" class="org.mq.captiway.scheduler.dao.ContactScoresDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="contactScoreSetting" class="org.mq.captiway.scheduler.campaign.ContactScoreSetting">
+		<property name="userScoreSettingsDao" ref="userScoreSettingsDao" />
+		<property name="userScoreSettingsDaoForDML" ref="userScoreSettingsDaoForDML" />
+		<property name="contactScoresDao" ref="contactScoresDao" />
+	</bean>
+	
+	
+	<!-- GoogleAnalytics -->
+	
+	<bean id="googleAnalyticsVisitsDownloadsDao" class="org.mq.captiway.scheduler.dao.GoogleAnalyticsVisitsDownloadsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="googleAnalyticsVisitsDownloadsDaoForDML" class="org.mq.captiway.scheduler.dao.GoogleAnalyticsVisitsDownloadsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="gAVisitDownloads" class="org.mq.captiway.scheduler.campaign.GAVisitDownloads">
+		<property name="contactScoreSetting" ref="contactScoreSetting" />
+		<property name="googleAnalyticsVisitsDownloadsDao" ref="googleAnalyticsVisitsDownloadsDao" />
+		<property name="googleAnalyticsVisitsDownloadsDaoForDML" ref="googleAnalyticsVisitsDownloadsDaoForDML" />
+	</bean>
+	
+	
+	
+	
+	
+	<bean id="urlShortCodeMappingDao" class="org.mq.captiway.scheduler.dao.UrlShortCodeMappingDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="urlShortCodeMappingDaoForDML" class="org.mq.captiway.scheduler.dao.UrlShortCodeMappingDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="SMSCampaignUrlDao" class="org.mq.captiway.scheduler.dao.SMSCampaignUrlDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<!-- <property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="SMSCampaignUrlDaoForDML" class="org.mq.captiway.scheduler.dao.SMSCampaignUrlDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<!-- <property name="jdbcTemplate" ref="jdbcTemplateForDML" /> -->
+	</bean>
+	<bean id="smsCampaignSentUrlShortCodeDao" class="org.mq.captiway.scheduler.dao.SMSCampaignSentUrlShortCodeDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<!-- <property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="smsCampaignSentUrlShortCodeDaoForDML" class="org.mq.captiway.scheduler.dao.SMSCampaignSentUrlShortCodeDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<!-- <property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<!--  -->
+	
+	
+	
+	<bean id="retailProSalesDao" class="org.mq.captiway.scheduler.dao.RetailProSalesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="retailProSalesDaoForDML" class="org.mq.captiway.scheduler.dao.RetailProSalesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="salesLitaeralHashCodeDao" class="org.mq.captiway.scheduler.dao.SalesLiteralHashCodeGenerateDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="salesLitaeralHashCodeDaoForDML" class="org.mq.captiway.scheduler.dao.SalesLiteralHashCodeGenerateDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" /> 
+	</bean>
+	
+	
+	
+	<bean id="homesPassedDao" class="org.mq.captiway.scheduler.dao.HomesPassedDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+		<bean id="homesPassedDaoForDML" class="org.mq.captiway.scheduler.dao.HomesPassedDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="skuFileDao" class="org.mq.captiway.scheduler.dao.SkuFileDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="skuFileDaoForDML" class="org.mq.captiway.scheduler.dao.SkuFileDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="retailProUploadFiles" class="org.mq.captiway.scheduler.OptCultureCSVFileUpload">
+		
+	</bean>
+	<!-- POS Mapping -->	
+	<bean id="posMappingDao" class="org.mq.captiway.scheduler.dao.POSMappingDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="posMappingDaoForDML" class="org.mq.captiway.scheduler.dao.POSMappingDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+	<!-- Purging  -->
+	<bean id="purgeList" class="org.mq.captiway.scheduler.services.PurgeList">
+		<property name="mailingListDao" ref="mailingListDao" />
+		<property name="contactParentalConsentDao" ref="contactParentalConsentDao" />
+		<property name="unsubscribesDao" ref = "unsubscribesDao"/>
+		<property name="unsubscribesDaoForDML" ref = "unsubscribesDaoForDML"/>
+		<property name = "suppressedContactsDao" ref = "suppressedContactsDao" />
+		<property name="purgeDao" ref="purgeDao"></property>
+		<property name="purgeDaoForDML" ref="purgeDaoForDML"></property>
+	</bean>
+	
+	<!-- EVENT TRIGGER OBSERVER -->
+	<bean id="eventTriggerEventsObserver" class="org.mq.captiway.scheduler.services.EventTriggerEventsObserver">
+		<property name="eventTriggerDao" ref="eventTriggerDao" />
+		<!-- <property name="eventTriggerDaoForDML" ref="eventTriggerDaoForDML" /> -->
+		<property name="eventTriggerEventsDaoForDML" ref="eventTriggerEventsDaoForDML" />
+		
+	</bean>
+	<bean id="eventTriggerEventsObservable" class="org.mq.captiway.scheduler.services.EventTriggerEventsObservable">
+		<property name="eventTriggerEventsObserver" ref="eventTriggerEventsObserver" />
+	</bean>
+	
+	
+	
+	<!-- END -->
+	<!-- User POS Setting //POSFTPFilesDownload-->
+	<bean id="userPosFTPSettingsDao" class="org.mq.captiway.scheduler.dao.UserPosFTPSettingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean><bean id="userPosFTPSettingsDaoForDML" class="org.mq.captiway.scheduler.dao.UserPosFTPSettingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+	<bean id="posFileLogDao" class="org.mq.captiway.scheduler.dao.POSFileLogDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="posFileLogDaoForDML" class="org.mq.captiway.scheduler.dao.POSFileLogDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<!--coupons related Dao  -->
+	
+	<bean id="couponsDao" class="org.mq.captiway.scheduler.dao.CouponsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	
+	<bean id="couponsDaoForDML" class="org.mq.captiway.scheduler.dao.CouponsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="couponCodesDao" class="org.mq.captiway.scheduler.dao.CouponCodesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="couponCodesDaoForDML" class="org.mq.captiway.scheduler.dao.CouponCodesDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="mastersToTransactionMappingsDao" class="org.mq.captiway.scheduler.dao.MastersToTransactionMappingsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="mastersToTransactionMappingsDaoForDML" class="org.mq.captiway.scheduler.dao.MastersToTransactionMappingsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	<bean id="drSentDao" class="org.mq.captiway.scheduler.dao.DRSentDao">
+	<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	
+	
+	
+	<bean id="drSentDaoForDML" class="org.mq.captiway.scheduler.dao.DRSentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>	
+	
+	<!-- ADDED FOR ET NEW IMPLEMENTATION -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- END -->
+	
+	<bean id="farwardToFriendDao" class="org.mq.captiway.scheduler.dao.FarwardToFriendDao">
+	<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>	
+	
+	<bean id="farwardToFriendDaoForDML" class="org.mq.captiway.scheduler.dao.FarwardToFriendDaoForDML">
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	<bean id="resetPasswordTokenDao" class="org.mq.captiway.scheduler.dao.ResetPasswordTokenDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="resetPasswordTokenDaoForDML" class="org.mq.captiway.scheduler.dao.ResetPasswordTokenDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	
+	
+	<!--  ADDED FOR TIMERS CODE SHIFTED TO SCHEDULER From SUBSCRIBER-->
+	
+	
+	
+	
+	
+	
+	<!-- Added for process digital receipts data extraction -->
+	
+	
+	
+	<bean id="digitalReceiptsJSONDao" class="org.mq.captiway.scheduler.dao.DigitalReceiptsJSONDao">
+	<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="digitalReceiptsJSONDaoForDML" class="org.mq.captiway.scheduler.dao.DigitalReceiptsJSONDaoForDML">
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<bean id="salesLiteralHashCodeGenerateDao" class="org.mq.captiway.scheduler.dao.SalesLiteralHashCodeGenerateDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="salesLiteralHashCodeGenerateDaoForDML" class="org.mq.captiway.scheduler.dao.SalesLiteralHashCodeGenerateDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	<!-- Update Cards Timer Task  -->
+	
+	<bean id="updateSparkBaseCardsController" class="org.mq.captiway.scheduler.services.UpdateSparkBaseCardsController">
+	</bean>
+	
+	<bean id="scheduledTask16" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="60000" />
+		<property name="period" value="900000" />
+		<property name="timerTask" ref="updateSparkBaseCardsController" />
+	</bean>
+	
+	<bean id="timerFactory17" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="scheduledTask16" />
+			</list>
+		</property>
+	</bean>
+	
+	
+	
+	
+	<!--  cards timer task -->
+	
+	<bean id="sparkBaseLocationDetailsDao" class="org.mq.captiway.scheduler.dao.SparkBaseLocationDetailsDao">
+	<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="sparkBaseLocationDetailsDaoForDML" class="org.mq.captiway.scheduler.dao.SparkBaseLocationDetailsDaoForDML">
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" /> 
+	</bean>
+	
+	<bean id="sparkBaseCardDao" class="org.mq.captiway.scheduler.dao.SparkBaseCardDao">
+	<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="sparkBaseCardDaoForDML" class="org.mq.captiway.scheduler.dao.SparkBaseCardDaoForDML">
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	 <bean id="appContextProviderId" class="org.mq.optculture.utils.ApplicationContextProvider">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	</bean>
+	
+	
+	<bean id="sparkBaseTransactionsDao" class = "org.mq.captiway.scheduler.dao.SparkBaseTransactionsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="sparkBaseTransactionsDaoForDML" class = "org.mq.captiway.scheduler.dao.SparkBaseTransactionsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+	
+	
+	<bean id="gatewayBusinessServiceImpl" class="org.mq.optculture.business.gateway.GatewayBusinessServiceImpl">
+		<!-- <property name="sessionFactory" ref="sessionFactory" /> -->
+	<!-- 	<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+	</bean>
+	
+	<bean id="ocMediaServiceImpl" class="org.mq.optculture.business.ocmedia.OCMediaServiceImpl">
+		
+	</bean>
+	
+	<!--  added for keyword expiry alert -->
+	
+	
+	<!-- added for session monitor service -->
+	
+	<bean id="customerSalesUpdatedDataDao" class="org.mq.captiway.scheduler.dao.CustomerSalesUpdatedDataDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+		<bean id="customerSalesUpdatedDataDaoForDML" class="org.mq.captiway.scheduler.dao.CustomerSalesUpdatedDataDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+	
+	
+	<bean id="loyaltyProgramTierDao" class="org.mq.optculture.data.dao.LoyaltyProgramTierDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyProgramTierDaoForDML" class="org.mq.optculture.data.dao.LoyaltyProgramTierDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyProgramDao" class="org.mq.optculture.data.dao.LoyaltyProgramDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyProgramDaoForDML" class="org.mq.optculture.data.dao.LoyaltyProgramDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyCardSetDao"
+		class="org.mq.optculture.data.dao.LoyaltyCardSetDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyCardSetDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyCardSetDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyCardsDao"
+		class="org.mq.optculture.data.dao.LoyaltyCardsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyCardsDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyCardsDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+<bean id="loyaltySettingsDao" class="org.mq.optculture.data.dao.LoyaltySettingsDao" >
+	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyProgramExclusionDao"
+		class="org.mq.optculture.data.dao.LoyaltyProgramExclusionDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyProgramExclusionDaoForDML"
+		class="org.mq.optculture.data.dao.LoyaltyProgramExclusionDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	
+	<bean id="loyaltyThresholdBonusDao" class="org.mq.optculture.data.dao.LoyaltyThresholdBonusDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+	
+	<bean id="loyaltyThresholdBonusDaoForDML" class="org.mq.optculture.data.dao.LoyaltyThresholdBonusDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyAutoCommDao" class="org.mq.optculture.data.dao.LoyaltyAutoCommDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyAutoCommDaoForDML" class="org.mq.optculture.data.dao.LoyaltyAutoCommDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="loyaltyTransactionParentDao" class="org.mq.optculture.data.dao.LoyaltyTransactionParentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="loyaltyTransactionParentDaoForDML" class="org.mq.optculture.data.dao.LoyaltyTransactionParentDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	<bean id="loyaltyTransactionChildDao" class="org.mq.optculture.data.dao.LoyaltyTransactionChildDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="loyaltyTransactionChildDaoForDML" class="org.mq.optculture.data.dao.LoyaltyTransactionChildDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+
+	<bean id="loyaltyTransactionExpiryDao" class="org.mq.optculture.data.dao.LoyaltyTransactionExpiryDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="loyaltyTransactionExpiryDaoForDML" class="org.mq.optculture.data.dao.LoyaltyTransactionExpiryDaoForDML">
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+
+	
+	<bean id="autoSMSDao" class="org.mq.captiway.scheduler.dao.AutoSMSDao" >
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="autoSmsQueueDao" class="org.mq.captiway.scheduler.dao.AutoSmsQueueDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="autoSmsQueueDaoForDML" class="org.mq.captiway.scheduler.dao.AutoSmsQueueDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<bean id="smsQueueDao" class="org.mq.captiway.scheduler.dao.SmsQueueDao" >
+	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="smsQueueDaoForDML" class="org.mq.captiway.scheduler.dao.SmsQueueDaoForDML" >
+	<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	<bean id="autoSMSObjectsQueue" class="org.mq.captiway.scheduler.AutoSMSObjectsQueue">
+	</bean>
+
+
+	
+	
+	
+	<bean id="ltySettingsActivityLogsDao" class="org.mq.optculture.data.dao.LtySettingsActivityLogsDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="ltySettingsActivityLogsDaoForDML" class="org.mq.optculture.data.dao.LtySettingsActivityLogsDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+	</bean>
+	
+	<!-- Temp solution for Deadlock in  sales relational mapping update-->
+	
+	<bean id="salesUpdateErrorLogDao" class=" org.mq.captiway.scheduler.dao.SalesUpdateErrorLogDao" >
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+		<bean id="salesUpdateErrorLogDaoForDML" class=" org.mq.captiway.scheduler.dao.SalesUpdateErrorLogDaoForDML" >
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		<property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+	
+	<bean id="backwoodsSparkBaseCardsController" class="org.mq.captiway.scheduler.services.BackwoodsSparkBaseCardsController">
+ </bean>
+ 
+ <bean id="backwoodsSparkBaseCards" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+  <property name="delay" value="60000" />
+  <property name="period" value="60000" />
+  <property name="timerTask" ref="backwoodsSparkBaseCardsController" />
+ </bean>
+ 
+ <bean id="backwoodsSparkBaseCardstimerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+  <property name="scheduledTimerTasks">
+   <list>
+    <ref bean="backwoodsSparkBaseCards" />
+   </list>
+  </property>
+ </bean>
+ 
+ <bean id="russelsSparkBaseCardsController" class="org.mq.captiway.scheduler.services.RusselsSparkBaseCardsController">
+ </bean>
+ 
+ <bean id="russelsSparkBaseCardsTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+  <property name="delay" value="60000" />
+  <property name="period" value="60000" />
+  <property name="timerTask" ref="russelsSparkBaseCardsController" />
+ </bean>
+ 
+ <bean id="russelsSparkBaseCardsTasktimerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+  <property name="scheduledTimerTasks">
+   <list>
+    <ref bean="russelsSparkBaseCardsTask" />
+   </list>
+  </property>
+ </bean>
+	
+	 
+	
+	
+	<bean id="loyaltyTransactionChildDaoId" class="org.mq.optculture.data.dao.LoyaltyTransactionChildDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+	<bean id="userEmailAlertDao" class="org.mq.captiway.scheduler.dao.UserEmailAlertDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+		 <property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="userEmailAlertDaoForDML" class="org.mq.captiway.scheduler.dao.UserEmailAlertDaoForDML">
+		<property name="sessionFactory" ref="sessionFactoryForDML" />
+		 <property name="jdbcTemplate" ref="jdbcTemplateForDML" />
+	</bean>
+	
+	
+</beans>    
+ 

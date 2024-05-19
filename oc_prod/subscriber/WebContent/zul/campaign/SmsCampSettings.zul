@@ -1,0 +1,708 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style src="/css/campaign.css"/>
+	 
+	 
+	    
+	<window id="smsCampSettigsWinId" border="0" width="100%" apply="org.mq.marketer.campaign.controller.campaign.SmsCampSettingsController" 
+	xmlns:h="http://www.zkoss.org/2005/zk/native" xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+	
+	<window id="personalizationTagsWinId" title="HTML Merge Fields" border="normal" mode="overlapped" visible="false" position="right,top">
+	 <zscript>
+	 
+            void insertText(A a){
+                
+                String value = a.getLabel();
+
+                String cp = caretPosTB.getValue();
+                if (cp == null || cp.length() == 0) {
+                    cp = "0";
+                }
+                try{
+                int caretPos = Integer.parseInt(cp);
+                if (caretPos != -1) {
+                    String currentValue = SMSMsgTbId.getValue();
+                    String newValue = currentValue.substring(0, caretPos) + value + currentValue.substring(caretPos);
+                    
+                    SMSMsgTbId.setValue(newValue);
+                   
+                     int charCount = SMSMsgTbId.getValue().length();
+					
+					if(charCount>160) {
+						int msgcount = charCount/160;
+						charCountTbId.setValue(""+charCount+" / "+(msgcount+1));
+						warnLblId.setVisible(true);
+					}//if
+					else {
+						charCountTbId.setValue(""+charCount+" / "+1);
+						warnLblId.setVisible(false);
+					}//else
+					
+                    sessionScope.put("messageContent", SMSMsgTbId.getValue());
+                    //personalizationTagsWinId.setVisible(false);
+                    SMSMsgTbId.focus();
+                    
+                }
+                }catch(Exception e) {
+                e.printStackTrace();
+                }
+            }
+
+        </zscript>
+        <script>
+        <![CDATA[
+
+                function updateCaretPosition() {
+                	//alert("hai");
+                    // get the zk widgets
+                    var scriptTB = zk.Widget.$(jq('$SMSMsgTbId'))
+                    var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+
+                    // get the js elements
+                    var jsScriptTB = document.getElementById(scriptTB.uuid)
+                    var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+
+                    // get the caret position
+                    var pos = getCaret(jsScriptTB);
+
+                    // set the caret position in the hidden text field
+                    jsCaretPosTB.value = pos;
+
+                    // trigger an event to send the caret position to the server
+                    if (document.createEvent) {
+                     var evt = document.createEvent('HTMLEvents');
+                     evt.initEvent( 'blur', false, false);
+                     jsCaretPosTB.dispatchEvent(evt);
+
+                     var evt2 = document.createEvent('HTMLEvents');
+                     evt2.initEvent( 'change', false, false);
+                     jsCaretPosTB.dispatchEvent(evt2);
+                    } else if (document.createEventObject) {
+                     jsCaretPosTB.fireEvent('onblur');
+                     jsCaretPosTB.fireEvent('onchange');
+                    }
+                }
+
+ 			function getCaret(el) {
+                	
+                	if (el.selectionStart) {
+                        return el.selectionStart;
+                    } else if (document.selection) {
+                        el.focus();
+
+                        var r = document.selection.createRange();
+
+                        
+                        if (r == null) {
+                        	
+                            return 0;
+                        }
+
+                        var re = el.createTextRange();
+                        	
+                                rc = re.duplicate();
+                        re.moveToBookmark(r.getBookmark());
+                        rc.setEndPoint('EndToStart', re);
+                        return rc.text.length;
+                    }else{
+                    	
+                    	if(el.value.length > 0) {
+                    		
+                    		el.selectionStart = el.value.length;
+                    		 return el.selectionStart;
+                    		
+                    	}
+                    	
+                    }
+                    return 0;
+
+
+                  
+                }
+            ]]>
+                </script>
+			<caption>
+				<toolbarbutton label="Close" onClick="personalizationTagsWinId.setVisible(false)"/>
+			</caption>
+			
+			<div id="tagsDivId" width="550px" height="200px" style="overflow:auto">
+				<label value="Basic Tags " style="font-weight: bold;font-size: 13px;"/>
+				<h:br/><h:br/>
+				<h:table >
+				 <h:tr>
+				 	<h:td>
+					 	<h:table >
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Email"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_emailId^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);" />
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="First Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_firstName^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Last Name"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_lastName^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Address One"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_addressOne^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Address Two"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_addressTwo^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 	</h:table>
+				 	</h:td>
+				 	<h:td width="100px">
+				 	</h:td>
+				 	<h:td>
+					 	<h:table >
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="City"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_city^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="State"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_state^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Country"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label="|^GEN_country^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Pin"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_pin^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Phone"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_phone^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Gender"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_gender^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Birthday"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_birthday^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 		<h:tr height="20px">
+					 			<h:td>
+					 			<label value="Anniversary"/>
+					 			</h:td>
+					 			<h:td>
+					 			<label value=":"/>
+					 			</h:td>
+					 			<h:td>
+					 			<a label ="|^GEN_anniversary^|" onClick="insertText(self);personalizationTagsWinId.setVisible(false);"/>
+					 			</h:td>
+					 		</h:tr>
+					 	</h:table>
+				 	</h:td>
+				 </h:tr>
+			 	</h:table>
+		</div>
+		</window>
+		
+		<menupopup id="editPopup" >
+	
+       <menuitem id="menuitemMergeTagsId" onClick="personalizationTagsWinId.setVisible(true);insertLinkWinId.setVisible(false)" image="/img/icons/edit_lists_icon.png" label="Insert Merge Tag"  />
+       <menuseparator />
+       <menuitem id="menuitemLinkId" image="/img/icons/delete.png" label="Insert Link" onClick="insertLinkWinId.setVisible(true);personalizationTagsWinId.setVisible(false)"/>
+		
+		</menupopup>
+		
+		
+		<window id="insertLinkWinId" title="Link URL" border="normal" mode="overlapped" visible="false" position="center">
+		
+		<caption>
+				<toolbarbutton label="Close" onClick="insertLinkWinId.setVisible(false)"/>
+			</caption>
+		
+				<h:table>
+					<h:tr>
+						<h:td>
+							<label value="Enter the Link URL:" />
+							<textbox  value="http://" width="360px" id="linkURLTxtBoxId"/>
+							
+						</h:td>
+					</h:tr>	
+					<h:tr>
+						<h:td>
+							<image src="/img/icons/icon_i.png"  />	
+							<label value="URL Short code will be generated and inserted in the message content." />
+						
+						
+						</h:td>
+					</h:tr>
+					<h:tr height="10" />			
+					<h:tr>
+						<h:td align="right">
+							<button id="insertLinkBtnId" label="Insert At Curser" sclass="idle240 greenbtn"/>
+						</h:td>
+					</h:tr>
+				</h:table>
+		</window>
+		
+		<h:table width="100%">
+			<h:tr>
+				<h:td>
+					<groupbox closable="false" >
+						<caption label="Basic Settings" style="font-weight:bold;font-size:12;"/>
+						<h:table>
+							<h:tr>
+								<h:td width="600px ">
+									<grid>
+										<columns>
+											<column width="170px" align="right"/>
+											<column />
+										</columns>
+										<rows>
+											<row>
+												<hbox>
+												<label value="*" sclass="redStar"/>
+												<label value=" SMS Campaign Name :"/>
+												</hbox>
+												<hbox>
+												<textbox id="smsCampNameTbId" width="250px" /><space/>
+												<label id="smsCampNameStatusLblId" value=""/>
+												</hbox>
+											</row>
+											<row>
+												<label value="SMS Sender Id :"/>
+												<listbox id="smsCampsenderIdLbId" mold="select" width="250px" >
+													<listitem label="--Select--" selected="true"/>
+													<listitem  forEach="${smsCampSettigsWinId$SmsCampSettingsController.senderIds}" label="${each.senderId}" value="${each}" style="line-height:22px;">
+													</listitem>
+													
+													<!--<listitem label="DEMOCAPT" selected="true"/>
+													--><!-- <listitem label="78East"/>
+													<listitem label="CAPTIWAY"/>
+													<listitem label="CHOC HUT"/> -->
+												</listbox>
+											</row>
+										</rows>
+											
+										
+									</grid>
+								
+								</h:td>
+								
+							</h:tr>
+						</h:table>
+					</groupbox>
+				
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<groupbox closable="false">
+						<caption label="Message Settings" style="font-weight:bold;font-size:12;"/>
+						<h:table>
+							<h:tr>
+								<h:td valign="top">
+								<h:table width="600px">
+									<h:tr>
+										<h:td>
+											<tabbox  width="600px"  id="smsMsgTabboxId" >
+											  <tabs>
+											  		<tab label="English SMS" id="englishTabId" />
+													<tab label="Language SMS" id="otherLangTabId" />
+													
+											  </tabs>
+											  <tabpanels>
+											  	<tabpanel>
+											  	<h:table>
+											  	<h:tr>
+												<h:td align="left" height="30px">
+													
+													<label value="*" sclass="redStar"/>		
+													<label value="Enter Message : "/>
+												</h:td>
+												<h:td>
+												</h:td>
+												<h:td align="right">
+													<!--<a label="Insert Merge Tag"  onClick="personalizationTagsWinId.setVisible(true)"/>
+													--><textbox id="caretPosTB" visible="false" />
+												</h:td>
+												</h:tr>
+												<h:tr>
+												<h:td colspan="3">
+													<textbox id="SMSMsgTbId" width="550px" rows="12" height="240px" 
+														maxlength="600" style="font-family: Arial,Helvetica,sans-serif;font-size:
+													 	14px;line-height: 1.5em;"  w:onClick="updateCaretPosition()"  
+													 	w:onChanging="updateCaretPosition()" w:onFocus="updateCaretPosition()"
+												 		name="SMSMsgTbId" context="editPopup"/>
+												 	
+												 	<!-- <textbox id="SMSLangMsgTbId" width="600px" rows="12" height="150px" 
+													maxlength="600"  visible="false"/> -->
+												 	
+												
+												</h:td>
+											
+												</h:tr>
+												<h:tr>
+													<h:td colspan="3">
+														<image src="/img/icons/icon_i.png"  />
+														<label value="Right Click on the message area to insert Merge Tags / Link." />
+													</h:td>
+													<h:td />
+													<h:td />
+												</h:tr>
+												<h:tr>
+												<h:td align="left">
+													<label value="Character Count :"/>
+													<textbox id="charCountTbId" readonly="true" value="0 / 1" width="70px"/>		
+												</h:td>
+												
+												<h:td>
+													<label id="warnLblId" visible="false" style="margin-left: 10px; color: Red; text-decoration: blink; border: 1px solid Red;"
+													value = "Message will be considered as Long SMS"/>
+												</h:td>
+												<h:td align="right">
+													
+													<a label="Spell Checker" visible="false"/>										
+												</h:td>
+												</h:tr>
+												</h:table>
+										  	</tabpanel>
+										  	
+										  	<tabpanel >
+										  		<!-- <iframe style="height:200px;width:650px; "  src="zul/campaign/temp.zul"/> -->
+										  	</tabpanel>
+										  	
+										  </tabpanels>
+  										</tabbox>
+									</h:td>
+								</h:tr>
+									
+								</h:table>
+								</h:td>
+
+								<h:td width="10px"/>
+
+								<h:td valign="top">
+									<vbox pack="start" align="start">
+										<hbox>
+											<label value="Select Mailing List(s) / " style="font-weight:bold;"/>
+											<space width="5px"/> <a label="Create New" id="createNewListLinkId" style="font-weight:bold;"/>
+										</hbox>
+									
+										<listbox id="dispMlListsLBoxId" width="270px" multiple="true" rows="8"  sclass="contactsView" checkmark="true">
+											
+											<listitem  forEach="${smsCampSettigsWinId$SmsCampSettingsController.mailingLists}" 
+												label="${each.listName}" value="${each}" style="line-height:22px;">
+											</listitem>
+											
+										</listbox>
+										
+									<separator height="20px"/>	
+										
+									<groupbox closable="false"  height="95px" >
+									<caption label="Send Test SMS" style="font-weight:bold;font-size:12;"/>
+									<vbox>
+										<label value="Mobile Number:"/>
+										<hbox pack="center">
+										<textbox id="mblNoTxtBoxId"/><space/>
+										<button  label="Send" sclass="idle70 greenbtn" id="sendTestSmsBtnId"/><space/>
+										<image src="/img/QuestionmarkButton-16x16.png" tooltip="smsOption" style="cursor: help" />
+										</hbox>
+										<label value="To send test SMS to multiple mobile numbers,give them as ',' separated."
+												style = "font-size:11px;"/>
+										
+									</vbox>
+									<popup id="smsOption" width="300px">
+										<html>
+										   <![CDATA[
+											 <span style="font-family:arial;font-size:12px;">   
+													->Test SMS will be sent based on the selected sending option
+													<br/>
+													
+											</span>
+											]]>
+										</html>
+									</popup>
+									
+								</groupbox>				
+											
+									</vbox>
+								
+								</h:td>
+							</h:tr>
+						</h:table>
+					</groupbox>
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td >
+					<h:table>
+						<h:tr>
+							<h:td WIDTH="30%">
+								<groupbox closable="false"  >
+									<caption label="If SMS is greater than 160 characters after replacing merge tag with actual data, then" style="font-weight:bold;font-size:12;"/>
+									
+										<radiogroup id="truncateMsgRgId" orient="vertical">
+											<radio label="Split and send as multiple messages" selected="true" value="1"/>
+											<radio label="Truncate to 160 characters and send message" value="2"/>
+											<radio label="Do not send the message" value="4" />
+											<hbox>
+											<radio label="Send as a long message" value="8"/>
+											<image src="/img/QuestionmarkButton-16x16.png" tooltip="longSMS" style="cursor: help" />
+											</hbox>
+										</radiogroup>
+										<popup id="longSMS" width="300px">
+											<html>
+											   <![CDATA[
+												 <span style="font-family:arial;font-size:12px;">   
+														->enabling this option lets the SMS to be sent as a <br/>
+														 long Message and number of received message will be depends<br/>
+														 on the Reciepient's Hand Set.
+														 
+														
+												</span>
+												]]>
+											</html>
+									</popup>
+			
+								</groupbox>			
+							</h:td>
+							
+						</h:tr>
+						
+					</h:table>
+				
+				</h:td>
+				
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<!--<label value=" Do You want to schedule the SMS's ? " style="font-weight:bold;font-size:11px;"/>
+					--><checkbox  id="smsSchedulingCbId" checked="false" label="Do You want to schedule the SMS's ? "  />
+					
+				</h:td>
+			</h:tr>
+			<h:tr>
+				<h:td>
+					<groupbox  closable="false" visible ="false" id="schedulingGbId" >
+						<!--<caption>
+							<checkbox  label=" Do You want to schedule the SMS's ? " id="smsSchedulingCbId" checked="false" style="font-weight:bold;font-size:11px;"  />
+							</caption>
+						-->
+						<div id="schedulingDivId">
+							<h:table cellspacing="2" cellpadding="2">
+								<h:tr>
+									<h:td valign="top">
+										<radiogroup id="scheduleRgId" orient="vertical">
+											<radio label="Select particular dates" selected="true"/>
+											<radio label="Send Periodically" />
+											
+										</radiogroup>
+										
+									</h:td>
+									<h:td valign="top">
+										<h:table cellspacing="2" cellpadding="2" width="100%">
+											<h:tr>
+												<h:td>
+													<div id="frqDivId" visible="false" width="100%">
+														Select the frequncy
+														<listbox mold="select" id="frqLbId" sclass="fieldLB" width="125px">
+															<listitem label="Every Day" value="5" onCreate="self.setAttribute(&quot;step&quot;,1)" selected="true"></listitem>
+															<listitem label="Every Week" value="5" onCreate="self.setAttribute(&quot;step&quot;,7)" ></listitem>
+															<listitem label="Every Fortnight" value="5" onCreate="self.setAttribute(&quot;step&quot;,14)"></listitem>
+															<listitem label="Every Month" value="2" onCreate="self.setAttribute(&quot;step&quot;,1)"></listitem>
+															<listitem label="Every Year" value="1" onCreate="self.setAttribute(&quot;step&quot;,1)"></listitem>
+														</listbox>
+														<button sclass="idle70" label="Add" id="frqBtnId"/>
+													</div>
+													<div id="prtDtDivId" width="100%">
+														<image src="/img/QuestionmarkButton-16x16.png" tooltip="scheduleDates" style="cursor: help" />
+														<datebox id="prtDtBxId" use="org.mq.marketer.campaign.custom.MyDatebox"  constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy HH:mm" />
+														<button label="Add" sclass="idle70" id="prtDtBtnId"/>
+													</div>
+													<popup id="scheduleDates" width="300px">
+														<html>
+														   <![CDATA[
+															 <span style="font-family:arial;font-size:12px;">   
+																	->Select the dates and click on Add button to schedule the campaign.<br/>
+																	
+															</span>
+															]]>
+														</html>
+													</popup>
+												</h:td>
+												<h:td>
+												</h:td>
+											</h:tr>
+											<h:tr>
+												<h:td>
+													<div id="frqDtDivId" visible="false">
+													Start Date
+													<datebox id="startDtBxId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy HH:mm"/>
+													End Date
+													<datebox id="endDtBxId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no past" readonly="true" cols="18" format="MMM dd, yyyy HH:mm"/>
+													</div>
+												</h:td>
+											</h:tr>
+										</h:table>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td colspan="3">
+										<label id="schErrorLblId" sclass="errorCss" />
+										<grid id="schedGrdId" fixedLayout="true">
+											<columns>
+												<column label=""  width="3%"/>
+												<column label="Date"  width="30%"/>
+												<column label="Status" align="center"  width="20%"/>
+												<column label="Actions" align="center" width="47%"/>
+											</columns>
+											<rows id="schedGrdRowsId"/>
+										</grid>
+										
+									</h:td>
+								</h:tr>
+								
+							</h:table>
+						</div>
+					</groupbox>
+				</h:td>
+			
+			
+			</h:tr>
+			<h:tr>
+				<h:td align="right" style="padding:10px;">
+					<button sclass="idle140" label="Save As Draft" id="saveAsDraftBtnId" style="font-weight:bold;font-size:14px;"/> 
+					<button sclass="idle140 greenbtn" id="submitSMSCampBtnId" label="Send SMS Now" style="font-weight:bold;font-size:14px;"/> 
+				</h:td>
+			</h:tr>
+		</h:table>
+		<window id="resendOptionWinId" width="400px" title="Resend" border="normal" mode="overlapped" visible="false" position="center">
+			<caption>
+				<toolbarbutton image="img/icons/close_blue.gif" onClick="resendOptionWinId.setVisible(false)"/>
+			</caption>
+			
+			<h:table cellpadding="2" cellspacing="2">
+			
+				<h:tr>
+					<h:td colspan="2">
+						<label id="errMsgLblId" style="color:red;font-size:10px" visible="false"/>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td style="padding:5px">
+						<label value="Select Date"/>
+						<datebox id="resendOptionDbId" use="org.mq.marketer.campaign.custom.MyDatebox" constraint="no past:Past dates are not allowed" readonly="true" cols="18" format="MMM dd, yyyy HH:mm"/>
+					</h:td>
+					<h:td style="padding:5px">
+						<label value="Resend for contacts who have "/>
+						<listbox id="resendOptionLbId" mold="select">
+							<listitem label="not opened" selected="true" value="1"/>
+							<listitem label="not clicked any URLs" value="2"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td colspan="2">
+						<button sclass="idle70" label="Submit" id="resendBtnId"/>
+					</h:td>
+				</h:tr>
+			</h:table>
+	</window>
+	<window id="resendEditorWinId" width="900px" title="Use different content" border="normal" 
+			mode="overlapped" visible="false" position="center,top" style="overflow:auto;">
+		<caption>
+			<toolbarbutton image="img/icons/close_blue.gif" style="margin-right:5px" onClick="resendEditorWinId.setVisible(false)"/>
+		</caption>
+		<include id="resendIncId" />
+	</window>
+					
+	</window>
+	
+	
+ 
+</zk>

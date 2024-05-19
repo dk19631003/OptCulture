@@ -1,0 +1,14 @@
+/optdata/ocapp/tomcat/logs/catalina.out
+	{   
+
+		su optculture optculture 
+		copytruncate	
+		rotate 7   
+		compress   
+		missingok   
+		size 64M
+		 postrotate
+        			echo "" > /optdata/ocapp/tomcat/logs/catalina.out
+	 	endscript
+	
+	}

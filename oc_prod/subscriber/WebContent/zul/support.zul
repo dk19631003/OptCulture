@@ -1,0 +1,256 @@
+<zk>
+<window  id="supportWinId" border="0" width="100%"	apply="org.mq.marketer.campaign.controller.SupportController"
+						xmlns:h="http://www.zkoss.org/2005/zk/native" 	xmlns:w="http://www.zkoss.org/2005/zk/client" >
+						
+	<zscript>
+	<![CDATA[
+    import org.zkforge.bwcaptcha.Captcha;
+    import org.mq.marketer.campaign.general.MessageUtil;
+         
+    void verifyCaptcha(Textbox tbox,Captcha capt){
+        if(!capt.getValue().equals(tbox.getValue())){ 
+        	
+        	tbox.setValue("");
+        	
+        	MessageUtil.setMessage("Please provide valid captcha","color:red;");
+        	return;
+        	//throw new WrongValueException(tbox,"Code Error!"); 
+        }
+    }
+ 
+    void verifyCaptchaIgnoreCase(Textbox tbox,Captcha capt){
+        if(!capt.getValue().equalsIgnoreCase(tbox.getValue())){ throw new WrongValueException(tbox,"Code Error!"); }
+    }
+]]></zscript>
+	<h:table width="100%" >
+		<h:tr>
+		  <h:td width="60%" >
+			<h:table width="100%" >
+		    <h:tr >
+				<h:td >
+				
+			<label id="veribageId" value="If this is a technical emergency that requires immediate attention please contact 877-578-5778," /><h:br/> 
+			<label value="otherwise we will respond to your service request for review within 1 business day between the hours 9 AM CST – 6 PM CST ." />
+			
+			 </h:td>
+	   		</h:tr>
+	   </h:table>
+	   
+	   <h:br/>
+	   
+		<h:table >
+		
+				<h:tr>
+					<radiogroup id="typeRadioRgId" />
+						<h:td  >
+							<label value="Type:"  /> 
+						</h:td>
+						<h:td >
+						
+							<radio id="bugRgId" radiogroup="typeRadioRgId" label="Report Bug"  />
+							</h:td>
+							<h:td>
+							<radio id="featureReqRgId" radiogroup="typeRadioRgId" label="Feature Request"/>
+						</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+					</h:td>
+					<h:td>
+					<radio id="serviceReqRgId" radiogroup="typeRadioRgId" label="Service Request"/>
+					</h:td>
+					<h:td>
+					<radio id="technicalReqRgId" radiogroup="typeRadioRgId" label="Technical Questions"/>
+				</h:td>
+				</h:tr>	
+				
+				<h:tr height="5px" />
+				
+				<h:tr>
+					<h:td width="160px" >
+						<label value="Client Name:"  /> 
+					</h:td>
+					<h:td>
+						<textbox id="clientNametbId" />
+					</h:td>
+					
+				</h:tr>	
+				<h:tr height="5px" />
+				<h:tr>
+					<h:td width="160px" >
+						<label value="Contact Name:"  /> 
+					</h:td>
+					<h:td>
+						<textbox id="contactNametbId" />
+					</h:td>
+					
+				</h:tr>	
+				<h:tr height="5px" />
+				<h:tr>
+					<h:td width="160px" >
+						<label value="Contact Phone Number:"  /> 
+					</h:td>
+					<h:td>
+						<textbox id="contactPhonetbId" />
+					</h:td>
+					
+				</h:tr>	
+				<h:tr height="5px" />
+				<h:tr>
+					<h:td width="160px" >
+						<label value="Contact Email Address:"  /> 
+					</h:td>
+					<h:td>
+						<textbox id="contactEmailtbId"  width="180px"/>
+					</h:td>
+					
+				</h:tr>	
+				</h:table>
+				
+				<div id="productsAreaDivIxd" >
+					
+					<h:table >
+			
+						<h:tr>
+							<h:td width="160px">
+								<label value="Product Area:"  /> 
+							</h:td>
+						
+							<radiogroup id="productAreaRadioRgId" />
+								<h:td>
+									<radio id="websiteRgId" radiogroup="productAreaRadioRgId" label="Web Application" checked="true"/>
+									<radio id="posIntegrationRgId" radiogroup="productAreaRadioRgId" label="POS Integration"/>
+								</h:td>
+						</h:tr>	
+					
+						
+					</h:table>
+					
+					<div id="websiteDivId" visible="true"  >
+						<h:table >
+			
+							<h:tr>
+								<h:td width="160px" />
+									
+								<h:td>
+									<listbox id ="websiteLbId"  visible="true" width="200px" rows="1" mold="select"  style="position:relative;left:5px;">
+										<listitem label="-Select-" selected="true" />
+										<listitem label="Email" />
+										<listitem label="SMS" />
+										<listitem label="Digital Receipts" />
+										<listitem label="Loyalty" />
+										<listitem label="Contacts &amp; Lists" />
+										<listitem label="Promotions" />
+										<listitem label="Other" />
+									
+									</listbox>
+								</h:td>
+							</h:tr>
+					</h:table>
+					
+					</div>
+					
+					
+					
+					<div id="posIntegrationDivId"  visible="false">
+							<h:table >
+					
+									<h:tr>
+										<h:td width="160px" />
+											
+										<h:td>
+										
+											<listbox id = "posIntegrationLbId" visible="false" width="200px" rows="1" mold="select"  style="position:relative;left:5px;" >
+												<listitem label="-Select-" selected="true" />
+												<listitem label="Digital Receipts" />
+												<listitem label="Loyalty Creation" />
+												<listitem label="Loyalty Redemption" />
+												<listitem label="Loyalty Lookup" />
+												<listitem label="Loyalty Enrollment " />
+												<listitem label="Promo Manager " />
+												<listitem label="Other" />
+											
+											</listbox>
+										
+										</h:td>
+								</h:tr>
+							</h:table>
+					</div>
+						
+					
+					
+			</div>
+			<h:table >
+			
+				<h:tr>
+					<h:td width="160px">
+						<label value="Description:"  /> 
+					</h:td>
+					<h:td>
+						<textbox id="descriptiontbId" width="400px" height="60px" maxlength="500"  rows="30"/>
+					</h:td>
+					
+				</h:tr>	
+				<h:tr height="5px" />
+				<h:tr>
+					<h:td width="160px">
+						<label value="File Upload (Optional):"  /> 
+					</h:td>
+					<h:td>
+					<textbox id="fileUploadtbId" readonly="true" />
+						<a id="uploadAId"  label="upload"/>
+					</h:td>
+					
+				</h:tr>	
+				<h:tr height="5px" />
+				<h:tr>
+					<h:td width="160px">
+						<label value="Captcha"  /> 
+					</h:td>
+					<h:td >
+						 <vbox>
+						    <hlayout>
+						    <bw.captcha id="cap1" />
+						    <button label="re-generate" onClick="cap1.randomValue();" id="reGenratBtnId" style="margin-left:10px;margin-top:10px;"/>
+						    
+						    </hlayout>
+						    <textbox onChange="verifyCaptcha(self,cap1)" id="captchTbId" />
+						    
+						   <!--  <label value="ignore case"/>
+						    <textbox onChange="verifyCaptchaIgnoreCase(self,cap1)" /> -->
+						</vbox>
+					</h:td>
+					</h:tr>
+					<h:tr height="5px" />
+			</h:table>	
+			
+			
+			
+	   
+			<h:br />		
+		<h:table width="100%" >
+		    <h:tr >
+					
+			  <h:td align="left">
+			   <button label="Submit " sclass="idle140 greenbtn" id="saveBtnId" style="padding:left;40px"/>
+			   <button label="Cancel" sclass="idle140 " id="cancelBtnId" style="padding:left;40px"/>
+			  </h:td>
+	   		</h:tr>
+	   </h:table>
+	    </h:td>
+		  <h:td  >
+		 <!--  <h:table  border="1" width="100%" height="100%" >
+			  <h:tr>
+			  <h:td style="border: solid #000 1px;">
+			  </h:td>
+		  </h:tr>
+		  
+		  </h:table> -->
+		  </h:td>
+		  </h:tr>
+		  
+	 </h:table>
+		
+		
+</window>
+</zk>

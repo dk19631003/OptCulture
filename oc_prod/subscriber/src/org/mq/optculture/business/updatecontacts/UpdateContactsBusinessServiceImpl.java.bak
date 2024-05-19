@@ -1,0 +1,1321 @@
+package org.mq.optculture.business.updatecontacts;
+import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mq.marketer.campaign.beans.Contacts;
+import org.mq.marketer.campaign.beans.CustomTemplates;
+import org.mq.marketer.campaign.beans.EmailQueue;
+import org.mq.marketer.campaign.beans.MailingList;
+import org.mq.marketer.campaign.beans.Messages;
+import org.mq.marketer.campaign.beans.OCSMSGateway;
+import org.mq.marketer.campaign.beans.POSMapping;
+import org.mq.marketer.campaign.beans.SMSSettings;
+import org.mq.marketer.campaign.beans.Users;
+import org.mq.marketer.campaign.controller.service.CaptiwayToSMSApiGateway;
+import org.mq.marketer.campaign.controller.service.EventTriggerEventsObservable;
+import org.mq.marketer.campaign.controller.service.EventTriggerEventsObserver;
+import org.mq.marketer.campaign.custom.MyCalendar;
+import org.mq.marketer.campaign.dao.ContactsDao;
+import org.mq.marketer.campaign.dao.ContactsDaoForDML;
+import org.mq.marketer.campaign.dao.CustomTemplatesDao;
+import org.mq.marketer.campaign.dao.EmailQueueDao;
+import org.mq.marketer.campaign.dao.EmailQueueDaoForDML;
+import org.mq.marketer.campaign.dao.MailingListDao;
+import org.mq.marketer.campaign.dao.MailingListDaoForDML;
+import org.mq.marketer.campaign.dao.MessagesDao;
+import org.mq.marketer.campaign.dao.POSMappingDao;
+import org.mq.marketer.campaign.dao.SMSSettingsDao;
+import org.mq.marketer.campaign.dao.UsersDao;
+import org.mq.marketer.campaign.general.Constants;
+import org.mq.marketer.campaign.general.POSFieldsEnum;
+import org.mq.marketer.campaign.general.PropertyUtil;
+import org.mq.marketer.campaign.general.PurgeList;
+import org.mq.marketer.campaign.general.SMSStatusCodes;
+import org.mq.marketer.campaign.general.Utility;
+import org.mq.optculture.business.helper.GatewayRequestProcessHelper;
+import org.mq.optculture.business.helper.LoyaltyProgramHelper;
+import org.mq.optculture.business.helper.SmsQueueHelper;
+import org.mq.optculture.exception.BaseServiceException;
+import org.mq.optculture.model.BaseRequestObject;
+import org.mq.optculture.model.BaseResponseObject;
+import org.mq.optculture.model.updatecontacts.ContactRequest;
+import org.mq.optculture.model.updatecontacts.ContactResponse;
+import org.mq.optculture.model.updatecontacts.Customer;
+import org.mq.optculture.model.updatecontacts.Header;
+import org.mq.optculture.model.updatecontacts.Status;
+import org.mq.optculture.model.updatecontacts.User;
+import org.mq.optculture.utils.OCConstants;
+import org.mq.optculture.utils.ServiceLocator;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+public class UpdateContactsBusinessServiceImpl implements UpdateContactsBusinessService{
+	private static final Logger logger = LogManager.getLogger(Constants.SUBSCRIBER_LOGGER);
+	private boolean isListSizeIncreased = false ;
+	private boolean isNewList = false;
+	@Override
+	public BaseResponseObject processRequest(BaseRequestObject baseRequestObject)
+			throws BaseServiceException {
+		BaseResponseObject baseResponseObject=new BaseResponseObject();
+		ContactResponse contactResponse = null;
+
+		try {
+			logger.debug("-------entered processRequest---------");
+			//json to object
+			Gson gson=new Gson();
+			ContactRequest contactRequest = null;
+			try {
+				contactRequest = gson.fromJson(baseRequestObject.getJsonValue(), ContactRequest.class);
+			} catch (JsonSyntaxException e) {
+				logger.error("Exception ::",e);
+				Status status = new Status("400000",PropertyUtil.getErrorMessage(400000, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				contactResponse = prepareFinalResponse(new Header(),status,contactRequest);
+				String json=gson.toJson(contactResponse);
+				baseResponseObject.setJsonValue(json);
+				baseResponseObject.setAction(OCConstants.UPDATE_CONTACTS_SERVICE_REQUEST);
+				return baseResponseObject;
+			}
+			UpdateContactsBusinessService updateContactsBusinessService=(UpdateContactsBusinessService) ServiceLocator.getInstance().getServiceByName(OCConstants.UPDATE_CONTACTS_BUSINESS_SERVICE);
+			contactResponse = (ContactResponse) updateContactsBusinessService.processUpdateContactRequest(contactRequest);
+
+			//object to json
+			String json=gson.toJson(contactResponse);
+			baseResponseObject.setJsonValue(json);
+			baseResponseObject.setAction(OCConstants.UPDATE_CONTACTS_SERVICE_REQUEST);
+			return baseResponseObject;
+		} catch (Exception e) {
+			logger.error("Exception ::",e);
+		}
+		 logger.debug("-------exit  processRequest---------");
+		return baseResponseObject;
+	}//processRequest
+
+	@Override
+	public ContactResponse processUpdateContactRequest(ContactRequest contactRequest) throws BaseServiceException {
+		ContactResponse contactResponse = null;
+		User user = null;
+		Header header = null;
+		Customer customer = null;
+		Status status = null;
+		try {
+			logger.debug("-------entered processUpdateContactRequest---------");
+			status = validateRootObject(contactRequest);
+			if(status != null && !OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE.equals(status.getStatus())) {
+				contactResponse = prepareFinalResponse(header,status,contactRequest);
+				return contactResponse;
+			}
+			
+			//get user using json user details
+			header = contactRequest.getHeader();
+			customer = contactRequest.getCustomer();
+			user = contactRequest.getUser();
+			status = validateInnerObjects(header,user,customer);
+			if(status!=null && !OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE.equals(status.getStatus())) {
+				contactResponse = prepareFinalResponse(header,status,contactRequest);
+				return contactResponse;
+			}
+			
+			UsersDao usersDao=(UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			String userName = user.getUserName();
+			String orgId = user.getOrganizationId();
+			String token = user.getToken();
+			Users userObj = usersDao.findByToken(userName+Constants.USER_AND_ORG_SEPARATOR+orgId , token);
+			status = processContactData(userObj,contactRequest);
+			//if(status!=null && !OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE.equals(status.getStatus())) {
+			contactResponse = prepareFinalResponse(header,status,contactRequest);
+			return contactResponse;
+			/*}else {
+				status=new Status("0","contact updated successfully",OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE);
+				contactResponse = prepareFinalResponse(header,status, contactRequest);
+				logger.debug("-------exit  processUpdateContactRequest---------");
+				return contactResponse;
+			}*/
+		}catch(Exception e) {
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing processUpdateContactRequest::::: ", e);
+		}
+	}//processUpdateContactRequest
+
+	private Status validateInnerObjects(Header header,User user, Customer customer)throws BaseServiceException {
+		Status status=null;
+		try {
+			logger.debug("-------entered validateInnerObjects---------");
+			if(header == null) {
+				status=new Status("400003",PropertyUtil.getErrorMessage(400003, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			if(header.getRequestId() == null || header.getRequestId().isEmpty()) {
+				status=new Status("400004",PropertyUtil.getErrorMessage(400004, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(header.getRequestDate() == null || header.getRequestDate().isEmpty()) {
+				status=new Status("400014",PropertyUtil.getErrorMessage(400014, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(header.getContactSource() == null || header.getContactSource().isEmpty()) {
+				status=new Status("400015",PropertyUtil.getErrorMessage(400015, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			if(!header.getContactSource().equalsIgnoreCase("Store") && !header.getContactSource().equalsIgnoreCase("Webform") && !header.getContactSource().equalsIgnoreCase("eComm") ) {
+				status=new Status("400016",PropertyUtil.getErrorMessage(400016, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(header.getContactList() == null || header.getContactList().isEmpty()) {
+				status=new Status("400017",PropertyUtil.getErrorMessage(400017, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(header.getContactList().length() > 50 ) {
+				status=new Status("400018",PropertyUtil.getErrorMessage(400018, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			if(!Utility.validateName(header.getContactList())) {
+				status=new Status("400019",PropertyUtil.getErrorMessage(400019, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			if(user == null) {
+				status=new Status("400005",PropertyUtil.getErrorMessage(400005, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			String userNameStr = user.getUserName();
+			if(userNameStr==null || userNameStr.trim().length()==0) {
+				status=new Status("400006",PropertyUtil.getErrorMessage(400006, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			String orgId = user.getOrganizationId();
+			if(orgId==null || orgId.trim().length()==0) {
+				status=new Status("400007",PropertyUtil.getErrorMessage(400007, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			String tokenStr = user.getToken();
+			if(tokenStr==null || tokenStr.trim().length()==0) {
+				status=new Status("400008",PropertyUtil.getErrorMessage(400008, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			UsersDao usersDao=(UsersDao)ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+			Users users = usersDao.findByToken(userNameStr+Constants.USER_AND_ORG_SEPARATOR+orgId , tokenStr);
+			if(users == null) {
+				status = new Status("400009",PropertyUtil.getErrorMessage(400009, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(customer == null) {
+				status = new Status("400010",PropertyUtil.getErrorMessage(400010, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(customer.getCreationDate() == null || customer.getCreationDate().isEmpty()) {
+				status = new Status("400002",PropertyUtil.getErrorMessage(400002, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(customer.getCreationDate() != null && !customer.getCreationDate().isEmpty()) {
+				String date = customer.getCreationDate();
+				String regexMMDDYYYY="((19|20)[0-9]{2})-((0?[1-9])|1[012])-((0?[1-9])|(1[0-9])|(2[0-9])|(3[01]))\\s((0?[0-9])|1[0-9]|2[0-4]):([0-5][0-9]):([0-5][0-9])";
+				if(!Pattern.matches(regexMMDDYYYY, date)) {
+					status = new Status("400020",PropertyUtil.getErrorMessage(400020, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+					return status;
+				}
+			}
+			
+			logger.debug("-------exit  validateInnerObjects---------");
+			return status;
+		}catch (Exception e) {
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing validateInnerObjects::::: ", e);
+		}
+	}//validateInnerObjects
+
+	private Status processContactData(Users userObj, ContactRequest contactRequest)throws BaseServiceException {
+		Status status=null;
+		try {
+			logger.debug("-------entered processContactData---------");
+			ContactsDao contactsDao = (ContactsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_DAO);
+			POSMappingDao posMappingDao = (POSMappingDao) ServiceLocator.getInstance().getDAOByName(OCConstants.POSMAPPING_DAO);
+			List<POSMapping> contactPOSMap = null;
+			contactPOSMap = posMappingDao.findByType("'"+Constants.POS_MAPPING_TYPE_CONTACTS+"'", userObj.getUserId());
+			status = validateContactPOSMap(contactPOSMap,userObj.getUserId());
+			if(status!=null && !OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE.equals(status.getStatus())) {
+				return status;
+			}
+			Contacts inputContact = new Contacts();
+			Contacts contactObj = null;
+			inputContact.setUsers(userObj);
+			
+			//prepare and set data to inputcontact from receipt json object
+			setContactFields(inputContact, contactPOSMap, contactRequest);
+			status = validateInputContact(inputContact);
+			if(status!=null && !OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE.equals(status.getStatus())) {
+				return status;
+			}
+			//validate emailId and mobile
+			TreeMap<String, List<String>> prioMap = null;
+			prioMap = Utility.getPriorityMap(userObj.getUserId(), Constants.POS_MAPPING_TYPE_CONTACTS, posMappingDao);
+			status=validatePriorityMap(prioMap,userObj);
+			if(status!=null && !OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE.equals(status.getStatus())) {
+				return status;
+			}
+			if(prioMap != null || prioMap.size() > 0){
+				contactObj = contactsDao.findContactByUniqPriority(prioMap, inputContact, userObj.getUserId());
+			}
+			long contactBit = 0l;
+			boolean purgeFlag = false;
+			MailingList mailingList = createNewMlist(userObj,contactRequest);
+			if(mailingList == null && isListSizeIncreased) {
+				status = new Status("400021",PropertyUtil.getErrorMessage(400021, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+			
+			if(contactObj != null){
+				status = updateExistingContactObject(contactBit,contactObj,inputContact,purgeFlag,userObj,mailingList,contactRequest.getHeader().getContactSource(),
+														contactRequest.getCustomer().getCreationDate(),contactRequest.getCustomer().getHomeStore());
+			}
+			else{
+				status = addNewContact(contactBit,inputContact,purgeFlag,userObj,mailingList,contactRequest.getHeader().getContactSource(),contactRequest.getCustomer().getCreationDate());
+			}
+			logger.debug("-------exit  processContactData---------");
+			return status;
+		}catch (Exception e) {
+			//e.printStackTrace();
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing processContactData::::: ", e);
+		}
+	}//processContactData
+
+	private MailingList createNewMlist(Users userObj, ContactRequest contactRequest) {
+		logger.info("---entered createNewMlist---");
+		MailingList mailingList =  null;
+		try {
+			MailingListDao mailingListDao = (MailingListDao) ServiceLocator.getInstance().getDAOByName(OCConstants.MAILINGLIST_DAO);
+		MailingListDaoForDML mailingListDaoForDML = (MailingListDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.MAILINGLIST_DAO_FOR_DML);
+		mailingList = mailingListDao.getMailingListByName(userObj.getUserId(),contactRequest.getHeader().getContactList());
+		
+		if(mailingList == null) {
+			isNewList = true;
+			mailingList = new MailingList();
+			mailingList.setListSize(0L);
+			mailingList.setListName(contactRequest.getHeader().getContactList());
+			mailingList.setListType(Constants.MAILINGLIST_TYPE_ADDED_MANUALLY);
+			mailingList.setCreatedDate(Calendar.getInstance());
+			mailingList.setStatus(OCConstants.MAILINGLIST_STATUS_ACTIVE);
+			mailingList.setLastModifiedDate(Calendar.getInstance());
+			mailingList.setLastStatusChangeDate(Calendar.getInstance());
+			mailingList.setUsers(userObj);
+			long mlbit = mailingListDao.getNextAvailableMbit(userObj.getUserId());
+			
+			if(mlbit == 0l){
+				logger.error("You have exceeded limit on maximum number of lists(60). " +
+						"Please delete one or more lists to create a new list.", "red");
+				isListSizeIncreased = true;
+				return null;
+			}
+			mailingList.setMlBit(mlbit);
+			mailingListDaoForDML.saveOrUpdate(mailingList);
+		}
+		}
+		catch(Exception e) {
+			logger.error("Exception ::",e);
+		}
+		logger.info("---exit createNewMlist---");
+		return mailingList;
+	}//createNewMlist()
+
+	private Status addNewContact(long contactBit,Contacts inputContact, boolean purgeFlag, Users user,MailingList mailingList, String source, String date)throws BaseServiceException {
+		
+		Status status = null;
+		try {
+			logger.debug("-------entered addNewContact---------");
+			EventTriggerEventsObservable eventTriggerEventsObservable=(EventTriggerEventsObservable) ServiceLocator.getInstance().getBeanByName(OCConstants.EVENT_TRIGGER_EVENTS_OBSERVABLE);
+			EventTriggerEventsObserver eventTriggerEventsObserver=(EventTriggerEventsObserver) ServiceLocator.getInstance().getBeanByName(OCConstants.EVENT_TRIGGER_EVENTS_OBSERVER);
+			ContactsDao contactsDao=(ContactsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_DAO);
+			ContactsDaoForDML contactsDaoForDML = (ContactsDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.CONTACTS_DAO_FOR_DML);
+			MailingListDaoForDML mailingListDao=(MailingListDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.MAILINGLIST_DAO_FOR_DML);
+			purgeFlag = true;
+			contactBit = mailingList.getMlBit().longValue();
+			
+			//if(date != null && !date.isEmpty()) {
+				
+				/*SimpleDateFormat fromJson = new SimpleDateFormat("MM/dd/yyyy");
+				SimpleDateFormat dbFormat = new SimpleDateFormat(MyCalendar.FORMAT_DATETIME_STYEAR);
+				String reformattedStr = "";
+				try {
+					reformattedStr = dbFormat.format(fromJson.parse(date));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}*/
+			Calendar createdDate = MyCalendar.string2Calendar(date);
+			inputContact.setCreatedDate(createdDate);
+			/*}
+			else {
+				inputContact.setCreatedDate(Calendar.getInstance());
+			}*/
+			
+			inputContact.setPurged(false);
+			inputContact.setEmailStatus(Constants.CONT_STATUS_PURGE_PENDING);
+			inputContact.setUsers(user);
+			if(source.toString().equalsIgnoreCase("Store")) {
+				source = Constants.CONTACT_OPTIN_MEDIUM_POS;
+			}else if(source.toString().equalsIgnoreCase("Webform")) {
+				source = Constants.CONTACT_OPTIN_MEDIUM_WEBFORM;
+			}else {
+				source = Constants.CONTACT_OPTIN_MEDIUM_ECOMMERCE;
+			}
+			inputContact.setOptinMedium(source);
+			//perform mobile status
+			if(inputContact.getMobilePhone()!= null) {
+				performMobileOptIn(inputContact, true, null,user);
+			}else {
+				inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_NOT_A_MOBILE);
+			}
+			mailingList.setLastModifiedDate(Calendar.getInstance());
+			inputContact.setMlBits(contactBit);
+			PurgeList purgeList;
+			if(purgeFlag) {
+				purgeList = (PurgeList)ServiceLocator.getInstance().getBeanByName(OCConstants.PURGE_LIST);
+				purgeList.checkForValidDomainByEmailId(inputContact);
+			}
+			contactsDaoForDML.saveOrUpdate(inputContact);
+			mailingList.setListSize(mailingList.getListSize() + 1);
+			mailingListDao.saveOrUpdate(mailingList);
+			if(mailingList.isCheckWelcomeMsg() && !mailingList.getCheckDoubleOptin()) {
+				sendWelcomeEmail(inputContact, mailingList, mailingList.getUsers());
+			}
+			eventTriggerEventsObservable.addObserver(eventTriggerEventsObserver);
+			eventTriggerEventsObservable.notifyForWebEvents(user.getUserId().longValue(),
+					inputContact.getContactId().longValue(), inputContact.getContactId().longValue() );
+		}catch (Exception e) {
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing addNewContact::::: ", e);
+		}
+		status = new Status("0","Contact created successfully",OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE);
+		logger.debug("-------exit  addNewContact---------");
+		return status;
+	}//addNewContact
+
+	private Status updateExistingContactObject(long contactBit, Contacts contactObj,
+			Contacts inputContact,boolean purgeFlag,Users user,MailingList mailingList, String source, String date, String homeStore)throws BaseServiceException {
+		Status status = null;
+		try {
+			logger.debug("-------entered updateExistingContactObject---------");
+			EventTriggerEventsObservable eventTriggerEventsObservable=(EventTriggerEventsObservable) ServiceLocator.getInstance().getBeanByName(OCConstants.EVENT_TRIGGER_EVENTS_OBSERVABLE);
+			EventTriggerEventsObserver eventTriggerEventsObserver=(EventTriggerEventsObserver) ServiceLocator.getInstance().getBeanByName(OCConstants.EVENT_TRIGGER_EVENTS_OBSERVER);
+			ContactsDao contactsDao=(ContactsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CONTACTS_DAO);
+			ContactsDaoForDML contactsDaoForDML = (ContactsDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.CONTACTS_DAO_FOR_DML);
+			MailingListDao mailingListDao=(MailingListDao) ServiceLocator.getInstance().getDAOByName(OCConstants.MAILINGLIST_DAO);
+			MailingListDaoForDML mailingListDaoForDML=(MailingListDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.MAILINGLIST_DAO_FOR_DML);
+			String emailStatus = contactObj.getEmailStatus();
+			boolean emailFlag = contactObj.getPurged();
+			contactBit = contactObj.getMlBits().longValue();
+			boolean isEnableEvent = false;
+			boolean isWelcomeEmail=false;
+			if((contactObj.getEmailId() != null && inputContact.getEmailId() != null &&
+					! contactObj.getEmailId().equalsIgnoreCase(inputContact.getEmailId())
+					)||(contactObj.getEmailId() == null && inputContact.getEmailId() != null) ) {
+				emailStatus = Constants.CONT_STATUS_PURGE_PENDING;
+				emailFlag = false;
+				purgeFlag = true;
+			}
+			if( contactBit == 0l ) {
+				if(source.toString().equalsIgnoreCase("Store")) {
+				   source = Constants.CONTACT_OPTIN_MEDIUM_POS;
+				}else if(source.toString().equalsIgnoreCase("Webform")) {
+					source = Constants.CONTACT_OPTIN_MEDIUM_WEBFORM;
+				}else {
+					source = Constants.CONTACT_OPTIN_MEDIUM_ECOMMERCE;
+				}
+				contactObj.setOptinMedium(source);
+				emailStatus = Constants.CONT_STATUS_PURGE_PENDING;
+				emailFlag = false;
+				purgeFlag = true;
+				isEnableEvent=true;
+				isWelcomeEmail=true;
+			}
+			boolean isSet=true;
+			//perform mobile status
+			if(inputContact.getMobilePhone()!= null) {
+				if(user.isConsiderSMSSettings()){
+					performMobileOptIn(inputContact, false, contactObj,user);
+				}else{
+					inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+					isSet=false;
+				}
+			}
+			
+			
+			//Handle createdDate
+			/*SimpleDateFormat fromJson = new SimpleDateFormat("yyyy/MM/dd");
+			SimpleDateFormat dbFormat = new SimpleDateFormat(MyCalendar.FORMAT_DATETIME_STYEAR);
+			String reformattedStr = "";
+			try {
+				reformattedStr = dbFormat.format(fromJson.parse(date));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}*/
+			Calendar createdDate = MyCalendar.string2Calendar(date);
+			Calendar dbCreatedDate = contactObj.getCreatedDate();
+			//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		//	if(!sdf.format(createdDate.getTime()).equals(sdf.format(dbCreatedDate.getTime()))){
+
+			if(createdDate.before(dbCreatedDate)) {
+				inputContact = mergeContacts(inputContact, contactObj); //Data is not overridden Only null values are updated
+				inputContact.setCreatedDate(createdDate);
+				if(source.toString().equalsIgnoreCase("Store")) {
+					   source = Constants.CONTACT_OPTIN_MEDIUM_POS;
+					}else if(source.toString().equalsIgnoreCase("Webform")) {
+						source = Constants.CONTACT_OPTIN_MEDIUM_WEBFORM;
+				}else {
+					source = Constants.CONTACT_OPTIN_MEDIUM_ECOMMERCE;
+				}
+				inputContact.setOptinMedium(source);
+				if(homeStore != null && !homeStore.isEmpty()) {
+					inputContact.setHomeStore(homeStore);
+				}
+			}else {
+				inputContact = Utility.mergeContacts(inputContact, contactObj); //Data is overridden 
+			}
+		//	}
+
+			
+			if(inputContact.getMobilePhone()== null){
+				inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_NOT_A_MOBILE);
+			}
+			if(!isSet) {
+				inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+			}
+			inputContact.setEmailStatus(emailStatus);
+			inputContact.setPurged(emailFlag);
+			contactBit = (contactBit | mailingList.getMlBit().longValue());
+			mailingList.setLastModifiedDate(Calendar.getInstance());
+			inputContact.setMlBits(contactBit);
+			PurgeList purgeList;
+			if(purgeFlag) {
+				purgeList = (PurgeList)ServiceLocator.getInstance().getBeanByName(OCConstants.PURGE_LIST);
+				purgeList.checkForValidDomainByEmailId(inputContact);
+			}
+			
+			contactsDaoForDML.saveOrUpdate(inputContact);
+			LoyaltyProgramHelper.updateLoyaltyMembrshpPhone(inputContact, inputContact.getMobilePhone());
+			if(isNewList){
+				mailingList.setListSize(mailingList.getListSize() + 1);
+			}
+			mailingListDaoForDML.saveOrUpdate(mailingList);
+			//send welcome email
+			if(isWelcomeEmail) {
+				if(mailingList.isCheckWelcomeMsg() && !mailingList.getCheckDoubleOptin()) {
+					sendWelcomeEmail(contactObj, mailingList, mailingList.getUsers());
+				}
+			}
+			//event trigger for contact
+			eventTriggerEventsObservable.addObserver(eventTriggerEventsObserver);
+			if(isEnableEvent) {
+				eventTriggerEventsObservable.notifyForWebEvents(user.getUserId().longValue(),
+						inputContact.getContactId().longValue(), inputContact.getContactId().longValue() );
+			}//if
+		}catch (Exception e) {
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing updateContactObject::::: ", e);
+		}
+		
+		status = new Status("0","Contact updated successfully",OCConstants.JSON_RESPONSE_SUCCESS_MESSAGE);
+		logger.debug("-------exit  updateContactObject---------");
+		return status;
+	}//updateContactObject
+
+	private Contacts mergeContacts(Contacts inputContact, Contacts dbContact) {
+
+	      try {
+			if(dbContact == null){
+			      return inputContact;
+			  }
+
+			  if((dbContact.getEmailId()==null)|| (dbContact.getEmailId().trim().isEmpty())){
+			      dbContact.setEmailId(inputContact.getEmailId());
+			  }
+			  if((dbContact.getFirstName()== null)|| (dbContact.getFirstName().trim().isEmpty())){
+			      dbContact.setFirstName(inputContact.getFirstName());
+			  }
+			  if((dbContact.getLastName()==null) || (dbContact.getLastName().trim().isEmpty())){
+			      dbContact.setLastName(inputContact.getLastName());
+			  }
+			  if((dbContact.getAddressOne()==null) || (dbContact.getAddressOne().trim().isEmpty())){
+			      dbContact.setAddressOne(inputContact.getAddressOne());
+			  }
+			  if((dbContact.getAddressTwo()==null) || (dbContact.getAddressTwo().trim().isEmpty())){
+			      dbContact.setAddressTwo(inputContact.getAddressTwo());
+			  }
+			  if((dbContact.getCity()==null) || (dbContact.getCity().trim().isEmpty())){
+			      dbContact.setCity(inputContact.getCity());
+			  }
+			  if((dbContact.getState()==null) || (dbContact.getState().trim().isEmpty())){
+			      dbContact.setState(inputContact.getState());
+			  }
+			  if((dbContact.getCountry()==null) || (dbContact.getCountry().isEmpty())){
+			      dbContact.setCountry(inputContact.getCountry());
+			  }
+			  if((dbContact.getUdf1()==null) || (dbContact.getUdf1().trim().isEmpty())){
+			      dbContact.setUdf1(inputContact.getUdf1());
+			  }
+			  if((dbContact.getUdf2()==null) || (dbContact.getUdf2().trim().isEmpty())){
+			      dbContact.setUdf2(inputContact.getUdf2());
+			  }
+			  if((dbContact.getUdf3()==null) || (dbContact.getUdf3().trim().isEmpty())){
+			      dbContact.setUdf3(inputContact.getUdf3());
+			  }
+			  if((dbContact.getUdf4()==null) || (dbContact.getUdf4().trim().isEmpty())){
+			      dbContact.setUdf4(inputContact.getUdf4());
+			  }
+			  if((dbContact.getUdf5()==null) || (dbContact.getUdf5().trim().isEmpty())){
+			      dbContact.setUdf5(inputContact.getUdf5());
+			  }
+			  if((dbContact.getUdf6()==null) || (dbContact.getUdf6().trim().isEmpty())){
+			      dbContact.setUdf6(inputContact.getUdf6());
+			  }
+			  if((dbContact.getUdf7()==null) || (dbContact.getUdf7().trim().isEmpty())){
+			      dbContact.setUdf7(inputContact.getUdf7());
+			  }
+			  if((dbContact.getUdf8()==null) || (dbContact.getUdf8().trim().isEmpty())){
+			      dbContact.setUdf8(inputContact.getUdf8());
+			  }
+			  if((dbContact.getUdf9()==null) || (dbContact.getUdf9().trim().isEmpty())){
+			      dbContact.setUdf9(inputContact.getUdf9());
+			  }
+			  if((dbContact.getUdf10()==null) || (dbContact.getUdf10().trim().isEmpty())){
+			      dbContact.setUdf10(inputContact.getUdf10());
+			  }
+			  if((dbContact.getUdf11()==null) || (dbContact.getUdf11().trim().isEmpty())){
+			      dbContact.setUdf11(inputContact.getUdf11());
+			  }
+			  if((dbContact.getUdf12()==null) || (dbContact.getUdf12().trim().isEmpty())){
+			      dbContact.setUdf12(inputContact.getUdf12());
+			  }
+			  if((dbContact.getUdf13()==null) || (dbContact.getUdf13().trim().isEmpty())){
+			      dbContact.setUdf13(inputContact.getUdf13());
+			  }
+			  if((dbContact.getUdf14()==null) || (dbContact.getUdf14().trim().isEmpty())){
+			      dbContact.setUdf14(inputContact.getUdf14());
+			  }
+			  if((dbContact.getUdf15()==null) || (dbContact.getUdf15().trim().isEmpty())){
+			      dbContact.setUdf15(inputContact.getUdf15());
+			  }
+			  if((dbContact.getGender()==null) || (dbContact.getGender().trim().isEmpty())){
+			      dbContact.setGender(inputContact.getGender());
+			  }
+			  if((dbContact.getBirthDay()==null)){
+			      dbContact.setBirthDay(inputContact.getBirthDay());
+			  }
+			  if((dbContact.getAnniversary()==null)){
+			      dbContact.setAnniversary(inputContact.getAnniversary());
+			  }
+			  if((dbContact.getZip()==null) || (dbContact.getZip().trim().isEmpty())){
+			      dbContact.setZip(inputContact.getZip());
+			  }
+			  if((dbContact.getMobilePhone()==null) || (dbContact.getMobilePhone().trim().isEmpty())){
+			      dbContact.setMobilePhone(inputContact.getMobilePhone());
+			  }
+			  if((dbContact.getExternalId()==null) || (dbContact.getExternalId().trim().isEmpty())){
+			      dbContact.setExternalId(inputContact.getExternalId());
+			  }
+			  if((dbContact.getHomeStore()==null) ||(dbContact.getHomeStore().trim().isEmpty())){
+			      dbContact.setHomeStore(inputContact.getHomeStore());
+			  }
+			  if((dbContact.getHomePhone()==null) || (dbContact.getHomePhone().trim().isEmpty())){
+			      dbContact.setHomePhone(inputContact.getHomePhone());
+			  }
+			  return dbContact;
+		} catch (Exception e) {
+			logger.error("Exception ::" , e);
+			return dbContact;
+		}
+	  }
+
+	private void sendWelcomeEmail(Contacts contactObj, MailingList mailingList,
+			Users user)throws BaseServiceException {
+		//to send the loyalty related email
+		try {
+			logger.debug("-------entered sendWelcomeEmail---------");
+			CustomTemplatesDao customTemplatesDao=(CustomTemplatesDao) ServiceLocator.getInstance().getDAOByName(OCConstants.CUSTOMTEMPLATES_DAO);
+			EmailQueueDao emailQueueDao=(EmailQueueDao) ServiceLocator.getInstance().getDAOByName(OCConstants.EMAILQUEUE_DAO);
+			EmailQueueDaoForDML emailQueueDaoForDML=(EmailQueueDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.EMAILQUEUE_DAO_ForDML);
+			CustomTemplates custTemplate = null;
+			String message = PropertyUtil.getPropertyValueFromDB("welcomeMsgTemplate");
+
+			if(mailingList.getWelcomeCustTempId() != null) {
+
+				custTemplate = customTemplatesDao.findCustTemplateById(mailingList.getWelcomeCustTempId());
+				if(custTemplate != null) {
+
+					message = custTemplate.getHtmlText();
+				}
+			}
+			//logger.debug("-----------email----------"+tempContact.getEmailId());
+			message = message.replace("[OrganisationName]", user.getUserOrganization().getOrganizationName())
+					.replace("[senderReplyToEmailID]", user.getEmailId());
+
+			EmailQueue testEmailQueue = new EmailQueue(custTemplate,Constants.EQ_TYPE_WELCOME_MAIL, message, "Active", contactObj.getEmailId(), contactObj.getUsers(),Calendar.getInstance(),
+					"Welcome Mail", null, contactObj.getFirstName(), MyCalendar.calendarToString(contactObj.getBirthDay(), MyCalendar.FORMAT_DATEONLY), contactObj.getContactId());
+
+			//testEmailQueue.setChildEmail(childEmail);
+			//emailQueueDao.saveOrUpdate(testEmailQueue);
+			emailQueueDaoForDML.saveOrUpdate(testEmailQueue);
+			logger.debug("-------exit  sendWelcomeEmail---------");
+		}catch (Exception e) {
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing sendWelcomeEmail::::: ", e);
+		}
+	}//sendWelcomeEmail
+
+	private Status validatePriorityMap(TreeMap<String, List<String>> prioMap,Users user)throws BaseServiceException {
+		Status status=null;
+		logger.debug("-------entered validatePriorityMap---------");
+		if(prioMap == null || prioMap.size() == 0){
+			logger.info("Unique Priority Map NOT configured to the user: "+user.getUserName());
+			status=new Status("400013",PropertyUtil.getErrorMessage(400013, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		logger.debug("-------exit  validatePriorityMap---------");
+		return status;
+	}
+
+	private Status validateInputContact(Contacts inputContact)throws BaseServiceException {
+		Status status=null;
+		logger.debug("-------entered validateInputContact---------");
+		if((inputContact.getExternalId() == null || inputContact.getExternalId().trim().isEmpty())
+				&& (inputContact.getEmailId() == null || inputContact.getEmailId().trim().isEmpty()) 
+				&& (inputContact.getMobilePhone() == null || inputContact.getMobilePhone().trim().isEmpty())){
+			status=new Status("400012",PropertyUtil.getErrorMessage(400012, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		logger.debug("-------exit  validateInputContact---------");
+		return status;
+	}//validateInputContact
+
+	private void setContactFields(Contacts inputContact,List<POSMapping> contactPOSMap,
+			                      ContactRequest contactRequest)throws BaseServiceException {
+		Class strArg[] = new Class[] { String.class };
+		Class calArg[] = new Class[] { Calendar.class };
+
+		logger.debug("-------entered setContactFields---------");
+		for(POSMapping posMapping : contactPOSMap){
+
+			String custFieldAttribute = posMapping.getCustomFieldName();
+			String fieldValue=getFieldValue(contactRequest,posMapping);
+			if(posMapping.getDataType().equalsIgnoreCase("Number"))fieldValue = Utility.validateNumberValue(fieldValue);
+			if(posMapping.getDataType().equalsIgnoreCase("Double"))fieldValue = Utility.validateDoubleValue(fieldValue);
+			//if(fieldValue ==null || fieldValue.length() <= 0)continue;
+			if(fieldValue == null || fieldValue.trim().length() <= 0){
+				logger.info("custom field value is empty ...for field : "+custFieldAttribute);
+				continue;
+			}
+			fieldValue = fieldValue.trim();
+			String dateTypeStr = null;
+			dateTypeStr = posMapping.getDataType();
+			if(dateTypeStr == null || dateTypeStr.trim().length() <=0){
+				continue;
+			}
+			if(custFieldAttribute.startsWith("UDF") && dateTypeStr.startsWith("Date")){
+				String dateValue = getDateFormattedData(posMapping, fieldValue);
+				if(dateValue == null) continue;
+//				fieldValue = dateValue;
+			}
+			Users user = inputContact.getUsers();
+			Object[] params = null;
+			Method method = null;
+			try {
+
+				if (custFieldAttribute.equals(POSFieldsEnum.emailId.getOcAttr()) && fieldValue.length() > 0 &&
+						Utility.validateEmail(fieldValue)) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.emailId.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.firstName.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.firstName.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.lastName.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.lastName.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.addressOne.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.addressOne.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.addressTwo.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.addressTwo.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.city.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.city.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.state.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.state.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.country.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.country.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.zip.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.zip.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.mobilePhone.getOcAttr()) && fieldValue.length() > 0) {
+
+					String phoneParse = Utility.phoneParse(fieldValue, user!=null ? user.getUserOrganization() : null );
+					if(phoneParse != null){
+						//logger.info("after phone parse: "+phoneParse);
+						method = Contacts.class.getMethod("set" + POSFieldsEnum.mobilePhone.getPojoField(), strArg);
+						params = new Object[] { phoneParse };
+					}
+				}
+
+				else if (custFieldAttribute.equals(POSFieldsEnum.externalId.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.externalId.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+
+				else if (custFieldAttribute.equals(POSFieldsEnum.gender.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.gender.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+
+				else if (custFieldAttribute.equals(POSFieldsEnum.birthDay.getOcAttr()) && fieldValue.length() > 0) {
+
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.birthDay.getPojoField(), calArg);
+					try {
+						String dateformat = dateTypeStr.substring(dateTypeStr.indexOf("(")+1, dateTypeStr.indexOf(")"));
+						DateFormat formatter ; 
+						Date date ; 
+						formatter = new SimpleDateFormat(dateformat);
+						date = (Date)formatter.parse(fieldValue); 
+						Calendar dobCal =  new MyCalendar(Calendar.getInstance(), null, MyCalendar.dateFormatMap.get(dateformat));
+						dobCal.setTime(date);
+						params = new Object[] { dobCal };
+						//contact.setBirthDay(dobCal);
+					} catch (Exception e) {
+						logger.info("BirthDay date format not matched with data",e);
+					}
+
+				}
+
+				else if (custFieldAttribute.equals(POSFieldsEnum.anniversary.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.anniversary.getPojoField(), calArg);
+					try {
+						String dateformat = dateTypeStr.substring(dateTypeStr.indexOf("(")+1, dateTypeStr.indexOf(")"));
+						DateFormat formatter ; 
+						Date date ; 
+						formatter = new SimpleDateFormat(dateformat);
+						date = (Date)formatter.parse(fieldValue); 
+						Calendar dobCal =  new MyCalendar(Calendar.getInstance(), null, MyCalendar.dateFormatMap.get(dateformat));
+						dobCal.setTime(date);
+						params = new Object[] { dobCal };
+						//contact.setBirthDay(dobCal);
+					} catch (Exception e) {
+						logger.info("Anniversary date format not matched with data",e);
+					}
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.homeStore.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.homeStore.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf1.getOcAttr()) && fieldValue.length() > 0) {
+					
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf1.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf2.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf2.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf3.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf3.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf4.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf4.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf5.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf5.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf6.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf6.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf7.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf7.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf8.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf8.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf9.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf9.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf10.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf10.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf11.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf11.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf12.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf12.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf13.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf13.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf14.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf14.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				else if (custFieldAttribute.equals(POSFieldsEnum.udf15.getOcAttr()) && fieldValue.length() > 0) {
+					method = Contacts.class.getMethod("set" + POSFieldsEnum.udf15.getPojoField(), strArg);
+					params = new Object[] { fieldValue };
+				}
+				if (method != null) {
+					try {
+						method.invoke(inputContact, params);
+						//logger.info("method name:  "+method.getName()+" field value: "+fieldValue);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						logger.error("Exception ::" , e);
+					} 
+				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//logger.info("securityexception");
+				logger.error("Exception ::" , e);
+			} 
+			logger.debug("-------exit  setContactFields---------");
+		}
+		//logger.info("set contact data input contact: mobile: "+inputContact.getMobilePhone());
+	}//setContactFields
+
+	private String getDateFormattedData(POSMapping posMapping, String fieldValue) throws BaseServiceException{
+		String dataTypeStr = posMapping.getDataType();
+		String dateFieldValue = null;
+		logger.debug("-------entered getDateFormattedData---------");
+		//String custfieldName = posMapping.getCustomFieldName();
+		if(posMapping.getDataType().trim().startsWith("Date")) {
+			try {
+				String dateFormat = dataTypeStr.substring(dataTypeStr.indexOf("(")+1, dataTypeStr.indexOf(")"));
+				if(!Utility.validateDate(fieldValue, dateFormat)) {
+					return null;
+				}
+				DateFormat formatter ; 
+				Date date ; 
+				formatter = new SimpleDateFormat(dateFormat);
+				date = (Date)formatter.parse(fieldValue); 
+				Calendar cal =  new MyCalendar(Calendar.getInstance(), null, MyCalendar.dateFormatMap.get(dateFormat));
+				cal.setTime(date);
+				dateFieldValue= MyCalendar.calendarToString(cal, MyCalendar.dateFormatMap.get(dateFormat));
+			} catch (Exception e) {
+				logger.error("Exception  ::", e);
+				throw new BaseServiceException("Exception occured while processing getDateFormattedData::::: ", e);
+			}
+		}
+		logger.debug("-------exit  getDateFormattedData---------");
+		return dateFieldValue;
+	}//getDateFormattedData
+
+	private String getFieldValue(ContactRequest contactRequest,POSMapping posMapping)throws BaseServiceException {
+		String fieldValue=null;
+		logger.debug("-------entered getFieldValue---------");
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("street")) {
+			fieldValue = contactRequest.getCustomer().getAddressLine1();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("address two")) {
+			fieldValue = contactRequest.getCustomer().getAddressLine2();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("email")) {
+			fieldValue = contactRequest.getCustomer().getEmailAddress();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("mobile")) {
+			fieldValue = contactRequest.getCustomer().getPhone();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("first name")) {
+			fieldValue = contactRequest.getCustomer().getFirstName();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("last name")) {
+			fieldValue = contactRequest.getCustomer().getLastName();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("city")) {
+			fieldValue = contactRequest.getCustomer().getCity();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("state")) {
+			fieldValue = contactRequest.getCustomer().getState();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("country")) {
+			fieldValue = contactRequest.getCustomer().getCountry();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("zip")) {
+			fieldValue = contactRequest.getCustomer().getPostal();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("home store")) {
+			fieldValue = contactRequest.getCustomer().getHomeStore();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("gender")) {
+			fieldValue = contactRequest.getCustomer().getGender();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("customer id")) {
+			fieldValue = contactRequest.getCustomer().getCustomerId();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("created date")) {
+			fieldValue = contactRequest.getCustomer().getCreationDate();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("birthday")) {
+			fieldValue = contactRequest.getCustomer().getBirthday();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("anniversary")) {
+			fieldValue = contactRequest.getCustomer().getAnniversary();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf1")) {
+			fieldValue = contactRequest.getCustomer().getUDF1();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf2")) {
+			fieldValue = contactRequest.getCustomer().getUDF2();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf3")) {
+			fieldValue = contactRequest.getCustomer().getUDF3();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf4")) {
+			fieldValue = contactRequest.getCustomer().getUDF4();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf5")) {
+			fieldValue = contactRequest.getCustomer().getUDF5();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf6")) {
+			fieldValue = contactRequest.getCustomer().getUDF6();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf7")) {
+			fieldValue = contactRequest.getCustomer().getUDF7();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf8")) {
+			fieldValue = contactRequest.getCustomer().getUDF8();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf9")) {
+			fieldValue = contactRequest.getCustomer().getUDF9();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf10")) {
+			fieldValue = contactRequest.getCustomer().getUDF10();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf11")) {
+			fieldValue = contactRequest.getCustomer().getUDF11();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf12")) {
+			fieldValue = contactRequest.getCustomer().getUDF12();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf13")) {
+			fieldValue = contactRequest.getCustomer().getUDF13();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf14")) {
+			fieldValue = contactRequest.getCustomer().getUDF14();
+			return fieldValue;
+		}
+		if(posMapping.getCustomFieldName().equalsIgnoreCase("udf15")) {
+			fieldValue = contactRequest.getCustomer().getUDF15();
+			return fieldValue;
+		}
+		logger.debug("-------exit  getFieldValue---------");
+		return fieldValue;
+	}//getFieldValue
+
+	private Status validateContactPOSMap(List<POSMapping> contactPOSMap,Long userId)throws BaseServiceException {
+		Status status=null;
+		logger.debug("-------entered validateContactPOSMap---------");
+		if(contactPOSMap == null || contactPOSMap.size() == 0){
+			logger.debug("POS Mapping type CONTACTS not exists for the user: "+userId);
+			status=new Status("400011",PropertyUtil.getErrorMessage(400011, OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+			return status;
+		}
+		logger.debug("-------exit  validateContactPOSMap---------");
+		return status;
+	}//validateContactPOSMap
+
+	private ContactResponse prepareFinalResponse(Header header,Status status, ContactRequest contactRequest) throws BaseServiceException{
+		logger.debug("-------entered prepareFinalResponse---------");
+		ContactResponse contactResponse=new ContactResponse();
+		header = new Header();
+		if(contactRequest != null && contactRequest.getHeader() != null) {
+				header.setRequestId(contactRequest.getHeader().getRequestId());
+				header.setRequestDate(contactRequest.getHeader().getRequestDate());
+		}
+		contactResponse.setHeader(header);
+		contactResponse.setStatus(status);
+		logger.debug("-------exit  prepareFinalResponse---------");
+		return contactResponse;
+	}//prepareFinalResponse
+
+	private Status validateRootObject(ContactRequest contactRequest)throws BaseServiceException {
+		Status status=null;
+		try {
+			logger.debug("-------entered validateRootObject---------");
+			
+			if(contactRequest == null) {
+				status=new Status("400001",PropertyUtil.getErrorMessage(400001,OCConstants.ERROR_CONTACTS_FLAG),OCConstants.JSON_RESPONSE_FAILURE_MESSAGE);
+				return status;
+			}
+		}catch(Exception e) {
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing validateRootObject::::: ", e);
+		}
+		logger.debug("-------exit  validateRootObject---------");
+		return status;
+	}//validateRootObject
+
+	private void performMobileOptIn(Contacts inputContact, boolean isNew,
+			Contacts contactObj,Users user)throws BaseServiceException {
+
+		try {
+			logger.debug("-------entered performMobileOptIn---------");
+			ContactsDaoForDML contactsDaoForDML=(ContactsDaoForDML) ServiceLocator.getInstance().getDAOForDMLByName(OCConstants.CONTACTS_DAO_FOR_DML);
+			SMSSettingsDao smsSettingsDao=(SMSSettingsDao) ServiceLocator.getInstance().getDAOByName(OCConstants.SMSSETTINGS_DAO);
+			SMSSettings smsSettings=null ;
+			OCSMSGateway ocsmsGateway =null;
+			if(user.isEnableSMS() && user.isConsiderSMSSettings()){
+
+				if(SMSStatusCodes.smsProgramlookupOverUserMap.get(user.getCountryType())) smsSettings = smsSettingsDao.findByUser(user.getUserId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN);
+				else  smsSettings = smsSettingsDao.findByOrg(user.getUserOrganization().getUserOrgId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN);
+				// smsSettings = smsSettingsDao.findByUser(user.getUserId(), OCConstants.SMS_PROGRAM_KEYWORD_TYPE_OPTIN);
+				try {
+					ocsmsGateway = GatewayRequestProcessHelper.getOcSMSGateway(user, SMSStatusCodes.defaultSMSOptinGatewayTypeMap.get(user.getCountryType()));
+				} catch (BaseServiceException e) {
+					// TODO Auto-generated catch block
+					logger.error(e);
+				}
+
+			}
+
+			if(smsSettings == null || ocsmsGateway == null) {
+				String noSMSComplaincyMsg = ". No SMS Settings find for your user Account," +
+						"SMS may not be sent to the mobile contacts.";
+				Messages messages = new Messages("Contact" ,"Mobile contacts may not reachable" ,noSMSComplaincyMsg ,
+						Calendar.getInstance(),"Inbox",false ,"Info", inputContact.getUsers()); 
+				MessagesDao messagesDao = (MessagesDao) ServiceLocator.getInstance().getDAOByName(OCConstants.MESSAGES_DAO);
+				messagesDao.saveOrUpdate(messages);
+				inputContact.setMobileOptin(false);
+				inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);//TODO need to finalize
+
+				if(contactObj != null) {
+					contactObj.setMobileOptin(false);
+					contactObj.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);//TODO need to finalize
+				}
+				return;
+			}
+
+			String optinMedium = null;
+			if(inputContact.getMobilePhone() != null && !inputContact.getMobilePhone().isEmpty()) {
+				//if
+				boolean isDifferentMobile = false;
+				String mobile = inputContact.getMobilePhone();
+				if(contactObj != null) {
+					String conMobile = contactObj.getMobilePhone();
+					optinMedium = contactObj.getOptinMedium();
+					//to identify whether entered one is same as previous mobile
+					if(conMobile != null ) {
+						if(!mobile.equals(conMobile)) {
+							if( (mobile.length() < conMobile.length() && !conMobile.endsWith(mobile) ) ||
+									(conMobile.length() < mobile.length() && !mobile.endsWith(conMobile)) || mobile.length() == conMobile.length()) {
+								isDifferentMobile = true;
+							}//if
+						}//if
+					}//if
+
+					else{
+						contactObj.setMobilePhone(inputContact.getMobilePhone());
+						isDifferentMobile = true;
+					}
+
+				}//if
+				else{
+					optinMedium = inputContact.getOptinMedium();
+				}
+				//contact.setPhone(mPhoneIBoxId.getValue());
+				//Users currentUser = inputContactObj.getUsers();
+				Users currentUser = smsSettings.getUserId();
+
+				boolean canProceed = false;
+				//do only when the existing phone number is not same with the entered
+				byte optin = 0;
+				if(optinMedium != null) {
+
+					if(optinMedium.equalsIgnoreCase(Constants.CONTACT_OPTIN_MEDIUM_ADDEDMANUALLY) ) {
+						optin = 1;
+					}
+					else if(optinMedium.startsWith(Constants.CONTACT_OPTIN_MEDIUM_WEBFORM) ) {
+						optin = 2;
+					}
+					else if(optinMedium.equalsIgnoreCase(Constants.CONTACT_OPTIN_MEDIUM_POS) ) {
+						optin = 4;
+					}
+
+				}//if
+				
+				Users contactOwner = inputContact.getUsers();
+				Byte userOptinVal =	smsSettings.getOptInMedium();
+				
+				userOptinVal = ( SMSStatusCodes.userOptinMediumMap.get(contactOwner.getCountryType()) && contactOwner.getOptInMedium() != null) ? 
+						contactOwner.getOptInMedium() : userOptinVal;
+					
+						
+				
+				if(smsSettings.isEnable() && 
+						userOptinVal != null && 
+						(userOptinVal.byteValue() & optin ) > 0 ) {									
+					
+				
+					if( (contactObj != null && 
+							(contactObj.getLastSMSDate() == null && contactObj.isMobileOptin() != true) ||
+							(contactObj != null && isDifferentMobile) )  ) {
+						contactObj.setMobileStatus(Constants.CON_MOBILE_STATUS_OPTIN_PENDING);
+						contactObj.setLastSMSDate(Calendar.getInstance());
+						contactObj.setMobileOptin(false);
+						canProceed = true;
+					}
+					if(canProceed || isNew) {	
+						//logger.info("is a new contact=====");
+						inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_OPTIN_PENDING);
+						inputContact.setMobileOptin(false);
+						CaptiwayToSMSApiGateway captiwayToSMSApiGateway = (CaptiwayToSMSApiGateway) ServiceLocator.getInstance().getBeanByName(OCConstants.CAPTIWAY_TO_SMS_API_GATEWAY);
+
+						if(!ocsmsGateway.isPostPaid() && !captiwayToSMSApiGateway.getBalance(ocsmsGateway, 1)) {
+							logger.debug("low credits with clickatell");
+							return;
+						}
+
+						if( (  (currentUser.getSmsCount() == null ? 0 : currentUser.getSmsCount()) - (currentUser.getUsedSmsCount() == null ? 0 : currentUser.getUsedSmsCount() ) ) >=  1) {
+
+							UsersDao usersDao =(UsersDao) ServiceLocator.getInstance().getDAOByName(OCConstants.USERS_DAO);
+
+							String msgContent = smsSettings.getAutoResponse();
+							if(msgContent != null) {
+
+								msgContent = smsSettings.getMessageHeader() + " "+ msgContent;
+							}
+
+							String mobileStatus = captiwayToSMSApiGateway.sendSingleMobileDoubleOptin(ocsmsGateway,
+									smsSettings.getSenderId(), mobile, msgContent, smsSettings.getUserId());
+
+							if(mobileStatus== null) {
+								mobileStatus = Constants.CON_MOBILE_STATUS_OPTIN_PENDING;
+							}
+							if(!mobileStatus.equals(Constants.CON_MOBILE_STATUS_OPTIN_PENDING)) {
+
+								contactsDaoForDML.updatemobileStatus(mobile, mobileStatus, currentUser);
+
+							}
+							if(canProceed) {
+								contactObj.setMobileStatus(mobileStatus);
+							}
+							if(isNew) {
+								inputContact.setMobileStatus(mobileStatus);
+							}
+
+							//clickaTellApi.sendAutoResponse(PropertyUtil.getPropertyValueFromDB(Constants.SMS_SENDERID), mobile, msgContent);
+							/*if(currentUser.getParentUser() != null) {
+						currentUser = currentUser.getParentUser();
+					}*/
+							/*currentUser.setUsedSmsCount( (currentUser.getUsedSmsCount() == null ? 0 : currentUser.getUsedSmsCount() )+1);
+					usersDao.saveOrUpdate(currentUser);*/
+							usersDao.updateUsedSMSCount(currentUser.getUserId(), 1);
+							
+							/**
+							 * Update Sms Queue
+							 */
+							SmsQueueHelper smsQueueHelper = new SmsQueueHelper();
+							smsQueueHelper.updateSMSQueue(mobile,msgContent,Constants.SMS_MSG_TYPE_OPTIN,  user, smsSettings.getSenderId());
+							
+						}else {
+							logger.debug("low credits with user...");
+
+							return;
+
+						}
+
+					}//if
+				}//if
+				else {
+					if(contactObj != null) {
+						if(contactObj.getMobilePhone() != null && isDifferentMobile){
+							contactObj.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+							contactObj.setMobileOptin(false);
+						}
+					}//if existing contact
+					else {
+						if(inputContact.getMobilePhone() != null ){
+							inputContact.setMobileStatus(Constants.CON_MOBILE_STATUS_ACTIVE);
+							inputContact.setMobileOptin(false);
+						}
+					}//if is new contact
+				}//else
+			}
+		}catch (Exception e) {
+			logger.error("Exception  ::", e);
+			throw new BaseServiceException("Exception occured while processing sendWelcomeEmail::::: ", e);
+		}
+		logger.debug("-------exit  performMobileOptIn---------");
+	}//performMobileOptIn
+}

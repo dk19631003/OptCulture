@@ -1,0 +1,53 @@
+<zk>
+<window id="bounceWinId" apply="org.mq.marketer.campaign.controller.report.SMSBounceReportController" width="100%"  xmlns:h="native">
+	 <style src="/css/reports.css" />
+	 <groupbox sclass="gbStyle" closable="false">
+				<caption label="Bounced Contacts Report"  />
+		       		
+			 	<hbox id="toolbarButtonHboxId" style="cursor:pointer;margin-right:5px;" align="center"/>
+	 
+			   <listbox id="bounceGenericLbId" emptyMessage="No records found..." sclass="contactsView" width="99%" mold="paging"  >
+					<listhead id="bounceLbHeaderId" sizable="true" >
+						<listheader label="Mobile Number"></listheader>
+					</listhead>
+				</listbox>
+				
+				<h:table  width="99%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+				<h:tr>
+					
+					<h:td align="right">
+			   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+			   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+						<listitem label="5" />
+						<listitem label="10" selected="true" />
+						<listitem label="15"/>
+					</listbox>
+					</h:td>
+					<h:td width="280px"  >
+						<paging id="bouncePagingId" detailed="true" pageSize="10" width="280px" 
+							class="contactsViewPaging" style="border:none;"/>
+					</h:td>
+				</h:tr>
+			
+			</h:table>
+				
+				<!--<div >
+					<paging visible="true" id="bouncePagingId" pageSize="10"  detailed="true" sclass="contactsViewPaging"/>
+				</div>
+	 
+	 		--><h:table style="padding-top:20px;">
+ 				<h:tr>
+ 				 	<h:td>
+					<label value="Export as a" /> 
+					<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+				 	   			<comboitem label=" .csv file" value="csv" />    
+					</combobox> 
+					
+					<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId"/>
+ 				 	</h:td>
+ 				</h:tr>
+ 			</h:table>
+	 </groupbox>
+		</window>
+
+</zk>

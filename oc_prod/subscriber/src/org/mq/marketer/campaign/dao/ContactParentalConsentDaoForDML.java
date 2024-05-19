@@ -1,0 +1,100 @@
+
+package org.mq.marketer.campaign.dao;
+
+import java.util.List;
+
+import org.mq.marketer.campaign.beans.ContactParentalConsent;
+
+public class ContactParentalConsentDaoForDML extends AbstractSpringDaoForDML{
+
+	public ContactParentalConsentDaoForDML() {}
+	
+	public void saveOrUpdate(ContactParentalConsent contactConsent){
+        super.saveOrUpdate(contactConsent);
+    }
+	
+	/*public List<ContactParentalConsent> findAllByUserId(Long currentUserId, String status, String srchKey, String searchCriteria, int firstResult, int maxResult,String orderby_colName,String desc_Asc) {
+		String query = "";
+		
+		String subquery ="";
+		if(srchKey != null) {
+			
+			if(searchCriteria.equalsIgnoreCase("parent") ){
+				subquery = " AND email like '%"+srchKey+"%' ";
+			}else if(searchCriteria.equalsIgnoreCase("child") ){
+				subquery = " AND childFirstName like '%"+srchKey+"%' ";
+			}
+		}
+		
+		if(status.equals("All")) {
+			query="FROM ContactParentalConsent WHERE userId="+currentUserId+ subquery +" order by "+orderby_colName+" "+desc_Asc;
+		  }else {	
+		
+			query="FROM ContactParentalConsent WHERE userId="+currentUserId+" AND status like '" + status + "'"+subquery+" order by "+orderby_colName+" "+desc_Asc;
+		  }
+		
+		
+		
+		
+		
+		return executeQuery(query, firstResult, maxResult);
+		
+	}
+	
+	public int findCountByUserId(Long currentUserId, String status, String srchKey, String searchCriteria) {
+		
+		String query = "";
+		String subquery ="";
+		if(srchKey != null) {
+			
+			if(searchCriteria.equalsIgnoreCase("parent") ){
+				subquery = " AND email like '%"+srchKey+"%' ";
+			}else if(searchCriteria.equalsIgnoreCase("child") ){
+				subquery = " AND childFirstName like '%"+srchKey+"%' ";
+			}
+		}
+		
+		
+		if(status.equals("All")) {
+			query="SELECT COUNT(*) FROM ContactParentalConsent WHERE userId="+currentUserId+subquery;
+		  }else {	
+		
+			query="SELECT COUNT(*) FROM ContactParentalConsent WHERE userId="+currentUserId+" AND status like '" + status+"'"+subquery;
+		  }
+		
+		List list = getHibernateTemplate().find(query);
+		if(list.size()>0)
+			return ((Long)list.get(0)).intValue();
+		else
+			return 0;
+		
+		
+		
+	}
+	
+	
+	public ContactParentalConsent findByContactId(Long cid) {
+		
+		String qry = "FROM ContactParentalConsent WHERE contactId="+cid;
+		
+		List<ContactParentalConsent> list = getHibernateTemplate().find(qry);
+		if(list.size()>0)
+			return (list.get(0));
+		else
+			return null;
+		
+	}*///findByContactId
+	
+	
+	public void deleteByContactId(String contactIds) {
+		
+		String qry = "DELETE FROM ContactParentalConsent WHERE contactId IN("+contactIds+")";
+		
+		int count = executeUpdate(qry);
+		
+		
+		
+	}
+	
+	
+}

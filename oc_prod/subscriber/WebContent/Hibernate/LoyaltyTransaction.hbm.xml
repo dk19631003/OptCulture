@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.LoyaltyTransaction"
+		table="loyalty_transaction">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<property name="requestId" type="string">
+			<column name="request_id" not-null="true"/>
+		</property>
+		<property name="jsonRequest" type="string">
+			<column name="json_request" />
+		</property>
+		<property name="jsonResponse" type="string">
+			<column name="json_response" />
+		</property>
+		<property name="type" type="string">
+			<column name="type" />
+		</property>
+		<property name="mode" type="string">
+			<column name="mode" />
+		</property>
+		<property name="pcFlag" type="boolean">
+			<column name="pcflag" />
+		</property>
+		<property name="requestDate" type="calendar">
+			<column name="request_date" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" />
+		</property>
+		<property name="requestStatus" type="string">
+			<column name="request_status" />
+		</property>
+		<property name="cardNumber" type="string">
+			<column name="card_number" />
+		</property>
+		<property name="userDetail" type="string">
+			<column name="user_detail" />
+		</property>
+		<property name="docSID" type="string">
+			<column name="doc_sid" />
+		</property>
+		<property name="storeNumber" type="string">
+			<column name="store_number" />
+		</property>
+		<!-- <property name="membershipNumber" type="string">
+			<column name="membership_number" />
+		</property> -->
+		<property name="customerId" type="string">
+			<column name="customer_id" />
+		</property>
+		<property name="serviceType" type="string">
+			<column name="service_type" />
+		</property>
+		<property name="employeeId" type="string">
+			<column name="employee_id" />
+		</property>
+		<property name="terminalId" type="string">
+			<column name="terminal_id" />
+		</property>
+		<property name="loyaltyServiceType" type="string">
+			<column name="loyalty_service_type" />
+		</property>
+		
+		</class>
+</hibernate-mapping>

@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.RetailProSalesCSV" table="retail_pro_sales">
+    <id name="salesId" type="java.lang.Long">
+    
+      <column name="sales_id"/>
+      <generator class="native"/>
+    </id>
+    
+    <property name="listId" type="java.lang.Long">
+            <column name="list_id" />
+   </property>
+   
+    <property name="userId" type="java.lang.Long">
+            <column name="user_id" />
+   </property>
+    
+    <property name="customerId" type="string">
+      <column name="customer_id" />
+    </property>
+    
+     <property name="externalId" type="java.lang.Long">
+      <column name="external_id" />
+    </property>
+    
+	<property name="recieptNumber" type="long">
+      <column name="reciept_number"/>
+    </property>
+	<property name="salesDate" type="calendar">
+      <column name="sales_date"/>
+    </property>
+    
+    
+	<property name="quantity" type="double">
+      <column name="quantity" default="0.0"/>
+    </property>
+    
+	<property name="salesPrice" type="double">
+      <column name="sales_price" default="0.0"/>
+    </property>
+	<property name="tax" type="double">
+      <column name="tax" default="0.0"/>
+    </property>
+	<property name="promoCode" type="string">
+      <column name="promo_code"/>
+    </property>
+    <property name="storeNumber" type="string">
+      <column name="store_number"/>
+    </property>
+	<property name="sku" type="string">
+      <column name="sku"/>
+    </property>
+    <property name="tenderType" type="string">
+      <column name="tender_type"/>
+    </property>
+   
+   <property name="udf1" type="string">
+      <column name="udf1"/>
+    </property>
+    <property name="udf2" type="string">
+      <column name="udf2"/>
+    </property>
+    <property name="udf3" type="string">
+      <column name="udf3"/>
+    </property>
+    <property name="udf4" type="string">
+      <column name="udf4"/>
+    </property>
+    <property name="udf5" type="string">
+      <column name="udf5"/>
+    </property>
+    <property name="udf6" type="string">
+      <column name="udf6"/>
+    </property>
+    <property name="udf7" type="string">
+      <column name="udf7"/>
+    </property>
+    <property name="udf8" type="string">
+      <column name="udf8"/>
+    </property>
+    <property name="udf9" type="string">
+      <column name="udf9"/>
+    </property>
+    <property name="udf10" type="string">
+      <column name="udf10"/>
+    </property>
+    <property name="udf11" type="string">
+      <column name="udf11"/>
+    </property>
+     <property name="udf12" type="string">
+	      <column name="udf12"/>
+	    </property>
+	    <property name="udf13" type="string">
+	      <column name="udf13"/>
+	    </property>
+    <property name="udf14" type="string">
+      <column name="udf14"/>
+    </property>
+   <property name="udf15" type="string">
+      <column name="udf15"/>
+    </property>
+     <property name="cid" type="long">
+      <column name="cid"/>
+    </property>
+    <property name="inventoryId" type="long">
+      <column name="inventory_id"/>
+    </property>
+    
+    <property name="itemSid" type="string">
+      <column name="item_sid"/>
+    </property>
+    
+    <property name="docSid" type="string">
+      <column name="doc_sid"/>
+    </property>
+    
+    
+    <property name="discount" type="double">
+      <column name="discount" default="0.0"/>
+    </property>
+    
+ </class>
+</hibernate-mapping>
+
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.UserAgentJSON" table="user_agent_json">
+		<id name="uajsonId" type="long">
+			<column name="ua_json_id" />
+			<generator class="native" />
+		</id>
+		<property name="userAgentStr" type="string" >
+			<column name="user_agent_str" unique="true" length="700" />
+		</property>
+		<property name="jsonStr" type="string" >
+			<column name="json_str" length="1000" />
+		</property>
+	
+	</class>
+</hibernate-mapping>

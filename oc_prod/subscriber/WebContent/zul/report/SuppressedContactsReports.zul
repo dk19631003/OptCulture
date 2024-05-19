@@ -1,0 +1,65 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="suppressedContactsRepWinId" width="100%"  xmlns:h="native"
+				apply="org.mq.marketer.campaign.controller.report.SuppressedContactsReportController">
+				
+		<style src="/css/reports.css" />
+		<groupbox sclass="gbStyle" closable="false" >
+				<caption label="Suppressed Contacts Report"  />		
+		<h:table>
+		<h:tr>
+		<h:td>	
+		<label value="The following subscribers did not receive this email campaign as their email address was suppressed in the mailing list due to" />
+		</h:td>
+		</h:tr>
+		<h:tr>
+		<h:td style="padding-bottom:15px;">
+		<label value="reasons mentioned alongside the individual email addresses respectively." /></h:td>
+		</h:tr>
+		</h:table>	
+		
+		<listbox id="suppContRepLbId" emptyMessage="No Records Found..." sclass="contactsView" width="99%"  >
+			<listhead   >
+				<listheader label="Email Address"></listheader>
+				<listheader label="Reason For Suppression"></listheader>
+			</listhead>
+		</listbox>
+		
+		<h:table  width="99%" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+		<h:tr>
+			
+			<h:td align="right">
+	   		<label value="Items per page:" style="padding-right:5px;font-size:11px;"/>
+	   		<listbox rows="1" mold="select" id="pageSizeLbId"  style="margin-right:30px;">
+				<listitem label="5" />
+				<listitem label="10" selected="true" />
+				<listitem label="15"/>
+			</listbox>
+			</h:td>
+			<h:td width="340px"  >
+				<paging id="suppcontactsPagingId" detailed="true" pageSize="10" width="340px" 
+					class="contactsViewPaging" style="border:none;"/>
+			</h:td>
+		</h:tr>
+	
+	</h:table>
+		
+			
+			<h:table style="padding-top:20px;">
+ 				<h:tr>
+ 				 	<h:td>
+					<label value="Export as a" /> 
+					<combobox sclass="cb_100w" id="exportCbId" readonly="true">
+				 	   			<comboitem label=" .csv file" value="csv" />    
+					</combobox> 
+					
+					<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId"/>
+ 				 	</h:td>
+ 				</h:tr>
+ 			</h:table>
+			
+				
+		</groupbox>		
+
+</window>
+</zk>

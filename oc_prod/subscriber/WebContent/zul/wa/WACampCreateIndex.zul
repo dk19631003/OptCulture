@@ -1,0 +1,5 @@
+<?page title="Create WhatsaApp Campaign" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="waCampCreateIndexWinId" apply="org.mq.marketer.campaign.controller.wa.WACampCreateIndexController">
+	</window>
+</zk>

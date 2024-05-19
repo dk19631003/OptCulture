@@ -1,0 +1,155 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  border="none"  apply="org.mq.marketer.campaign.controller.admin.ExternalSMTPController" xmlns:h="native" width="100%">
+<div align="center">
+<hbox pack="end" width="100%"> <button  id="backBtnId" label="Back"  /></hbox>
+<h:hr />
+<hbox>
+	 <label value="Creating External User SMTP user for user : Vinay " />
+</hbox>
+<grid width="800px" id="fieldsGridId">
+
+	<columns>
+		<column width="6%">Required</column>
+		<column width="20%">Parameters</column>
+		<column width="24%">Value</column>
+		<column width="25%">Requirements</column>
+		<column width="25%">Description</column>
+	</columns>
+
+	<rows>
+		<row>
+					<label value="Yes" />
+					<label value="User name" /><textbox id="userNameTbId" /> 
+					<label value="No more than 64 characters" />
+					<label value="The customers new username" />
+					 </row>
+		<row>
+					<label value="Yes" />
+					<label value="Password" />
+					<textbox id="passwordTbId"/>
+					<label value="Must be at least 6 characters" />
+					 <label value="New password of customer" /> 
+		</row>
+		<row>
+					<label value="Yes" />
+					<label value="Confirm Password" />
+					<textbox id="confPassTbId" /> 
+					<label value="Must match password parameter, must be atleast 6 characters" />
+					<label value="Confirm new password" /> 
+		</row>
+		<row>
+					<label value="Yes" />
+					<label value="Email" />
+					<textbox id="emlIdTbId"/> 
+					<label value="Must be in email format, no more than 64 characters" />
+					<label value="Email address of new customer" /> 
+		</row>
+		<row>
+					<label value="Yes" />
+					<label value="First_name" />
+					<textbox id="firstNameTbId"/> <label value="No more than 50 characters" />
+					<label value="First name of new customer" /> 
+		</row>
+		<row>
+					<label value="Yes" />
+					<label value="Last name" />
+					<textbox id="lastNameTbId"/> 
+					<label value="No more than 50 characters" />
+					<label value="Last name of new customer" />
+		 </row>
+		<row>
+					<label value="Yes" />
+					<label value="Address" />
+					<textbox id="addTbId"/><label value="No more than 100 characters" />
+					 <label value="Address of new customer" />
+		 </row>
+		<row>
+					<label value="Yes" />
+					<label value="City" />
+					<textbox id="cityTbId"/><label value="No more than 100 characters" />
+					 <label value="City of new customer" />
+			  </row>
+		<row>
+				<label value="Yes" />
+				<label value="State" />
+				<textbox id="stateTbId" /><label value="No more than 100 characters" />
+				 <label value="State of new customer" /> 
+		 </row>
+		<row>
+				<label value="Yes" />
+				<label value="Zip" />
+				<textbox id="zipCodeTbId" /> <label value="No more than 50 characters" />
+				<label value="Zip of new customer. This field is not validated for correct value. It’s up to developer to check for valid zip code." />
+		 </row>
+		<row>
+				<label value="Yes" />
+				<label value="Country" />
+				<textbox id="countryTbId"/><label value="No more than 100 characters" />
+				 <label value="Country of new customer" /> 
+		 </row>
+		<row>
+				<label value="Yes" />
+				<label value="Phone" />
+				<textbox id="phoneTbId" /> <label value="No more than 50 characters" />
+				<label value="Phone number of new customer" /> 
+		</row>
+		<row>
+				<label value="Yes" />
+				<label value="Website" />
+				<textbox id="websiteTbId" /> <label value="No more than 255 characters" />
+				<label value="Website of new customer" /> 
+		</row>
+		<row>
+				<label value="Yes" />
+				<label value="Company" />
+				<textbox id="companyTbId" /><label value="No more than 255 characters" />
+				 <label value="Company of new customer" /> 
+		 </row>
+		<row>
+				<label value="Yes" />
+				<label value="Package" />
+				<textbox id="packageTbId" /><label value="No more than 255 characters" />
+				 <label value="Name of the Package to assign to customer" />
+		  </row>
+		<row>
+				<label value="Yes" />
+				<label value="Whitelabel" />
+				<textbox id="whiteLabelTbId"/> <label value="No more than 255 characters" />
+				 <label value="The domain name for whitelabel" /> 
+		 </row>
+		<row>
+				<label value="No" />
+				<label value="Ip group" />
+				<textbox id="ipGrpTbId"/><label value="No more than 255 characters for each ip_group name. It must belong to you." />
+				 <label value="Name of the IP Group you wish to optionally add." />
+		  </row>
+		<row>
+				<label value="No" />
+				<label value="Ip" />
+				<textbox id="ipTbId"/> <label value="Valid ip address that belongs to you." />
+				<label value="If package allows it, you can optionally add additional IP addresses." /> 
+		</row>
+		<row>
+			<label value="Yes" />
+			<label value="Free User" />
+			<radiogroup id="freeUserRdId"><radio label="Yes"></radio><radio label="No"></radio></radiogroup> <label value="If the new customer is a free customer, you need to specify this parameter. Either true or false." />
+			<label value="Create a free customer" /> 
+		</row>
+		<row>
+				<label value="No" />
+				<label value="Billing date" />
+				<datebox id="billingDateCalId" /> <label value="If the new customer’s billing anniversary date
+					is on a different date from the time you create the customer, you need
+					to specify this parameter. Must be in YYYY-mm-dd format. This date
+					must be within one billing cycle from the time you create this
+					customer. (e.g. if they sign up on 2/28/11, then the latest date you
+					can use is 3/28/11)" />
+		<label value="If the new customer’s billing anniversary date is different from today (or when you execute this API call), you canspecify the first billing anniversary date" /> </row>
+	</rows>
+</grid>
+
+  <hbox spacing="200px" style="padding-top:10px;" ><button label="Create" id="saveOrEditBtnId" ></button><button label="Cancel" id="cancelBtnId" /></hbox>
+  </div>
+</window>
+</zk>

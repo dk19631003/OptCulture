@@ -1,0 +1,156 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="missingSalesReceiptsWinId" border="0"   apply="org.mq.marketer.campaign.controller.admin.MissingSalesAndReceiptsController" 
+	xmlns:h="native" xmlns:w="client" width="100%">
+	
+	<style>
+	
+	.dashboardMyLinks {
+		color:#2589BB;
+		font-weight:bold;
+		padding:0 15px;
+		display:inline-block;
+		
+     }
+	
+	
+	
+	</style>
+	
+	
+	
+	<h:table  bgcolor="#F4F5F9" style="padding:3px;border-radius:5px;" border="0" width="100%">
+		<h:tr height="38">
+			<h:td  width="400" >
+				<label value="Select Organization :" />
+				<label value="*" style="font-size:15px;color:red;" />
+				<listbox id="orgListBxId" mold="select" width="200px" />
+					
+			</h:td>
+			
+			<h:td width="150">
+				<radiogroup id="missingOptionRgId"/>
+					<radio label="Missing Numbers" radiogroup="missingOptionRgId" />
+			</h:td>	
+
+			<h:td width="210" >
+			
+				
+				
+				<div id="strtNumbersDivId" visible="false"  >
+				<label value="From : " /><longbox id="strtNumIntBox" maxlength="8"/>
+				</div>
+			</h:td>	
+			
+			<h:td>
+			<div id="endNumberDivId" visible="false" >
+					<label value="To : " style="margin-left:15px" /><longbox maxlength="8" id="endNumIntBox"/>
+				</div>
+			</h:td>	
+			
+		</h:tr>
+	
+	
+		<h:tr height="38">
+			<h:td >
+				<label value="Select User :" />
+				<label value="*" style="font-size:15px;color:red;" />
+			
+				<listbox style="margin-left:45px; " id="usersListBxId" width="200px" mold="select" />
+
+			</h:td>	
+
+			<h:td >
+				<radio id="missingDatesRadioId" label="Missing Dates" radiogroup="missingOptionRgId" checked="true" />
+			</h:td>	
+			
+			<h:td >
+			<div id="strtdatesDivId" >
+					<label value="Start Date :" />
+					<datebox id="fromDateboxId" format="dd-MMM-yyyy" 
+						constraint="no future" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"/>
+				</div>
+
+				
+				
+			</h:td>	
+			<h:td >
+			
+				<div id="enddatesDivId"   >
+					<label value="End Date :" />
+					<datebox id="toDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" format="dd-MMM-yyyy" readonly="true" />
+				</div>
+			
+			</h:td>	
+			
+		</h:tr>
+		
+		<h:tr height="42">
+			<h:td  >
+				<label value="POS List Name :" />
+				<label value="*" style="font-size:15px;color:red;" />
+				<textbox id="posListTxtBoxId" style="margin-left:25px;" width="200px" maxlength="50" />
+			</h:td>	
+			
+			<h:td >
+				<button id="getBtnId" label="Get" sclass="idle140 greenbtn" />
+			</h:td>
+			
+			<h:td colspan="2">
+			<div id="ignoreDayDivId" visible="true">
+				<h:table><h:tr><h:td>
+				<label value="Ignore:"  sclass="boldLabel"/>
+				</h:td>
+				<h:td>
+				<checkbox label= "Sun" id="ignoreSunChkBoxId" sclass="dashboardMyLinks" /> 
+				<checkbox label= "Mon" id="ignoreMonChkBoxId" sclass="dashboardMyLinks" />
+				<checkbox label= "Tue" id="ignoreTueChkBoxId" sclass="dashboardMyLinks" /> 
+				<checkbox label= "Wed" id="ignoreWedChkBoxId" sclass="dashboardMyLinks" /> 
+				<checkbox label= "Thu" id="ignoreThurChkBoxId" sclass="dashboardMyLinks" /> 
+				<checkbox label= "Fri" id="ignoreFriChkBoxId" sclass="dashboardMyLinks" /> 
+				<checkbox label= "Sat" id="ignoreSatChkBoxId" sclass="dashboardMyLinks" /> 
+				</h:td>
+				</h:tr></h:table>
+				 
+			</div>
+				
+				
+			
+			</h:td>
+		</h:tr>
+	</h:table>
+	
+	<groupbox   closable="false" open="true" >
+		<caption >
+			<label value="Missing Sales dates / Receipts numbers" />
+				<toolbarbutton id="posContTbBtnId" image="/img/icons/icon_minus.png" />
+		</caption>
+		<div  id="missingDatesDivId">
+			
+			<grid emptyMessage="No records Found..." mold="paging" pageSize="15">
+				<columns>
+					<column label="Sales Dates" />
+					
+				</columns>
+				<rows id="salesDateRowsId"/>
+			</grid>
+		
+		</div>
+		<div  id="missingNumbersDivId" visible="false">
+			
+			<grid emptyMessage="No records Found..." mold="paging" pageSize="15">
+				<columns>
+					<column label="Receipt Numbers" />
+					
+				</columns>
+				<rows id="receiptNumRowsId"/>
+			</grid>
+		
+		</div>
+		
+	</groupbox>	
+	
+	
+</window>
+</zk>
+	

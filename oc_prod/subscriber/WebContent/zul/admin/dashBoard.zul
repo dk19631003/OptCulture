@@ -1,0 +1,547 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="dashBoardWinId" apply="org.mq.marketer.campaign.controller.admin.DashBoardController"   
+				 xmlns:w="http://www.zkoss.org/2005/zk/client"
+				  xmlns:h="http://www.zkoss.org/2005/zk/native">
+<!--<zscript>
+	<![CDATA[
+     	import org.mq.marketer.campaign.general.PageUtil;
+
+     	String style = "font-weight:bold;font-size:15px;color:#313031;font-family:Arial,Helvetica,sans-serif;align:left";
+     	PageUtil.setHeader("Adminstrator / Dash Board","",style,true);
+	]]>
+</zscript>
+				  
+				 
+		
+	-->
+	<tabbox width="100%" id="typeTabboxId" >
+	  <tabs>
+	  		<tab label="Campaign Reports" />
+			<tab label="Latest Campaigns" id="latestCampaignsTabId"/>
+			<tab label="Lists and Users" id="listsUsersTabId"/>
+			<tab label="Campaign Schedules" id="campaignSchedulesTabId"/>
+	  </tabs>
+	  
+	  <tabpanels>
+		<tabpanel>
+		
+				<groupbox closable="false"  sclass="gbStyle" style="margin-top:10px;">
+				     <caption label="Latest Reports" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+				     	
+				     		 		<label value="No.of Reports:" sclass="boldLabel"/>
+				     		 		
+							   		<listbox rows="1" mold="select"  style="position:relative;left:5px;" id="campRepSelectLbId" >
+										<listitem label="5" selected="true" value="self.getLabel()"/>
+										<listitem  label="10" value="self.getLabel()"/>
+										<listitem  label="15" value="self.getLabel()"/>
+										<listitem  label="20" value="self.getLabel()"/>
+									</listbox>
+									
+									<space width="20px"/>
+								<!--	<label value="Users:" id="usersLblId" sclass="boldLabel" />
+											
+									 <listbox id="userListLbId" rows="1" mold="select">
+										<listitem value="" selected="true">
+										   <listcell label="All">
+										   </listcell>
+										 </listitem>
+										<listitem  forEach="${dashBoardWinId$DashBoardController.users}" value="${each}" style="line-height:22px;">
+											<listcell  label="${each.userName}" />
+										</listitem>
+									</listbox> -->
+									
+									<label value="User Organization ID:" sclass="theme-lbHeading"/>
+									<listbox id="userOrgLbId" width="150px" mold="select" />
+									<space width="20px"/>
+									<label value="User Name :" sclass="theme-lbHeading"/>
+									<listbox id="userNameLbId" width="150px" mold="select" >
+										<listitem label="--All--" selected="true"/>
+									</listbox>
+						
+									<space width="20px"/>
+									<label value="click on the list to see the Opens/Clicks reports"/>
+									
+				     		 	
+										<listbox id="recentCampListLbId" sclass="contactsView" emptyMessage="No records found...">
+											<listhead sizable="false" style="background-color:#488eb0;">
+												<listheader label="User Name" width="110px" align="left" maxlength="25"/>
+												<listheader label="User Organization" width="110px" align="left" maxlength="25"/>
+												<listheader label="Email Name" width="400px" align="left" />
+												<listheader label="Sent Date" width="200px" align="center"/>
+												<listheader label="Sent" width="70px" align="center"/>
+												<listheader label="Opens " width="70px" align="center"/>
+												<listheader label="Clicks" width="70px" align="center"/>
+												<listheader label="Bounces" width="70px" align="center"/>
+												<listheader label="Reports"  align="left"/>
+											</listhead>
+										</listbox>
+				     			
+					</groupbox>
+	
+					<groupbox closable="false"  sclass="gbStyle" id="dtldRepsGbId" visible="false" style="margin-top:10px;">
+				     	<caption label="Detailed Reports" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+				     	<h:table>
+				     		<h:tr>
+				     			<h:td>
+				     				<label value ="Fetch Latest Of:" sclass="boldLabel"/>
+				     				
+				     				<listbox rows="1" mold="select" style="position:relative;left:5px;" id="fetchLatestRepLbId" >
+										<listitem label="Opens" selected="true" value="self.getLabel()"/>
+										<listitem  label="Clicks" value="self.getLabel()"/>
+										
+										
+									</listbox>
+									<space width="20px"/>
+									<label value="No: Of Reports:" sclass="boldLabel"/>
+									<listbox rows="1" mold="select" style="position:relative;left:5px;" id="numOfFetchLatestRepLbId" >
+										<listitem label="5"  value="self.getLabel()"/>
+										<listitem  label="10" selected="true" value="self.getLabel()"/>
+										<listitem  label="15" value="self.getLabel()"/>
+										
+									</listbox>
+									<space width="10px"/>
+									<label value="Domains :" sclass="boldLabel"/>
+									
+									<listbox rows="1" mold="select" style="position:relative;left:5px;" id="DomainsLbId" >
+										<listitem  label="--All--" value="" selected="true"/>
+										<listitem label="Gmail.com"  value="Gmail.com"/>
+										<listitem  label="Yahoo.com" value="Yahoo.com"/>
+										<listitem  label="redif.com" value="redif.com"/>
+										<listitem  label="msn.com" value="msn.com"/>
+										<listitem  label="aol.com" value="aol.com"/>
+										<listitem  label="hotmail.com" value="hotmail.com"/>
+									
+				     				</listbox>
+				     				<space width="20px"/>
+				     				<label value="Sent Count :"  sclass="boldLabel"/>
+				     				<label id="sntCntLabelId" value="" sclass="boldLabel"/>
+				     				
+									</h:td>
+							</h:tr>
+							</h:table>
+							
+							
+									
+				     				 <div id="campListDivId" >
+				     				 	<listbox id="viewDtldRepLbId"  sclass="contactsView" rows="8">
+				     				 		<listhead sizable="false" style="background-color:#488eb0;">
+												<listheader label="Email Id" align="left" width="250px"/>
+												<listheader label="Open Date"   width="140px" align="center" />
+												<listheader label=""    align="center" />
+												<listheader label="Status"   width="100px" align="left" />
+											</listhead>
+				     				 	
+				     				 	</listbox>
+						     			
+						  	   		</div>
+				     			
+				     	
+					</groupbox>
+
+					<label value="Please enter user_id :: "></label><textbox id="updateStoreNumberTxtId"/><space/><label value="Sent Date:" sclass="theme-lbHeading" />
+							<space />
+						<label value="From" />
+						<datebox id="fromDateboxId" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true"
+							format="yyyy-MM-dd"  />
+						<space />
+						<label value="To " />
+						<datebox id="toDateboxId"  use="org.mq.marketer.campaign.custom.MyDatebox"  readonly="true"
+							format="yyyy-MM-dd" /><button id="updateStoreNumberBtnId" label="Update Store Number"></button>
+							<label value="Refresh Domain Pool"	 /><button id="updateDomainStatusBtnId" label="Update Domain status" />    	
+<label value="SBTOOCTRXDAta:: "/>Enter userID<textbox id="userTxtId" />
+<label value="SBTOOCTRXDAta-user:: "/>Enter userID Details as in DB<textbox id="userDetailsTxtId" />
+							identer first trx<textbox id="firstTxtId" />last trx id<textbox id="lastTxtId" />
+							<button id="insertSbtoOcDataBtnId" label="insertSbtoOcDataBtnId"/>  
+							  
+	   </tabpanel>
+	   <tabpanel>
+
+				<groupbox closable="false"  sclass="gbStyle" style="margin-top:10px;">
+				     <caption label="Latest Campaigns" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+				     	<h:table>
+				     		<h:tr>
+				     		 	<h:td>
+				     		 		<label value="No.of Campaigns:" sclass="boldLabel"/>
+				     		 		
+							   		<listbox rows="1" mold="select" style="position:relative;left:5px;" id="campSelectLbId"  >
+										<listitem label="5" selected="true" value="self.getLabel()"/>
+										<listitem  label="10" value="self.getLabel()"/>
+										<listitem  label="15" value="self.getLabel()"/>
+										<listitem  label="20" value="self.getLabel()"/>
+									</listbox>
+									<space width="20px"/>
+									<label value="User Organization ID:" sclass="theme-lbHeading"/>
+									<listbox id="campUserOrgLbId" width="150px" mold="select" />
+									<space width="20px"/>
+									<label value="User Name :" sclass="theme-lbHeading"/>
+									<listbox id="campUserNameLbId" width="150px" mold="select" >
+										<listitem label="--All--" selected="true"/>
+									</listbox>
+									<!-- <label value="Users:" id="campUsersLblId" sclass="boldLabel" />
+											
+									<listbox id="campUserListLbId" rows="1" mold="select">
+										<listitem value="" selected="true">
+										   <listcell label="All">
+										   </listcell>
+										 </listitem>
+										<listitem  forEach="${dashBoardWinId$DashBoardController.users}" value="${each}" style="line-height:22px;">
+											<listcell  label="${each.userName}" />
+										</listitem>
+									</listbox> -->
+									</h:td>
+							</h:tr>
+							</h:table>
+							
+									
+				     				
+			     			 <listbox id="viewCampListLbId"  emptyMessage="No records found..."   sclass="contactsView">
+								<listhead sizable="false" style="background-color:#488eb0;">
+									<listheader label="User Name"  align="left" width="110px"/>
+									<listheader label="User Organization"  align="left" width="110px"/>
+									<listheader label="Email"  width="100%" align="left" />
+									<listheader label="Date"   align="center" width="200px"/>
+									<listheader label="Status"  align="center"  width="100px"/>
+									<listheader label="Reports" align="center" width="100px"/>
+								</listhead>
+							</listbox>
+						  	   
+				     	
+					</groupbox>
+
+						     	
+	   </tabpanel>
+	   <tabpanel>
+	   		
+			<groupbox id="recentCreatedMListGBId"  closable="false" style="margin-top:10px;" >
+				<caption label="Recent Created Mailing List" style="font-weight:bold;padding:0px 4px;font-size:12px;"></caption>
+				<h:table>
+				
+				<h:tr>
+					<h:td>
+						<label value="No.of Mailing Lists:" sclass="boldLabel"/>
+						     		 		
+				   		<listbox rows="1" mold="select"  style="position:relative;left:5px;" id="mlSelectedLbId" >
+							<listitem label="5" selected="true" value="self.getLabel()"/>
+							<listitem  label="10" value="self.getLabel()"/>
+							<listitem  label="15" value="self.getLabel()"/>
+							<listitem  label="20" value="self.getLabel()"/>
+						</listbox>
+						<space width="20px"/>
+						<!-- <label value="Users:" id="mlistUsersLblId" sclass="boldLabel" />
+								
+						<listbox id="mlistUserListLbId" rows="1" mold="select">
+							<listitem value="" selected="true">
+							   <listcell label="All">
+							   </listcell>
+							 </listitem>
+							<listitem  forEach="${dashBoardWinId$DashBoardController.users}" value="${each}" style="line-height:22px;">
+								<listcell  label="${each.userName}" />
+							</listitem>
+						</listbox> -->
+						
+						<label value="User Organization ID:" sclass="theme-lbHeading"/>
+						<listbox id="mlUserOrgLbId" width="150px" mold="select" />
+						<space width="20px"/>
+						<label value="User Name :" sclass="theme-lbHeading"/>
+						<listbox id="mlUserNameLbId" width="150px" mold="select" >
+							<listitem label="--All--" selected="true"/>
+						</listbox>
+					</h:td>
+				</h:tr>
+				
+				</h:table>
+				
+				
+							<listbox  id="customersLbId" emptyMessage="No records found..."  sclass="contactsView">
+								<listhead sizable="false" style="background-color:#488eb0;">
+									<listheader label="User Name"  width="110px" align="left" />
+									<listheader label="User Organization"  width="110px" align="left" />
+									<listheader label="List Mails" align="left" width="100%"/>
+									<listheader label="No. Of Contacts"  align="center"  width="100px"/>
+									<listheader label="Last Modified Date" align="center" width="180px"/>
+								</listhead>
+							
+							</listbox>
+				
+			 
+		  </groupbox>
+		  
+			<groupbox id="loginUserGBId" closable="false" visible="false" style="margin-top:10px;">
+				<caption label="Login Users" style="font-weight:bold;padding:0px 4px;font-size:12px;"></caption>
+				
+				<listbox id="loginLbId"  height="200px" mold="paging" pageSize="6" sclass="contactsView" >
+					<listhead sizable="false" style="background-color:#488eb0;">
+						<listheader label="User Name"   width="100%" align="left" style="padding-left:10px;" maxlength="40"/>
+						<listheader label=" Vmta"   align="center"  width="200px"/>
+						<listheader label="Expiry Date"   align="center" width="300px"/>
+					</listhead>
+					
+					 <listitem  forEach="${dashBoardWinId$DashBoardController.userDetails}" value="${each}" height="18px" >
+						 <listcell label="${each.userName}"  style="padding-left:10px;" /> 
+						<listcell label="${each.vmta}"/>
+						<listcell label="${each.packageExpiryDate}"/>
+				 	</listitem>
+				</listbox> 
+									
+				</groupbox> 
+			
+	   </tabpanel>
+	   
+	   <tabpanel>
+
+		<groupbox closable="false"  sclass="gbStyle" style="margin-top:10px;">
+		     <caption label="Campaign Schedules" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+		     	<h:table>
+		     		<h:tr>
+		     		 	<h:td>
+		     		 	
+		     		 		<label value="No.of Schedules:" sclass="boldLabel"/>
+		     		 		
+					   		<listbox rows="1" mold="select" style="position:relative;left:5px;" id="campSchedulesSelectLbId" >
+								<listitem label="5" selected="true" value="self.getLabel()"/>
+								<listitem  label="10" value="self.getLabel()" />
+								<listitem  label="15" value="self.getLabel()" />
+								<listitem  label="20" value="self.getLabel()" />
+								<listitem  label="50" value="self.getLabel()" />
+							</listbox>
+							<space width="20px"/>
+							
+							<!-- <label value="Users:" id="campScheduleUsersLblId" sclass="boldLabel" />
+									
+							<listbox id="campScheduleUserListLbId" rows="1" mold="select">
+								<listitem value="" selected="true">
+								   <listcell label="All">
+								   </listcell>
+								 </listitem>
+								<listitem  forEach="${dashBoardWinId$DashBoardController.users}" value="${each}" style="line-height:22px;">
+									<listcell  label="${each.userName}" />
+								</listitem>
+							</listbox> -->
+							<label value="User Organization ID:" sclass="theme-lbHeading"/>
+							<listbox id="campScheduleUserOrgLbId" width="150px" mold="select" />
+							<space width="20px"/>
+							<label value="User Name :" sclass="theme-lbHeading"/>
+							<listbox id="campScheduleUserNameLbId" width="150px" mold="select" >
+								<listitem label="--All--" selected="true"/>
+							</listbox>
+
+						<space width="20px"/>
+							<label value="Status:" sclass="boldLabel"/>
+		     		 		
+					   		<listbox rows="1" mold="select" style="position:relative;left:5px;" id="campSchedulesStatusLbId" >
+								<listitem label="--All--" selected="true" />
+								<listitem  label="Active"  value="0"   />
+								<listitem  label="Sent"  value="1"  />
+								<listitem  label="Draft"  value="2" />
+								<listitem  label="Subscription Expired"  value="3"/>
+							</listbox>
+							
+							<space width="20px"/>
+							<label value="Current Time:" sclass="boldLabel" />
+							<label id="currentTimeLblId" style="padding-right:6px;" />
+							
+							</h:td>
+							
+					</h:tr>
+					</h:table>
+					<listbox id="viewCampSchedulesListLbId" sclass="contactsView">
+					<listhead sizable="false" style="background-color:#488eb0;">
+						<listheader label="User Name"   width="110px"  align="left" />
+						<listheader label="User Organization"   width="110px"  align="left" />
+						<listheader label=" Schedule  Server Time"    width="160px"  align="center" />
+						<listheader label="Campaign ID"  width="80px"  align="center" />
+						<listheader label="Schedule ID"   width="80px" align="center" />
+						<listheader label="Diff in Minutes" align="center" />
+						<listheader label="Status"  width="200px"   align="center" />
+					</listhead>
+				</listbox>
+					
+			</groupbox>
+	  </tabpanel>
+					   	
+	</tabpanels>
+</tabbox>
+<groupbox  closable="false" style="margin:2px;">
+					<caption label="update couponDesc"/> 
+					
+					<div >
+						
+							
+							
+							
+							<label value="Coupon Name " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="couponNameTxtId"  />
+							<space width="60px"/>
+							<label value="userID " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="userIdTxtId"  />
+							<button width="100px" id="getCoupoDescBtnId" label="getCoupoDesc" sclass="idle70 greenbtn" />			
+							
+							
+					
+					</div>
+</groupbox>
+<groupbox  closable="false" style="margin:2px;">
+					<caption label="Bulk Enrollments"/> 
+					
+					<div >
+						
+							
+							<label value="User Name " sclass="theme-lbHeading"/>
+							<space width="10px"/>
+							<textbox width="250px" id="userTbId" />
+							<space width="50px"/>
+							<label value="File Name " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="fileTbId"  />
+							<space width="60px"/>
+							<button width="100px" id="enrollBtnId" label="Enroll" sclass="idle70 greenbtn" />			
+							
+							
+					
+					</div>
+</groupbox>
+<groupbox  closable="false" style="margin:2px;">
+					<caption label="Bulk Enrollments"/> 
+					
+					<div >
+						
+							
+							<label value="User Name " sclass="theme-lbHeading"/>
+							<space width="10px"/>
+							<textbox width="250px" id="expiryuserTbId" />
+							<space width="60px"/>
+							<button width="100px" id="rewardExpiryBtnId" label="Run Reward Expiry" sclass="idle70 greenbtn" />			
+							
+							
+					
+					</div>
+</groupbox>
+<groupbox  closable="false" style="margin:2px;">
+					<caption label="Bulk Loyalty Transactions (Issuance and Redemption)"/> 
+					
+					<div >
+						
+							
+							<label value="User Name " sclass="theme-lbHeading"/>
+							<space width="10px"/>
+							<textbox width="250px" id="ltyUserTbId" />
+							<space width="50px"/>
+							<label value="File Name " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="ltyFileTbId"  />
+							<space width="60px"/>
+							<button width="100px" id="ltyOkBtnId" label="OK" sclass="idle70 greenbtn" />			
+							
+							
+					
+					</div>
+</groupbox>
+<groupbox  closable="false" style="margin:2px;">
+					<caption label="Bulk special Rewards AND Discount Codes"/> 
+					<div>
+					<label value="User Name (Full)"  sclass="theme-lbHeading"/>
+							<space width="10px"/>
+					<textbox width="250px" id="bulkUploaduserIDTbId" />
+					<space width="10px"/>
+					<h:table>
+					<h:tr>
+									<h:td width="200"><label value="Browse file to upload:" /></h:td>
+									<h:td width="300">
+										<textbox cols="40" value=" " id="uploadCSVTbId" maxlength="60"/>	
+									</h:td>
+									<h:td style="padding-left:30px;">
+										<button id="uploadBtnId" sclass="idle140"  label="Browse"></button>
+									</h:td>
+							</h:tr>
+						
+							<h:tr>
+								<h:td>	</h:td>
+		
+								<h:td valign="top" style="padding-top:5px;" >	
+									<image src="/img/icons/icon_i.png"  />	
+									<label value="The first row of your CSV file should be header row. " sclass="labelPos"/>
+								</h:td>
+							</h:tr>
+							<h:tr height="30"/>
+							</h:table>
+					</div>
+					<div  >
+					</div>
+					
+					<div  >
+					
+					<label value="enter UserID " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="userIDTxtID"  />
+							<space width="50px"/>
+							<label value=" enter ProgramTier" sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="progTxtId"  />
+							<space width="50px"/>
+							<label value="Enter Date" sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="DateToConsiderTxtId"  />
+							<space width="10px"/>
+							<textbox width="250px" id="activationDateTxtId"  />
+							<space width="60px"/>
+							<button width="100px" id="addToExpiry" label="addToExpiry" sclass="idle70 greenbtn" />			
+							activationDateTxtId
+					</div>
+					
+					<div  >
+					
+					<label value="enter UserID for FBP " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="usersTxtID"  />
+							<space width="50px"/>
+							<label value=" enter Date" sclass="theme-lbHeading" />
+							<space width="10px"/>
+							
+								<textbox width="250px" id="SaleDateTxtID"  />	
+								<space width="50px"/>
+							<label value=" enter end Date" sclass="theme-lbHeading" />
+							<space width="10px"/>
+							
+								<textbox width="250px" id="SaleEndDateTxtID"  />	
+												
+							<button width="100px" id="startFBPReport" label="startFBPReport" sclass="idle70 greenbtn" />			
+							
+					</div>
+					<div id="furtherDetailsDivID" visible="false">
+							
+							
+							<label value="Exclude(E)-Include(I) Disc Item " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="excludeIncludItemTbId"  />
+							<space width="50px"/>
+							<label value="Across Single(S)-Multiple(M) " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="acrossSingleMultipleTbId"  />
+							<space width="50px"/>
+							<label value="Quantity required " sclass="theme-lbHeading" />
+							<space width="10px"/>
+							<textbox width="250px" id="requiredQtyTbId"  />
+							<space width="10px"/><label value="exclude free items on the discount code" />
+							<checkbox width="250px" id="appliedPromo"  />
+							<space width="10px"/><label value="free items Qty"/>
+							<textbox width="250px" id="freeQtyTbId"  />
+							<space width="60px"/>
+							<button width="100px" id="bulkuploadBtnID" label="OK" sclass="idle70 greenbtn" />			
+							
+							
+					
+					</div>
+					
+							
+</groupbox>
+									
+</window>
+</zk>
+						     	
+						     	
+						     	
+						     	
+						     	

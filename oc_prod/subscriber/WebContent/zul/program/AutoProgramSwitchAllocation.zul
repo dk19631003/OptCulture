@@ -1,0 +1,95 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window border="normal" apply="org.mq.marketer.campaign.controller.program.AutoProgramSwitchAllocationController"
+xmlns:h="http://www.zkoss.org/2005/zk/native" width="780px" height="450px" xmlns:w="http://www.zkoss.org/2005/zk/client">
+
+	<h:table width="100%" height="97%">
+		<h:tr>
+			<h:td valign="top">
+				
+					<groupbox width="740px" closable="false">
+								
+						<caption label="Navigate To" style="font-weight:bold;"/>
+							
+							<vbox>
+								<hbox  align="center" style="padding:6px;">
+									<combobox id="percCb1Id">
+										<comboitem label="10" value="20"></comboitem>
+										<comboitem label="20" value="20"></comboitem>
+										<comboitem label="30" value="20"></comboitem>
+										<comboitem label="40" value="20"></comboitem>
+										<comboitem label="50" value="20"></comboitem>
+										<comboitem label="60" value="20"></comboitem>
+										<comboitem label="70" value="40"></comboitem>
+										<comboitem label="80" value="60"></comboitem>
+										<comboitem label="90" value="80"></comboitem>
+										<comboitem label="100" value="100"></comboitem>
+										
+									</combobox>										
+									<label value="Percentage Of Contacts Towards"/>
+									<listbox mold="select" id="title1LbId">
+									</listbox>
+									<space width="50px"/>
+									<label value=" Line Text:"/>
+									<textbox id="msgLine1TbId"/>
+								</hbox>
+								<hbox width="" align="center" style="padding:6px;" visible="false" id="nextLine2HbId">
+									<combobox id="percCb2Id">
+										<comboitem label="10" value="20"></comboitem>
+										<comboitem label="20" value="20"></comboitem>
+										<comboitem label="30" value="20"></comboitem>
+										<comboitem label="40" value="20"></comboitem>
+										<comboitem label="50" value="20"></comboitem>
+										<comboitem label="60" value="20"></comboitem>
+										<comboitem label="70" value="40"></comboitem>
+										<comboitem label="80" value="60"></comboitem>
+										<comboitem label="90" value="80"></comboitem>
+										<comboitem label="100" value="100"></comboitem>
+									</combobox>										
+									<label value="Percentage Of Contacts Towards"/>
+									<listbox mold="select" id="title2LbId"/>
+									<space width="50px"/>
+									<label value=" Line Text:"/>
+									<textbox id="msgLine2TbId"/>
+								</hbox>
+								
+							</vbox>
+					
+					
+					</groupbox>
+				
+				
+			</h:td>
+		</h:tr>
+		<h:tr>
+			<h:td>
+				<groupbox closable="false" >
+					<caption label="How Do You want to calculate the percentage?" style="font-weight:bold;"/>
+					<radiogroup id="percCalCriteriaRgId"  />
+					<radiogroup id="dateConsRgId" />
+					<div>
+						<radio selected="true" radiogroup="percCalCriteriaRgId" label="For Each Run" id="percCalForEachRunRbId" style="display:block;"/>
+						<radio radiogroup="percCalCriteriaRgId" label="Over All" id="percCalForOverAllRbId" style="display:block;"/>
+						
+						<div style="padding-left:40px;height:70px;" id="dateConsDivId" visible="false">
+							
+							<radio label="From Modified date" id="fromModifiedRbId" radiogroup="dateConsRgId" selected="true" style="display:block;" />
+							<radio label="From Created date" id="fromCreatedRbId" radiogroup="dateConsRgId" style="display:block;" />						
+						
+						</div>
+					
+					</div>
+					
+						
+				
+				</groupbox>
+				
+			</h:td>
+		</h:tr>
+	</h:table>
+
+
+
+
+</window>
+</zk>

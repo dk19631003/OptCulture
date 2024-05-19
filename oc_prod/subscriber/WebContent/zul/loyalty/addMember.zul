@@ -1,0 +1,185 @@
+
+<zk>
+<style >
+		.redStar{
+		font-size:14px;color:red;
+	    }
+	    .lbl, .z-checkbox, .z-radio {
+	    display: block-inline;
+	    }
+	    .z-overflow-hidden {
+ 		overflow: visible;
+		}
+		div.z-listcell-cnt {
+    	line-height: 10px;
+		}
+	</style>
+<window id="addMemberWinId" apply="org.mq.optculture.controller.loyalty.AddMemberController" width="100%" 
+		xmlns:h="http://www.zkoss.org/2005/zk/native"  xmlns:w="http://www.zkoss.org/2005/zk/client">
+		
+		<div>
+			<label value="Add Members" />
+		</div>
+		
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+		
+		<caption> <label value="Fill Membership Details"/> </caption>
+		<h:table style="padding:2px 25px">
+		<h:tr height="10"/>
+		<h:tr>
+		<h:td>
+		<label value="Loyalty Program: " /><label value=" * " style="color:red;"/>
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<listbox id="programTypeLbId" mold="select" width="180px" height="30px"  sclass="contactsView" style="margin-top:5px;position:relative;">
+			<listhead>
+			<listheader width="110px" />
+			<listheader />
+							 					
+			</listhead>
+		</listbox>
+		</h:td>
+		<h:td width="50">
+		<h:td>
+		<label value="Membership Card Number: " /><label value=" * " style="color:red;"/>
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox cols="30" value=" " id="cardNumberTbId" maxlength="256" height="30px"/>
+		</h:td>
+		</h:td>
+		</h:tr>
+		</h:table>
+		</groupbox>
+		<groupbox width="95%" sclass="gbStyle" style="margin-top:10px;" closable="false">
+		
+		<caption> <label value="Add Member"/> </caption>
+		<h:table style="padding:2px 25px">
+		<h:tr height="15"/>
+		<h:tr>
+		<h:td>
+		<label value="Email: " /><label value=" * " style="color:red;"/>
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox cols="30" value=" " id="emailTbId" maxlength="256" height="30px"/>
+		</h:td>
+		<h:td width="50">
+		<h:td ><label value="Mobile: " /><label value=" * " style="color:red;"/>
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox id="mobileTbId" value="" cols="30" maxlength="256" height="30px"/>
+		</h:td>
+		</h:td>
+		</h:tr>
+		<h:tr height="10"/>
+		<h:tr>
+		<h:td>
+		<label value="First Name: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox cols="30" value=" " id="firstNameTbId" maxlength="256" height="30px"/>
+		</h:td>
+		<h:td width="50">
+		<h:td ><label value="Last Name: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox id="lastNameTbId" value="" cols="30" maxlength="256" height="30px"/>
+		</h:td>
+		</h:td>
+		</h:tr>
+		<h:tr height="10"/>
+		<h:tr>
+		<h:td>
+		<label value="Birthday: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox cols="30" value=" " id="birthdayTbId" maxlength="256" height="30px"/>
+		</h:td>
+		<h:td width="50">
+		<h:td ><label value="Anniversary: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox id="anniversaryTbId" value="" cols="30" maxlength="256" height="30px"/>
+		</h:td>
+		</h:td>
+		</h:tr>
+		<h:tr height="10"/>
+		<h:tr>
+		<h:td>
+		<label value="Street: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox cols="30" value=" " id="streetTbId" maxlength="256" height="30px"/>
+		</h:td>
+		<h:td width="50">
+		<h:td ><label value="City: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox id="cityTbId" value="" cols="30" maxlength="256" height="30px"/>
+		</h:td>
+		</h:td>
+		</h:tr>
+		<h:tr height="10"/>
+		<h:tr>
+		<h:td>
+		<label value="State: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox cols="30" value=" " id="stateTbId" maxlength="256" height="30px"/>
+		</h:td>
+		<h:td width="50">
+		<h:td ><label value="Country: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox id="countryTbId" value="" cols="30" maxlength="256" height="30px"/>
+		</h:td>
+		</h:td>
+		</h:tr>
+		<h:tr height="10"/>
+		<h:tr>
+		<h:td>
+		<label value="Postal Code: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<textbox cols="30" value=" " id="postalCodeTbId" maxlength="256" height="30px"/>
+		</h:td>
+		<h:td width="50">
+		<h:td ><label value="Gender: " />
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<listbox id="genderTypeLbId" mold="select" height="30px" style="margin-top:5px;position:relative;">
+			<listitem label="Male" value="Male" selected="true">
+			</listitem>
+			<listitem label="Female" value="Female">
+			</listitem>
+			<listitem label="Non-Binary" value="Non-Binary">
+			</listitem>
+		</listbox>
+		</h:td>
+		</h:td>
+		</h:tr>
+		<h:tr height="10"/>
+		<h:tr>
+		<h:td>
+		<label value="Store : " /><label value=" * " style="color:red;"/>
+		</h:td>
+		<h:td style="padding-left: 80px">
+		<listbox id="storeTypeLbId" mold="select" height="30px" style="margin-top:5px;position:relative;">
+			<listitem label="--Select--" selected="true" value="0" />
+		</listbox>
+		</h:td>
+		</h:tr>
+		<h:tr height="30"/>
+		<h:tr>
+		<h:td></h:td>
+		<h:td style="padding-left: 80px">
+			<button id="savBtnId" sclass="idle140 greenbtn" label="Save">
+			</button>
+			<button id="cancelBtnId" visible="false" sclass="idle140" label="Cancel">
+			</button>
+		</h:td>
+		</h:tr>
+		</h:table>
+		</groupbox>
+		
+</window>
+</zk>

@@ -1,0 +1,1871 @@
+<?page title="createUser" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style>
+	.oddrow {
+		background-color:#F5F8FB;
+	}
+	.evenrow {
+		background-color:#FFF;
+	}
+	.tablefooter {
+		background-color:#EFEFEF;
+		line-height:15px;
+	}
+</style>
+<style src="/css/campaign.css"  />
+<window border="0" id="createWinId" apply="org.mq.marketer.campaign.controller.admin.CreateUserController"
+			 xmlns:h="http://www.zkoss.org/2005/zk/native"
+			  xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<!--<zscript>
+	<![CDATA[
+	         import javax.servlet.http.HttpServletRequest;
+	         import org.mq.marketer.campaign.beans.Users;
+	         
+			String type = ((HttpServletRequest)Executions.getCurrent().getNativeRequest()).getParameter("type");
+			Users user = null;
+			
+			if(type != null) {
+				user = (Users)sessionScope.get("editUserObj"); 
+			}
+	
+	]]>
+	</zscript>
+	
+	
+	-->
+	
+	
+	
+	
+	
+	
+	
+	<script>
+			<![CDATA[
+			
+			function updateCaretPosition() {
+			//alert("hai");
+			// get the zk widgets
+			var scriptTB = zk.Widget.$(jq('$optInMsgTbId'))
+			var caretPosTB = zk.Widget.$(jq('$caretPosTB'))
+			
+			// get the js elements
+			var jsScriptTB = document.getElementById(scriptTB.uuid)
+			var jsCaretPosTB = document.getElementById(caretPosTB.uuid)
+			
+			// get the caret position
+			var pos = getCaret(jsScriptTB);
+			
+			// set the caret position in the hidden text field
+			jsCaretPosTB.value = pos;
+			
+			// trigger an event to send the caret position to the server
+			if (document.createEvent) {
+			var evt = document.createEvent('HTMLEvents');
+			evt.initEvent( 'blur', false, false);
+			jsCaretPosTB.dispatchEvent(evt);
+			
+			var evt2 = document.createEvent('HTMLEvents');
+			evt2.initEvent( 'change', false, false);
+			jsCaretPosTB.dispatchEvent(evt2);
+			} else if (document.createEventObject) {
+			jsCaretPosTB.fireEvent('onblur');
+			jsCaretPosTB.fireEvent('onchange');
+			}
+			}
+			
+			 function getCaret(el) {
+             	
+             	if (el.selectionStart) {
+                     return el.selectionStart;
+                 } else if (document.selection) {
+                     el.focus();
+
+                     var r = document.selection.createRange();
+
+                     
+                     if (r == null) {
+                     	
+                         return 0;
+                     }
+
+                     var re = el.createTextRange();
+                     	
+                             rc = re.duplicate();
+                     re.moveToBookmark(r.getBookmark());
+                     rc.setEndPoint('EndToStart', re);
+                     return rc.text.length;
+                 }else{
+                 	
+                 	if(el.value.length > 0) {
+                 		
+                 		el.selectionStart = el.value.length;
+                 		 return el.selectionStart;
+                 		
+                 	}
+                 	
+                 }
+                 return 0;
+			 }
+
+             	]]>
+			</script>
+	
+	
+				<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+					<caption label="Organization Details" style="font-weight:bold;font-size:12px;" ></caption>
+					<h:table cellspacing="0" cellpadding="10" width="100%">
+						<h:tr class="evenrow">
+							<h:td width="170"><label value="Organization Name" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="compNameTbId" value="" cols="40" maxlength="50"/>
+							<label value="" id="orgStatusLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td><label value="Organization Id" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="compShrtNameTbId" value="" cols="40" maxlength="50"/>
+							<label value="" id="orgNameStatusLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="Organization Type" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><listbox id="orgTypeLbId" mold="select">
+							<listitem label="POS" value="POS" selected="true"/>
+							<listitem label="BCRM" value="BCRM" />
+							</listbox>
+							</h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td><label value="Branding" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><listbox id="brandingLbId" mold="select">
+							<listitem label="OptCulture" value="OPT" selected="true"/>
+							<!--<listitem label="Captiway" value="CAP" />
+							--></listbox>			
+
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="Organization Unit Name" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="domainNameTbId" value="" cols="40" maxlength="60"/>
+							<label value="" id="domainNameStatusLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						</h:table >
+						
+						
+						</groupbox>
+						
+						
+						<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+							<caption label="Super User Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							
+						<h:table cellspacing="0" cellpadding="10" width="100%" >
+						<h:tr class="evenrow">
+							<h:td width="170">
+								<label value="User Name" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td>
+								<textbox value="" maxlength="300" id="userNameTbId" cols="40" />
+								<label value="" id="nameStatusLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<!-- <h:tr class="oddrow">
+							<h:td>
+								<label value="Password" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="passwordTbId" value='' cols="40" maxlength="25" type="password"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="Reenter Password" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="rePasswordTbId" value="" cols="40" maxlength="25" type="password"/>
+							</h:td>
+						</h:tr>	 -->
+						<h:tr class="oddrow">
+							<h:td><label value="Email Id" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox cols="40" value="" id="emailIdTbId" maxlength="60"/>
+							<label value="" id="emailLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="First Name" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox id="firstNameTbId" value="" cols="40" maxlength="50"/>
+								<label value="" id="firstNameLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td><label value="Last Name" /><label value="*" style="color:red;"/>
+							</h:td>
+							<h:td><textbox cols="40" value="" id="lastNameTbId" maxlength="60"/>
+							<label value="" id="lastNameLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						
+						<h:tr>
+						</h:tr>	
+					</h:table>
+				</groupbox>
+			
+			<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+							<caption label="Contract Details" style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+							
+						<h:table cellspacing="0" cellpadding="10" width="100%" >
+						<h:tr class="evenrow">
+							<h:td width="170">
+								<label value="Number of Stores" />
+							</h:td>
+							<h:td>
+								<textbox value="" maxlength="300" id="numOfStoresTbId" cols="14" />
+								<label value="" id="numOfStoresLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td><label value="Number of Contacts" />
+							</h:td>
+							<h:td><textbox cols="14" value="" id="numOfContactsTbId" maxlength="60"/>
+							<label value="" id="numOfContactsLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="Number of SMS per month to be added" />
+							</h:td>
+							<h:td><textbox id="smsTbId" value="" cols="14" maxlength="50"/>
+								<label value="" id="smsLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td><label value="Number of e-Receipts per month if restricted" />
+							</h:td>
+							<h:td><textbox cols="14" value="" id="drTbId" maxlength="60"/>
+							<label value="" id="drLblId" style="color:#08658F;"/>
+							</h:td>
+						</h:tr>	
+						
+						<h:tr>
+						</h:tr>	
+					</h:table>
+				</groupbox>
+
+				<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+					<caption label="Address Details" style="font-weight:bold;font-size:12px;" ></caption>
+					<h:table cellspacing="0" cellpadding="5" width="100%">
+						<h:tr>
+							<h:td  width="50%" valign="top">
+								<h:table cellspacing="0" cellpadding="10" width="100%">
+									<h:tr class="evenrow">
+										<h:td width="170">
+											<label value="Address One" /><label value="*" style="color:red;"/>
+										</h:td>
+										<h:td>
+										<textbox id="addressOneTbId" value="" cols="40" maxlength="200"/>  <![CDATA[ <br> ]]>
+										<label value="" id="addressOneLblId" style="color:#08658F;"/>  
+										</h:td>
+									</h:tr>
+									<h:tr class="oddrow">
+										<h:td><label value="Address Two" />
+										</h:td>
+										<h:td ><textbox id="addressTwoTbId" value="" cols="40" maxlength="50"/>
+										</h:td>
+									</h:tr>
+									<h:tr class="evenrow">
+										<h:td><label value="City" /><label value="*" style="color:red;"/>
+										</h:td>
+										<h:td ><textbox cols="40" value="" id="cityTbId" maxlength="50"/> <![CDATA[ <br> ]]>
+						     			 <label value="" id="CityLblId" style="color:#08658F;"/>  
+										</h:td>
+									</h:tr>	
+									<h:tr class="oddrow">
+										<h:td><label value="State" /><label value="*" style="color:red;"/>
+										</h:td>
+										<h:td ><textbox id="stateTbId" value="" cols="40" maxlength="30"/> <![CDATA[ <br> ]]>
+										<label value="" id="stateLblId" style="color:#08658F;"/>
+										</h:td>
+									</h:tr>	
+									<h:tr class="evenrow">
+										<h:td><label value="Country" /><label value="*" style="color:red;"/>
+										</h:td>
+										<h:td ><textbox cols="40" value="" id="countryTbId" maxlength="30"/> <![CDATA[ <br> ]]>
+										<label value="" id="cLbId" style="color:#08658F;"/>
+										</h:td>
+									</h:tr>	
+									<h:tr class="oddrow">
+										<h:td><label value="Zip Code" /><!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td ><textbox id="pinTbId"   cols="40" maxlength="20"/>
+										
+											<image
+											src="/img/icons/icon_q.png" tooltip="help4"
+											style="padding-left:40px;" />
+											<popup id="help4" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Required for countries where postal/ZIP codes are used."
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+										
+										</h:td>
+									</h:tr>	
+									<h:tr class="evenrow">
+										<h:td><label value="Phone" />
+										</h:td>
+										<h:td ><textbox cols="40" id="phoneTbId" 
+										tooltiptext="Formats that are possible: +xx-xxx-xxx-xxxx or xxx-xxx-xxxx or xxxxxxxxxx or 
+										xxx.xxx.xxxx or x-(xxx).xxx.xxxx or x-xxx.xxxxxxx"
+										 maxlength="25"/>
+										</h:td>
+									</h:tr>	
+								</h:table>
+							</h:td>
+			     			<h:td width="50%" valign="top">
+								<h:table cellspacing="10px" cellpadding="0"  width="100%" align="left">
+							     	<h:tr>
+						     			<h:td><label value="Enable user"  sclass="boldLbl" /></h:td>
+										<h:td><checkbox id="enabledCbId" checked="true"/></h:td>
+							     	</h:tr>
+							     	<h:tr>
+						     			<h:td><label value="Email Limit"  sclass="boldLbl" /> <!-- <label value="*" style="color:red;"/> --> </h:td>
+										<h:td><intbox id="totalLimitLbId" cols="14" value="0"  /></h:td>
+							     	</h:tr>
+							     	<h:tr style="display:none;">
+						     			<h:td><label value="SMS Limit"  sclass="boldLbl" /></h:td>
+										<h:td><intbox id="totalSmsLimitLbId" cols="14" value="0"/></h:td>
+							     	</h:tr> 
+							     	<h:tr>
+						     			<h:td><label value="Start Date"  sclass="boldLbl" /></h:td>
+										<h:td><datebox id ="startDbId" format="dd MMM, yyyy" use="org.mq.marketer.campaign.custom.MyDatebox" readonly="true" constraint="no empty"/>
+										<image id="startDbId_img" src="/img/theme/action_delete.gif" height="13" width="16" visible="false"/>
+										</h:td>
+							     	</h:tr>
+							     	<h:tr>
+						     			<h:td><label value="Expiry Date"  sclass="boldLbl" /></h:td>
+										<h:td><datebox id="expDbId" format="dd MMM, yyyy" use="org.mq.marketer.campaign.custom.MyDatebox"  readonly="true" constraint="no empty" />
+										<image id="expDbId_img" src="/img/theme/action_delete.gif" height="13" width="16" visible="false"/>
+										
+										</h:td>
+							     	</h:tr>
+							     	<h:tr>
+						     			<!-- <h:td width="21%"><label value="VMTA"  sclass="boldLbl" /> <label value="*" style="color:red;"/> </h:td> -->
+						     			<h:td width="21%"><label value="Email Route"  sclass="boldLbl" /> <!-- <label value="*" style="color:red;"/> --> </h:td>
+										<!-- <h:td width="75%">  -->
+										<h:td width="30%">
+											<combobox id="vmtaCbId" readonly="true">
+												<attribute name="onChange">
+													<!-- String status = (String)vmtaCbId.getSelectedItem().getValue();
+													vmtaStatusLblId.setValue(status); -->
+												</attribute> 
+											</combobox>
+											<!-- Status <label id="vmtaStatusLblId"  sclass="boldLbl" /> -->
+										</h:td>
+										<h:td> 
+										<label value="Account"  sclass="boldLbl" /> <!-- <label value="*" style="color:red;"/> -->
+											<combobox id="vmtaAccountNameCbId" readonly="true">
+												<attribute name="onChange">
+												<!-- 	String status = (String)vmtaCbId.getSelectedItem().getValue();
+													vmtaStatusLblId.setValue(status); -->
+												</attribute> 
+											</combobox>
+										</h:td>
+							     	</h:tr>
+							     	
+							     	<h:tr>
+								
+										<h:td >
+											<label value="SMS Gateway Country:" sclass="idle70" id="countryLblId"/>
+											<label value="*" sclass="redStar" />
+												
+										</h:td>
+										<h:td >
+								
+											<listbox id="countryLbId"  mold="select"  width="200px" >
+												
+											</listbox>
+										</h:td>
+								
+							
+								</h:tr>
+							     	
+							     	 
+							     	<h:tr style="display:none;">
+						     			<h:td><label value="SMS Gateway"  sclass="boldLbl" />  <label value="*" style="color:red;"/>  </h:td>
+										<h:td width="75%"> 
+											<combobox id="smsGateWayCbId" readonly="true" >
+												<comboitem label="Select" />
+												<comboitem label="US" />
+												<comboitem label="IN" />
+											</combobox>
+										</h:td>
+							     	</h:tr>
+							     	
+							     	<h:tr style="display:none;">
+						     			<h:td><label value="SMS Country Code"  sclass="boldLbl" />  <label value="*" style="color:red;"/>  </h:td>
+										<h:td width="75%"> 
+											<textbox id="countryCodeTxtBxId" />
+										</h:td>
+							     	</h:tr> 
+							     	
+							     	<h:tr>
+								<h:td>
+									<label value="Country Code:"/>
+									<label value="*" style="color:red;" />
+										
+								
+								</h:td>
+								<h:td>
+									<textbox id="countryCodeTxtId"  disabled="true"/>
+								</h:td>
+								
+							</h:tr>
+							
+							<h:tr>
+								<h:td>
+									<label value="Mobile length:"/>
+									<label value="*" style="color:red;" />
+								</h:td>
+								
+								<h:td style="padding-right:20px;">
+									<label value="Min:"/>
+									<!-- <textbox id="minTxtId" width="20px"/> -->
+									<intbox id="minTxtId" cols="1" value="0"  />
+									<label value="Max:"/>
+									<!-- <textbox id="maxTxtId" width="20px"/> -->
+									<intbox id="maxTxtId" cols="1" value="0"  />
+								</h:td>
+								
+								<h:td align="left">
+								   
+								</h:td>
+								
+							</h:tr>
+							<h:tr>
+								<h:td>
+								    <label value="Enable Mobile Pattern:"/> 
+								</h:td>
+								<h:td>
+									<checkbox id="mobilePatternChkBxId" checked="false" style="display:inline-block;" />
+								</h:td>
+							</h:tr>
+							     	
+							     	
+							     	
+							     	
+
+							     	<h:tr>
+							     	 <h:td  COLSPAN="2">
+							     	
+							     	<groupbox id="footerForEditorsGbId" closable="false" width="80%" visible="false" >
+							     		<caption label="Add Footer to the Campaigns for below Editor types" 
+							     			style="font-weight:bold;padding:0px 4px;font-size:12px;" ></caption>
+		
+							     	<h:table>
+							     	  <h:tr>
+							     	   <h:td>
+							     	    <checkbox label="External Editor" id="externalEdCbId" value="1" checked="true"/>
+							     	   </h:td>
+							     	   <h:td>
+							     	    <checkbox label="Plain Text Editor" id="plainTextEdCbId" value="2" checked="true"/>
+							     	   </h:td>
+							     	  </h:tr>
+							     	  <h:tr>
+							     	   <h:td>
+							     	    <checkbox label="Plain HTML Editor" id="plainHtmlEdCbId" value="4" checked="true"/>
+							     	   </h:td>
+							     	   <h:td>
+							     	    <checkbox label="Block Editor" id="blockEdCbId" value="8" checked="true"/>
+							     	   </h:td>							     	 
+							     	  </h:tr>
+							     	</h:table>
+							     	</groupbox>
+							     	
+							     	
+							     	</h:td>
+							     	</h:tr>
+							    </h:table>
+							</h:td>
+				     	</h:tr>
+				    </h:table> 		
+				</groupbox>
+			
+
+				
+				<groupbox  closable="false"  sclass="gbStyle"  id="smsSenderIdGbId" visible="false">
+					<caption label="SMS SenderId Details " style="font-weight:bold;padding:0px 4px;font-size:12px;"></caption>							
+						<h:table width="50%">
+							<h:tr>
+								<h:td width="50%" valign="top">
+									<label value="User SenderIds :"/>
+								
+								</h:td>
+								<h:td>
+									<combobox id="userSenderIdsCbId" >
+										<!--<comboitem label="jhfhdfds"/>
+										
+										
+									--></combobox>
+								</h:td>
+								<h:td>
+									<button label="Delete" sclass="idle70" id="deleteSenderIdBtnId"/>
+								</h:td>
+							
+							</h:tr>
+							<h:tr>
+								<h:td>
+									<label value="New Sender Id:"/>
+								
+								</h:td>
+								<h:td>
+									<textbox id="newSenderIdTxtId" />
+								</h:td>
+								<h:td>
+									<button sclass="idle70 greenbtn" id="addNewSenderIdBtnId" label="Add"/>
+								</h:td>
+							</h:tr>
+							<h:tr>
+								<h:td colspan="3" >
+									
+									<button id="senderIdCloseBtnId" sclass="idle70" label="Cancel"/>
+								
+								</h:td>
+							</h:tr>
+							
+						</h:table>
+					
+				</groupbox>
+			
+			
+			
+				<groupbox  closable="false"  sclass="gbStyle"  id="smsSettingsIdGbId" >
+					<caption label="SMS Settings " style="font-weight:bold;padding:0px 4px;font-size:12px;" />
+					
+						<h:table >
+						
+							<h:tr>
+								<h:td  >
+									<label value="Enable SMS:"  />
+								
+								</h:td>
+								<h:td >
+								 <checkbox id="enableSmsChkId" />
+								 </h:td>
+							</h:tr>
+							</h:table>
+							
+							<div id="enableSmsDivId" visible="false" >
+							
+								<h:table >
+								
+								<h:tr>
+						     			<h:td><label value="SMS Limit"  sclass="boldLbl" />
+						     			<label value="*" sclass="redStar" /></h:td>
+										<h:td><intbox id="userSmsLimitIntBoxId" cols="14" value="0"  /></h:td>
+								
+										
+										
+							     </h:tr>
+								
+								
+								<!-- <h:tr>
+								
+								<h:td width="200px">
+									<label value="Country:" sclass="idle70" id="countryLblId"/>
+									<label value="*" sclass="redStar" />
+										
+								</h:td>
+								<h:td >
+						
+									<listbox id="countryLbId"  mold="select"  width="200px" >
+										
+									</listbox>
+								</h:td>
+								
+							
+							</h:tr> 
+							<h:tr>
+								<h:td>
+									<label value="Country Code:"/>
+									<label value="*" style="color:red;" />
+										
+								
+								</h:td>
+								<h:td>
+									<textbox id="countryCodeTxtId"  disabled="true"/>
+								</h:td>
+								
+							</h:tr> -->
+							</h:table>
+							
+						<div id ="indiaDivId" visible="false" >
+							<h:table>
+							 <h:tr>
+								<h:td  >
+									
+									<label value=" Choose Promotional SMS Gateway:" /><label value="*" sclass="redStar" />
+								
+								</h:td>
+								
+								
+								<h:td  >
+									
+								<listbox id="promotionalSMSGateWayLbId" width="200px" mold="select" />
+								
+								</h:td>
+								<h:td  />
+								<h:td >
+								<label value="Account Name" /><label value="*" sclass="redStar" />
+								<listbox id="promotionalSMSUserNameGateWayLbId" width="200px" mold="select" />
+							</h:td>
+							</h:tr>
+							
+							</h:table>
+							
+							<h:table>
+							
+							<h:tr>
+								<h:td  >
+									
+									<label value="Enable Transactional SMS :" />
+								
+								</h:td>
+								<h:td  >
+									
+									<checkbox id="transactionalSMSGateWayChkId" />
+								
+								</h:td>
+								
+							</h:tr>
+							<h:tr height="5" />
+							</h:table>
+							
+							<div id ="transactionalDivId"  visible="false">
+							<h:table>
+								<h:tr>
+								
+								<h:td width="160px"/>
+								<h:td >
+									<label value="Gateway:" /><label value="*" sclass="redStar" />
+								</h:td>
+								 <h:td  >
+										
+									<listbox id="transactionalSMSGateWayLbId" width="200px" mold="select" />
+									
+								</h:td> 
+								<h:td >
+									<label value="Account Name" /><label value="*" sclass="redStar" />
+									<listbox id="transactionalSMSUserNameGateWayLbId" width="200px" mold="select" />
+								</h:td>
+								
+								
+								</h:tr>
+								
+								<h:tr height="5" />
+								
+									<!-- App-3701 -->
+							     	<!--	<h:tr>
+								     			<h:td />
+								     			<h:td >
+								     				<label value="Set Sender ID:"  /><label value="*" sclass="redStar" />
+								     			</h:td>
+								     			<h:td>
+								     				<textbox id="transSenderIdTxtBxId"/>
+								     			</h:td>
+								     		</h:tr>	-->
+											<h:tr>
+												<h:td />
+												<h:td  >
+													<label value="Select TR sender id(s) :" id="selectTRSenderIdLblId" visible="false"/>
+												</h:td>
+												<h:td  >
+													<div id="selectTRSenderIdDiv" visible="false">
+														<listbox width="250px" rows="2" id="trsenderIdLBId" checkmark="true" multiple="true" ></listbox>
+													</div>
+												</h:td>
+											</h:tr>
+								     		
+								     		<h:tr height="5" />
+								     		
+								     		<h:tr>
+								     			<h:td />
+								     			<h:td >
+								     				<label value="Approve Template:"   /><label value="*" sclass="redStar" />
+								     			</h:td>
+								     			<h:td>
+								     				<combobox id="approveTempCmbBoxId" readonly="true" />
+								     			</h:td>
+								     			<h:td>
+								     				<toolbarbutton id="tempContPreviewTbId" image="images/icon_preview_big.png" sclass="tbbLink"
+														label="Preview"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+								     			
+								     			
+								     				<toolbarbutton id="approveTempTbId" image="/img/icons/approve_icn.png" sclass="tbbLink"
+														label="Approve Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+								     			</h:td>
+								     			
+								     		</h:tr>
+								     		<h:tr height="5" />
+								     		<h:tr>
+								     		<h:td>
+								     		<div id="tempIdRow" visible="false">
+								     		<h:table>
+								     		<h:tr>
+								     		 <h:td width="250px"  >
+									
+											<label value="Template Registered ID:" />
+								
+											</h:td>
+											<h:td  >
+									
+											<textbox id="templateId" />
+								
+											</h:td>
+											</h:tr>
+											</h:table>
+											</div>
+											</h:td>
+								     		</h:tr>
+							<h:tr height="5" />
+							     	</h:table>	
+							     	
+							</div>
+							
+							
+							<h:table>
+							<h:tr>
+							
+							
+							<h:td >
+								<label value="Enable Transactional Route for Opt-in SMS:" />
+							</h:td>
+							
+								<h:td  >
+									
+									<checkbox id="optinSMSRouteChkId" />
+								
+								</h:td>
+								
+							</h:tr>
+							</h:table>
+							
+							
+							<h:table>
+							<h:tr>
+								<h:td  >
+									
+									<label value=" Enable Opt-in  SMS:" />
+								
+								</h:td>
+								<h:td  >
+									
+									<checkbox id="optinSMSGateWayChkId" />
+								
+								</h:td>
+								
+								
+								
+							</h:tr>
+						</h:table>
+						
+							<!-- <div id ="optinRouteDivId"  visible="false">
+							<h:table>
+							<h:tr>
+							
+							<h:td width="200px"/>
+							<h:td >
+								<label value="Gateway:" /><label value="*" sclass="redStar" />
+							</h:td>
+							</h:tr>
+							</h:table>
+							</div> -->
+							
+							
+						<div id ="optinSmsDivId"  visible="false">
+							<h:table>
+							<h:tr>
+							
+							<h:td width="200px"/>
+							<h:td >
+								<label value="Gateway:" /><label value="*" sclass="redStar" />
+							</h:td>
+							<h:td >
+									
+								<listbox id="optinSMSGateWayLbId"  width="200px" mold="select"/>
+								
+							</h:td>
+							
+							<h:td >
+								<label value="Account Name" /><label value="*" sclass="redStar" />
+								<listbox id="optinSMSUserNameGateWayLbId"  width="200px" mold="select"/>
+							</h:td>
+							<h:td >
+									
+								
+							</h:td>
+							
+							</h:tr>
+							
+							<h:tr height="5" />
+								
+								
+								<h:tr>
+								<h:td />
+					     			<h:td >
+					     				<label value="Set Opt-in Sender ID:"  sclass="boldLbl" /><label value="*" sclass="redStar" />
+					     			</h:td>
+					     			<h:td>
+					     				<textbox id="optinSenderIdTxtBxId"/>
+					     			</h:td>
+							     </h:tr>
+							     
+							     <h:tr>
+							     
+							     <h:td />
+									<h:td  >
+										
+										<label  value="Enable Opt-in by Missed Call:"  />
+									
+									</h:td>
+									<h:td  >
+										
+										<checkbox  id="enableMsdCalChkId" />
+									
+									</h:td>
+									
+									
+								</h:tr>
+								</h:table>
+							     
+							     <div id="optinMsdCalDivId"  visible="false" >
+							     <h:table>		
+					     		<h:tr>
+					     		
+					     		<h:td  width="160px"/>
+					     		<h:td  width="160px"/>
+					     		<h:td/>
+					     		
+					     		
+					     		
+					     			<h:td >
+					     				<label value="Opt-in Missed Call Number:"  sclass="boldLbl" /><label value="*" sclass="redStar" />
+					     			</h:td>
+					     			<!-- <h:td>
+					     				<textbox id="optinMsdCalNumTxtBxId"/>
+					     			</h:td> -->
+					     			
+					     			<h:td>
+					     				<listbox id="optinMsdCalNumLBId" mold="select" width="200px"/>
+					     			</h:td>
+					     		</h:tr>
+					     		</h:table>
+					     		
+					     		</div>
+					     		
+					     		<h:table>
+					     		<h:tr>
+							     <h:td width="200px"/>
+							     <h:td />
+							 
+							     
+									<h:td  >
+										
+										<label  value="Enable Opt-in by Keyword on SMS:"  />
+									
+									</h:td>
+									<h:td  >
+										
+										<checkbox  id="enableKeywordChkId" />
+									
+									</h:td>
+									
+									
+								</h:tr>
+								</h:table>
+								
+								<div id="enableMsdCallsKeywordsDivId" visible="false" >
+								<h:table>
+								<h:tr>
+					     		<h:td width="160px"/>
+					     		<h:td width="160px"/>
+					     		<h:td/>
+					     		
+					     			<h:td >
+					     				<label value="Keyword Receiving Number:"  sclass="boldLbl" /><label value="*" sclass="redStar" />
+					     			</h:td>
+					     			<!-- <h:td>
+					     				<textbox id="optinKeywordMsdCalNumTxtBxId"/>
+					     			</h:td> -->
+					     			
+					     			<h:td>
+					     				<listbox id="optinKeywordMsdCalNumLBId" mold="select" width="200px"/>
+					     			</h:td>
+					     		</h:tr>
+							     		
+					     		<h:tr>
+					     		<h:td width="160px"/>
+					     		<h:td width="160px" />
+					     		<h:td/>
+					     		
+					     			<h:td >
+					     				<label value="Opt-in Keyword:"  sclass="boldLbl" /><label value="*" sclass="redStar" />
+					     			</h:td>
+					     			<h:td>
+					     				<textbox id="optinKeywordTxtBxId"/>
+					     			</h:td>
+					     			
+					     		</h:tr>
+					     		
+					     		<h:tr>
+					     		<h:td width="160px"/>
+					     		<h:td  width="160px"/>
+					     		<h:td/>
+					     			<h:td >
+					     				<label value="Opt-out Keyword:"  sclass="boldLbl" /><label value="*" sclass="redStar" />
+					     			</h:td>
+					     			<h:td>
+					     				<textbox id="optoutKeywordTxtBxId"/>
+					     			</h:td>
+					     		</h:tr>
+					     		</h:table>
+					     		
+					     		
+					     		
+						</div>
+						
+						<div id="optinListDivId" visible="false">
+					     		
+					     		<h:table>
+					     		
+								<h:tr>
+								<h:td width="200px"/>
+								<h:td >
+					     				<label value="SMS Opt-in List:"  sclass="boldLbl" /><label value="*" sclass="redStar" />
+					     			</h:td>
+					     			<h:td>
+					     				<listbox id="optinListLBId" mold="select" width="160px" disabled="true" />
+					     			</h:td>
+					     			</h:tr>
+							</h:table>	
+							
+							</div>
+							
+							<h:table>
+					     		
+								<h:tr>
+									<h:td width="200px"/>
+									<h:td >
+						     				<label value="Message inviting opt-ins :"  sclass="boldLbl" /><label value="*" sclass="redStar" />
+					     			</h:td>
+					     			<h:td>
+					     			
+					     			<textbox id="caretPosTB" visible="false" />
+									<textbox id="optInMsgTbId" value=""
+										name="shortCodeTb" width="270px" multiline="true" height="160px" 
+										w:onClick="updateCaretPosition('$optInMsgTbId', '$caretPosTB')"
+												w:onChanging="updateCaretPosition('$optInMsgTbId', '$caretPosTB')"
+												w:onFocus="updateCaretPosition('$optInMsgTbId', '$caretPosTB')" />
+								    <!-- <textbox id="msgInviteTxtId"  width="160px" readonly="true" /> -->
+								    </h:td>
+					     			
+					     		</h:tr>
+					     		
+					     		<h:tr>
+									<h:td width="200px"/>
+									<h:td width="200px"/>
+									<h:td >
+										<label value="Character Count :"
+											style="font-weight:bold;" />
+										<textbox id="charCountTbId" readonly="true"
+											value="0" width="70px" />
+										<label value="(160 Characters per SMS)" />
+									</h:td>
+								</h:tr>	
+						</h:table>	
+							
+							
+							
+								
+							</div>
+							
+							
+							
+							</div>
+							
+							<div id="usSMSDivId" >
+								<h:table>
+									
+								
+								<h:tr>
+									<h:td width="200px" >
+										
+										<label value="OutBound SMS Gateway:" />
+										<label value="*" sclass="redStar" />
+									
+									</h:td>
+									
+								
+								 <h:td  >
+										
+									<listbox id="USSMSGateWayLbId" width="200px" mold="select" />
+									
+								</h:td> 
+								<h:td >
+									<label value="Account Name" /><label value="*" sclass="redStar" />
+									<listbox id="USSMSUserNameGateWayLbId" width="200px" mold="select" />
+								</h:td>
+								
+								
+								</h:tr>
+								
+								
+								
+								</h:table>
+							
+							
+							</div>
+							
+							<!-- app-3818 -->
+							<div id="canadaSMSDivId" >
+								<h:table>
+									<h:tr>
+										<h:td width="200px" >
+											
+											<label value="OutBound SMS Gateway:" />
+											<label value="*" sclass="redStar" />
+										
+										</h:td>
+										
+									
+										 <h:td  >
+												
+											<listbox id="CANADASMSGateWayLbId" width="200px" mold="select" />
+											
+										</h:td> 
+										<h:td >
+											<label value="Account Name" /><label value="*" sclass="redStar" />
+											<listbox id="CANADASMSUserNameGateWayLbId" width="200px" mold="select" />
+										</h:td>
+									
+									
+									</h:tr>
+								
+								
+								
+								</h:table>
+							
+							
+							</div>
+							
+							<!-- app-3819 -->
+							<div id="saSMSDivId" >
+								<h:table>
+									<h:tr>
+										<h:td width="200px" >
+											
+											<label value="OutBound SMS Gateway:" />
+											<label value="*" sclass="redStar" />
+										
+										</h:td>
+										
+									
+										 <h:td  >
+												
+											<listbox id="SASMSGateWayLbId" width="200px" mold="select" />
+											
+										</h:td> 
+										<h:td >
+											<label value="Account Name" /><label value="*" sclass="redStar" />
+											<listbox id="SASMSUserNameGateWayLbId" width="200px" mold="select" />
+										</h:td>
+									
+									
+									</h:tr>
+								
+								
+								
+								</h:table>
+							
+							
+							</div>
+							
+							<div id="pakistanSMSDivId" visible="false">
+								<h:table>
+									
+								
+								<h:tr>
+									<h:td width="200px" >
+										
+										<label value="Promotional SMS Gateway:" />
+										<label value="*" sclass="redStar" />
+									
+									</h:td>
+									
+								
+								 <h:td  >
+										
+									<listbox id="pakistanSMSGateWayLbId" width="200px" mold="select" />
+									
+								</h:td> 
+								<h:td >
+									<label value="Account Name" /><label value="*" sclass="redStar" />
+									<listbox id="pakistanSMSUserNameGateWayLbId" width="200px" mold="select" />
+								</h:td>
+								
+								
+								</h:tr>
+								
+								
+								
+								</h:table>
+							
+							
+							</div>
+							
+							<div id="uaeSMSDivId" visible="false">
+								<h:table>
+									
+								
+								<h:tr>
+									<h:td width="200px" >
+										
+										<!-- <label value="Promotional SMS Gateway:" /> -->
+										<label value="Broadcast SMS Gateway:" />
+										<label value="*" sclass="redStar" />
+									
+									</h:td>
+									
+								
+								 <h:td  >
+										
+									<listbox id="uaeSMSGateWayLbId" width="200px" mold="select" />
+									
+								</h:td> 
+								<h:td >
+									<label value="Account Name" /><label value="*" sclass="redStar" />
+									<listbox id="uaeSMSUserNameGateWayLbId" width="200px" mold="select" />
+								</h:td>
+								
+								
+								</h:tr>
+								
+								
+						</h:table>
+						<h:table>
+							
+							<h:tr>
+								<h:td  >
+									
+									<label value="Enable Transactional SMS :" />
+								
+								</h:td>
+								<h:td  >
+									
+									<checkbox id="uaeTransactionalSMSGateWayChkId" />
+								
+								</h:td>
+								
+							</h:tr>
+							<h:tr height="5" />
+							</h:table>
+							
+							<div id ="uaeTransactionalDivId"  visible="false">
+							<h:table>
+								<h:tr>
+								
+								<h:td width="160px"/>
+								<h:td >
+									<label value="Gateway:" /><label value="*" sclass="redStar" />
+								</h:td>
+								 <h:td  >
+										
+									<listbox id="uaeTransactionalSMSGateWayLbId" width="200px" mold="select" />
+									
+								</h:td> 
+								<h:td >
+									<label value="Account Name" /><label value="*" sclass="redStar" />
+									<listbox id="uaeTransactionalSMSUserNameGateWayLbId" width="200px" mold="select" />
+								</h:td>
+								
+								
+								</h:tr>
+								
+								<h:tr height="5" />
+								
+								
+								     		<h:tr>
+								     			<h:td />
+								     			<h:td >
+								     				<label value="Set Sender ID:"  /><label value="*" sclass="redStar" />
+								     			</h:td>
+								     			<h:td>
+								     				<textbox id="uaeTransSenderIdTxtBxId"/>
+								     			</h:td>
+								     		</h:tr>
+								     		
+								     		<h:tr height="5" />
+								     		
+								     		<h:tr>
+								     			<h:td />
+								     			<h:td >
+								     				<label value="Approve Template:"   /><label value="*" sclass="redStar" />
+								     			</h:td>
+								     			<h:td>
+								     				<combobox id="uaeApproveTempCmbBoxId" readonly="true" />
+								     			</h:td>
+								     			<h:td>
+								     				<toolbarbutton id="uaeTempContPreviewTbId" image="images/icon_preview_big.png" sclass="tbbLink"
+														label="Preview"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+								     			
+								     			
+								     				<toolbarbutton id="uaeApproveTempTbId" image="/img/icons/approve_icn.png" sclass="tbbLink"
+														label="Approve Template"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+								     			</h:td>
+								     			
+								     		</h:tr>
+								     		<h:tr height="5" />
+								     		<!-- <h:tr>
+								     		<h:td>
+								     		<div id="uaeTempIdRow" visible="false">
+								     		<h:table>
+								     		<h:tr>
+								     		 <h:td width="250px"  >
+									
+											<label value="Template Registered ID:" />
+								
+											</h:td>
+											<h:td  >
+									
+											<textbox id="uaeTemplateId" />
+								
+											</h:td>
+											</h:tr>
+											</h:table>
+											</div>
+											</h:td>
+								     		</h:tr> -->
+							<h:tr height="5" />
+							     	</h:table>	
+							     	
+							</div>
+							
+							
+							</div>
+							<div id="genericSMSDivId" visible="false">
+								<h:table>
+									
+								
+								<h:tr>
+									<h:td width="200px" >
+										
+										<!-- <label value="Promotional SMS Gateway:" /> -->
+										<label value="Broadcast SMS Gateway:" />
+										<label value="*" sclass="redStar" />
+									
+									</h:td>
+									
+								
+								 <h:td  >
+										
+									<listbox id="genericSMSGateWayLbId" width="200px" mold="select" />
+									
+								</h:td> 
+								<h:td >
+									<label value="Account Name" /><label value="*" sclass="redStar" />
+									<listbox id="genericSMSUserNameGateWayLbId" width="200px" mold="select" />
+								</h:td>
+								
+								
+								</h:tr>
+								
+								
+								
+								</h:table>
+							
+							
+							</div>
+							
+							<h:table>
+							<h:tr>
+							<h:td  >
+									<label value="Select sender id(s) :" id="selectSenderIdLblId" visible="false"/>
+							</h:td>
+							<h:td  >
+							<div id="selectSenderIdDiv" visible="false">
+							<!-- <h:td> -->
+								<listbox width="250px" rows="2" id="senderIdLBId" checkmark="true" multiple="true" >
+									<!-- <listhead id="senderIdListHead">
+										<listheader label="" width="40px" />
+										<listheader label="Select SenderId(s)"  />
+									</listhead> -->
+								</listbox>
+							<!-- </h:td> -->
+							</div>
+							</h:td>
+						</h:tr>
+						</h:table>
+							<h:table>
+								<h:tr>
+							
+							
+							<h:td >
+								<label value="Mobile Validations:" />
+							</h:td>
+							
+								<h:td  >
+									
+									<checkbox id="mobileValidationsChkId" />
+								
+								</h:td>
+								
+							</h:tr>
+							
+							<h:tr>
+								<h:td width="200px"  >
+									
+									<label value="Keywords Limit:" />
+								
+								</h:td>
+								<h:td  >
+									
+									<textbox id="keywordsTxtboxId" />
+								
+								</h:td>
+									
+							</h:tr>
+							
+							
+							
+							
+							 <!-- <h:tr>
+								<h:td  >
+									
+									<label value="Message Receiving Number:" />
+								
+								</h:td>
+								<h:td>
+								
+								
+								<combobox id="msgRecvNumCmbId" /> 
+								</h:td>
+								
+								<h:td>
+							     				<toolbarbutton id="addNumberTbId" image="/images/action_add.gif" sclass="tbbLink"
+													label="Add"  style="color:#2886B9;font-weight:bold;text-decoration: underline;"/>
+							     			</h:td>
+							     			<h:td>
+							     			<toolbarbutton id="KeywordDelTBId" 	label="delete" image="img/delt_icn.png" style="color:#2886B9;font-weight:bold;text-decoration: underline;"	/>
+							     			</h:td>
+									
+									
+							</h:tr>  -->
+							</h:table>
+							<!-- <h:table style="display:none;">
+							<h:tr>
+								<h:td width="200px" >
+									
+									<label value="Enable Alerts when keyword is going to expire" />
+								
+								</h:td>
+								<h:td  >
+									
+									<checkbox id="enableAlertsChkId" />
+								
+								</h:td>
+							</h:tr>
+							</h:table> -->
+							<h:table>
+									<h:tr>
+										<h:td width="200px" >
+											
+											<label value="Alerts to Email Address:" />
+										
+										</h:td>
+										<h:td  >
+											
+											<textbox id="toEmailTxtboxId" />
+										
+										</h:td>
+									</h:tr>
+									
+							
+							
+						</h:table>
+						</div>
+					
+				</groupbox>
+
+				
+				<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+					<caption label="Loyalty Settings" style="font-weight:bold;font-size:12px;" ></caption>
+					<h:table style="background-color: #F8F8F8; border-bottom: 1px solid #CCCCCC; box-shadow: 0 0 2px #CCCCCC; padding: 3px;">
+						<h:tr>
+							<h:td>
+							<radiogroup  id="loyaltyServicetypeLbId" onCheck="choice.value = self.selectedItem.value" >
+								<radio label="OptCulture Loyalty" id="oCRadioId" value="OC" radiogroup="loyaltyServicetypeLbId"  />
+								<radio label="SB to OC Services (OptCulture Loyalty)" id="sBToOCRadioId" value="SBToOC" radiogroup="loyaltyServicetypeLbId" style="padding-left:35px;" />
+								<radio label="SparkBase Loyalty" id="sBRadioId" value="SB" radiogroup="loyaltyServicetypeLbId" selected="true" style="padding-left:35px;" />
+							</radiogroup>
+							</h:td>
+						</h:tr>
+						<h:table>
+							<h:tr>
+								<h:td >
+									<label value="Turn on mobile opt-in in loyalty enrollment : " />
+								</h:td>
+								<h:td  >
+									<checkbox id="mobileOptinOnEnrollChkId" />
+								</h:td>
+							</h:tr>
+						</h:table>
+					</h:table>
+				</groupbox>
+				
+				
+				
+				<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+					<caption label="Additional Contact Details" style="font-weight:bold;font-size:12px;" ></caption>
+					<h:table cellspacing="0" cellpadding="10" width="100%">
+						<h:tr class="evenrow" colspan="4">
+							<h:td><label value="Contact 1" style="font-weight:bold;font-size:12px;"/></h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td width = "170"><label value="Name" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact1NameTbId"  cols="40" maxlength="50"/>
+							</h:td>
+							<h:td width = "170"><label value="Number" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact1NumberTbId"  cols="40" maxlength="50"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="Email" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact1EmailTbId"  cols="40" maxlength="60"/>
+							</h:td>
+							<h:td><label value="Position" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact1PositionTbId"  cols="40" maxlength="50"/>
+							</h:td>
+						</h:tr>	
+						<h:tr >
+						 	<h:td colspan="4">
+						 	<div style=" border-bottom: 1px solid white; border-top: 1px solid #DADBDF;height: 0;"></div>
+						 	</h:td>
+						 </h:tr>
+						<h:tr class="evenrow" colspan="4">
+							<h:td><label value="Contact 2" style="font-weight:bold;font-size:12px;"/></h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td width = "170"><label value="Name" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact2NameTbId"  cols="40" maxlength="50"/>
+							</h:td>
+							<h:td width = "170"><label value="Number" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact2NumberTbId"  cols="40" maxlength="50"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="Email" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact2EmailTbId" cols="40" maxlength="60"/>
+							</h:td>
+							<h:td><label value="Position" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact2PositionTbId" cols="40" maxlength="50"/>
+							</h:td>
+						</h:tr>	
+						<h:tr >
+						 	<h:td colspan="4">
+						 	<div style=" border-bottom: 1px solid white; border-top: 1px solid #DADBDF;height: 0;"></div>
+						 	</h:td>
+						 </h:tr>
+						<h:tr class="evenrow" colspan="4">
+							<h:td><label value="Contact 3" style="font-weight:bold;font-size:12px;"/></h:td>
+						</h:tr>	
+						<h:tr class="oddrow">
+							<h:td width = "170"><label value="Name" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact3NameTbId"  cols="40" maxlength="50"/>
+							</h:td>
+							<h:td width = "170"><label value="Number" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact3NumberTbId"  cols="40" maxlength="50"/>
+							</h:td>
+						</h:tr>	
+						<h:tr class="evenrow">
+							<h:td><label value="Email" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact3EmailTbId"  cols="40" maxlength="60"/>
+							</h:td>
+							<h:td><label value="Position" />
+							<!-- <label value="*" style="color:red;"/> -->
+							</h:td>
+							<h:td><textbox id="contact3PositionTbId"  cols="40" maxlength="50"/>
+							</h:td>
+						</h:tr>	
+						</h:table >
+					</groupbox>
+						
+					<groupbox closable="false" style="padding:10px 4px;" sclass="gbStyle">
+					<caption label="POS / OC Details" style="font-weight:bold;font-size:12px;" ></caption>
+					<h:table cellspacing="0" cellpadding="10" width="100%">
+						<h:tr>
+							<h:td  width="55%" valign="top">
+								<h:table cellspacing="0" cellpadding="10" width="100%">
+									<h:tr class="evenrow">
+										<h:td width="170"><label value="Number of contracted Emails" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><textbox id="numberOfContractedEmailsTbId" cols="40" maxlength="50"/>
+										</h:td>
+									</h:tr>	
+									<h:tr class="oddrow">
+										<h:td><label value="Number of contracted SMS" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><textbox id="numberOfContractedSmsTbId" cols="40" maxlength="50"/>
+										</h:td>
+									</h:tr>
+									<h:tr class="evenrow">
+										<h:td width="170"><label value="POS System Version" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><listbox id="posSystemVersionLbId" mold="select">
+										<listitem label="V8" value="V8" selected="true"/>
+										<listitem label="V9" value="V9" />
+										<listitem label="Other" value="Other" />
+										</listbox>
+										</h:td>
+									</h:tr>	
+									<h:tr class="oddrow">
+										<h:td><label value="OptDigitalReciept Version" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><textbox id="optDRVersionTbId" cols="40" maxlength="50"/>
+										</h:td>
+									</h:tr>	
+									<h:tr class="evenrow">
+										<h:td><label value="OptLoyalty Version" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><textbox id="optLoyaltyVersionTbId" cols="40" maxlength="50"/>
+										</h:td>
+									</h:tr>	
+									<h:tr class="oddrow">
+										<h:td><label value="OptPromo Version" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><textbox id="optPromoVersionTbId" cols="40" maxlength="50"/>
+										</h:td>			
+									</h:tr>	
+									<h:tr class="evenrow">
+										<h:td><label value="OptIntel Version" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><textbox id="optIntelVersionTbId" cols="40" maxlength="50"/>
+										</h:td>	
+									</h:tr>
+									<h:tr class="oddrow">
+										<h:td><label value="OptSync Version" />
+										<!-- <label value="*" style="color:red;"/> -->
+										</h:td>
+										<h:td><textbox id="optSyncVersionTbId" cols="40" maxlength="50"/>
+										</h:td>			
+									</h:tr>
+					       		 </h:table>
+							</h:td>
+							<h:td width="45%" valign="top">
+								<h:table cellspacing="0" cellpadding="0"  width="100%" align="left">
+							     	<h:tr>
+							     		<h:td>
+							     		    	
+											    <button Label="Upload .ini/.txt files" id="uploadImgBtnId" sclass="idle greenbtn" upload="true,maxsize=-1,multiple=true" height="28px" />
+										</h:td>
+									</h:tr>	
+									<h:td>
+											<groupbox closable="false" height="350px">
+												<caption label="Files" />
+												<div id="filesDivId" width="100%" height="350px">
+												
+													<listbox id="fileListlbId"  emptyMessage="" >
+														<listhead >
+															<listheader align="left" width="85%"/>
+															<listheader align="left" width="15%" />
+														</listhead>	
+													</listbox>
+
+											    </div>
+											</groupbox>
+									</h:td>
+								</h:table>
+							</h:td>
+						</h:tr>
+				    </h:table> 		
+				</groupbox>
+			
+			
+			
+
+		<div>
+			<label id="errorDivId" width="90%" multiline="true" style="padding-left:15px;color:#EF2C2C;font-weight:bold;font-size:14px;font-family:verdena;margin-left:8px;">
+				
+			</label>
+		</div>
+		
+		
+		<div>
+				<button id="submitBtnId" label="Submit" sclass="idle140 greenbtn" /><space />
+				<checkbox id="submitCbId" checked="false" visible="false"/>
+				<button label="Reset" id="resetBtnid" sclass="idle70" />
+				<!-- <button label="Reset" id="resetBtnid" w:onClick="reset()" sclass="idle70"  if="${type==null}"/> -->
+				<button label="Close" visible="false" id="cancelBtnId" sclass="idle70"/>
+			</div>
+	
+	
+	<script type="text/javascript">
+	<![CDATA[
+	    var valid = true;
+	    var defErrorContent = '<li> Correct the fields which are marked in red.';
+		var errorContent = "";
+	    var tbNormalCss = "border:1px solid #B2B0B1; background:url('/subscriber/zkau/web/1d1ebab6/zul/img/misc/text-bg.gif') repeat-x scroll 0 0 #FFFFFF";
+	    var tbErrorCss = "border:1px solid #F37373; background:#FFCFCF";
+	    
+		function validateUser() {
+			
+			errorContent = "";
+			
+			valid = true;
+			var image;
+			validateStr('userNameTbId');
+			
+			var nameStatusLbl = zk.Widget.$(jq('$nameStatusLblId'));
+			if(nameStatusLbl.getStyle().indexOf('red') >0 ) {
+				valid = false;
+				errorContent += '<br/> <li> Provide valid User Name or User Name already exist';
+				zk.Widget.$(jq('$userNameTbId')).setStyle(tbErrorCss);
+			}
+			
+			validatePwd();
+			validateEmailStr('emailIdTbId');
+			validateStr('firstNameTbId');
+			validateStr('lastNameTbId');
+			validateStr('addressOneTbId');
+			validateStr('cityTbId');
+			validateStr('stateTbId');
+			validateStr('countryTbId');
+			validateNum('pinTbId')
+			
+			var cbWidget = zk.Widget.$(jq('$enabledCbId'));
+			if(cbWidget.isChecked()) {
+				validateNum('totalLimitLbId');
+				var vmtaCb = zk.Widget.$(jq('$vmtaCbId'));
+				if(vmtaCb.getValue().indexOf("--") == 0) {
+					valid = false;
+					errorContent += '<br/> <li> Select a VMTA for enabled user';
+				}
+				
+			}
+			
+			validateDates();
+			if(!valid) {
+				document.getElementById('errorDivId').innerHTML = defErrorContent + errorContent;
+				document.getElementById('errorDivId').style.display = 'block';
+				return;
+			} else {
+				document.getElementById('errorDivId').style.display = 'none';
+			}
+			
+			
+			//alert('Validation done');
+			var submitCb = zk.Widget.$(jq('$submitCbId'))
+			submitCb.setChecked(!submitCb.isChecked());
+			
+			submitCb.fire('onCheck',{value:submitCb.value},{toServer:true},0);
+		}
+	    
+	    function validatePwd() {
+	    	var pwd = zk.Widget.$(jq('$passwordTbId'));
+	    	var repwd = zk.Widget.$(jq('$rePasswordTbId'));
+	    	if(trim(pwd.getValue()).length == 0 || trim(repwd.getValue()).length == 0 ) {
+	    		valid = false;
+	    		pwd.setStyle(tbErrorCss);
+	    		repwd.setStyle(tbErrorCss);
+	    		pwd.setValue("");
+	    		repwd.setValue("");
+	    		return;
+	    	}else if(pwd.getValue() != repwd.getValue()) {
+	    		valid = false;
+	    		errorContent += '<br/> <li> Two Passwords must match';
+	    		pwd.setStyle(tbErrorCss);
+	    		repwd.setStyle(tbErrorCss);
+	    		pwd.setValue("");
+	    		repwd.setValue("");
+	    		return;
+	    	}
+	    	else {
+				pwd.setStyle(tbNormalCss);
+				repwd.setStyle(tbNormalCss);
+			}
+	    	
+	    }
+		
+		function validateStr(id) {
+			var tb = zk.Widget.$(jq('$' + id));
+			var name = tb.getValue();
+			if(trim(name).length == 0) {
+				valid = false;
+				tb.setStyle(tbErrorCss);
+			} else {
+				tb.setStyle(tbNormalCss);
+			}
+		}
+		
+		function validateEmailStr(id) {
+			var emailtb = zk.Widget.$(jq('$' + id));
+			var email = emailtb.getValue();
+			if(trim(email).length == 0 || !validateEmail(email) ) {
+				valid = false;
+				errorContent += '<br/> <li> Provide valid Email-id';
+				emailtb.setStyle(tbErrorCss);
+			} else {
+				emailtb.setStyle(tbNormalCss);
+			}
+		}
+		
+		function validateNum(id) {
+			var tb = zk.Widget.$(jq('$' + id));
+			var val = tb.getValue();
+			if(val == undefined) {
+				valid = false;
+				tb.setStyle(tbErrorCss);
+			} else {
+				if(val <= 0) {
+					valid = false;
+					errorContent += '<br/> <li> Number must be greater than zero';
+					tb.setStyle(tbErrorCss);
+					return;
+				}
+				tb.setStyle(tbNormalCss);
+			}
+		}
+		
+		function validateDates() {
+			
+			var startDb = zk.Widget.$(jq('$startDbId'));
+	    	var expDb = zk.Widget.$(jq('$expDbId'));
+	    	var startVal = startDb.getValue();
+	    	var expVal = expDb.getValue()
+
+	    	var newStartDate = new Date(startVal.getYear()+1900, startVal.getMonth(), startVal.getDate());
+	    	var newExpDate = new Date(expVal.getYear()+1900, expVal.getMonth(), expVal.getDate());
+	    	
+	    	if((newStartDate > newExpDate )) {
+	    		errorContent += '<br/> <li> Start date must be less than expiry date ';
+	    		
+	    		zk.Widget.$(jq('$startDbId_img')).setVisible(true);
+	    		zk.Widget.$(jq('$expDbId_img')).setVisible(true);
+	    		valid=false;
+	    		
+	    	}else {
+	    	
+	    		zk.Widget.$(jq('$startDbId_img')).setVisible(false);
+	    		zk.Widget.$(jq('$expDbId_img')).setVisible(false);
+	    	}
+		}
+		
+		
+		
+		function reset() {
+			resetWidget('userNameTbId');
+			resetWidget('passwordTbId');
+			resetWidget('rePasswordTbId');
+			resetWidget('emailIdTbId');
+			resetWidget('firstNameTbId');
+			resetWidget('lastNameTbId');
+			resetWidget('compNameTbId');
+			resetWidget('addressOneTbId');
+			resetWidget('addressTwoTbId');
+			resetWidget('cityTbId');
+			resetWidget('stateTbId');
+			resetWidget('countryTbId');
+			resetWidget('pinTbId');
+			resetWidget('phoneTbId');
+			resetWidget('enabledCbId');
+			resetWidget('totalLimitLbId');
+			resetWidget('nameStatusLblId');
+			resetWidget('vmtaCbId');
+			resetWidget('vmtaStatusLblId');
+			resetWidget('compNameTbId');
+			resetWidget('compShrtNameTbId');
+			resetWidget('orgNameStatusLblId');
+			resetWidget('domainNameTbId');
+			resetWidget('domainNameStatusLblId');
+			resetWidget('errorDivId');
+			
+			
+			
+			
+		}
+		
+		function resetWidget(id) {
+			var tbWidget = zk.Widget.$(jq('$' + id));
+			//alert(tbWidget.className);
+			if(tbWidget.className == 'zul.wgt.Checkbox') {
+				tbWidget.setChecked(true);
+			}else if(tbWidget.className == 'zul.inp.Textbox' || tbWidget.className == 'zul.inp.Intbox') {
+				tbWidget.setValue("");
+				tbWidget.setStyle(tbNormalCss);
+			}else if(tbWidget.className == 'zul.wgt.Label') {
+				tbWidget.setValue("");
+				tbWidget.setStyle("");
+			}else if(tbWidget.className == 'zul.inp.Combobox') {
+				var child = tbWidget.getChildAt(0).getLabel();
+				tbWidget.setValue(child);
+			}
+		}
+		
+
+		
+	]]>
+	</script>
+	
+	
+	<window id="previewIframeWin" title="Preview" border="normal" mode="overlapped" visible="false" position="center">
+					<caption>
+						<toolbarbutton label="Close" onClick="previewIframeWin.setVisible(false);event.stopPropagation();" />
+					</caption>
+					<div id="contentDiv1Id" width="750px" height="500px" style="overflow:auto">
+						<iframe id="iframeId" width="100%" height="100%"/>
+					</div>
+	</window>
+	
+	
+	
+	
+	</window>
+</zk>

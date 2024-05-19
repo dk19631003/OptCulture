@@ -1,0 +1,155 @@
+
+
+<ion-content  dir="{{textDir}}" fullscreen="true" forceOverscroll="false">
+  <ion-grid fixed class="padding0 margin0 wd100 ht100" >
+    <ion-row class="ht100">
+     <ion-col size="12" size-md="4" size-lg="4" class="padding0">
+    <div [style.background]="'url(' + imageurl +  ')'" class="imgClass">
+        <ion-toolbar color="#ffe000">
+            <ion-buttons slot="start" >
+                <ion-button  (click)="backButtonEvent()">
+                  <ion-icon mode="md" color="light" slot="icon-only" name="arrow-back"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+      <!-- <ion-item lines="none" class="mr-right-5 mr-left-5 color-background"> -->
+     
+        <!-- <ion-label text-wrap class="titleText mr-right-5 mr-left-5">
+          {{'Register' | translate}}  
+        </ion-label>
+  -->
+      <!-- </ion-item> -->
+    </div>
+  <form [formGroup]="registerForm"  (ngSubmit)="submitFrom()" [ngStyle]="{'padding-bottom':  keyboardHeight  }">
+   <ion-grid class="mr-right-5 mr-left-5">
+     <ion-row>
+       <ion-col>
+          <ion-label  class="textFont">{{ 'FirstName' | translate }}
+            <span class="mandatory">*</span>
+          </ion-label>
+          <ion-item class="box-border">
+              <ion-input type="text" class="textFont" formControlName="firstName" placeholder="Enter first name"  required></ion-input>
+            </ion-item>
+            <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.firstName.errors?.required">
+              First Name is required.
+            </span>
+            <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.firstName.errors?.minlength">
+              Name should be min 2 chars long.
+            </span>
+       </ion-col>
+     </ion-row>
+    
+     <ion-row>
+        <ion-col>
+            <ion-label  class="textFont">{{ 'LastName' | translate }}
+              <span class="mandatory">*</span>
+            </ion-label>
+           <ion-item class="box-border">
+              <ion-input type="text" class="textFont"  placeholder="{{ 'Last Name' | translate }}" formControlName="lastName" required></ion-input>
+            </ion-item>
+
+            <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.lastName.errors?.required">
+              LastName  is required.
+            </span>
+            <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.lastName.errors?.minlength">
+              Name should be min 2 chars long.
+            </span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col>
+              <ion-label  class="textFont">{{ 'Mobile' | translate }}
+                <span class="mandatory">*</span>
+              </ion-label>
+             <ion-item class="box-border">
+                <ion-input type="text" class="textFont" placeholder="{{ 'Mobile' | translate }} " formControlName="mobile" required></ion-input>
+              </ion-item>
+              <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.required">
+                Mobile number is required.
+              </span>
+              <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.pattern">
+                Only numerical values allowed.
+              </span>
+              <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.minlength">
+                Mobile number should be 10 digts only
+              </span>
+              <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.maxlength">
+                Mobile number should be 10 digts only
+              </span>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-label  class="textFont">{{ 'Email' | translate }}
+                  <span class="mandatory">*</span>
+                </ion-label>
+                <ion-item class="box-border">
+                    <ion-input type="email" class="textFont" formControlName="email" placeholder="{{ 'Email' | translate }} "  required></ion-input>
+                  </ion-item>
+                  <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.required">
+                    Email is required.
+                  </span>
+                  <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.pattern">
+                    Please provide valid email id.
+                  </span>
+              
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+                <ion-label  class="textFont">{{ 'Password' | translate }}
+                  <span class="mandatory">*</span>
+                </ion-label>
+                <ion-item class="box-border">
+                    <ion-input id="password" [type]="show ? 'text' : 'password'" class="textFont" formControlName="password" placeholder="{{ 'Password' | translate }} "  required></ion-input>
+                    <ion-button (click)="showPassword()" class="iconButton" fill="clear" slot="end" color="transparent">
+                      <ion-icon   *ngIf="!show" slot="icon-only" name="eye"  style="color:#8b959a;width:20px;height:80%;"></ion-icon>
+                      <ion-icon *ngIf="show" slot="icon-only" name="eye-off" style="color:#8b959a;width:20px;height:80%;"></ion-icon>
+                    </ion-button>
+                </ion-item>
+                <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.password.errors?.required">
+                  Password is required.
+                </span>
+                 <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.password.errors?.pattern">
+                  Password must contain at least 8 characters, 1 upper case, 1 lower case,1 special character, and 1 number
+                </span>
+            </ion-col>
+          </ion-row>
+          <!-- <ion-row>
+              <ion-col>
+                  <ion-label  class="textFont">{{ 'Country' | translate }}
+                    <span class="mandatory">*</span>
+                  </ion-label>
+                  <ion-item class="box-border">
+                      <ion-input type="text" class="textFont" formControlName="country" placeholder="{{ 'Country' | translate }} "  required></ion-input>
+                  </ion-item>
+                  <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.country.errors?.required">
+                    Country is required.
+                  </span>
+                  <span class="mandatory ion-padding" *ngIf="isSubmitted && errorControl.country.errors?.minlength">
+                    Country should be min 2 chars long.
+                  </span>
+              </ion-col>
+            </ion-row> -->
+            <ion-row>
+                <ion-col>
+                    <ion-item class="checkbox-item" lines="none">
+                        <ion-checkbox mode="ios"  class="checkbox-icon" formControlName="fingerPrint" ></ion-checkbox>
+                        <ion-label class="textFont">{{'EnabeltouchId' | translate}}</ion-label>
+                      </ion-item>
+                </ion-col>
+              </ion-row>
+
+
+      <ion-button expand="full" type="submit" shape="round"    class="Login-Button text_transform" > 
+          <ion-text class="Login-Button-Text ">{{'Register' | translate}} </ion-text>
+        </ion-button>
+
+  </ion-grid>
+  </form>
+</ion-col>
+<ion-col *ngIf="!isMobile" class="bgimage "></ion-col>
+</ion-row>
+</ion-grid>
+</ion-content>
+

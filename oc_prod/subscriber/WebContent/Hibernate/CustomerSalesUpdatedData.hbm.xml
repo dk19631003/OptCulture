@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.mq.marketer.campaign.beans.CustomerSalesUpdatedData"
+		table="customer_sales_updated_data">
+		<id name="aggrId" type="java.lang.Long">
+			<column name="aggr_id" />
+			<generator class="native" />
+		</id>
+		<property name="customerId" type="string">
+			<column name="customer_id" />
+		</property>
+		<!-- <property name="totReceiptCount" type="int">
+			<column name="tot_reciept_count" />
+		</property> -->
+		<property name="totPurchaseAmt" type="double">
+			<column name="tot_purchase_amt" />
+		</property>
+		<property name="userId" type="long">
+			<column name="user_id" />
+		</property>
+		<property name="basketSize" type="double">
+			<column name="basket_size" />
+		</property>
+		<property name="totInvoice" type="int">
+			<column name="tot_invoice" />
+		</property>
+		<property name="totVisits" type="int">
+			<column name="tot_visits" />
+		</property>
+		<property name="firstPurchaseDate" type="calendar">
+			<column name="first_purchase_date" />
+		</property>
+		<property name="lastPurchaseDate" type="calendar">
+			<column name="last_purchase_date" />
+		</property>
+		
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 6, 2008 2:15:04 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+  <class name="org.mq.captiway.scheduler.beans.OCSMSGateway" table="oc_sms_gateway">
+    <id name="id" type="java.lang.Long" column="id">
+      <generator class="native"/>
+    </id>
+	 <property name="countryName" type="string" length="20"  column="country_name" />
+	<property name="gatewayName" type="string" column="gateway_name" length="120" />
+	<property name="userId" type="string" column="user_id" length="120" />
+	<property name="pwd" type="string" column="pwd" length="20"/>
+	<property name="systemId" type="string" column="system_id" length="120" />
+	<property name="systemPwd" type="string" column="system_pwd" length="20" />
+	<property name="ip" type="string" column="ip" length="30" />
+	<property name="port" type="string" column="port" length="20" />
+	<property name="accountType" type="string" column="account_type" length="10" />
+	<property name="mode" type="string" column="mode" length="10"/>
+	<property name="status" type="string" column ="status" length="20"/>
+	<property name="postPaid" type="boolean" ><column name="is_post_paid" default="false" /></property>
+	<property name="pullReports" type="boolean" ><column name="pull_reports" default="false" /></property>
+	<property name="createdBy" type="java.lang.Long" column="created_by" />
+    <property name="modifiedBy" type="java.lang.Long" column="modified_by" />
+     <property name="createdDate" type="java.util.Calendar" column="created_date" />
+    <property name="modifiedDate" type="java.util.Calendar" column="modified_date" />
+    
+    <property name="pullReportsURL" type="string" column ="pull_reports_URL" />
+    
+     <property name="postpaidBalURL" type="string" column ="postpaid_bal_URL" />
+     
+      <property name="systemType" type="string" column ="system_type" />
+      
+      <property name="senderId" type="string" column ="sender_id" />
+       
+      <property name="APIId" type="string" column ="API_id" />
+     <property name="enableMultiThreadSub" type="boolean" ><column name="enable_multi_thread_sub" default="false" /></property>
+      <property name="enableSessionAlive" type="boolean" ><column name="enable_session_alive" default="false" /></property>
+      <property name="twoWaySenderID" type="string" column ="two_way_sender_id" />
+  </class>
+</hibernate-mapping>

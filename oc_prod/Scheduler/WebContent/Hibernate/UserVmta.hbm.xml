@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2009 16:53:04 PM -->
+<hibernate-mapping>
+	<class name="org.mq.captiway.scheduler.beans.UserVmta"
+		table="user_vmta" lazy="false">
+		<id name="id" type="java.lang.Long" column="id">
+			<generator class="native" />
+		</id>
+		<property name="vmtaId" type="java.lang.Long" column="vmta_id" />
+		<property name="userId" type="java.lang.Long" column="user_id"/>
+		<property name="emailType" type="string" column="email_type"/>
+		<property name="enabled" type="boolean" column="enabled"/>
+	</class>
+</hibernate-mapping>

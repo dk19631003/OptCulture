@@ -1,0 +1,232 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style>
+ .custCheck {
+  width:140px;
+ }
+</style>
+<window width="110%" id="ltyStoreReportWinId" apply="org.mq.optculture.controller.loyalty.LtyStoreReportController"
+	 xmlns:h="http://www.zkoss.org/2005/zk/native"
+	xmlns:w="http://www.zkoss.org/2005/zk/client">
+		<groupbox sclass="gbStyle" closable="false">
+			<caption label="Stores Report" />
+			<h:table cellspacing="0" cellpadding="0" width="74%" 
+				align="left" style="padding-top:20px;">
+				    <h:tr>
+					<h:td width="80px">
+						<div  style="padding-top:20px;margin-left:10px;">
+						<h:table>
+						<h:tr>
+						<h:td>
+						<label value="Store-level KPIs For Loyalty Customers Within" style="font-weight:bold" />
+						</h:td>
+						<h:td>
+						<hbox>
+						<listbox id="timeDurLbId" width="130px" mold="select" style="position:relative;">
+										<listitem label="Last 30 Days" selected="true" />
+										<listitem label="Last 3 Months"  />
+										<listitem label="Last 6 Months"  />
+										<listitem label="Last 1 Year"  />
+										<listitem label="Custom Dates"  />
+							</listbox>
+							<div id="storeKPIdatesDivId" visible="false">
+								<label value="From " style="display:inline-block;font-weight:bold;;margin-left:5px;" />
+								<datebox id="storeKPIfromDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+								format="dd-MMM-yyyy" constraint="no future"/>
+								<label value="To " style="display:inline-block;font-weight:bold;;margin-left:5px;" />
+								<datebox id="storeKPItoDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+								format="dd-MMM-yyyy" constraint="no future"/>
+							<a label="Filter" id="storeKPIregDateFilterBtnId" />
+							<a label="Reset" id="storeKPIregDateResetBtnId" />
+							</div>
+							</hbox>
+							</h:td>
+							</h:tr>
+							</h:table>
+							<grid id="storeKpiLbId" sclass="contactsView" 	emptyMessage="No Records Found" width="50%" >
+								<columns style="background-color:#488eb0;">
+									<column label="Store"  width="35%"  align="center" />
+									<!-- <column label="Avg.Spend/Visit"  width="120px" align="left" />
+									<column label="Avg.Monthly Visit" width="120px" align="left" />
+									<column label="Avg.Basket Size" width="120px" align="left" />
+									<column label="Spend / SKU"  width="90px" align="left" />
+									<column label="Repeat Customers" width="125px" align="left" />
+									<column label="Repeat Sales"  width="100px" align="left" /> -->
+									<column label="Visits" width="30%" align="center" />
+									<column label="Revenue" width="35%" align="center" />
+								</columns>
+								<foot id="storeKpiFooterId" />
+								<rows id="storeKpisRowsId" />
+							</grid>
+						</div>
+					 </h:td>
+				</h:tr> 
+				<h:tr>
+					<h:td>
+						<div style="padding-top:20px;margin-left:10px;">
+							<label value="Store Liability As Of " style="font-weight:bold" />
+							<label value="" id="listLblId" style="font-weight:bold;"/>
+							<grid id="storeLiabilityLbId" sclass="contactsView" emptyMessage="No Records Found" width="50%" >
+								<columns style="background-color:#488eb0;">
+									<column label="Store" width="25%" align="left" />
+									<column label="Issued" width="25%" align="center" />
+									<column label="Redeemed" width="25%" align="center" />
+									<column label="Difference" width="25%" align="center" />
+								</columns>
+								<foot id="storeLiabilityFooterId" />
+								<rows id="storeLiabilityRowsId" />
+							</grid>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr>
+				<h:td>
+				<h:table>
+						 	<h:tr>
+						 	<h:td>
+							<label value="Store Enrollments Within" style="font-weight:bold" />
+							</h:td>
+							<h:td>
+							<hbox>
+							<listbox id="enrollDurLbId" width="130px" mold="select" style="position:relative;">
+										<listitem label="Last 30 Days" selected="true" />
+										<listitem label="Last 3 Months"  />
+										<listitem label="Last 6 Months"  />
+										<listitem label="Last 1 Year"  />
+										<listitem label="Custom Dates"  />
+							</listbox>
+							<div id="datesDivId" visible="false">
+								<label value="From " style="display:inline-block;font-weight:bold;;margin-left:5px;" />
+								<datebox id="fromDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+								format="dd-MMM-yyyy" constraint="no future"/>
+								<label value="To " style="display:inline-block;font-weight:bold;;margin-left:5px;" />
+								<datebox id="toDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+								format="dd-MMM-yyyy" constraint="no future"/>
+							<a label="Filter" id="regDateFilterBtnId" />
+							<a label="Reset" id="regDateResetBtnId" />
+							</div>
+							
+							</hbox>
+							</h:td>
+							</h:tr>
+							</h:table>
+							</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						<div style="padding-top:20px;margin-left:10px;">
+						
+							<grid id="enrollLbId" emptyMessage="No Records Found" sclass="contactsView" width="69%" >
+								<columns style="background-color:#488eb0;" id="enrollColsId">
+									<column label="Store" align="left" />
+									<column label="No.of Enrollments" align="center" />
+									<column label="No.of Gift-Card Issuances" align="center" id="giftCardIssId" /> 
+								</columns>
+								<rows id="enrollRowsId" />
+								<foot id="enrollFooterId" />
+							</grid>
+						</div>
+					</h:td>
+				</h:tr>
+				<h:tr>
+					<h:td>
+						
+						<h:table>
+						 	<h:tr>
+						 	<h:td>
+							<label value="Store Transactions Within" style="font-weight:bold;" />
+							</h:td>
+							<h:td>
+							<hbox>
+							<listbox id="transDurLbId" width="130px" mold="select" style="position:relative;">
+										<listitem label="Last 30 Days" selected="true" />
+										<listitem label="Last 3 Months"  />
+										<listitem label="Last 6 Months"  />
+										<listitem label="Last 1 Year"  />
+										<listitem label="Custom Dates"  />
+							</listbox>
+							<div id="transDatesDivId" visible="false">
+								<label value="From " style="display:inline-block;font-weight:bold;margin-left:5px;" />
+								<datebox id="transFromDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+								format="dd-MMM-yyyy" constraint="no future"/>
+								<label value="To " style="display:inline-block;font-weight:bold;;margin-left:5px;" />
+								<datebox id="transToDateboxId" readonly="true" use="org.mq.marketer.campaign.custom.MyDatebox"
+								format="dd-MMM-yyyy" constraint="no future"/>
+							<a label="Filter" id="transDateFilterBtnId" />
+							<a label="Reset" id="transDateResetBtnId" />
+							</div>
+							</hbox>
+							</h:td>
+							</h:tr>
+							</h:table>
+							</h:td>
+							</h:tr>
+							<h:tr>
+							<h:td>
+							<div style="padding-top:20px;margin-left:10px;">
+							<grid id="transLbId" sclass="contactsView" 	emptyMessage="No Records Found" width="100%">
+								<columns style="background-color:#488eb0;" >
+									<!-- 
+									<column label="Acount History" width="120px" align="center" /> -->
+									<column label="Store"   />
+									<column label="Enrollment"  />
+									<column label="Loyalty Issuance"  />
+									<column label="Gift Issuance"  id="giftIssueId" />
+									<column label="Redemption"  />
+									<column label="Inquiry"  />
+									<column label="Returns"  />
+									<column label="Store Credit"   />
+									<column label="Transfers"  id="transferId" />
+									<column label="Total"  /> 
+								</columns>
+								<rows id="transRowsId" />
+							</grid>
+							<grid width="100%">
+							<foot id="transFooterId" />
+							</grid>
+						</div>
+						</h:td>
+						</h:tr>
+				</h:table>
+				<h:table cellspacing="10" cellpadding="10" width="100%">
+				
+				<h:tr width="300">
+				
+				<h:td>
+					<label value="Export as a " />
+					<combobox  id="exportCbId" readonly="true" sclass="cb_100w">
+		 	  			<comboitem label=" .csv file" value="csv" />    
+					</combobox> 
+					<button label="Export" sclass="idle140 greenbtn" style="margin-left:20px;" id="exportBtnId" />
+				</h:td>
+				</h:tr>
+			</h:table>
+		</groupbox>
+
+<window id="custExport" title="Choose Data to Export" border="normal"  width="680px" visible="false"   xmlns:h="native"
+				onClose="self.setVisible(false); event.stopPropagation();" closable="true"> 
+				
+				
+				<div id="chkDivId" width="650px" style="margin:15px;" >
+					 <checkbox label="Store-level KPIs" sclass="custCheck" checked="true"/> 
+					 <checkbox label="Store Liability" sclass="custCheck" checked="true"/> 
+					 <checkbox label="Store Enrollments" sclass="custCheck" checked="true"/> 
+					 <checkbox label="Store Transactions" sclass="custCheck" checked="true"/> 
+				</div> 
+								
+				<h:table width="100%" cellspacing="4" align="center" cellpadding="4" style="margin:3px;">
+				<h:tr>
+					<h:td ><a label="Select All" id="selectAllAnchr" style="margin-right:20px;" />   <a label="Clear All" id="clearAllAnchr" /> </h:td> 
+					<h:td>
+						<div align="right" style="margin:10px 40px 0 0;">
+							<button label="Export" id="selectFieldBtnId" sclass="idle70 greenbtn" style="margin-right:15px;"/> 
+							<button label="Cancel" sclass="idle70" onClick="custExport.setVisible(false);" />
+						</div>
+					</h:td>
+				</h:tr>
+				</h:table>
+				
+</window>
+
+</window>
+</zk>

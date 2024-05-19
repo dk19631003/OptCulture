@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.mq.marketer.campaign.beans.CouponCodes" table="coupon_codes">
+
+		<id name="ccId" type="java.lang.Long" column="coupon_code_id">
+			<generator class="native" />
+		</id>
+		<property name="couponCode" type="string">
+			<column name="coupon_code" not-null="true"/>
+		</property>
+		
+		<many-to-one name="couponId" lazy="false"
+			class="org.mq.marketer.campaign.beans.Coupons" fetch="select">
+			<column name="coupon_id" not-null="true"  />
+		</many-to-one>
+		
+		<property name="sentId" type="long">
+			<column name="sentid"  />
+		</property>
+		<property name="campaignType" type="string">
+			<column name="campaign_type" />
+		</property>
+		<property name="orgId" type="long">
+			<column name="orgId" />
+		</property>
+		<property name="status" type="string">
+			<column name="status" />
+		</property>
+		
+		
+		<property name="issuedOn" type="calendar">
+			<column name="issued_on" />
+		</property>
+		<property name="redeemedOn" type="calendar">
+			<column name="redeemed_on" />
+		</property>
+		<property name="totDiscount" type="double">
+			<column name="tot_discount" />
+		</property>
+		<property name="totRevenue" type="double">
+			<column name="tot_revenue" />
+		</property>
+		<property name="issuedTo" type="string">
+			<column name="issued_to" />
+		</property>
+		<property name="membership" type="string">
+			<column name="membership" />
+		</property>
+		<property name="campaignName" type="string">
+			<column name="campaign_name" />
+		</property>
+		
+		
+		<property name="usedLoyaltyPoints" type="double">
+			<column name="used_loyalty_points" />
+		</property>
+		<property name="valueCode" type="string">
+			<column name="value_code" />
+		</property>
+		<property name="contactId" type="long">
+			<column name="contact_id" />
+		</property>
+		<property name="docSid" type="string">
+			<column name="doc_sid" />
+		</property>
+		<property name="subsidiaryNumber" type="string">
+			<column name="subsidiary_number" />
+		</property>
+		<property name="receiptAmount" type="double">
+			<column name="receipt_amount" />
+		</property>
+		<property name="receiptNumber" type="string">
+			<column name="receipt_number" />
+		</property>
+		<property name="redeemedTo" type="string">
+			<column name="redeemed_to" />
+		</property>
+		<property name="redeemCustId" type="string">
+			<column name="redeem_cust_id" />
+		</property>
+		<property name="redeemEmailId" type="string">
+			<column name="redeem_email_id" />
+		</property>
+		<property name="redeemPhnId" type="string">
+			<column name="redeem_phn_id" />
+		</property>
+		<property name="storeNumber" type="string">
+			<column name="store_number" />
+		</property>
+		<property name="sourceType" type="string">
+			<column name="source_type" length="50"/>
+		</property>
+		<property name="expiredOn" type="calendar">
+			<column name="expired_on" />
+		</property>
+		<property name="itemInfo" type="string">
+			<column name="item_info" />
+		</property>
+	</class>
+</hibernate-mapping>
+
+

@@ -1,0 +1,89 @@
+.split {
+    height: 70%;
+    position: fixed;
+    z-index: 1;
+    top: 25%;
+    overflow-x: hidden;
+  }
+  
+ .borderColor{
+     border-color: #e2e9f5;
+ }
+ .bgColor{
+     background-color: #e2e9f5;
+ }
+  .left {
+    left: 0;
+    width: 35%;
+    background-color: #e2e9f5;
+  }
+  .active{
+    --background:white; 
+  }
+  .itemBg{
+   --background:#e2e9f5;
+  }
+
+  .mrtop45{
+    margin-top: 40% !important;
+  }
+  .pdbottom0{
+    padding-bottom: 0px; 
+  }
+  .right {
+    right: 0;
+    width: 65%; 
+  }
+
+  
+  .ht25{
+      height: !important;
+  }
+  
+  .wd100
+  {
+      width: 100%;
+  }
+  .ht5{
+   height: 5%;
+  }
+  .typeText{
+    font-size: 16px;
+  }
+
+  .ht30px{
+    height:30px;
+  }
+  .col1{
+    padding-top:0px
+  }
+  .list{
+      padding-top:0px
+  }
+  .noheightline{
+      --min-height:0px
+  }
+
+  ion-radio{
+      --color-checked:black;
+  }
+  .bottom{
+    position: fixed;
+    bottom: 0px;
+  }
+  
+  .left {
+    left: 0;
+    width: 35%;
+    background-color: #e2e9f5;
+    position: absolute;
+    // height: 65%;
+  }
+  
+  .right {
+    // height: 65%;
+    position: absolute;
+    right: 0;
+    /* right: calc(calc(7 / var(--ion-grid-columns, 12)) * 100%); */
+    width: 65%;
+  }

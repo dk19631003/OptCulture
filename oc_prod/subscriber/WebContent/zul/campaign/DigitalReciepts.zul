@@ -1,0 +1,787 @@
+<?page title="Digital Reciepts" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window border="none"
+		apply="org.mq.marketer.campaign.controller.campaign.DigitalRecieptsController"
+		width="100%" xmlns:h="native">
+		<style>
+
+
+
+			.redStar{ font-size:14px;color:red; }
+
+			
+			<![CDATA[ .z-label { font-size: 13px; font-family:
+			arial,sans-serif; } .z-radio { display: inline; }
+
+
+			]]>
+			
+			
+   </style>
+
+
+
+		<tabbox>
+			<tabs>
+				<tab>Templates</tab>
+				<tab id="myTemplatesTabId" visible="false">
+					Templates
+				</tab>
+				<!-- <tab id="digiRcptReportsTabId">Reports</tab> -->
+				<tab id="digiRcptReportSettngsTabId">Settings</tab>
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+
+					<label
+						value="You can select a default or a custom template as a Digital Receipt here to be sent when your customer makes a purchase ."
+						style="font-size: 12px;font-family: : arial,sans-serif;padding:30px;" />
+					<h:br />
+					<label value="Please Note"
+						style="padding-left:30px;font-weight:bold;font-size: 12px;font-family:arial,sans-serif;" />
+					<label
+						value=" : Once all changes to the selected template have been made, you will have to click on 'Save As My Choice' to configure as your digital receipt."
+						style="font-size: 12px;font-family: : arial,sans-serif;" />
+					<div width="100%" align="right">
+						<!-- <radiogroup orient="horizontal" id="templateTypeGrpId" > <radio label="System Templates" ></radio>  <radio label="MyTemplates"></radio> </radiogroup> -->
+						
+						<toolbarbutton id="sendTestBtnId"
+							image="/img/icons/Send-test-DR-Icon_2.png"
+							label="Send Test Receipt" style="color:#2886B9;text-decoration: underline;" />
+						<toolbarbutton id="submitBtnId"
+							image="/img/digi_receipt_Icons/Save_in_my_templates_icn.png"
+							label="Save In My Templates" visible="false" style="color:#2886B9;text-decoration: underline;" />
+						<toolbarbutton id="updateTemplateAId"
+							image="/img/digi_receipt_Icons/Save_icn.png"
+							label="Update My Template" style="color:#2886B9;text-decoration: underline;" />
+					</div>
+
+					<label value="Configured Template : "
+						style="font-weight: bold;" />
+					<label id="selectedTemplateLblId" />
+					<hbox width="100%">
+						<vbox width="230px" style="margin-right:10px;" align="center">
+							<tabbox mold="accordion" id="tabBoxId">
+								<tabs>
+									<tab width="230px" sclass="segmentHead"
+										label="My Templates">
+									</tab>
+									<tab width="230px" sclass="segmentHead"
+										label="System Templates">
+									</tab>
+								</tabs>
+								<tabpanels>
+									<tabpanel>
+										<listbox id="myTemplatesListId"
+											sclass="segmentList" height="410px">
+												<listhead sizable="false">
+													<listheader maxlength="30"/>
+												</listhead>
+										</listbox>
+									</tabpanel>
+									<tabpanel>
+										<listbox id="digitalTemplatesListId"
+										   sclass="segmentList">
+												<listhead sizable="false">
+													<listheader maxlength="30"/>
+												</listhead>
+										</listbox>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+
+						</vbox>
+
+						<vbox >
+
+							<ckeditor id="digitalRecieptsCkEditorId" customConfigurationsPath="/js/ckConfig.js"
+								width="98%" height="450px">
+							</ckeditor>
+
+						</vbox>
+
+
+					</hbox>
+
+
+					<h:table width="100%">
+						<h:tr>
+
+							<h:td width="30%"></h:td>
+							<h:td colspan="2">
+								<!-- <label value="Selected Templates : " />  <label id="selectedTemplateLblId" /> <h:br/>  -->
+
+							</h:td>
+						</h:tr>
+						<h:tr>
+							<h:td width="30%"></h:td>
+							<h:td>
+
+
+
+
+							</h:td>
+
+						</h:tr>
+						<h:tr height="100px" width="100%">
+							<h:td width="30%"></h:td>
+
+							<h:td colspan="2"
+								style="padding-right:70px;" width="70%" align="right">
+								<!-- <button id="submitBtnId" sclass="idle200 greenbtn" label="Save In My Templates" />  -->
+								<button id="configTemplateBtnId"
+									sclass="idle140 greenbtn" label="Save As My Choice" />
+
+							</h:td>
+
+						</h:tr>
+					</h:table>
+
+
+
+
+					<window id="winId" title="Save in My Templates"
+						border="normal" visible="false" width="400px" height="100px"
+						closable="true"
+						onClose="self.setVisible(false); event.stopPropagation();">
+						<hbox>
+							<label
+								value="Please provide template name:" />
+							<textbox id="templatNameTbId" />
+						</hbox>
+						<button label="Save Template"
+							id="saveInMyTempBtnId" />
+					</window>
+					
+					<window id="testDRWinId" visible="false" closable="true" title="Send Test Receipt" 
+						height="200px" width="350px" xmlns:h="http://www.zkoss.org/2005/zk/native"
+											onClose="self.setVisible(false);event.stopPropagation();">
+						<h:table style="padding:10px;">
+							<h:tr>
+								<h:td colspan="3"><label id="msgLblId" style="color:red;font-family:verdana;font-size:11px;"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td colspan="1"><label value="Email address:" /></h:td>
+								<h:td colspan="2"><textbox  id="testDRTbId"  width="160px"/></h:td>
+							</h:tr>
+							<h:tr>
+								<h:td/>
+								
+								<h:td  colspan="2" valign="center">	
+									<image src="/img/icons/icon_i.png"  style="vertical-align:bottom;"/>	
+									<label value="To send a test receipt to multiple email addresses, enter the addresses comma separated." style="vertical-align:bottom;" sclass="labelPos" />
+								</h:td>
+								
+								
+							</h:tr>
+							<h:tr height="10" />
+							<h:tr>
+								<h:td><button label="Send" id="sendTestMailBtnId" /></h:td>
+								<h:td><button label="Cancel" id="cancelSendTestMailBtnId" /></h:td>
+							</h:tr>
+						</h:table>
+					</window>
+					
+				</tabpanel>
+
+				<tabpanel>
+					<listbox id="digitalRecieptListId"
+						checkmark="true">
+						<listhead>
+							<listheader>Template Name</listheader>
+							<listheader>Created Date</listheader>
+							<listheader>Options</listheader>
+						</listhead>
+					</listbox>
+
+					<hbox>
+						<button id="myTemplateBtnId"
+							label="Configure">
+						</button>
+					</hbox>
+				</tabpanel>
+
+				<!--<tabpanel>
+					 <listbox id="digiRecptReportListId" height="400px"
+						mold="paging" pageSize="10">
+					</listbox>
+
+					<window id="previewWin" title="Preview"
+						border="normal" mode="overlapped" visible="false"
+						position="center">
+						<caption>
+							<toolbarbutton label="Close"
+								onClick="previewWin.setVisible(false)" />
+						</caption>
+						<div id="contentDivId" width="750px"
+							height="500px" style="overflow:auto">
+							<html id="html" />
+						</div>
+					</window>
+					 <include id="viewReportsIncId" src=""  /> 
+					
+				</tabpanel> -->
+
+
+
+
+				<tabpanel>
+
+
+					<label
+						value=" You can configure your Digital Receipt's email settings here " />
+						
+					<groupbox width="95%" sclass="gbStyle"
+						style="margin-top:10px;" closable="false">
+						<caption>
+							<label value="Digital Receipt Settings" />
+						</caption>
+
+						<div height="100px" >
+
+							<h:table cellspacing="0" cellpadding="0"
+								width="100%"  height="100%" align="left" style="padding-left:20px;">
+
+								<h:tr>
+				     			<h:td width="20%" >
+				     				<div style="margin:0px 10px 0 0"><label value="Enable Sending Receipt:" /> </div>	
+				     			</h:td>
+				     			<h:td width="10%">
+				     				<div >
+				     					<checkbox id="enableSendingChkBxId" checked="false"  />
+				     				</div>
+				     			</h:td>
+				     		</h:tr>
+				     		
+				     		<h:tr>
+				     			<h:td  width="20%">
+				     		
+				     				<div style="margin:0px 10px 0 0"><label value="Turn-on Display in Receipt:" /> </div>	
+				     			</h:td>
+				     			<h:td width="12%" >
+				     					<checkbox id="shippingAmntChkBxId" label="Shipping Amount" checked="true" style="display:inline-block;" />
+				     			</h:td>
+				     			<h:td width="10%">
+				     					<checkbox id="feeAmntChkBxId" label="Fee Amount" checked="true" style="display:inline-block;"  />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="taxAmntChkBxId" label="Tax Amount" checked="true" style="display:inline-block;"   />
+				     			</h:td>
+				     			<h:td width="10%" >
+				     					<checkbox id="discAmntChkBxId" label="Global Discount Amount" checked="false" style="display:inline-block;"   />
+				     			</h:td>
+				     			
+				     			<h:td width="50%" >
+				     					<checkbox id="totalAmntChkBxId" label="Total Amount" checked="true" style="display:inline-block;"   />
+				     			</h:td>
+				     		</h:tr>
+				     		
+				     		
+
+							</h:table>
+						</div>
+
+					</groupbox>	
+
+					<groupbox width="95%" sclass="gbStyle"
+						style="margin-top:10px;" closable="false">
+						<caption>
+							<!-- <label value="Basic Settings" /> -->
+							<label value="Email Settings" />
+						</caption>
+
+						<div>
+
+							<h:table cellspacing="0" cellpadding="0"
+								width="85%" align="left" style="padding-left:20px;">
+
+								<h:tr height="30">
+									<h:td style="padding-top:20px;">
+										<label value="Subject:" />
+										<label value="*"
+											sclass="redStar" />
+									</h:td>
+
+									<h:td colspan="2"
+										style="padding-top:20px;">
+										<textbox id="cSubTb"
+											width="250px" value="" maxlength="200">
+										</textbox>
+										<label visible="false" value="A carefully crafted Subject gets better opens, recommended length 50 - 55 characters." sclass="labelPos" />
+									</h:td>
+								</h:tr>
+
+
+								<h:tr height="100">
+									<h:td style="padding-top:0px;">
+										<label value="From Name:" />
+										<label value="*"
+											sclass="redStar" />
+									</h:td>
+
+									<h:td colspan="3" style="padding-top:0px;">
+									
+									    <div style="padding-top:53px;">
+									    
+									    <radiogroup id="frmNamedynamicOrNotRgId">
+									        
+											<radio label="Same for all receipts" checked="true" /> 
+											
+											  <textbox id="cFromNameTb" width="250px" value="" maxlength="60" />
+											  
+											  
+											  
+											  <image
+											src="/img/icons/icon_q.png" tooltip="help1"
+											style="padding-left:40px;" />
+											
+											
+											 <separator spacing="16px"/> 
+											 
+											<radio label="Dynamically changes with email settings of purchase store" />
+											
+											<a label="Go to Manage Stores"
+											id="manageStoresLink1AnchId"
+											style="font-weight: bold;text-decoration: underline;font-size: 12px;color:#43A0BA;"
+											/>
+										</radiogroup>
+									    </div>
+									
+										<!-- <textbox id="cFromNameTb"
+											width="250px" value=""
+											constraint="no empty: Please enter From name" maxlength="60" /> -->
+										<!-- <image
+											src="/img/icons/icon_q.png" tooltip="help1"
+											style="padding-left:40px;" /> -->
+										<popup id="help" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<image
+															src="/img/icons/icon_bulb.png" />
+													</h:td>
+													<h:td>
+														<label
+															value="A carefully crafted Subject gets better opens," />
+													</h:td>
+												</h:tr>
+												<h:tr>
+													<h:td></h:td>
+													<h:td>
+														<label
+															value="recommended length 50 - 55 characters." />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+										<popup id="help1" width="400px"
+											style="bgcolor:#CCCCCC">
+											<h:table>
+												<h:tr>
+													<h:td>
+														<label
+															value="Name displayed as 'From' in the email"
+															sclass="labelPos" />
+													</h:td>
+												</h:tr>
+
+											</h:table>
+
+										</popup>
+
+									</h:td>
+								</h:tr>
+								
+								
+								
+								<h:tr height="100">
+									<h:td style="padding-top:0px;">
+										<label value="From Email Address:" />
+										<label value="*"
+											sclass="redStar" />
+									</h:td>
+
+									<h:td colspan="3" style="padding-top:0px;">
+									
+									    <div style="padding-top:53px;">
+									    
+									    <radiogroup id="frmEmaildynamicOrNotRgId">
+									        
+											<radio label="Same for all receipts" checked="true" /> 
+											
+										<combobox id="cFromEmailCb"
+											readonly="true" sclass="cb_250w" />
+										<label value="or"
+											style="font-weight: bold;padding-left:10px;" />
+										<a label="Register"
+											id="regFrmEmlAnchId"
+											style="font-weight: bold;text-decoration: underline;font-size: 12px;color:#43A0BA;"
+											popup="regEmailPopupId" />
+										<label value="new Email Address"
+											style="padding-left:5px;" />
+										<popup id="regEmailPopupId"
+											width="400px">
+
+											<h:table>
+												<h:tr>
+													<h:td>
+														Enter Email
+														Address :
+													</h:td>
+												</h:tr>
+												<h:tr>
+													<h:td>
+														<textbox
+															id="cFromEmailTb" width="250px" value=""
+															name="cFromEmailTb" maxlength="60" />
+
+													</h:td>
+												</h:tr>
+												<h:tr height="20" />
+												<h:tr>
+													<h:td
+														align="right">
+														<button
+															label="Cancel" sclass="idle70" id="cancelBtnId" />
+														<button
+															label="Submit" sclass="idle140 greenbtn"
+															id="submitBt1nId" />
+													</h:td>
+												</h:tr>
+											</h:table>
+
+										</popup>
+											
+											 <separator spacing="16px"/> 
+											 
+											<radio label="Dynamically changes with email settings of purchase store" />
+											
+											<a label="Go to Manage Stores"
+											id="manageStoresLink2AnchId"
+											style="font-weight: bold;text-decoration: underline;font-size: 12px;color:#43A0BA;"
+											/>
+										</radiogroup>
+									    </div>
+									
+										
+										
+										
+
+									</h:td>
+								</h:tr>
+
+								<!-- <h:tr height="50">
+									<h:td>
+										<label
+											value="From Email Address:" />
+										<label value="*"
+											sclass="redStar" />
+									</h:td>
+									<h:td colspan="2">
+										<combobox id="cFromEmailCb"
+											readonly="true" sclass="cb_250w" />
+										<label value="or"
+											style="font-weight: bold;padding-left:10px;" />
+										<a label="Register"
+											id="regFrmEmlAnchId"
+											style="font-weight: bold;text-decoration: underline;font-size: 13px;color:#43A0BA;"
+											popup="regEmailPopupId" />
+										<label value="new Email Address"
+											style="padding-left:5px;" />
+										<popup id="regEmailPopupId"
+											width="400px">
+
+											<h:table>
+												<h:tr>
+													<h:td>
+														Enter Email
+														Address :
+													</h:td>
+												</h:tr>
+												<h:tr>
+													<h:td>
+														<textbox
+															id="cFromEmailTb" width="250px" value=""
+															name="cFromEmailTb" maxlength="60" />
+
+													</h:td>
+												</h:tr>
+												<h:tr height="20" />
+												<h:tr>
+													<h:td
+														align="right">
+														<button
+															label="Cancel" sclass="idle70" id="cancelBtnId" />
+														<button
+															label="Submit" sclass="idle140 greenbtn"
+															id="submitBt1nId" />
+													</h:td>
+												</h:tr>
+											</h:table>
+
+										</popup>
+									</h:td>
+								</h:tr> -->
+
+								<!-- <h:tr>
+				     			<h:td >
+				     				<div style="margin:8px 10px 0 0"><label value="Enable Sending Receipt:" /> </div>	
+				     			</h:td>
+				     			<h:td >
+				     				<div >
+				     					<checkbox id="enableSendingChkBxId" checked="false"  />
+				     				</div>
+				     			</h:td>
+				     		</h:tr> -->
+
+							</h:table>
+						</div>
+
+					</groupbox>
+
+					<separator />
+
+
+					<groupbox width="95%" sclass="gbStyle"
+						style="margin-top:10px;" visible="false" closable="false" open="true">
+						<caption>
+							<label value="Optional Settings" />
+							<toolbarbutton id="optSettingsTbBtnId"
+								image="/img/icons/icon_plus.png" />
+						</caption>
+						<div id="gbContentDivId">
+
+
+							<h:table cellspacing="0" cellpadding="0"
+								width="85%" align="left" style="padding-left:20px;">
+								<h:tr>
+									<h:td valign="top">
+										<label value="Web page Version" />
+									</h:td>
+
+									<h:td valign="top">
+										<checkbox id="cWebPageCb"
+											label="Include a link to view a web page version of this email"
+											onCheck="cWebLinkHboxId.visible = !cWebLinkHboxId.visible"
+											checked="true" />
+									</h:td>
+								</h:tr>
+
+
+								<h:tr>
+									<h:td></h:td>
+									<h:td>
+
+
+										<div id="cWebLinkHboxId"
+											style="text-align:left;" align="left" visible="true">
+											<h:table>
+												<h:tr>
+													<h:td>
+
+														<label
+															value="Text:" style="padding-right:5px;" />
+														<textbox
+															id="cWebLinkTextTb" width="250px"
+															value=" Having Trouble viewing this email?"
+															maxlength="200" />
+
+													</h:td>
+													<h:td width="20"></h:td>
+													<h:td>
+
+														<label
+															value="Link  Text:" style="padding-right:5px;" />
+														<textbox
+															id="cWebLinkUrlTextTb" width="150px" value=" Click here"
+															maxlength="200" />
+
+
+													</h:td>
+												</h:tr>
+											</h:table>
+										</div>
+									</h:td>
+								</h:tr>
+
+								<h:tr height="15" />
+
+								<h:tr>
+									<h:td valign="top" width="170"
+										style="padding-top:5px;">
+										<label
+											value=" Permission Reminder" />
+									</h:td>
+
+									<h:td>
+										<radiogroup id="cPermRemRb" orient="vertical">
+											<radio label="On"
+												onCheck="permRemDivId.visible=true;" />
+												<h:br/>
+											<radio label="Off"
+												onCheck="permRemDivId.visible=false;" checked="true" />
+										</radiogroup>
+									</h:td>
+								</h:tr>
+								<h:tr>
+									<h:td></h:td>
+									<h:td>
+
+										<div id="permRemDivId"
+											visible="false">
+											<textbox id="permRemTextId"
+												rows="3" height="50px" cols="50"
+												value="You are receiving this email because you had opted in on our website."
+												maxlength="200" />
+											<h:br />
+
+										</div>
+
+									</h:td>
+
+								</h:tr>
+								<h:tr height="15" />
+								<h:tr>
+									<h:td>
+										<label
+											value="Personalize the &quot;To:&quot; Field:" />
+									</h:td>
+									<h:td>
+										<checkbox id="toNameChkId"
+											sclass="theme-lbHeading" checked="false"
+											onCheck="persToDivId.visible=!persToDivId.visible" />
+									</h:td>
+								</h:tr>
+
+								<h:tr>
+									<h:td></h:td>
+									<h:td>
+										<div id="persToDivId"
+											visible="false">
+											<label
+												value="Select tag for recipient name:"
+												sclass="theme-lbHeading" />
+											<listbox id="phLbId"
+												mold="select" rows="1">
+												<listitem
+													label="First Name" value="firstName" selected="true" />
+												<listitem
+													label="Last Name" value="lastName" />
+												<listitem
+													label="First Name Last Name" value="fullName" />
+											</listbox>
+										</div>
+									</h:td>
+								</h:tr>
+								
+								
+							</h:table>
+
+						</div>
+
+					</groupbox>
+
+
+		<h:table cellspacing="2" cellpadding="1" align="right"
+			style="font-size: 13px;font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif; padding: 20px 20px 0 0;">
+			<h:tr>
+			<h:td colspan="6" style="padding-right:30px;">
+				<button label="Save" sclass="idle140 greenbtn"
+					id="saveBtnId"  />
+			</h:td>
+
+			</h:tr>
+		</h:table>
+
+
+				</tabpanel>
+
+
+
+
+
+			</tabpanels>
+
+
+
+		</tabbox>
+		<menupopup id="manageActionsMpId"  sclass="myfilter">
+						<!-- <menuitem label="Make A Copy" id="makeCopyMId"/> -->
+						<menuitem label="Save As" id="saveAsMId"/>
+						<menuitem label="Send Test Receipt" id="sendTestReceiptMId"/>
+						<menuitem label="Save As My Choice" id="saveAsMyChoiceMId"/>
+						<menuitem label="View Details" id="viewDetailsMId"/>
+						<menuitem label="Rename Template" id="renameTemplateMId"/>
+						<menuitem label="Delete Template" id="deleteTemplateMId"/>
+		</menupopup>
+		
+		<window id="makeACopyWinId" title="Make A Copy"
+						border="normal" visible="false" width="400px" height="150px"
+						closable="true"
+						onClose="self.setVisible(false); event.stopPropagation();">
+				
+						
+						 <h:table>
+						 <h:tr>
+						   <h:td width="50%" align="center"><label value="Please provide template name" /></h:td>
+						 </h:tr>
+						 <h:tr>
+						   <h:td width="50%" align="center"><label value="Template Name:"  /></h:td><h:td><textbox id="templatNameTbId" maxlength="50"  /></h:td>
+						 </h:tr>
+						 <h:tr height="10" />
+						 <h:tr>
+						   <h:td></h:td>
+						   <h:td><button label="Save Template" id="saveInMyTempBtnId" /></h:td>
+						 </h:tr>
+						</h:table> 
+					
+            			
+						
+						
+						
+		</window>
+					
+					
+		<window id="viewDetailsWinId"  title="View Details" visible="false" width="420px"  border="normal"  closable="true"  onClose="self.setVisible(false); event.stopPropagation();" >
+		
+				<h:table width="400px"  >
+					<h:tr>
+						<h:td height="30px" width="180px"><label value="Template Name : "  /></h:td> <h:td><label id="templateNameLblId"/></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td height="30px"><label value="Creation Date : "/> </h:td> <h:td><label id="creationDateLblId"/></h:td>
+					</h:tr>
+					<h:tr>
+						<h:td height="30px"><label value="Last Modified Date : " /> </h:td> <h:td><label id="lastAccLblId"/></h:td>
+					</h:tr>
+				</h:table>
+							
+		
+		
+		</window>	
+		
+		<window id="renameTemplateWinId"  title="Rename Template" visible="false" width="420px"  border="normal"  closable="true"  onClose="self.setVisible(false); event.stopPropagation();" >
+		
+				<h:table>
+						 <h:tr>
+						   <h:td colspan="2" ><label value="Please provide new name for the template " /></h:td>
+						 </h:tr>
+						 <h:tr>
+						   <h:td width="200px" align="center"><label value="Template Name:" /> </h:td>
+						   <h:td><textbox id="newTempltNameTbId" maxlength="50"  /></h:td>
+						 </h:tr>
+						 <h:tr height="10" />
+						 <h:tr>
+						   <h:td align="center"><button label="Rename" id="renameTempltBtnId"  />
+						   <button label="Cancel" id="cancelTempltBtnId"  /></h:td>
+						 </h:tr>
+						</h:table> 
+							
+		
+		
+		</window>
+	</window>
+</zk>
